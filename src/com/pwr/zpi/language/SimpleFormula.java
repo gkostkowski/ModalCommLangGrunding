@@ -28,5 +28,5 @@ public class SimpleFormula implements Formula {
         return object.hasTrait(trait) && !isNegated;
     }
 
-    getState
+    getState //todo
 }

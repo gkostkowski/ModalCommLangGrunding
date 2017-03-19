@@ -3,6 +3,7 @@ package com.pwr.zpi.language;
 import com.pwr.zpi.*;
 import com.pwr.zpi.Object;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -29,10 +30,10 @@ public class Grounder {
      * @param time
      * @return
      */
-    static Set<NamedCollection<Names, Object>> positiveInWM (Set<NamedCollection<Names, Object>> workingMemory, int time) //todo
-    static Set<NamedCollection<Names, Object>> negativeInWM (Set<NamedCollection<Names, Object>> workingMemory, int time)
-    static Set<NamedCollection<Names, Object>> positiveInLM(Set<NamedCollection<Names, Object>> longTimeMemory, int time)
-    static Set<NamedCollection<Names, Object>> negativeInLM(Set<NamedCollection<Names, Object>> longTimeMemory, int time)
+    static Set<NamedCollection<Names, Object>> positiveInWM (Collection<BaseProfile> workingMemory, int time) //todo
+    static Set<NamedCollection<Names, Object>> negativeInWM (Collection<BaseProfile> workingMemory, int time)
+    static Set<NamedCollection<Names, Object>> positiveInLM(Collection<BaseProfile> longTimeMemory, int time)
+    static Set<NamedCollection<Names, Object>> negativeInLM(Collection<BaseProfile> longTimeMemory, int time)
 
         //todo sprawdzic 3.9 i 3.10 zachodzi (s. 64)
 

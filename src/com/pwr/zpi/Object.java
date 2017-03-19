@@ -12,6 +12,7 @@ import java.util.Set;
 public class Object {
     protected int identifier;
     protected String type;
+    private Set<Trait> traits; //won't be visible in subclasses
 
     public int getIdentifier() {
         return identifier;
@@ -28,8 +29,6 @@ public class Object {
     public void setType(String type) {
         this.type = type;
     }
-
-    private Set<Trait> traits; //won't be visible in subclasses
 
     @Override
     public boolean equals(Object o) {
@@ -49,6 +48,6 @@ public class Object {
     @Override
 
     public int hashCode() {
-        return getIdentifier();
+        return
     }
 }
