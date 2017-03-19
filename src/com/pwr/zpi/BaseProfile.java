@@ -12,4 +12,8 @@ import java.util.Collection;
 public class BaseProfile extends World {
     protected Collection<NamedCollection<Names, Object>> describedObjects; //hides field from superclass
 
+
+    boolean isPAdequate(Collection<NamedCollection<Names, Object>> PSwT, Trait examinedTrait) {
+        return false;
+    }
 }

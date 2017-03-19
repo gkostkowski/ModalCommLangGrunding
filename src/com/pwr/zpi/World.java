@@ -10,7 +10,7 @@ public class World {
     protected int time=0;
     protected Set<Object> objects;
     /**
-     * Keeps references to Objects perceived as containing certain trait (NamedCollection<Names, Object>),
+     * Keeps references to Objects included in world, perceived as containing certain trait (NamedCollection<Names, Object>),
      * each Collection for respective moments in time.
      */
     protected NamedCollection<Names, Collection<NamedCollection<Names, Object>>> describedObjects;

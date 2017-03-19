@@ -5,6 +5,10 @@ import java.util.Set;
 /**
  * Created by Grzesiek on 2017-03-16.
  */
+
+/**
+ * Intended to use in representation of agent knowledge.
+ */
 public class ExtendedObject extends Object {
     private Set<Trait> positive; //traits which were observed in object
     private Set<Trait> negative; //traits which were not observed in object
