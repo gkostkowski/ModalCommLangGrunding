@@ -6,4 +6,8 @@ package com.pwr.zpi;
 public class Trait <K, V> {
     private K name;
     private V value;
+
+//    boolean checkIfApply(Object o) {
+//        return false; //todo
+//    }
 }

@@ -12,6 +12,10 @@ public class World {
     /**
      * Keeps references to Objects included in world, perceived as containing certain trait (NamedCollection<Names, Object>),
      * each Collection for respective moments in time.
+     * @param
+     * @return
      */
     protected NamedCollection<Names, Collection<NamedCollection<Names, Object>>> describedObjects;
+
+
 }

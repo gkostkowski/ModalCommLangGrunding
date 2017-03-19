@@ -13,4 +13,13 @@ public class Language {
     private static final String SYMBOLS ="";
     Set<Symbol> symbols;
 
+    /*todo
+    * formuly atomowe: */
+
+
+    /*implementacja operatorOW:
+        - NOT, AND, XOR, OR
+    */
+    //public <I, O>Pos O(I operand1, I operand2) {}
+
 }
