@@ -143,6 +143,7 @@ public enum State {
      * @return State : Is if Is_Not.
      * Is_Not if Is.
      * Mayhaps if Mayhaps.
+     *
      */
     public abstract State not();
 
