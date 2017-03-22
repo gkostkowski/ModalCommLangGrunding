@@ -1,7 +1,7 @@
 package com.pwr.zpi.language;
 
 /**
- * Created by Grzesiek on 2017-03-19.
+ * Describes language symbols ,which provide logica operations.
  */
 public class Operations {
 
@@ -23,4 +23,7 @@ public class Operations {
     <T> double posX(T operand) {}
     <T> double knowX(T operand) {}
     <T> double belX(T operand) {}
+    
+    //Zmienić nazwę na Operators
+    //
 }
