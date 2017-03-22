@@ -7,7 +7,7 @@ import java.util.Set;
  * Created by Grzesiek on 2017-03-16.
  */
 public class World {
-    protected int time=0;
+    //protected int time=0;
     protected Set<Object> objects;
     /**
      * Keeps references to Objects included in world, perceived as containing certain trait (NamedCollection<Names, Object>),
@@ -16,6 +16,5 @@ public class World {
      * @return
      */
     protected NamedCollection<Names, Collection<NamedCollection<Names, Object>>> describedObjects;
-
-
+    //Zrób to na parach.
 }
