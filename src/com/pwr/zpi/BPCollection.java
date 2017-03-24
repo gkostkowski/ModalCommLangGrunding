@@ -1,29 +1,76 @@
 package com.pwr.zpi;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import javafx.util.Pair;
+
+import java.util.*;
 
 /**
  * Created by Grzesiek on 2017-03-17.
  */
 
 /**
- * Collection of BaseProfiles splited into working memory(obszar swiadomy/PR) and long-term memory(obszar przedswiadomy/PT).
- * Contains knowledge collected till moment in time described by currTime.
+ * Collection of BaseProfiles split into working memory(obszar swiadomy/PR) and long-term memory(obszar przedswiadomy/PT).
+ * Contains knowledge collected till moment in time described by timestamp.
  * All operations should be
  */
 public class BPCollection {
-    protected Collection<BaseProfile> workingMemory;
-    protected Collection<BaseProfile> longTermMemory;
-    private int currTime;
 
-    Set<BaseProfile> getBPCollection() {
-        Set<BaseProfile> res =new HashSet<>(workingMemory);
-        res.addAll(longTermMemory);
-        return res;
+    /**
+     * Map of BaseProfile representing working memory - each for successive moments in time - from beginning till
+     * current timestamp set for this BPCollection.
+     */
+    protected Map<Integer, BaseProfile> workingMemory;
+    /**
+     * Map of BaseProfile representing long-term memory - each for successive moments in time - from beginning till
+     * current timestamp set for this BPCollection.
+     */
+    protected Map<Integer, BaseProfile> longTermMemory;
+    //protected NamedCollection<Integer, BaseProfile> longTermMemory;
+    private int timestamp;
+
+
+    /**
+     * Returns base profile from long-time memory related with given timestamp.
+     * Ratains information about timestamp.
+     * @param timestamp Moment in time.
+     * @return Base profile from long time memory related with given timestamp.
+     */
+    public Pair<Integer, BaseProfile> getTimedBaseProfile(int timestamp) {
+        return new Pair<>(timestamp, workingMemory.get(timestamp));
     }
+    /**
+     * Returns base profile from long time memory related with given timestamp.
+     * @param timestamp Moment in time.
+     * @return Base profile from long time memory related with given timestamp.
+     */
+    public BaseProfile getBaseProfile(int timestamp) {
+        return workingMemory.get(timestamp);
+    }
+
+    public int getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(int timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setWorkingMemory(Map<Integer, BaseProfile> workingMemory) {
+        this.workingMemory = workingMemory;
+    }
+
+    public void setLongTermMemory(Map<Integer, BaseProfile> longTermMemory) {
+        this.longTermMemory = longTermMemory;
+    }
+
+    public Map<Integer, BaseProfile> getWorkingMemory() {
+        return workingMemory;
+    }
+
+    public Map<Integer, BaseProfile> getLongTermMemory() {
+        return longTermMemory;
+    }
+
 
     void moveToWM(NamedCollection toMove){}
     void moveToLM(NamedCollection toMove) {}
@@ -35,6 +82,6 @@ public class BPCollection {
      * @param from
      * @param to
      */
-    void shiftBaseProfile(Set<NamedCollection<Names, Object>> from, Set<NamedCollection<Names, Object>> to) {}
+    void shiftBaseProfile(Map<Integer, BaseProfile> from, Map<Integer, BaseProfile>  to) {} //todo
 
 }

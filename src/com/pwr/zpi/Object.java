@@ -27,11 +27,14 @@ public class Object {
         this.type = type;
     }
 
+    @Override
     public boolean equals(Object o) {
         return false; //TODO
     }
 
-    public boolean hasTrait(Trait t){return true;} //todo
+    public boolean hasTrait(Trait t){
+		return false; //todo
+	} 
 
     public Set<Trait> getTraits() {
         return traits;
@@ -43,6 +46,6 @@ public class Object {
 
     @Override
     public int hashCode() {
-        return 0;
+        return super.hashCode();
     }
 }
