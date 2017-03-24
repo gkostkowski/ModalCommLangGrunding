@@ -8,4 +8,12 @@ import java.util.Collection;
 public class NamedCollection<Name, Member> {
     private Name identifier;
     private Collection<Member> collection; //moze byc konkretniej - List zamiast Collection
+
+    public Collection<Member> getCollection() {
+        return collection;
+    }
+
+    public Collection<Member> getMember(Name val) {
+
+    }
 }

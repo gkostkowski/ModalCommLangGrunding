@@ -30,12 +30,14 @@ public class Object {
         this.type = type;
     }
 
-    @Override
+    //@Override
     public boolean equals(Object o) {
         return false; //TODO
     }
 
-    State hasTrait(Trait t){} //todo
+    State hasTrait(Trait t){
+        return null;
+    } //todo
 
     public Set<Trait> getTraits() {
         return traits;
@@ -48,6 +50,6 @@ public class Object {
     @Override
 
     public int hashCode() {
-        return
+        return super.hashCode();
     }
 }
