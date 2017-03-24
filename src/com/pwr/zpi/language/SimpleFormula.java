@@ -4,6 +4,8 @@ import com.pwr.zpi.Object;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 
+import java.util.Collection;
+
 /**
  * SimpleFormula is designed to be used as part of ComplexFormula
  */
@@ -41,5 +43,15 @@ public class SimpleFormula implements Formula {
             result = State.Is;
 
         return result;
+    }
+
+    @Override
+    public Object getAffectedObject() {
+        return object;
+    }
+
+    @Override
+    public Collection<Trait> getAffectedTraits() {
+        return List<Trait>;
     }
 }

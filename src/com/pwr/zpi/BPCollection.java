@@ -15,6 +15,11 @@ import java.util.*;
  */
 public class BPCollection {
 
+    public enum MemoryTypes {
+        WM, LM
+    }
+
+
     /**
      * Map of BaseProfile representing working memory - each for successive moments in time - from beginning till
      * current timestamp set for this BPCollection.
@@ -32,19 +37,58 @@ public class BPCollection {
     /**
      * Returns base profile from long-time memory related with given timestamp.
      * Ratains information about timestamp.
+     *
      * @param timestamp Moment in time.
      * @return Base profile from long time memory related with given timestamp.
      */
-    public Pair<Integer, BaseProfile> getTimedBaseProfile(int timestamp) {
-        return new Pair<>(timestamp, workingMemory.get(timestamp));
+    public Pair<Integer, BaseProfile> getTimedBaseProfile(int timestamp, BPCollection.MemoryTypes memType) {
+        switch (memType) {
+            case WM:
+                return new Pair<>(timestamp, workingMemory.get(timestamp));
+            case LM:
+                return new Pair<>(timestamp, longTermMemory.get(timestamp));
+            default:
+                return null;
+        }
     }
+
     /**
      * Returns base profile from long time memory related with given timestamp.
+     *
      * @param timestamp Moment in time.
+     * @param memType Specifies type of memory.
      * @return Base profile from long time memory related with given timestamp.
      */
-    public BaseProfile getBaseProfile(int timestamp) {
-        return workingMemory.get(timestamp);
+    public BaseProfile getBaseProfile(int timestamp, BPCollection.MemoryTypes memType) {
+        switch (memType) {
+            case WM:
+                return workingMemory.get(timestamp);
+            case LM:
+                return longTermMemory.get(timestamp);
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Returns map of base profiles with are associated with moment in time from range [start, given timestamp].
+     *
+     * @param timestamp
+     * @param memType
+     * @return Map of base profiles.
+     * @throws IllegalStateException
+     */
+    public Map<Integer, BaseProfile> getTimedBaseProfiles(int timestamp, BPCollection.MemoryTypes memType) throws IllegalStateException{
+        if (timestamp <= 0 || timestamp > this.timestamp)
+            throw new IllegalStateException("Incorrect timestamp.");
+        Map<Integer, BaseProfile> res = new HashMap<>(),
+            selectedMem = memType.equals(MemoryTypes.LM) ? longTermMemory : workingMemory;
+
+        for (Map.Entry<Integer, BaseProfile> entry: selectedMem.entrySet()) {
+            if (entry.getKey() <= timestamp)
+                res.put(entry.getKey(), entry.getValue());
+        }
+        return res;
     }
 
     public int getTimestamp() {
@@ -72,16 +116,21 @@ public class BPCollection {
     }
 
 
-    void moveToWM(NamedCollection toMove){}
-    void moveToLM(NamedCollection toMove) {}
+    void moveToWM(NamedCollection toMove) {
+    }
+
+    void moveToLM(NamedCollection toMove) {
+    }
 
     /**
      * Moves Existing Base Profile from one memory region to another.
      * Assumes two possibles scenarios: shifting from working memory to long-term memory or
      * from long-term memory to working memory.
+     *
      * @param from
      * @param to
      */
-    void shiftBaseProfile(Map<Integer, BaseProfile> from, Map<Integer, BaseProfile>  to) {} //todo
+    void shiftBaseProfile(Map<Integer, BaseProfile> from, Map<Integer, BaseProfile> to) {
+    } //todo
 
 }
