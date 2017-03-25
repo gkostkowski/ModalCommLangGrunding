@@ -7,5 +7,15 @@ import java.util.Collection;
  */
 public class NamedCollection<Name, Member> {
     private Name identifier;
-    private Collection<Member> collection; //moze byc konkretniej - List zamiast Collection
+    private List<Member> collection; //moze byc konkretniej - List zamiast Collection
+    public List<Member> getList(){
+        return collection;
+    }
+    public Member getMember(Member desired){
+        for(Member m:collection){
+            if(desired.equals(m))
+            {return m;}
+        }
+        return null;
+    }
 }

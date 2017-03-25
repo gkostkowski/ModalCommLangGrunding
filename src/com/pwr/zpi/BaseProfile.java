@@ -16,4 +16,13 @@ public class BaseProfile extends World {
     boolean isPAdequate(Collection<NamedCollection<Names, Object>> PSwT, Trait examinedTrait) {
         return false;
     }
+
+
+    /**
+     *
+     * @return all described objects
+     */
+    public Collection<NamedCollection<Names, Object>> giveMeWorld(){
+        return describedObjects;
+    }
 }

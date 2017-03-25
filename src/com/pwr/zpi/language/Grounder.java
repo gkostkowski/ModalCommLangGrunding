@@ -16,13 +16,110 @@ public class Grounder {
     public static final double MIN_BEL =
     public static final double MAX_BEL =
 
-    static Set<BaseProfile> getGroundingSetsPositiveTrait(Object o, Trait<> trait){} //todo
-    static Set<BaseProfile> getGroundingSetsNegativeTrait(Object o, Trait<> trait){} //todo
+    /**
+     * Returns every BaseProfile defined by agent from point of time t,and represent expierience
+     * of Object o having trait P
+     * @param o Object observed by agent
+     * @param trait Trait of object
+     * @param time Time taken into consideration when looking for expieriences
+     * @param all Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
+     * @return List of BaseProfiles which contain Positive Traits
+     */
 
-    static int getCardPositive(Set<BaseProfile> groundingSet){} //todo
-    static int getCardNegative(){} //todo
+    static List<BaseProfile> getGroundingSetsPositiveTrait(Object o, @SuppressWarnings("rawtypes") Trait P,int time,Set<BaseProfile> all){
+        List<BaseProfile> baseout = new ArrayList<BaseProfile>();
+        for(BaseProfile bp:all){
+            if(DetermineIfSetHasTrait(o,P,time,bp)){
+                baseout.add(bp);
+            }
+        }
+        return baseout;
+    }
 
-    static double relativeCard(Formula formula, Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time){}
+
+    /**
+     *
+     * @param o obeject observed by agent
+     * @param P Trait of object
+     * @param time  Time taken into consideration when looking for expieriences
+     * @param one BaseProfile in which we seek the object with given trait
+     * @return  true if BaseProfile contains object with given trait,false otherwise
+     */
+    static boolean DetermineIfSetHasTrait(Object o, @SuppressWarnings("rawtypes") Trait P,int time,BaseProfile one){
+        Collection<NamedCollection<Names, Object>> DescribedObjects = one.giveMeWorld();
+        Iterator<NamedCollection<Names, Object>> DOIterator = DescribedObjects.iterator();
+        while(DOIterator.hasNext()){
+            NamedCollection<Names,Object> NamedCol = DOIterator.next();
+            if(NamedCol.getList().contains(o)){
+                if(NamedCol.getMember(o).hasTrait(P)==State.Is){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns every BaseProfile defined by agent from point of time t,and represent expierience
+     * of Object o having trait P
+     * @param o Object observed by agent
+     * @param trait Trait of object
+     * @param time Time taken into consideration when looking for expieriences
+     * @param all Set<BaseProfile> gives us set from which we'll evaluate those which contain Negative Traits
+     * @return List of BaseProfiles which contain Negative Traits
+     */
+    static List<BaseProfile> getGroundingSetsNegativeTrait(Object o,@SuppressWarnings("rawtypes") Trait P,int time,Set<BaseProfile> all){
+        List<BaseProfile> baseout = new ArrayList<BaseProfile>();
+        for(BaseProfile bp:all){
+            if(!DetermineIfSetHasTrait(o,P,time,bp)){
+                baseout.add(bp);
+            }
+        }
+        return baseout;
+    }
+
+    /**
+     *
+     * @param groundingSet  List of Base Profiles which cardinality we desire to know
+     * @param t given time
+     * @return Positive Cardinality of List
+     */
+    static double getCardPositive(List<BaseProfile> groundingSet,int t){
+        return groundingSet.size();
+    }
+    /**
+     *
+     * @param groundingSet  List of Base Profiles which cardinality we desire to know
+     * @param t given time
+     * @return Cardinality of List
+     */
+
+    static double getCardNegative(List<BaseProfile> groundingSet,int t){
+        return groundingSet.size();
+    }
+
+    /**
+     *
+     * @param formula na ciul tu to
+     * @param groundingSetPositive List of Positive BaseProfiles
+     * @param groundingSetNegative  List of Negative BaseProfiles
+     * @param time given time
+     * @return  Cardinality (ratio) of Positive BaseProfiles to all
+     */
+    static double relativePositiveCard(Formula formula, List<BaseProfile> groundingSetPositive, List<BaseProfile> groundingSetNegative, int time){
+        return getCardPositive(groundingSetPositive,time)/(getCardNegative(groundingSetNegative,time)+getCardPositive(groundingSetPositive,time));
+    }
+    /**
+     *
+     * @param formula na ciul tu to
+     * @param groundingSetPositive List of Positive BaseProfiles
+     * @param groundingSetNegative  List of Negative BaseProfiles
+     * @param time given time
+     * @return  Cardinality (ratio) of Negative BaseProfiles to all
+     */
+    static double relativeNegativeCard(Formula formula, List<BaseProfile> groundingSetPositive, List<BaseProfile> groundingSetNegative, int time){
+        return getCardNegative(groundingSetPositive,time)/(getCardNegative(groundingSetNegative,time)+getCardPositive(groundingSetPositive,time));
+    }
 
     /**
      * todo opis zeby nie zapomniec co to robi
