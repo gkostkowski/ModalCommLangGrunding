@@ -205,8 +205,8 @@ public class Grounder {
      * Determines if any of "extended" operators will apply // todo opisac
      * @return
      */
-    static Operations.Type determinePositive(Agent agent, DistributedKnowledge ds, int time) {
+    static Operators.Type determinePositive(Agent agent, DistributedKnowledge ds, int time) {
         agent.
     }
-    static Operations.Type determineNegative(Object o, DistributedKnowledge ds, int time) //todo
+    static Operators.Type determineNegative(Object o, DistributedKnowledge ds, int time) //todo
 }
