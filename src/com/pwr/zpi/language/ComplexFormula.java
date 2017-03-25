@@ -7,10 +7,10 @@ import com.pwr.zpi.State;
  */
 public class ComplexFormula implements Formula {
     SimpleFormula operand1, operand2;
-    Operations operation;
+    Operators operation;
     State isNegated;
 
-    public ComplexFormula(SimpleFormula operand1, SimpleFormula operand2, Operations operation, State isNegated) {
+    public ComplexFormula(SimpleFormula operand1, SimpleFormula operand2, Operators operation, State isNegated) {
         this.operand1 = operand1;
         this.operand2 = operand2;
         this.operation = operation;
