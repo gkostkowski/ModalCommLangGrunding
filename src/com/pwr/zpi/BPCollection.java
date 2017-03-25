@@ -15,6 +15,11 @@ import java.util.*;
  */
 public class BPCollection {
 
+    public Set<Object> getAffectedObjects(int time) {
+        Set<Object> res = new HashSet<>();
+        res.addAll(getTimedBaseProfile(time, MemoryTypes.LM).getValue().)
+    }
+
     public enum MemoryTypes {
         WM, LM
     }
@@ -35,11 +40,11 @@ public class BPCollection {
 
 
     /**
-     * Returns base profile from long-time memory related with given timestamp.
+     * Returns base profile from pointed memory related with given timestamp.
      * Ratains information about timestamp.
      *
      * @param timestamp Moment in time.
-     * @return Base profile from long time memory related with given timestamp.
+     * @return Base profile from pointed memory related with given timestamp.
      */
     public Pair<Integer, BaseProfile> getTimedBaseProfile(int timestamp, BPCollection.MemoryTypes memType) {
         switch (memType) {
@@ -53,11 +58,11 @@ public class BPCollection {
     }
 
     /**
-     * Returns base profile from long time memory related with given timestamp.
+     * Returns base profile from pointed memory related with given timestamp.
      *
      * @param timestamp Moment in time.
      * @param memType Specifies type of memory.
-     * @return Base profile from long time memory related with given timestamp.
+     * @return Base profile from pointed memory related with given timestamp.
      */
     public BaseProfile getBaseProfile(int timestamp, BPCollection.MemoryTypes memType) {
         switch (memType) {
@@ -71,18 +76,43 @@ public class BPCollection {
     }
 
     /**
-     * Returns map of base profiles with are associated with moment in time from range [start, given timestamp].
-     *
+     * Returns set of base profiles which are associated with moment in time from range [start, given timestamp].
+     * @param timestamp
+     * @return Map of base profiles.
+     * @throws IllegalStateException
+     */
+    public Set<BaseProfile> getBaseProfiles(int timestamp) throws IllegalStateException{
+        return new HashSet<BaseProfile>(getTimedBaseProfiles(timestamp).values());
+    }
+
+    /**
+     * Returns map of base profiles which are associated with moment in time from range [start, given timestamp].
+     * It retains information about associated timestamps.
+     * @param timestamp
+     * @return Map of base profiles.
+     * @throws IllegalStateException
+     */
+    public Map<Integer, BaseProfile> getTimedBaseProfiles(int timestamp) throws IllegalStateException{
+        Map<Integer, BaseProfile> res = new HashMap<>();
+        res.putAll(getTimedBaseProfiles(timestamp, MemoryTypes.LM));
+        res.putAll(getTimedBaseProfiles(timestamp, MemoryTypes.WM));
+        return res;
+    }
+
+    /**
+     * Returns map of base profiles which are associated with moment in time from range [start, given timestamp],
+     * differentiated between momory type.
+     * It retains information about associated timestamps.
      * @param timestamp
      * @param memType
-     * @return Map of base profiles.
+     * @return Map of base profiles from requested memory.
      * @throws IllegalStateException
      */
     public Map<Integer, BaseProfile> getTimedBaseProfiles(int timestamp, BPCollection.MemoryTypes memType) throws IllegalStateException{
         if (timestamp <= 0 || timestamp > this.timestamp)
             throw new IllegalStateException("Incorrect timestamp.");
         Map<Integer, BaseProfile> res = new HashMap<>(),
-            selectedMem = memType.equals(MemoryTypes.LM) ? longTermMemory : workingMemory;
+                selectedMem = memType.equals(MemoryTypes.LM) ? longTermMemory : workingMemory;
 
         for (Map.Entry<Integer, BaseProfile> entry: selectedMem.entrySet()) {
             if (entry.getKey() <= timestamp)

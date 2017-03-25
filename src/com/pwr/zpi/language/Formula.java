@@ -11,11 +11,11 @@ import java.util.Collection;
 public interface Formula {
 
     abstract State evaluate();
-    abstract Object getAffectedObject();
+/*    abstract com.pwr.zpi.Object getAffectedObject();
 
-    /**
+    *//**
      * Returns traits affected in formula - only one trait in case of SimpleFormula; two or more in case of ComplexFormula.
      * @return Collections of affected traits.
-     */
-    abstract Collection<Trait> getAffectedTraits();
+     *//*
+    abstract Collection<Trait> getAffectedTraits();*/
 }

@@ -5,6 +5,7 @@ import com.pwr.zpi.Object;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Grzesiek on 2017-03-19.
@@ -36,6 +37,25 @@ public class Grounder {
         return baseout;
     }
 
+    /**
+     * Returns every BaseProfile defined by agent from point of time t,and represent expierience
+     * of Object o having trait P
+     * @param o Object observed by agent
+     * @param P Trait of object
+     * @param time Time taken into consideration when looking for expieriences
+     * @param all Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
+     * @return Set of BaseProfiles which contain Positive Traits
+     */
+
+    static Set<BaseProfile> getGroundingSetsPositiveTraitSet(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all){
+        Set<BaseProfile> baseout = new HashSet<>();
+        for(BaseProfile bp:all){
+            if(DetermineIfSetHasTrait(o,P,time,bp)){
+                baseout.add(bp);
+            }
+        }
+        return baseout;
+    }
 
     /**
      *
@@ -50,7 +70,7 @@ public class Grounder {
         Iterator<NamedCollection<Names, Object>> DOIterator = DescribedObjects.iterator();
         while(DOIterator.hasNext()){
             NamedCollection<Names,Object> NamedCol = DOIterator.next();
-            if(NamedCol.getCollection().contains(o)){
+            if(NamedCol.getList().contains(o)){
                 if(NamedCol.getMember(o).hasTrait(P)==State.Is){
                     return true;
                 }
@@ -68,8 +88,26 @@ public class Grounder {
      * @param all Set<BaseProfile> gives us set from which we'll evaluate those which contain Negative Traits
      * @return List of BaseProfiles which contain Negative Traits
      */
-    static Set<BaseProfile> getGroundingSetsNegativeTrait(Object o,@SuppressWarnings("rawtypes") Trait P,int time,Set<BaseProfile> all){
-        Set<BaseProfile> baseout = new HashSet<BaseProfile>();
+    static List<BaseProfile> getGroundingSetsNegativeTrait(Object o,@SuppressWarnings("rawtypes") Trait P,int time,Set<BaseProfile> all){
+        List<BaseProfile> baseout = new ArrayList<BaseProfile>();
+        for(BaseProfile bp:all){
+            if(!DetermineIfSetHasTrait(o,P,time,bp)){
+                baseout.add(bp);
+            }
+        }
+        return baseout;
+    }
+    /**
+     * Returns every BaseProfile defined by agent from point of time t,and represent expierience
+     * of Object o having trait P
+     * @param o Object observed by agent
+     * @param P Trait of object
+     * @param time Time taken into consideration when looking for expieriences
+     * @param all Set<BaseProfile> gives us set from which we'll evaluate those which contain Negative Traits
+     * @return Set of BaseProfiles which contain Negative Traits
+     */
+    static Set<BaseProfile> getGroundingSetsNegativeTraitSet(Object o,@SuppressWarnings("rawtypes") Trait P,int time,Set<BaseProfile> all){
+        Set<BaseProfile> baseout = new HashSet<>();
         for(BaseProfile bp:all){
             if(!DetermineIfSetHasTrait(o,P,time,bp)){
                 baseout.add(bp);
@@ -147,11 +185,11 @@ public class Grounder {
      * @param time Certain moment in time.
      * @return Distribution of knowledge.
      */
-    DistributedKnowledge distributeKnowledge(Agent agent, Trait trait, Object obj, int time) {
+    static DistributedKnowledge distributeKnowledge(Agent agent, Trait trait, Object obj, int time) {
         return new DistributedKnowledge(agent, trait, obj, time);
     }
-
-    /**
+/*  ==NOT APPLICABLE FOR COMPLEX FORMULA!==
+    *//**
      * Builds distributed knowledge, which will be used to make mental models m^a_1 and m^a_2 associated
      * with given formulas: baseFormula and its opposite - negBaseFormula.
      * @param agent The knowledge subject.
@@ -159,14 +197,16 @@ public class Grounder {
      * @param negBaseFormula Formula which is the base of resulted mental model m^a_2. Opposition of baseFormula.
      * @param time Certain moment in time.
      * @return Distribution of knowledge.
-     */
-    DistributedKnowledge distributeKnowledge(Agent agent, Formula baseFormula, Formula negBaseFormula, int time) {
+     *//*
+    static DistributedKnowledge distributeKnowledge(Agent agent, Formula baseFormula, Formula negBaseFormula, int time) {
         return new DistributedKnowledge(agent, baseFormula, negBaseFormula, time);
     }
     /**
      * Determines if any of "extended" operators will apply // todo opisac
      * @return
      */
-    static Operations.Type determinePositive(Object o, DistributedKnowledge ds, int time) //todo
+    static Operations.Type determinePositive(Agent agent, DistributedKnowledge ds, int time) {
+        agent.
+    }
     static Operations.Type determineNegative(Object o, DistributedKnowledge ds, int time) //todo
 }
