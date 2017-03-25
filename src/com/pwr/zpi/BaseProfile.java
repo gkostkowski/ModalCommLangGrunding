@@ -33,7 +33,7 @@ public class BaseProfile extends World {
         return describedByTraits;
     }
 
-    public void setDescribedByTraits(Map<Trait, Collection<Object>> describedByTraits) {
+    public void setDescribedByTraits(Map<Trait, Set<Object>> describedByTraits) {
         this.describedByTraits = describedByTraits;
     }
 
@@ -41,7 +41,7 @@ public class BaseProfile extends World {
         return notDescribedByTraits;
     }
 
-    public void setNotDescribedByTraits(Map<Trait, Collection<Object>> notDescribedByTraits) {
+    public void setNotDescribedByTraits(Map<Trait, Set<Object>> notDescribedByTraits) {
         this.notDescribedByTraits = notDescribedByTraits;
     }
 
@@ -49,7 +49,7 @@ public class BaseProfile extends World {
         return indefiniteByTraits;
     }
 
-    public void setIndefiniteByTraits(Map<Trait, Collection<Object>> indefiniteByTraits) {
+    public void setIndefiniteByTraits(Map<Trait, Set<Object>> indefiniteByTraits) {
         this.indefiniteByTraits = indefiniteByTraits;
     }
 
@@ -63,9 +63,9 @@ public class BaseProfile extends World {
 
 
 
-    boolean isPAdequate(Collection<NamedCollection<Name, Object>> PSwT, Trait examinedTrait) {
+    /*boolean isPAdequate(Collection<NamedCollection<Name, Object>> PSwT, Trait examinedTrait) {
         return false;
-    }
+    }*/
 
 
 
