@@ -13,21 +13,14 @@ public class NamedCollection<Name, Member> {
         return collection;
     }
 
-    public Collection<Member> getMember(Name val) {
-
-    }
-
-    /*
-    public List<Member> getList(){
-        return collection;
-    }
-    public Member getMember(Member desired){
-        for(Member m:collection){
-            if(desired.equals(m))
-            {return m;}
+    public Member getMember(Member val) {
+        Iterator<Member> it = collection.iterator();
+        while(it.hasNext()){
+            Member m = it.next();
+            if(m.equals(val)){
+                return m;
+            }
         }
         return null;
     }
-     */
-
 }

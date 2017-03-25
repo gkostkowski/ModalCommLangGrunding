@@ -26,8 +26,8 @@ public class Grounder {
      * @return List of BaseProfiles which contain Positive Traits
      */
 
-    static List<BaseProfile> getGroundingSetsPositiveTrait(Object o, @SuppressWarnings("rawtypes") Trait P,int time,Set<BaseProfile> all){
-        List<BaseProfile> baseout = new ArrayList<BaseProfile>();
+    static Set<BaseProfile> getGroundingSetsPositiveTrait(Object o, @SuppressWarnings("rawtypes") Trait P,int time,Set<BaseProfile> all){
+        Set<BaseProfile> baseout = new HashSet<BaseProfile>();
         for(BaseProfile bp:all){
             if(DetermineIfSetHasTrait(o,P,time,bp)){
                 baseout.add(bp);
@@ -50,7 +50,7 @@ public class Grounder {
         Iterator<NamedCollection<Names, Object>> DOIterator = DescribedObjects.iterator();
         while(DOIterator.hasNext()){
             NamedCollection<Names,Object> NamedCol = DOIterator.next();
-            if(NamedCol.getList().contains(o)){
+            if(NamedCol.getCollection().contains(o)){
                 if(NamedCol.getMember(o).hasTrait(P)==State.Is){
                     return true;
                 }
@@ -68,8 +68,8 @@ public class Grounder {
      * @param all Set<BaseProfile> gives us set from which we'll evaluate those which contain Negative Traits
      * @return List of BaseProfiles which contain Negative Traits
      */
-    static List<BaseProfile> getGroundingSetsNegativeTrait(Object o,@SuppressWarnings("rawtypes") Trait P,int time,Set<BaseProfile> all){
-        List<BaseProfile> baseout = new ArrayList<BaseProfile>();
+    static Set<BaseProfile> getGroundingSetsNegativeTrait(Object o,@SuppressWarnings("rawtypes") Trait P,int time,Set<BaseProfile> all){
+        Set<BaseProfile> baseout = new HashSet<BaseProfile>();
         for(BaseProfile bp:all){
             if(!DetermineIfSetHasTrait(o,P,time,bp)){
                 baseout.add(bp);
