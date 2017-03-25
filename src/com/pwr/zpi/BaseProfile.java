@@ -4,9 +4,7 @@ package com.pwr.zpi;
  * Created by Grzesiek on 2017-03-16.
  */
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents state of world from agent perspective. It's established for certain moment in time.
@@ -72,5 +70,40 @@ public class BaseProfile extends World {
 
     public Set<Object> getObjects(){
         return objects;
+    }
+
+    /**
+     * Returns set of all objects included in given base profiles. Used when as an example merging base profiles
+     * from working memory and long-term memory.
+     * @param baseProfiles Set of base profiles.
+     * @return Set of objects.
+     */
+    public static Set<Object> getObjects(Set<BaseProfile> baseProfiles) {
+        Set<Object> res = new HashSet<>();
+        for (BaseProfile bp :baseProfiles)
+            res.addAll(bp.getObjects());
+        return res;
+    }
+    /**
+     * Returns set of all objects included in given base profiles. Used when as an example merging base profiles
+     * from working memory and long-term memory.
+     * @param baseProfiles Array of base profiles.
+     * @return Set of objects.
+     */
+    public static Set<Object> getObjects(BaseProfile ... baseProfiles) {
+        return getObjects(new HashSet<BaseProfile>(Arrays.asList(baseProfiles)));
+    }
+
+    /**
+     * Returns set of objects indicated with given trait.
+     * @param trait
+     * @return Set of objects.
+     */
+    public Set<Object> getDescribedByTrait(Trait trait) {
+        return describedByTraits.get(trait);
+    }
+
+    public Set<Object> getNotDescribedByTrait(Trait trait) {
+        return notDescribedByTraits.get(trait);
     }
 }

@@ -15,6 +15,6 @@ public class World {
      * @param
      * @return
      */
-    protected NamedCollection<Name, Collection<NamedCollection<Name, Object>>> describedObjects;
+//    protected NamedCollection<Name, Collection<NamedCollection<Name, Object>>> describedObjects;
     //Zrób to na parach.
 }

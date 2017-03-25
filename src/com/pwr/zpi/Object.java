@@ -1,6 +1,8 @@
 package com.pwr.zpi;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -47,5 +49,18 @@ public class Object {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+
+    /**
+     * Simply gives set of all objects included in given list of sets.
+     * @param sets Array of sets of objects.
+     * @return Set of objects.
+     */
+    public static Set<Object> getObjects(Set<Object> ... sets) {
+        Set<Object> res = new HashSet<>();
+        for (Set<Object> set :sets)
+            res.addAll(set);
+        return res;
     }
 }

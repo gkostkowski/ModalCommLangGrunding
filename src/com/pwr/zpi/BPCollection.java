@@ -141,10 +141,10 @@ public class BPCollection {
     }
 
 
-    void moveToWM(NamedCollection toMove) {
+    void moveToWM(Map.Entry<Integer, BaseProfile> toMove) {
     }
 
-    void moveToLM(NamedCollection toMove) {
+    void moveToLM(Map.Entry<Integer, BaseProfile> toMove) {
     }
 
     /**

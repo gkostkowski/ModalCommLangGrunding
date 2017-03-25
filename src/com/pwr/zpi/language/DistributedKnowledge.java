@@ -32,6 +32,15 @@ public class DistributedKnowledge {
      * given trait.
      */
     private Set<BaseProfile> TA2;
+    /**
+     * Grounding set related with m^a_1 mental model.
+     */
+    private Set<BaseProfile> A1;
+    /**
+     * Grounding set related with m^a_2 mental model.
+     */
+    private Set<BaseProfile> A2;
+
     private int timestamp;
     private final Object obj;
     private final Trait trait;
@@ -44,9 +53,9 @@ public class DistributedKnowledge {
 
         Map<Integer, BaseProfile> inLM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryTypes.LM);
         Map<Integer, BaseProfile> inWM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryTypes.WM);
-        Set<BaseProfile> A1 =  Grounder
+        A1 =  Grounder
                 .getGroundingSetsPositiveTraitSet(obj, trait, time, agent.getKnowledgeBase().getBaseProfiles(time));
-        Set<BaseProfile> A2 =  Grounder
+        A2 =  Grounder
                 .getGroundingSetsNegativeTraitSet(obj, trait, time, agent.getKnowledgeBase().getBaseProfiles(time));
         RA1 = new HashSet<>(inWM.values());
         RA1.retainAll(A1);
@@ -99,5 +108,12 @@ public class DistributedKnowledge {
 
     public Trait getTrait() {
         return trait;
+    }
+    public Set<BaseProfile> getA1() {
+        return A1;
+    }
+
+    public Set<BaseProfile> getA2() {
+        return A2;
     }
 }
