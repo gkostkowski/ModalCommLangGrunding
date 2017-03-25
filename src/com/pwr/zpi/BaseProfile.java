@@ -6,6 +6,7 @@ package com.pwr.zpi;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents state of world from agent perspective. It's established for certain moment in time.
@@ -15,20 +16,20 @@ public class BaseProfile extends World {
      * Map of traits and related collections of objects. If some collection is related with certain trait, then
      * it mean that all objects in that collections have this trait.
      */
-    protected Map<Trait, Collection<Object>> describedByTraits;
+    protected Map<Trait, Set<Object>> describedByTraits;  //set
     /**
      * Map of traits and related collections of objects. If some collection is related with certain trait, then
      * it mean that all objects in that collections DON'T HAVE this trait.
      */
-    protected Map<Trait, Collection<Object>> notDescribedByTraits;
+    protected Map<Trait, Set<Object>> notDescribedByTraits;
     /**
      * Map of traits and related collections of objects. If some collection is related with certain trait, then
      * it mean that state of having this trait by all objects is unknown.
      */
-    protected Map<Trait, Collection<Object>> indefiniteByTraits;
+    protected Map<Trait, Set<Object>> indefiniteByTraits;
     protected int timestamp;
 
-    public Map<Trait, Collection<Object>> getDescribedByTraits() {
+    public Map<Trait, Set<Object>> getDescribedByTraits() {
         return describedByTraits;
     }
 
@@ -36,7 +37,7 @@ public class BaseProfile extends World {
         this.describedByTraits = describedByTraits;
     }
 
-    public Map<Trait, Collection<Object>> getNotDescribedByTraits() {
+    public Map<Trait, Set<Object>> getNotDescribedByTraits() {
         return notDescribedByTraits;
     }
 
@@ -44,7 +45,7 @@ public class BaseProfile extends World {
         this.notDescribedByTraits = notDescribedByTraits;
     }
 
-    public Map<Trait, Collection<Object>> getIndefiniteByTraits() {
+    public Map<Trait, Set<Object>> getIndefiniteByTraits() {
         return indefiniteByTraits;
     }
 
@@ -68,11 +69,8 @@ public class BaseProfile extends World {
 
 
 
-    /**
-     *
-     * @return all described objects
-     */
-    public Collection<NamedCollection<Names, Object>> giveMeWorld(){
-        return describedObjects;
+
+    public Set<Object> getObjects(){
+        return objects;
     }
 }

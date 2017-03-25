@@ -15,11 +15,6 @@ import java.util.*;
  */
 public class BPCollection {
 
-    public Set<Object> getAffectedObjects(int time) {
-        Set<Object> res = new HashSet<>();
-        res.addAll(getTimedBaseProfile(time, MemoryTypes.LM).getValue().)
-    }
-
     public enum MemoryTypes {
         WM, LM
     }
@@ -162,5 +157,10 @@ public class BPCollection {
      */
     void shiftBaseProfile(Map<Integer, BaseProfile> from, Map<Integer, BaseProfile> to) {
     } //todo
+
+    /*public Set<Object> getAffectedObjects(int time) {
+        Set<Object> res = new HashSet<>();
+        res.addAll(getTimedBaseProfile(time, MemoryTypes.LM).getValue().)
+    }*/
 
 }
