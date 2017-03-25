@@ -4,9 +4,6 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * Created by Grzesiek on 2017-03-16.
- */
-/**
  * Describes Objects included in World, which have traits assumed as objective, consistent with real world.
  */
 public class Object {
@@ -35,7 +32,9 @@ public class Object {
         return false; //TODO
     }
 
-    State hasTrait(Trait t){} //todo
+    public boolean hasTrait(Trait t){
+		return false; //todo
+	} 
 
     public Set<Trait> getTraits() {
         return traits;
@@ -46,8 +45,7 @@ public class Object {
     }
 
     @Override
-
     public int hashCode() {
-        return
+        return super.hashCode();
     }
 }

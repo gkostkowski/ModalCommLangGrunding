@@ -7,7 +7,17 @@ import java.util.Collection;
  */
 public class NamedCollection<Name, Member> {
     private Name identifier;
-    private List<Member> collection; //moze byc konkretniej - List zamiast Collection
+    private Collection<Member> collection; //moze byc konkretniej - List zamiast Collection
+
+    public Collection<Member> getCollection() {
+        return collection;
+    }
+
+    public Collection<Member> getMember(Name val) {
+
+    }
+
+    /*
     public List<Member> getList(){
         return collection;
     }
@@ -18,4 +28,6 @@ public class NamedCollection<Name, Member> {
         }
         return null;
     }
+     */
+
 }
