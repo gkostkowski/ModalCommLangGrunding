@@ -27,30 +27,37 @@ public class SimpleFormula implements Formula {
 
     /**
      * Used to determine whether given object has given trait
-     * by returning its State - trait Is or Is_Not occurring in object
+     * by returning its State - trait Is or Is_Not occurring in object.
      *
-     * @param  isNegated    used to return opposite result
-     * @param  trait        trait that we look for in object
-     * @param  object       being that is defined by set of traits
-     * @return              State of trait's occurrence in object (Is, Is_Not)
+     * @return State of trait's occurrence in object (Is, Is_Not).
      */
     public State evaluate() {
-        State result = object.hasTrait(trait) ? State.Is : State.Is_Not;
+//        State result = object.hasTrait(trait) ? State.Is : State.Is_Not;
+//
+//        if(isNegated && result == State.Is)  // when isNegated is true reverse result
+//            result = State.Is_Not;
+//        else
+//            result = State.Is;
+//
+//        return result;
 
-        if(isNegated && result == State.Is)  // when isNegated is true reverse result
-            result = State.Is_Not;
-        else
-            result = State.Is;
+        State result = object.hasTrait(trait);
+
+        if(isNegated)  // when isNegated is true reverse result
+            switch (result) {
+                case Is:
+                    return State.Is_Not;
+                case Is_Not:
+                    return State.Is;
+            }
 
         return result;
     }
 
-    @Override
     public Object getAffectedObject() {
         return object;
     }
 
-    @Override
     public Collection<Trait> getAffectedTraits() {
         return List<Trait>;
     }

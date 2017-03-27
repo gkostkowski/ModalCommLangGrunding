@@ -29,15 +29,6 @@ public class Object {
         this.type = type;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        return false; //TODO
-    }
-
-    public boolean hasTrait(Trait t){
-		return false; //todo
-	} 
-
     public Set<Trait> getTraits() {
         return traits;
     }
@@ -46,16 +37,60 @@ public class Object {
         this.traits = traits;
     }
 
+    /**
+     * Checks whether two objects are equal.
+     * Equal when - same types, same traits with same states.
+     *
+     * @param other Other object.
+     * @return      true/false
+     */
+    public boolean equals(Object other) {
+        boolean contains = false;
+
+        // ???????????????????????????????????
+        if(type.equals(other.getType()))
+            return false;
+
+        if(traits.size() != other.getTraits().size())
+            return false;
+
+        for (Trait t1 : traits) {
+            for (Trait t2 : other.getTraits()) {
+                if(t1.equals(t2)){
+                    contains = true;
+                    break;
+                }
+            }
+            if(!contains)
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * Checks if object has given trait and return it's state.
+     *
+     * @param trait Given trait.
+     * @return      State of trait or null when object does'nt has trait.
+     */
+    public State hasTrait(Trait trait) {
+        for (Trait t : traits) {
+            if (t.getName() == trait.getName())
+                return t.stateOfTrait();
+        }
+        return null;
+    }
+
     @Override
     public int hashCode() {
         return super.hashCode();
     }
 
-
     /**
      * Simply gives set of all objects included in given list of sets.
-     * @param sets Array of sets of objects.
-     * @return Set of objects.
+     *
+     * @param sets  Array of sets of objects.
+     * @return      Set of objects.
      */
     public static Set<Object> getObjects(Set<Object> ... sets) {
         Set<Object> res = new HashSet<>();
