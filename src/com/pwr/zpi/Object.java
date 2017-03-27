@@ -1,12 +1,11 @@
 package com.pwr.zpi;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Describes Objects included in World, which have traits assumed as objective, consistent with real world.
+ * Describes object with it's type and set of traits.
+ * Represents objects placed in real world and witnessed by agent.
  */
 public class Object {
     protected int identifier;
@@ -47,7 +46,6 @@ public class Object {
     public boolean equals(Object other) {
         boolean contains = false;
 
-        // ???????????????????????????????????
         if(type.equals(other.getType()))
             return false;
 

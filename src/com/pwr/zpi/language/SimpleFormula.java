@@ -4,10 +4,8 @@ import com.pwr.zpi.Object;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 
-import java.util.Collection;
-
 /**
- * SimpleFormula is designed to be used as part of ComplexFormula
+ * SimpleFormula is designed to be used as part of ComplexFormula.
  */
 public class SimpleFormula implements Formula {
 
@@ -32,15 +30,6 @@ public class SimpleFormula implements Formula {
      * @return State of trait's occurrence in object (Is, Is_Not).
      */
     public State evaluate() {
-//        State result = object.hasTrait(trait) ? State.Is : State.Is_Not;
-//
-//        if(isNegated && result == State.Is)  // when isNegated is true reverse result
-//            result = State.Is_Not;
-//        else
-//            result = State.Is;
-//
-//        return result;
-
         State result = object.hasTrait(trait);
 
         if(isNegated)  // when isNegated is true reverse result
@@ -54,11 +43,4 @@ public class SimpleFormula implements Formula {
         return result;
     }
 
-    public Object getAffectedObject() {
-        return object;
-    }
-
-    public Collection<Trait> getAffectedTraits() {
-        return List<Trait>;
-    }
 }

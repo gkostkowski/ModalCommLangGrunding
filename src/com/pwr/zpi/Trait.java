@@ -4,6 +4,9 @@ package com.pwr.zpi;
  * Trait - pair of name and value. Defines object's characteristics.
  */
 public class Trait <K, V> {
+    public static final int UPPER_BOUND = 70;
+    public static final int LOWER_BOUND = 30;
+
     private K name;
     private V value;
 
@@ -29,7 +32,7 @@ public class Trait <K, V> {
      * @return true/false
      */
     public boolean equals(Trait other){
-        return this.name == other.getName() && this.stateOfTrait() == other.stateOfTrait();
+        return name == other.getName() && stateOfTrait() == other.stateOfTrait();
     }
 
     /**
@@ -39,13 +42,13 @@ public class Trait <K, V> {
      */
     public State stateOfTrait() {
         int val = (int)this.value;
-        if(val > 70) {
+        if(val > UPPER_BOUND) {
             return State.Is;
         }
         else {
-            if (val < 30)
+            if (val < LOWER_BOUND)
                 return State.Is_Not;
-            else    // <30,70>
+            else    // <LOWER_BOUND,UPPER_BOUND>
                 return State.Mayhaps;
         }
     }

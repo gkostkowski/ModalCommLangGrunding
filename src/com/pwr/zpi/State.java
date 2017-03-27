@@ -1,9 +1,7 @@
 package com.pwr.zpi;
 
 /**
- * Created by Grzesiek on 2017-03-19.
- * Describes State of object ,determines whether object Is,Is not ,or might be.
- *
+ * Describes state of trait in object - determines whether trait is, is not or might be in object.
  */
 public enum State {
 
