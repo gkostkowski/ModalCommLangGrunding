@@ -14,7 +14,7 @@ public class BaseProfile extends World {
      * Map of traits and related collections of objects. If some collection is related with certain trait, then
      * it mean that all objects in that collections have this trait.
      */
-    protected Map<Trait, Set<Object>> describedByTraits;  //set
+    protected static Map<Trait, Set<Object>> describedByTraits;  //set
     /**
      * Map of traits and related collections of objects. If some collection is related with certain trait, then
      * it mean that all objects in that collections DON'T HAVE this trait.
@@ -106,4 +106,13 @@ public class BaseProfile extends World {
     public Set<Object> getNotDescribedByTrait(Trait trait) {
         return notDescribedByTraits.get(trait);
     }
+
+    public boolean DetermineIfSetHasTrait(Object o, @SuppressWarnings("rawtypes") Trait P,int time){
+        Map<Trait, Set<Object>> DescribedObjects = describedByTraits;
+        if(DescribedObjects.containsKey(P)){
+            return true;
+        }
+        else{return false;}
+    }
+
 }
