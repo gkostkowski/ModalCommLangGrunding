@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * Created by Grzesiek on 2017-03-19.
  */
-public interface Formula {
+public abstract class Formula {
 
     abstract State evaluate();
 /*    abstract com.pwr.zpi.Object getAffectedObject();

@@ -7,7 +7,7 @@ import com.pwr.zpi.Trait;
 /**
  * SimpleFormula is designed to be used as part of ComplexFormula.
  */
-public class SimpleFormula implements Formula {
+public class SimpleFormula extends Formula {
 
     Object object;
     Trait trait;

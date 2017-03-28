@@ -8,7 +8,7 @@ import com.pwr.zpi.State;
 public class Operators {
 
     enum Type {
-        AND, OR, XOR,
+        AND, OR, XOR, NOT,
         POS, BEL, KNOW
     }
 
