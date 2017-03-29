@@ -1,7 +1,10 @@
 package com.pwr.zpi.language;
+import com.pwr.zpi.State;
+import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
+
 import java.util.Collection;
 import java.util.Stack;
-import com.pwr.zpi.exception.InvalidSentenceFormulaException;
+
 
 /**
  * Class representing parts of complex formula in a binary tree

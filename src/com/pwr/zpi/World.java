@@ -4,9 +4,17 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * Created by Grzesiek on 2017-03-16.
+ *
  */
 public class World {
+    public Set<Object> getObjects() {
+        return objects;
+    }
+
+    public void setObjects(Set<Object> objects) {
+        this.objects = objects;
+    }
+
     //protected int time=0;
     protected Set<Object> objects;
     /**

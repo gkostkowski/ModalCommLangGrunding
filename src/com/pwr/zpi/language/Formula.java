@@ -6,7 +6,7 @@ import com.pwr.zpi.Trait;
 import java.util.Collection;
 
 /**
- * Created by Grzesiek on 2017-03-19.
+ *
  */
 public abstract class Formula {
 

@@ -3,7 +3,7 @@ package com.pwr.zpi;
 import java.util.Set;
 
 /**
- * Created by Grzesiek on 2017-03-16.
+ *
  */
 
 /**

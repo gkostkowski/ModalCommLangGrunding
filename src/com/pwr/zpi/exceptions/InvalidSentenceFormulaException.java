@@ -1,3 +1,5 @@
+package com.pwr.zpi.exceptions;
+
 /**
  * Created by Weronika on 27.03.2017.
  */

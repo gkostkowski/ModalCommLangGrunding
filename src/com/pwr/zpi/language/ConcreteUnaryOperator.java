@@ -1,7 +1,7 @@
 package com.pwr.zpi.language;
 
 /**
- * Created by Grzesiek on 2017-03-19.
+ *
  */
 
 /**

@@ -1,15 +1,17 @@
 package com.pwr.zpi.language;
 
 import com.pwr.zpi.State;
-import com.pwr.zpi.exception.InvalidSentenceFormulaException;
+import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
+
+import java.util.Stack;
 
 /**
- * Created by Grzesiek on 2017-03-19.
+ *
  */
 public class ComplexFormula extends Formula {
 
     /**
-     * It is a refernce to the root of the complex formula
+     * It is a reference to the root of the complex formula
      */
     private SubFormula subFormula;
 

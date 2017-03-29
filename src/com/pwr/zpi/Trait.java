@@ -52,4 +52,9 @@ public class Trait <K, V> {
                 return State.Mayhaps;
         }
     }
+
+    public void copy(Trait<K, V> other) {
+        setName(other.getName());
+        setValue(other.getValue());
+    }
 }

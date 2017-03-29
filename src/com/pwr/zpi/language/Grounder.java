@@ -8,14 +8,14 @@ import java.util.Set;
 import java.util.*;
 
 /**
- * Created by Grzesiek on 2017-03-19.
+ *
  */
 public class Grounder {
 
-    public static final double MIN_POS =
-    public static final double MAX_POS =
-    public static final double MIN_BEL =
-    public static final double MAX_BEL =
+    public static final double MIN_POS = 0.1;  //todo set proper values
+    public static final double MAX_POS = 0.6;
+    public static final double MIN_BEL = 0.61;
+    public static final double MAX_BEL = 0.99;
     private static final double KNOW = 1.0;
 
     /**
@@ -30,10 +30,10 @@ public class Grounder {
      * @return List of BaseProfiles which contain Positive Traits
      */
 
-    static Set<BaseProfile> getGroundingSetsPositiveTrait(Object o, @SuppressWarnings("rawtypes") Trait P,int time,Set<BaseProfile> all){
+    static Set<BaseProfile> getGroundingSetsPositiveTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
-        for(BaseProfile bp:all){
-            if(bp.DetermineIfSetHasTrait(o, P, time)){
+        for (BaseProfile bp : all) {
+            if (bp.DetermineIfSetHasTrait(o, P, time)) {
                 baseout.add(bp);
             }
         }
@@ -52,10 +52,10 @@ public class Grounder {
      * @return Set of BaseProfiles which contain Positive Traits
      */
 
-    static Set<BaseProfile> getGroundingSetsNegativeTrait(Object o,@SuppressWarnings("rawtypes") Trait P,int time,Set<BaseProfile> all){
+    static Set<BaseProfile> getGroundingSetsNegativeTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
-        for(BaseProfile bp:all){
-            if(!bp.DetermineIfSetHasTrait(o, P, time)){
+        for (BaseProfile bp : all) {
+            if (!bp.DetermineIfSetHasTrait(o, P, time)) {
                 baseout.add(bp);
             }
         }
@@ -64,6 +64,7 @@ public class Grounder {
 
     /**
      * Inductive cardinality GAi grounding set A1
+     *
      * @param groundingSet set of Base Profiles which cardinality we desire to know
      * @param t            given time
      * @return Positive Cardinality of Set
@@ -74,6 +75,7 @@ public class Grounder {
 
     /**
      * Inductive cardinality GAi grounding set A2
+     *
      * @param groundingSet set of Base Profiles which cardinality we desire to know
      * @param t            given time
      * @return Cardinality of Set
@@ -85,6 +87,7 @@ public class Grounder {
 
     /**
      * Value of relative power of grounding lambda for base form p(o)
+     *
      * @param groundingSetPositive Set of Positive BaseProfiles
      * @param groundingSetNegative Set of Negative BaseProfiles
      * @param time                 given time
@@ -95,7 +98,8 @@ public class Grounder {
     }
 
     /**
-     *Value of relative power of grounding lambda for base form not p(o)
+     * Value of relative power of grounding lambda for base form not p(o)
+     *
      * @param groundingSetPositive Set of Positive BaseProfiles
      * @param groundingSetNegative Set of Negative BaseProfiles
      * @param time                 Given time
@@ -104,25 +108,6 @@ public class Grounder {
     static double relativeNegativeCard(Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
         return getCardNegative(groundingSetPositive, time) / (getCardNegative(groundingSetNegative, time) + getCardPositive(groundingSetPositive, time));
     }
-
-    /**
-     * todo opis zeby nie zapomniec co to robi
-     *
-     * @param workingMemory
-     * @param time
-     * @return
-     */
-    static Set<NamedCollection<Name, Object>> positiveInWM(Collection<BaseProfile> workingMemory, int time) {
-
-    }
-
-    static Set<NamedCollection<Name, Object>> negativeInWM(Collection<BaseProfile> workingMemory, int time)
-
-    static Set<NamedCollection<Name, Object>> positiveInLM(Collection<BaseProfile> longTimeMemory, int time)
-
-    static Set<NamedCollection<Name, Object>> negativeInLM(Collection<BaseProfile> longTimeMemory, int time)
-
-    //todo sprawdzic 3.9 i 3.10 zachodzi (s. 64)
 
     /**
      * Builds distributed knowledge, which will be used to make mental models m^a_1 and m^a_2 associated
@@ -169,36 +154,19 @@ public class Grounder {
      */
     static Operators.Type determinePositive(Agent agent, DistributedKnowledge dk) {
         int timestamp = dk.getTimestamp();
-        BaseProfile lmBp = agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryTypes.LM);
-        BaseProfile wmBp = agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryTypes.LM);
-        Set<Object> objects = BaseProfile.getObjects(lmBp, wmBp);
-        Object describedObj = dk.getObj();
-        Trait describedTrait = dk.getTrait();
+        BaseProfile lmBp = new BaseProfile();
+        BaseProfile wmBp = new BaseProfile();
+        Set<Object> objects = new HashSet<>();
+        Object describedObj = new Object();
+        Trait describedTrait = new Trait();
+        Set<Object> objsWithClearState = new HashSet<>();
+        Set<Object> objsWithPositiveState = new HashSet<>();
+        Set<Object> indefiniteByTrait = new HashSet<>();
 
-        Set<Object> objsWithPositiveState = Object.getObjects(
-                lmBp.getDescribedByTrait(describedTrait),
-                wmBp.getDescribedByTrait(describedTrait));
-        Set<Object> objsWithClearState = Object.getObjects(
-                objsWithPositiveState,
-                lmBp.getNotDescribedByTrait(describedTrait),
-                wmBp.getNotDescribedByTrait(describedTrait));
-        Set<Object> indefiniteByTrait = new HashSet<>(objects);
-        indefiniteByTrait.removeAll(objsWithClearState);
-        if (indefiniteByTrait.contains(describedObj) && !dk.getRA1().isEmpty()) {
-            double currRelCard = relativePositiveCard(dk.getA1(), dk.getA2(), timestamp);
-            if (currRelCard >= MIN_POS && currRelCard < MAX_POS)
-                return Operators.Type.POS;
-            if (currRelCard >= MIN_BEL && currRelCard < MAX_BEL)
-                return Operators.Type.POS;
-            if (currRelCard == KNOW)
-                return Operators.Type.POS;
-        } else if (objsWithPositiveState.contains(describedObj)) {
-            return Operators.Type.POS;
-        } else {
-            /*can use AND, OR, XOR*/
+        setCommonObjects(timestamp, agent, dk, lmBp, wmBp, objects, describedObj, describedTrait, objsWithClearState,
+                objsWithPositiveState, indefiniteByTrait, false);
 
-        }
-        return null;
+        return checkEpistemicalConditions(indefiniteByTrait, describedObj, dk, timestamp, objsWithPositiveState, false);
     }
 
     /**
@@ -217,30 +185,61 @@ public class Grounder {
      */
     static Operators.Type determineNegative(Agent agent, DistributedKnowledge dk) {
         int timestamp = dk.getTimestamp();
-        BaseProfile lmBp = agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryTypes.LM);
-        BaseProfile wmBp = agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryTypes.LM);
-        Set<Object> objects = BaseProfile.getObjects(lmBp, wmBp);
-        Object describedObj = dk.getObj();
-        Trait describedTrait = dk.getTrait();
+        BaseProfile lmBp = new BaseProfile();
+        BaseProfile wmBp = new BaseProfile();
+        Set<Object> objects = new HashSet<>();
+        Object describedObj = new Object();
+        Trait describedTrait = new Trait();
+        Set<Object> objsWithClearState = new HashSet<>();
+        Set<Object> objsWithNegativeState = new HashSet<>();
+        Set<Object> indefiniteByTrait = new HashSet<>();
 
-        Set<Object> objsWithNegativeState = Object.getObjects(
+        setCommonObjects(timestamp, agent, dk, lmBp, wmBp, objects, describedObj, describedTrait, objsWithClearState, objsWithNegativeState, indefiniteByTrait, true);
+
+        return checkEpistemicalConditions(indefiniteByTrait, describedObj, dk, timestamp, objsWithNegativeState, true);
+    }
+
+    private static void setCommonObjects(int timestamp, Agent agent, DistributedKnowledge dk, BaseProfile lmBp, BaseProfile wmBp,
+                                         Set<Object> objects, Object describedObj, Trait describedTrait,
+                                         Set<Object> objsWithClearState, Set<Object> objsWithSelectedState, Set<Object> indefiniteByTrait, boolean isNegated) {
+        lmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryTypes.LM));
+        wmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryTypes.LM));
+        objects.addAll(BaseProfile.getObjects(lmBp, wmBp));
+        describedObj.copy(dk.getObj());
+        describedTrait.copy(dk.getTrait());
+
+        objsWithClearState.addAll(Object.getObjects(
                 lmBp.getNotDescribedByTrait(describedTrait),
-                wmBp.getNotDescribedByTrait(describedTrait));
-        Set<Object> objsWithClearState = Object.getObjects(
-                objsWithNegativeState,
+                wmBp.getNotDescribedByTrait(describedTrait),
                 lmBp.getDescribedByTrait(describedTrait),
-                wmBp.getDescribedByTrait(describedTrait));
-        Set<Object> indefiniteByTrait = new HashSet<>(objects);
+                wmBp.getDescribedByTrait(describedTrait)));
+        if (isNegated) {
+            objsWithSelectedState.addAll(Object.getObjects(
+                    lmBp.getNotDescribedByTrait(describedTrait),
+                    wmBp.getNotDescribedByTrait(describedTrait)));
+        } else {
+
+            objsWithSelectedState.addAll(Object.getObjects(
+                    lmBp.getDescribedByTrait(describedTrait),
+                    wmBp.getDescribedByTrait(describedTrait)));
+        }
+        indefiniteByTrait.addAll(objects);
         indefiniteByTrait.removeAll(objsWithClearState);
-        if (indefiniteByTrait.contains(describedObj) && !dk.getRA2().isEmpty()) {
-            double currRelCard = relativeNegativeCard(dk.getA1(), dk.getA2(), timestamp);
+    }
+
+    private static Operators.Type checkEpistemicalConditions(Set<Object> indefiniteByTrait, Object describedObj, DistributedKnowledge dk,
+                                                             int timestamp, Set<Object> objsWithSelectedState, boolean isNegated) {
+        Set<BaseProfile> PBfromWM = isNegated ? dk.getRA2() : dk.getRA1();
+        if (indefiniteByTrait.contains(describedObj) && !PBfromWM.isEmpty()) {
+            double currRelCard = isNegated ? relativeNegativeCard(dk.getA1(), dk.getA2(), timestamp)
+                    : relativePositiveCard(dk.getA1(), dk.getA2(), timestamp);
             if (currRelCard >= MIN_POS && currRelCard < MAX_POS)
                 return Operators.Type.POS;
             if (currRelCard >= MIN_BEL && currRelCard < MAX_BEL)
                 return Operators.Type.POS;
             if (currRelCard == KNOW)
                 return Operators.Type.POS;
-        } else if (objsWithNegativeState.contains(describedObj)) {
+        } else if (objsWithSelectedState.contains(describedObj)) {
             return Operators.Type.POS;
         } else {
             /*can use AND, OR, XOR*/
@@ -248,4 +247,5 @@ public class Grounder {
         }
         return null;
     }
+
 }

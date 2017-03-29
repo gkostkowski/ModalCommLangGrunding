@@ -16,7 +16,7 @@ public class Operators {
      *
      * @param op1 evaluated State of first SimpleFormula or part of a ComplexFormula
      * @param op2 evaluated State of second SimpleFormula or part of a ComplexFormula
-     * @return State which is a logical value of op1 ∨ op2
+     * @return State which is a logical value of op1 OR op2
      */
     public static State XorY(State op1, State op2){
         return op1.or(op2);
@@ -26,7 +26,7 @@ public class Operators {
      *
      * @param op1 evaluated State of first SimpleFormula or part of a ComplexFormula
      * @param op2 evaluated State of second SimpleFormula or part of a ComplexFormula
-     * @return State which is a logical value of op1 ∧ op2
+     * @return State which is a logical value of op1 AND op2
      */
     public static State XandY(State op1, State op2){
         return op1.and(op2);
@@ -38,7 +38,7 @@ public class Operators {
      * equals Mayhaps
      * @param op1 evaluated State of first SimpleFormula or part of a ComplexFormula
      * @param op2 evaluated State of second SimpleFormula or part of a ComplexFormula
-     * @return State which is a logical value of op1 ⊻ op2
+     * @return State which is a logical value of op1 XOR op2
      */
     public static State XxorY(State op1, State op2){
         State state = State.Is;
@@ -52,7 +52,7 @@ public class Operators {
      *
      * @param op1 SimpleFormula, first part of sentence
      * @param op2 SimpleFormula, second part of sentence
-     * @return State which is a logical value of op1 ∨ op2
+     * @return State which is a logical value of op1 OR op2
      */
     public static State XorY(SimpleFormula op1, SimpleFormula op2){
         return XorY(op1.evaluate(), op2.evaluate());
@@ -62,7 +62,7 @@ public class Operators {
      *
      * @param op1 SimpleFormula, first part of sentence
      * @param op2 SimpleFormula, second part of sentence
-     * @return State which is a logical value of op1 ∧ op2
+     * @return State which is a logical value of op1 AND op2
      */
     public static State XandY(SimpleFormula op1, SimpleFormula op2){
         return XandY(op1.evaluate(), op2.evaluate());
@@ -74,7 +74,7 @@ public class Operators {
      * equals Mayhaps
      * @param op1 SimpleFormula, first part of sentence
      * @param op2 SimpleFormula, second part of sentence
-     * @return State which is a logical value of op1 ⊻ op2
+     * @return State which is a logical value of op1 XOR op2
      */
     public static State XxorY(SimpleFormula op1, SimpleFormula op2){
         State state = State.Is;

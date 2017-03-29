@@ -96,4 +96,10 @@ public class Object {
             res.addAll(set);
         return res;
     }
+
+    public void copy(Object other) {
+        setIdentifier(other.getIdentifier());
+        setType(other.getType());
+        setTraits(other.getTraits());
+    }
 }

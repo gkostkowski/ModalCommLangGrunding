@@ -1,9 +1,10 @@
 package com.pwr.zpi;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
- * Created by Grzesiek on 2017-03-16.
+ *
  */
 public class NamedCollection<Name, Member> {
     private Name identifier;

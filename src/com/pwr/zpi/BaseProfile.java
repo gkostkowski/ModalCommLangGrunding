@@ -1,7 +1,7 @@
 package com.pwr.zpi;
 
 /**
- * Created by Grzesiek on 2017-03-16.
+ *
  */
 
 import java.util.*;
@@ -115,4 +115,11 @@ public class BaseProfile extends World {
         else{return false;}
     }
 
+    public void copy(BaseProfile other) {
+        setDescribedByTraits(other.getDescribedByTraits());
+        setNotDescribedByTraits(other.getNotDescribedByTraits());
+        setIndefiniteByTraits(getIndefiniteByTraits());
+        setTimestamp(other.getTimestamp());
+        setObjects(other.getObjects());
+    }
 }

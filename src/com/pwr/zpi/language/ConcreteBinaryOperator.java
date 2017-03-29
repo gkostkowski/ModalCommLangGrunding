@@ -1,7 +1,7 @@
 package com.pwr.zpi.language;
 
 /**
- * Created by Grzesiek on 2017-03-19.
+ *
  */
 public abstract class ConcreteBinaryOperator<I, O> extends Symbol implements BinaryOperator<I, O> {
     I operand1, operand2;
