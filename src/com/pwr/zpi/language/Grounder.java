@@ -19,8 +19,9 @@ public class Grounder {
     private static final double KNOW = 1.0;
 
     /**
-     * Returns every BaseProfile defined by agent from point of time t,and represent expierience
-     * of Object o having trait P
+     * Defines grounded set A1(t) responsible for induction of mental model m1 connected to object p and trait P
+     * A1 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
+     * representing expierience object o,having trait P
      *
      * @param o     Object observed by agent
      * @param trait Trait of object
@@ -40,8 +41,9 @@ public class Grounder {
     }
 
     /**
-     * Returns grounding set defined for agent for base profiles from point of time t,and represent expierience
-     * of Object o having trait P
+     * Defines grounded set A2(t) responsible for induction of mental model m1 connected to object p and trait P
+     * A2 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
+     * representing expierience object o,not having trait P
      *
      * @param o    Object observed by agent
      * @param P    Trait of object
@@ -61,27 +63,30 @@ public class Grounder {
     }
 
     /**
-     * @param groundingSet List of Base Profiles which cardinality we desire to know
+     * Inductive cardinality GAi grounding set A1
+     * @param groundingSet set of Base Profiles which cardinality we desire to know
      * @param t            given time
-     * @return Positive Cardinality of List
+     * @return Positive Cardinality of Set
      */
-    static double getCardPositive(List<BaseProfile> groundingSet, int t) {
+    static double getCardPositive(Set<BaseProfile> groundingSet, int t) {
         return groundingSet.size();
     }
 
     /**
-     * @param groundingSet List of Base Profiles which cardinality we desire to know
+     * Inductive cardinality GAi grounding set A2
+     * @param groundingSet set of Base Profiles which cardinality we desire to know
      * @param t            given time
-     * @return Cardinality of List
+     * @return Cardinality of Set
      */
 
-    static double getCardNegative(List<BaseProfile> groundingSet, int t) {
+    static double getCardNegative(Set<BaseProfile> groundingSet, int t) {
         return groundingSet.size();
     }
 
     /**
-     * @param groundingSetPositive List of Positive BaseProfiles
-     * @param groundingSetNegative List of Negative BaseProfiles
+     * Value of relative power of grounding lambda for base form p(o)
+     * @param groundingSetPositive Set of Positive BaseProfiles
+     * @param groundingSetNegative Set of Negative BaseProfiles
      * @param time                 given time
      * @return Cardinality (ratio) of Positive BaseProfiles to all
      */
@@ -90,9 +95,10 @@ public class Grounder {
     }
 
     /**
-     * @param groundingSetPositive List of Positive BaseProfiles
-     * @param groundingSetNegative List of Negative BaseProfiles
-     * @param time                 given time
+     *Value of relative power of grounding lambda for base form not p(o)
+     * @param groundingSetPositive Set of Positive BaseProfiles
+     * @param groundingSetNegative Set of Negative BaseProfiles
+     * @param time                 Given time
      * @return Cardinality (ratio) of Negative BaseProfiles to all
      */
     static double relativeNegativeCard(Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
