@@ -248,4 +248,85 @@ public class Grounder {
         return null;
     }
 
+    /**
+     * Defines grounded set Ai(t) responsible for induction of mental model mi connected to baseProfile which
+     * involves connotations with both objects P,and Q.Depending on i
+     * i=1 - Returns BaseProfiles where Object o has Trait P and has Trait Q
+     * i=2 - Returns BaseProfiles where Object o has Trait P and does not have Trait Q
+     * i=3 - Returns BaseProfiles where Object o does not have Trait P and has Trait Q
+     * i=4 - Returns BaseProfiles where Object o does not have Trait P and does not have Trait Q
+     * @param o Object observed by agent
+     * @param P Trait of object
+     * @param Q Trait of object
+     * @param time Time taken into consideration when looking for expieriences
+     * @param all Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
+     * @param i indicator,indicating which case we'd like to use
+     * @return
+     */
+
+    static Set<BaseProfile> getGroundingSetsConjunction(Object o,Trait P,Trait Q,int time,Set<BaseProfile> all,int i){
+        Set<BaseProfile> out = new HashSet<BaseProfile>();
+        switch(i){
+            case 1:
+                for(BaseProfile bp :all){
+                    if(bp.DetermineIfSetHasTrait(o, P, time) && bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
+                }
+                break;
+
+            case 2:
+                for(BaseProfile bp :all){
+                    if(bp.DetermineIfSetHasTrait(o, P, time) && !bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
+                }
+                break;
+
+            case 3:
+                for(BaseProfile bp :all){
+                    if(!bp.DetermineIfSetHasTrait(o, P, time) && bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
+                }
+                break;
+
+            case 4:
+                for(BaseProfile bp :all){
+                    if(!bp.DetermineIfSetHasTrait(o, P, time) && !bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
+                }
+                break;
+        }
+        return out;
+    }
+
+    /**
+     * Inductive cardinality GAi grounding set Ai
+     * @param groundingSet Grounding set which cardinality we wish to know
+     * @param t Time taken into consideration when looking for expieriences
+     * @return Cardinality of given set
+     */
+    static double getCard(Set<BaseProfile> groundingSet, int t) {
+        return groundingSet.size();
+    }
+
+    /**
+     * Value of relative power of grounding lambda for base form indicated by i
+     * i = 1 p(o) and q(o)
+     * i = 2 p(o) and not q(o)
+     * i = 3 not p(o) and q(o)
+     * i = 4 not p(o) and not q(o)
+     * @param o Object observed by agent
+     * @param P Trait of object
+     * @param Q  Trait of object
+     * @param time Time taken into consideration when looking for expieriences
+     * @param all   Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
+     * @param i indicator,indicating which case we'd like to use
+     * @return
+     */
+    static double relativeCardConunction(Object o,Trait P,Trait Q,int time,Set<BaseProfile> all,int i) {
+        Set<BaseProfile> Sum = new HashSet<BaseProfile>();
+
+        //OgarnijAdAlla, nie dodaje tych samych obiektów
+        Sum.addAll(getGroundingSetsConjunction(o,P,Q,time,all,1));
+        Sum.addAll(getGroundingSetsConjunction(o,P,Q,time,all,2));
+        Sum.addAll(getGroundingSetsConjunction(o,P,Q,time,all,3));
+        Sum.addAll(getGroundingSetsConjunction(o,P,Q,time,all,4));
+        return getCard(getGroundingSetsConjunction(o,P,Q,time,all,i),time)/getCard(Sum,time);
+    }
+
 }
