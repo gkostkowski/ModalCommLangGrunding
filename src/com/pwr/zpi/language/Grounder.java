@@ -110,8 +110,8 @@ public class Grounder {
     }
 
     /**
-     * Builds distributed knowledge, which will be used to make mental models m^a_1 and m^a_2 associated
-     * with formulas. Formulas are given according to provided object and trait. This formulas are: trait(object) and
+     * Builds distributed knowledge, which will be used to make respective mental models associated
+     * with formulas. It can be used to build distribution of different mental models - the oFormulas are given according to provided object and trait. This formulas are: trait(object) and
      * not(trait(object)).
      * Builded distributed knowledge is related to certain moment in time.
      *

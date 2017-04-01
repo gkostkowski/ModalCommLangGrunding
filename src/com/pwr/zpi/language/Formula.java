@@ -10,6 +10,11 @@ import java.util.Collection;
  */
 public abstract class Formula {
 
+    enum Type {
+        SIMPLE_MODALITY,
+        MODAL_CONJUNCTION
+    }
+
     abstract State evaluate();
 /*    abstract com.pwr.zpi.Object getAffectedObject();
 

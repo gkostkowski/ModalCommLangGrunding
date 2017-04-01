@@ -108,8 +108,8 @@ public class BaseProfile extends World {
     }
 
     public boolean DetermineIfSetHasTrait(Object o, @SuppressWarnings("rawtypes") Trait P,int time){
-        Map<Trait, Set<Object>> DescribedObjects = describedByTraits;
-        if(DescribedObjects.containsKey(P)){
+        Map<Trait, Set<Object>> describedObjects = describedByTraits;
+        if(describedObjects.containsKey(P)){
             return true;
         }
         else{return false;}

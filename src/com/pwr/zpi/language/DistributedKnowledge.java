@@ -54,9 +54,9 @@ public class DistributedKnowledge {
         Map<Integer, BaseProfile> inLM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryTypes.LM);
         Map<Integer, BaseProfile> inWM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryTypes.WM);
         A1 =  Grounder
-                .getGroundingSetsPositiveTraitSet(obj, trait, time, agent.getKnowledgeBase().getBaseProfiles(time));
+                .getGroundingSetsPositiveTrait(obj, trait, time, agent.getKnowledgeBase().getBaseProfiles(time));
         A2 =  Grounder
-                .getGroundingSetsNegativeTraitSet(obj, trait, time, agent.getKnowledgeBase().getBaseProfiles(time));
+                .getGroundingSetsNegativeTrait(obj, trait, time, agent.getKnowledgeBase().getBaseProfiles(time));
         RA1 = new HashSet<>(inWM.values());
         RA1.retainAll(A1);
         TA1 = new HashSet<>(inLM.values());
