@@ -94,6 +94,7 @@ public class Grounder {
      * @return Cardinality (ratio) of Positive BaseProfiles to all
      */
     static double relativePositiveCard(Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
+        if(groundingSetNegative.isEmpty()){return 0;}
         return getCardPositive(groundingSetPositive, time) / (getCardNegative(groundingSetNegative, time) + getCardPositive(groundingSetPositive, time));
     }
 
@@ -106,6 +107,7 @@ public class Grounder {
      * @return Cardinality (ratio) of Negative BaseProfiles to all
      */
     static double relativeNegativeCard(Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
+        if(groundingSetPositive.isEmpty()){return 0;}
         return getCardNegative(groundingSetPositive, time) / (getCardNegative(groundingSetNegative, time) + getCardPositive(groundingSetPositive, time));
     }
 
