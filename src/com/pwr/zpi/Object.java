@@ -12,6 +12,12 @@ public class Object {
     protected String type;
     private Set<Trait> traits; //won't be visible in subclasses
 
+    public Object(int identifier,String type,Set<Trait> traits){
+        this.identifier = identifier;
+        this.type = type;
+        this.traits = traits;
+    }
+
     public int getIdentifier() {
         return identifier;
     }

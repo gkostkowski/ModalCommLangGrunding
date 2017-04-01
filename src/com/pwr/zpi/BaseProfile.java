@@ -27,6 +27,11 @@ public class BaseProfile extends World {
     protected Map<Trait, Set<Object>> indefiniteByTraits;
     protected int timestamp;
 
+    public BaseProfile (Map<Trait, Set<Object>> SetOTraits,int timestamp) {
+        this.indefiniteByTraits = SetOTraits;
+        this.timestamp = timestamp;
+    }
+
     public Map<Trait, Set<Object>> getDescribedByTraits() {
         return describedByTraits;
     }
