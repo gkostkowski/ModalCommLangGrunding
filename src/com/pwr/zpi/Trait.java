@@ -43,13 +43,13 @@ public class Trait <K, V> {
     public State stateOfTrait() {
         int val = (int)this.value;
         if(val > UPPER_BOUND) {
-            return State.Is;
+            return State.IS;
         }
         else {
             if (val < LOWER_BOUND)
-                return State.Is_Not;
+                return State.IS_NOT;
             else    // <LOWER_BOUND,UPPER_BOUND>
-                return State.Mayhaps;
+                return State.MAYHAPS;
         }
     }
 

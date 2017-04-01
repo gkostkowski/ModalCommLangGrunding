@@ -5,7 +5,7 @@ import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 
 /**
- * SimpleFormula is designed to be used as part of ComplexFormula.
+ * SimpleFormula is understood as atomic formula and it's used as part of ComplexFormula.
  */
 public class SimpleFormula extends Formula {
 
@@ -25,19 +25,19 @@ public class SimpleFormula extends Formula {
 
     /**
      * Used to determine whether given object has given trait
-     * by returning its State - trait Is or Is_Not occurring in object.
+     * by returning its State - trait IS or IS_NOT occurring in object.
      *
-     * @return State of trait's occurrence in object (Is, Is_Not).
+     * @return State of trait's occurrence in object (IS, IS_NOT).
      */
     public State evaluate() {
         State result = object.hasTrait(trait);
 
         if(isNegated)  // when isNegated is true reverse result
             switch (result) {
-                case Is:
-                    return State.Is_Not;
-                case Is_Not:
-                    return State.Is;
+                case IS:
+                    return State.IS_NOT;
+                case IS_NOT:
+                    return State.IS;
             }
 
         return result;

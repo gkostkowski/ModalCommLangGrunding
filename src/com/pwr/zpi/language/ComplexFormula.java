@@ -3,6 +3,9 @@ package com.pwr.zpi.language;
 import com.pwr.zpi.State;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Stack;
 
 /**
@@ -14,6 +17,7 @@ public class ComplexFormula extends Formula {
      * It is a reference to the root of the complex formula
      */
     private SubFormula subFormula;
+    private Operators operator;
 
     /**
      * Constructor of ComplexFormula for creating sentence with two operannds and an operator
@@ -148,4 +152,11 @@ public class ComplexFormula extends Formula {
         return values;
     }
 
+    public Collection<Formula> getParts() {
+        return Arrays.asList(subFormula.getFormula1(), subFormula.getFormula2());
+    }
+
+    public Operators getOperator() {
+        return operator;
+    }
 }

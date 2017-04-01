@@ -7,7 +7,13 @@ import com.pwr.zpi.State;
  */
 public class Operators {
 
-    enum Type {
+    private Type type;
+
+    public Type getType() {
+        return type;
+    }
+
+    public enum Type {
         AND, OR, XOR, NOT,
         POS, BEL, KNOW
     }
@@ -34,18 +40,18 @@ public class Operators {
 
     /**
      * Function returns exclusive disjunction of state op1 and op2 with the assumption that
-     * if a value of at least one State equals Mayhaps, logical sense of the whole sentence also
-     * equals Mayhaps
+     * if a value of at least one State equals MAYHAPS, logical sense of the whole sentence also
+     * equals MAYHAPS
      * @param op1 evaluated State of first SimpleFormula or part of a ComplexFormula
      * @param op2 evaluated State of second SimpleFormula or part of a ComplexFormula
      * @return State which is a logical value of op1 XOR op2
      */
     public static State XxorY(State op1, State op2){
-        State state = State.Is;
-        if(op1 == State.Mayhaps || op2 == State.Mayhaps)
-            state = State.Mayhaps;
+        State state = State.IS;
+        if(op1 == State.MAYHAPS || op2 == State.MAYHAPS)
+            state = State.MAYHAPS;
         else if(op1 == op2)
-            state = State.Is_Not;
+            state = State.IS_NOT;
         return state;
     }
     /**
@@ -70,20 +76,20 @@ public class Operators {
 
     /**
      * Function returns exclusive disjunction of states op1 and op2 with the assumption that
-     * if a value of at least one state equals Mayhaps, logical sense of the whole sentence also
-     * equals Mayhaps
+     * if a value of at least one state equals MAYHAPS, logical sense of the whole sentence also
+     * equals MAYHAPS
      * @param op1 SimpleFormula, first part of sentence
      * @param op2 SimpleFormula, second part of sentence
      * @return State which is a logical value of op1 XOR op2
      */
     public static State XxorY(SimpleFormula op1, SimpleFormula op2){
-        State state = State.Is;
+        State state = State.IS;
         State first = op1.evaluate();
         State second = op2.evaluate();
-        if(first == State.Mayhaps || second == State.Mayhaps)
-            state = State.Mayhaps;
+        if(first == State.MAYHAPS || second == State.MAYHAPS)
+            state = State.MAYHAPS;
         else if(first == second)
-            state = State.Is_Not;
+            state = State.IS_NOT;
         return state;
     }
 

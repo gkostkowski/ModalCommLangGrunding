@@ -107,12 +107,12 @@ public class BaseProfile extends World {
         return notDescribedByTraits.get(trait);
     }
 
-    public boolean DetermineIfSetHasTrait(Object o, @SuppressWarnings("rawtypes") Trait P,int time){
-        Map<Trait, Set<Object>> describedObjects = describedByTraits;
-        if(describedObjects.containsKey(P)){
-            return true;
-        }
-        else{return false;}
+    public boolean DetermineIfSetHasTrait(Object o, @SuppressWarnings("rawtypes") Trait P,int time, State stateOfDescription){
+        Map<Trait, Set<Object>> describedObjects = stateOfDescription.equals(State.IS) ?
+                describedByTraits : (stateOfDescription.equals(State.IS_NOT) ?
+                    notDescribedByTraits : indefiniteByTraits);
+        return describedObjects.containsKey(P);
+
     }
 
     public void copy(BaseProfile other) {

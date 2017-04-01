@@ -5,113 +5,113 @@ package com.pwr.zpi;
  */
 public enum State {
 
-    Is {
+    IS {
         public double apply() {
             return 1;
         }
 
         public State and(State second) {
             switch (second) {
-                case Is:
-                    return Is;
-                case Is_Not:
-                    return Mayhaps;
-                case Mayhaps:
-                    return Mayhaps;
+                case IS:
+                    return IS;
+                case IS_NOT:
+                    return MAYHAPS;
+                case MAYHAPS:
+                    return MAYHAPS;
             }
             return null;
         }
 
         public State or(State second) {
             switch (second) {
-                case Is:
-                    return Is;
-                case Is_Not:
-                    return Mayhaps;
-                case Mayhaps:
-                    return Is;
+                case IS:
+                    return IS;
+                case IS_NOT:
+                    return MAYHAPS;
+                case MAYHAPS:
+                    return IS;
             }
             return null;
         }
 
         public State not(){
-            return Is_Not;
+            return IS_NOT;
         }
 
     },
-    Is_Not {
+    IS_NOT {
         public double apply() {
             return 0;
         }
 
         public State and(State second) {
             switch (second) {
-                case Is:
-                    return Mayhaps;
-                case Is_Not:
-                    return Is_Not;
-                case Mayhaps:
-                    return Mayhaps;
+                case IS:
+                    return MAYHAPS;
+                case IS_NOT:
+                    return IS_NOT;
+                case MAYHAPS:
+                    return MAYHAPS;
             }
             return null;
         }
 
         public State or(State second) {
             switch (second) {
-                case Is:
-                    return Mayhaps;
-                case Is_Not:
-                    return Is_Not;
-                case Mayhaps:
-                    return Is_Not;
+                case IS:
+                    return MAYHAPS;
+                case IS_NOT:
+                    return IS_NOT;
+                case MAYHAPS:
+                    return IS_NOT;
             }
             return null;
         }
         public State not(){
-            return Is;
+            return IS;
         }
     },
-    Mayhaps {
+    MAYHAPS {
         public double apply() {
             return 0.5;
         }
 
         public State and(State second) {
-            return Mayhaps;
+            return MAYHAPS;
         }
 
         public State or(State second) {
             switch (second) {
-                case Is:
-                    return Is;
-                case Is_Not:
-                    return Is_Not;
-                case Mayhaps:
-                    return Mayhaps;
+                case IS:
+                    return IS;
+                case IS_NOT:
+                    return IS_NOT;
+                case MAYHAPS:
+                    return MAYHAPS;
             }
             return null;
         }
         public State not(){
-            return Mayhaps;
+            return MAYHAPS;
         }
     },;
 
     /**
      *
-     * @return double with double description of state Is - 1,Is_Not - 0,Mayhaps - 0.5;
+     * @return double with double description of state IS - 1,IS_NOT - 0,MAYHAPS - 0.5;
      */
     public abstract double apply();
 
     @Override
     public String toString() {
         switch (this) {
-            case Is:
+            case IS:
                 System.out.println(" Jest ");
                 break;
-            case Is_Not:
+            case IS_NOT:
                 System.out.println(" Nie jest ");
                 break;
-            case Mayhaps:
+            case MAYHAPS:
                 System.out.println(" Byc moze ");
                 break;
         }
@@ -121,7 +121,7 @@ public enum State {
     /**
      *
      * @param second State which will be used as operator in AND operator
-     * @return  State : Is if both operands(States) ARE,Is_Not if both operands(States) ARE NOT,Mayhaps in any other
+     * @return  State : IS if both operands(States) ARE,IS_NOT if both operands(States) ARE NOT,MAYHAPS in any other
      * situation.
      */
     public abstract State and(State second);
@@ -129,18 +129,18 @@ public enum State {
     /**
      *
      * @param second State which will be used as operator in OR operator
-     * @return  State : Is if both or ARE or one IS while the other Mayhaps.
-     * Is_Not if both ARE NOT or one IS NOT while the other Mayhaps.
-     * Mayhaps if both MIGHT BE or if one IS while the other IS NOT.
+     * @return  State : IS if both or ARE or one IS while the other MAYHAPS.
+     * IS_NOT if both ARE NOT or one IS NOT while the other MAYHAPS.
+     * MAYHAPS if both MIGHT BE or if one IS while the other IS NOT.
      */
 
     public abstract State or(State second);
 
     /**
      *
-     * @return State : Is if Is_Not.
-     * Is_Not if Is.
-     * Mayhaps if Mayhaps.
+     * @return State : IS if IS_NOT.
+     * IS_NOT if IS.
+     * MAYHAPS if MAYHAPS.
      *
      */
     public abstract State not();

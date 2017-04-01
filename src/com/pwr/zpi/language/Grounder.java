@@ -3,7 +3,6 @@ package com.pwr.zpi.language;
 import com.pwr.zpi.*;
 import com.pwr.zpi.Object;
 
-import java.util.Collection;
 import java.util.Set;
 import java.util.*;
 
@@ -19,6 +18,83 @@ public class Grounder {
     private static final double KNOW = 1.0;
 
     /**
+     * Gives complete collection of grounding sets for certain formula. It supports simple and complex formulas.
+     * @param formula Considered formula.
+     * @param time
+     * @param all
+     * @param states Represents especially two states: IS and IS_NOT, which determines if simple formula, part of
+     *               complex formula will require checking associated to objects described by trait or objects
+     *               NOT described by trait.
+     * @return Collection of grounding sets.
+     */
+    static List<Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all, State... states) {
+        Object o = formula.getObject();
+        Set<Trait> traits = formula.getTraits();
+        List<Formula> parts = new ArrayList<>();
+        List<Set<BaseProfile>> res = new ArrayList<>();
+
+        Operators.Type type = null;
+        if (formula instanceof ComplexFormula) {
+            parts.addAll(((ComplexFormula) formula).getParts());
+            type = ((ComplexFormula) formula).getOperator().getType();
+        } else
+            parts.add(formula);
+
+        int fstStateCounter = 0,
+                sndStateCounter = 0;
+        for (Formula atomicFormula : parts) {
+            for (State state : states) {
+                res.add(new HashSet<>());
+                for (BaseProfile bp : all) {
+                    if (isFulfilled(o, new ArrayList<>(traits), time, Arrays.asList(states[fstStateCounter], states[sndStateCounter]), type, bp))
+                        ;
+                    res.get(res.size() - 1).add(bp);
+                }
+                fstStateCounter = (fstStateCounter + 1) % states.length;
+            }
+            sndStateCounter = (sndStateCounter + 1) % states.length;
+        }
+        return res;
+    }
+
+    /**
+     * Checks if condition (for sample or complex formula) is fulfilled. While building condition, takes into account order
+     * of traits and states in given lists.
+     * In most cases, it runs for one or two iterations (for complex formula): state1(trait1(o)) op state2(trait2(o)).
+     *
+     * @param o
+     * @param traits
+     * @param time
+     * @param states Should be placed in certain positions, respectiovely to traits.
+     * @param op
+     * @param bp
+     * @return
+     */
+    static private boolean isFulfilled(Object o, List<Trait> traits, int time, List<State> states, Operators.Type op, BaseProfile bp) {
+        if (traits.size() != states.size())
+            throw new IllegalStateException("Number of traits differs from amount of states.");
+
+        if (op == null) //case for simple formula
+            op = Operators.Type.AND;
+        boolean res = op.equals(Operators.Type.AND) ? true : false; //so far, applicable only for AND or OR
+        for (int i = 0; i < traits.size(); i++) {
+            boolean curr = bp.DetermineIfSetHasTrait(o, traits.get(i), time, states.get(i));
+            switch (op) {
+                case AND:
+                    res = res && curr;
+                    break;
+                case OR:
+                    res = res || curr;
+            }
+        }
+        return res;
+    }
+
+    static List<Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) {
+        return getGroundingSets(formula, time, all, State.IS, State.IS_NOT);
+    }
+
+    /**
      * Defines grounded set A1(t) responsible for induction of mental model m1 connected to object p and trait P
      * A1 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
      * representing expierience object o,having trait P
@@ -29,7 +105,6 @@ public class Grounder {
      * @param all   Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @return List of BaseProfiles which contain Positive Traits
      */
-
     static Set<BaseProfile> getGroundingSetsPositiveTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
         for (BaseProfile bp : all) {
@@ -116,24 +191,23 @@ public class Grounder {
      * Builded distributed knowledge is related to certain moment in time.
      *
      * @param agent The knowledge subject.
-     * @param trait Certain trait included in formulas.
-     * @param obj   Certain object included in formulas.
+     * @param formula Formula which
      * @param time  Certain moment in time.
      * @return Distribution of knowledge.
      */
-    static DistributedKnowledge distributeKnowledge(Agent agent, Trait trait, Object obj, int time) {
-        return new DistributedKnowledge(agent, trait, obj, time);
+    static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) {
+        return new DistributedKnowledge(agent, formula, time);
     }
 /*  ==NOT APPLICABLE FOR COMPLEX FORMULA!==
     *//**
-     * Builds distributed knowledge, which will be used to make mental models m^a_1 and m^a_2 associated
-     * with given formulas: baseFormula and its opposite - negBaseFormula.
-     * @param agent The knowledge subject.
-     * @param baseFormula Formula which is the base of resulted mental model m^a_1.
-     * @param negBaseFormula Formula which is the base of resulted mental model m^a_2. Opposition of baseFormula.
-     * @param time Certain moment in time.
-     * @return Distribution of knowledge.
-     *//*
+ * Builds distributed knowledge, which will be used to make mental models m^a_1 and m^a_2 associated
+ * with given formulas: baseFormula and its opposite - negBaseFormula.
+ * @param agent The knowledge subject.
+ * @param baseFormula Formula which is the base of resulted mental model m^a_1.
+ * @param negBaseFormula Formula which is the base of resulted mental model m^a_2. Opposition of baseFormula.
+ * @param time Certain moment in time.
+ * @return Distribution of knowledge.
+ *//*
     static DistributedKnowledge distributeKnowledge(Agent agent, Formula baseFormula, Formula negBaseFormula, int time) {
         return new DistributedKnowledge(agent, baseFormula, negBaseFormula, time);
     }*/
@@ -205,7 +279,7 @@ public class Grounder {
         lmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryTypes.LM));
         wmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryTypes.LM));
         objects.addAll(BaseProfile.getObjects(lmBp, wmBp));
-        describedObj.copy(dk.getObj());
+        describedObj.copy(dk.getObject());
         describedTrait.copy(dk.getTrait());
 
         objsWithClearState.addAll(Object.getObjects(
@@ -255,39 +329,40 @@ public class Grounder {
      * i=2 - Returns BaseProfiles where Object o has Trait P and does not have Trait Q
      * i=3 - Returns BaseProfiles where Object o does not have Trait P and has Trait Q
      * i=4 - Returns BaseProfiles where Object o does not have Trait P and does not have Trait Q
-     * @param o Object observed by agent
-     * @param P Trait of object
-     * @param Q Trait of object
+     *
+     * @param o    Object observed by agent
+     * @param P    Trait of object
+     * @param Q    Trait of object
      * @param time Time taken into consideration when looking for expieriences
-     * @param all Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
-     * @param i indicator,indicating which case we'd like to use
+     * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
+     * @param i    indicator,indicating which case we'd like to use
      * @return
      */
 
-    static Set<BaseProfile> getGroundingSetsConjunction(Object o,Trait P,Trait Q,int time,Set<BaseProfile> all,int i){
+    static Set<BaseProfile> getGroundingSetsConjunction(Object o, Trait P, Trait Q, int time, Set<BaseProfile> all, int i) {
         Set<BaseProfile> out = new HashSet<BaseProfile>();
-        switch(i){
+        switch (i) {
             case 1:
-                for(BaseProfile bp :all){
-                    if(bp.DetermineIfSetHasTrait(o, P, time) && bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
+                for (BaseProfile bp : all) {
+                    if (bp.DetermineIfSetHasTrait(o, P, time) && bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
                 }
                 break;
 
             case 2:
-                for(BaseProfile bp :all){
-                    if(bp.DetermineIfSetHasTrait(o, P, time) && !bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
+                for (BaseProfile bp : all) {
+                    if (bp.DetermineIfSetHasTrait(o, P, time) && !bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
                 }
                 break;
 
             case 3:
-                for(BaseProfile bp :all){
-                    if(!bp.DetermineIfSetHasTrait(o, P, time) && bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
+                for (BaseProfile bp : all) {
+                    if (!bp.DetermineIfSetHasTrait(o, P, time) && bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
                 }
                 break;
 
             case 4:
-                for(BaseProfile bp :all){
-                    if(!bp.DetermineIfSetHasTrait(o, P, time) && !bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
+                for (BaseProfile bp : all) {
+                    if (!bp.DetermineIfSetHasTrait(o, P, time) && !bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
                 }
                 break;
         }
@@ -296,8 +371,9 @@ public class Grounder {
 
     /**
      * Inductive cardinality GAi grounding set Ai
+     *
      * @param groundingSet Grounding set which cardinality we wish to know
-     * @param t Time taken into consideration when looking for expieriences
+     * @param t            Time taken into consideration when looking for expieriences
      * @return Cardinality of given set
      */
     static double getCard(Set<BaseProfile> groundingSet, int t) {
@@ -310,23 +386,24 @@ public class Grounder {
      * i = 2 p(o) and not q(o)
      * i = 3 not p(o) and q(o)
      * i = 4 not p(o) and not q(o)
-     * @param o Object observed by agent
-     * @param P Trait of object
-     * @param Q  Trait of object
+     *
+     * @param o    Object observed by agent
+     * @param P    Trait of object
+     * @param Q    Trait of object
      * @param time Time taken into consideration when looking for expieriences
-     * @param all   Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
-     * @param i indicator,indicating which case we'd like to use
+     * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
+     * @param i    indicator,indicating which case we'd like to use
      * @return
      */
-    static double relativeCardConunction(Object o,Trait P,Trait Q,int time,Set<BaseProfile> all,int i) {
+    static double relativeCardConunction(Object o, Trait P, Trait Q, int time, Set<BaseProfile> all, int i) {
         Set<BaseProfile> Sum = new HashSet<BaseProfile>();
 
         //OgarnijAdAlla, nie dodaje tych samych obiektów
-        Sum.addAll(getGroundingSetsConjunction(o,P,Q,time,all,1));
-        Sum.addAll(getGroundingSetsConjunction(o,P,Q,time,all,2));
-        Sum.addAll(getGroundingSetsConjunction(o,P,Q,time,all,3));
-        Sum.addAll(getGroundingSetsConjunction(o,P,Q,time,all,4));
-        return getCard(getGroundingSetsConjunction(o,P,Q,time,all,i),time)/getCard(Sum,time);
+        Sum.addAll(getGroundingSetsConjunction(o, P, Q, time, all, 1));
+        Sum.addAll(getGroundingSetsConjunction(o, P, Q, time, all, 2));
+        Sum.addAll(getGroundingSetsConjunction(o, P, Q, time, all, 3));
+        Sum.addAll(getGroundingSetsConjunction(o, P, Q, time, all, 4));
+        return getCard(getGroundingSetsConjunction(o, P, Q, time, all, i), time) / getCard(Sum, time);
     }
 
 }
