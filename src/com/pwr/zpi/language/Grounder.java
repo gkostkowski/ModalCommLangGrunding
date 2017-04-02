@@ -2,6 +2,8 @@ package com.pwr.zpi.language;
 
 import com.pwr.zpi.*;
 import com.pwr.zpi.Object;
+import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
+import javafx.util.Pair;
 
 import java.util.Set;
 import java.util.*;
@@ -19,22 +21,24 @@ public class Grounder {
 
     /**
      * Gives complete collection of grounding sets for certain formula. It supports simple and complex formulas.
+     *
      * @param formula Considered formula.
      * @param time
      * @param all
-     * @param states Represents especially two states: IS and IS_NOT, which determines if simple formula, part of
-     *               complex formula will require checking associated to objects described by trait or objects
-     *               NOT described by trait.
+     * @param states  Represents especially two states: IS and IS_NOT, which determines if simple formula, part of
+     *                complex formula will require checking associated to objects described by trait or objects
+     *                NOT described by trait.
      * @return Collection of grounding sets.
      */
-    static List<Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all, State... states) {
+    static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all, State... states) throws InvalidSentenceFormulaException {
         Object o = formula.getObject();
         Set<Trait> traits = formula.getTraits();
         List<Formula> parts = new ArrayList<>();
-        List<Set<BaseProfile>> res = new ArrayList<>();
+        Map<Formula, Set<BaseProfile>> res = new HashMap<>();
 
         Operators.Type type = null;
-        if (formula instanceof ComplexFormula) {
+        boolean isComplex=false;
+        if (isComplex=formula instanceof ComplexFormula) {
             parts.addAll(((ComplexFormula) formula).getParts());
             type = ((ComplexFormula) formula).getOperator().getType();
         } else
@@ -44,11 +48,13 @@ public class Grounder {
                 sndStateCounter = 0;
         for (Formula atomicFormula : parts) {
             for (State state : states) {
-                res.add(new HashSet<>());
+                List<State> statesSeq = Arrays.asList(states[fstStateCounter], states[sndStateCounter]);
+                Formula mentalModel = isComplex ? new ComplexFormula(o, traits, statesSeq, type) : new SimpleFormula(o, traits, statesSeq);
+                Set<BaseProfile> currSet = null;
+                res.put(mentalModel, currSet=new HashSet<>());
                 for (BaseProfile bp : all) {
-                    if (isFulfilled(o, new ArrayList<>(traits), time, Arrays.asList(states[fstStateCounter], states[sndStateCounter]), type, bp))
-                        ;
-                    res.get(res.size() - 1).add(bp);
+                    if (isFulfilled(o, new ArrayList<>(traits), time, statesSeq, type, bp))
+                        currSet.add(bp);
                 }
                 fstStateCounter = (fstStateCounter + 1) % states.length;
             }
@@ -90,7 +96,7 @@ public class Grounder {
         return res;
     }
 
-    static List<Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) {
+    static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidSentenceFormulaException {
         return getGroundingSets(formula, time, all, State.IS, State.IS_NOT);
     }
 
@@ -169,7 +175,9 @@ public class Grounder {
      * @return Cardinality (ratio) of Positive BaseProfiles to all
      */
     static double relativePositiveCard(Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
-        if(groundingSetNegative.isEmpty()){return 0;}
+        if (groundingSetNegative.isEmpty()) {
+            return 0;
+        }
         return getCardPositive(groundingSetPositive, time) / (getCardNegative(groundingSetNegative, time) + getCardPositive(groundingSetPositive, time));
     }
 
@@ -182,41 +190,29 @@ public class Grounder {
      * @return Cardinality (ratio) of Negative BaseProfiles to all
      */
     static double relativeNegativeCard(Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
-        if(groundingSetPositive.isEmpty()){return 0;}
+        if (groundingSetPositive.isEmpty()) {
+            return 0;
+        }
         return getCardNegative(groundingSetPositive, time) / (getCardNegative(groundingSetNegative, time) + getCardPositive(groundingSetPositive, time));
     }
 
     /**
      * Builds distributed knowledge, which will be used to make respective mental models associated
-     * with formulas. It can be used to build distribution of different mental models - the oFormulas are given according to provided object and trait. This formulas are: trait(object) and
-     * not(trait(object)).
+     * with formulas. It can be used to build distribution of different mental models.
      * Builded distributed knowledge is related to certain moment in time.
      *
-     * @param agent The knowledge subject.
+     * @param agent   The knowledge subject.
      * @param formula Formula which
-     * @param time  Certain moment in time.
+     * @param time    Certain moment in time.
      * @return Distribution of knowledge.
      */
     static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) {
         return new DistributedKnowledge(agent, formula, time);
     }
-/*  ==NOT APPLICABLE FOR COMPLEX FORMULA!==
-    *//**
- * Builds distributed knowledge, which will be used to make mental models m^a_1 and m^a_2 associated
- * with given formulas: baseFormula and its opposite - negBaseFormula.
- * @param agent The knowledge subject.
- * @param baseFormula Formula which is the base of resulted mental model m^a_1.
- * @param negBaseFormula Formula which is the base of resulted mental model m^a_2. Opposition of baseFormula.
- * @param time Certain moment in time.
- * @return Distribution of knowledge.
- *//*
-    static DistributedKnowledge distributeKnowledge(Agent agent, Formula baseFormula, Formula negBaseFormula, int time) {
-        return new DistributedKnowledge(agent, baseFormula, negBaseFormula, time);
-    }*/
 
     /**
-     * Realizes verification of epistemic fulfillment relationship's conditions for modal formula
-     * including base formula.
+     * Realizes verification of epistemic fulfillment relationship's conditions for formula given through
+     * knowledge distribution.
      * Checks what type of extension of formula can occur. The following assumption was made: For any extended formula
      * (modal formula) there are only one modal operator which can be applied to this formula at once.
      * According to that, this method returns type of operator which can be used in formula without breaking
@@ -224,65 +220,58 @@ public class Grounder {
      * Timestamp is taken from given distribution of knowledge.
      *
      * @param agent Subject of knowledge.
-     * @param dk    Distributed knowledge for respective grounding sets related with certain trait.
+     * @param dk    Distributed knowledge for respective grounding sets related with certain formula.
      * @return Type of operator which can be applied to formula given through distribution of knowledge.
      * @see DistributedKnowledge
      */
-    static Operators.Type determinePositive(Agent agent, DistributedKnowledge dk) {
+    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) {
+        Operators.Type res;
+        for (Formula mentalModel : dk.getMentalModels()) {
+            res = determineSingleFulfillment(agent, dk, mentalModel);
+        }
+        return null; //todo ?
+    }
+
+
+    static Operators.Type determineSingleFulfillment(Agent agent, DistributedKnowledge dk, Formula mentalModel) {
         int timestamp = dk.getTimestamp();
         BaseProfile lmBp = new BaseProfile();
         BaseProfile wmBp = new BaseProfile();
         Set<Object> objects = new HashSet<>();
-        Object describedObj = new Object();
-        Trait describedTrait = new Trait();
+
+        Object describedObj = mentalModel.getObject();
+        Set<Trait> describedTrait = mentalModel.getTraits();
+        //mentalModel.
+        //boolean isNegated = state.equals(State.IS) ? true : false;
+
         Set<Object> objsWithClearState = new HashSet<>();
-        Set<Object> objsWithPositiveState = new HashSet<>();
+        /**
+         * Represents objsWithPositiveState or objsWithNegativeState - depending on state value
+         */
+        Set<Object> objsWithGivenState = new HashSet<>();
+
         Set<Object> indefiniteByTrait = new HashSet<>();
+        Formula formula = dk.getFormula();
 
-        setCommonObjects(timestamp, agent, dk, lmBp, wmBp, objects, describedObj, describedTrait, objsWithClearState,
-                objsWithPositiveState, indefiniteByTrait, false);
 
-        return checkEpistemicalConditions(indefiniteByTrait, describedObj, dk, timestamp, objsWithPositiveState, false);
+//        setCommonObjects(timestamp, agent, dk, lmBp, wmBp, objects, describedObj, describedTrait, objsWithClearState,
+//                objsWithGivenState, indefiniteByTrait, isNegated);
+        setCommonObjects(timestamp, agent, lmBp, wmBp, objects, describedObj, describedTrait, objsWithClearState,
+                objsWithGivenState, indefiniteByTrait, isNegated);
+
+        return checkEpistemicalConditions(indefiniteByTrait, describedObj, dk, timestamp, objsWithGivenState, isNegated);
     }
 
-    /**
-     * Realizes verification of epistemic fulfillment relationship's conditions for modal formula
-     * including NEGATED base formula.
-     * Checks what type of extension of formula can occur. The following assumption was made: For any extended formula
-     * (modal formula) there are only one modal operator which can be applied to this formula at once.
-     * According to that, this method returns type of operator which can be used in formula without breaking
-     * epistemic fulfillment relationship's conditions.
-     * Timestamp is taken from given distribution of knowledge.
-     *
-     * @param agent Subject of knowledge.
-     * @param dk    Distributed knowledge for respective grounding sets related with certain trait.
-     * @return Type of operator which can be applied to formula given through distribution of knowledge.
-     * @see DistributedKnowledge
-     */
-    static Operators.Type determineNegative(Agent agent, DistributedKnowledge dk) {
-        int timestamp = dk.getTimestamp();
-        BaseProfile lmBp = new BaseProfile();
-        BaseProfile wmBp = new BaseProfile();
-        Set<Object> objects = new HashSet<>();
-        Object describedObj = new Object();
-        Trait describedTrait = new Trait();
-        Set<Object> objsWithClearState = new HashSet<>();
-        Set<Object> objsWithNegativeState = new HashSet<>();
-        Set<Object> indefiniteByTrait = new HashSet<>();
 
-        setCommonObjects(timestamp, agent, dk, lmBp, wmBp, objects, describedObj, describedTrait, objsWithClearState, objsWithNegativeState, indefiniteByTrait, true);
-
-        return checkEpistemicalConditions(indefiniteByTrait, describedObj, dk, timestamp, objsWithNegativeState, true);
-    }
-
-    private static void setCommonObjects(int timestamp, Agent agent, DistributedKnowledge dk, BaseProfile lmBp, BaseProfile wmBp,
+    private static void setCommonObjects(int timestamp, Agent agent, BaseProfile lmBp, BaseProfile wmBp,
                                          Set<Object> objects, Object describedObj, Trait describedTrait,
-                                         Set<Object> objsWithClearState, Set<Object> objsWithSelectedState, Set<Object> indefiniteByTrait, boolean isNegated) {
-        lmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryTypes.LM));
-        wmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryTypes.LM));
+                                         Set<Object> objsWithClearState, Set<Object> objsWithGivenState,
+                                         Set<Object> indefiniteByTrait, boolean isNegated) {
+        lmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.LM));
+        wmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.LM));
         objects.addAll(BaseProfile.getObjects(lmBp, wmBp));
-        describedObj.copy(dk.getObject());
-        describedTrait.copy(dk.getTrait());
+//        describedObj.copy(dk.getObject());
+//        describedTrait.copy(dk.getTrait());
 
         objsWithClearState.addAll(Object.getObjects(
                 lmBp.getNotDescribedByTrait(describedTrait),
@@ -290,12 +279,12 @@ public class Grounder {
                 lmBp.getDescribedByTrait(describedTrait),
                 wmBp.getDescribedByTrait(describedTrait)));
         if (isNegated) {
-            objsWithSelectedState.addAll(Object.getObjects(
+            objsWithGivenState.addAll(Object.getObjects(
                     lmBp.getNotDescribedByTrait(describedTrait),
                     wmBp.getNotDescribedByTrait(describedTrait)));
         } else {
 
-            objsWithSelectedState.addAll(Object.getObjects(
+            objsWithGivenState.addAll(Object.getObjects(
                     lmBp.getDescribedByTrait(describedTrait),
                     wmBp.getDescribedByTrait(describedTrait)));
         }

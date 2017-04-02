@@ -3,7 +3,8 @@ package com.pwr.zpi.language;
 import com.pwr.zpi.*;
 import com.pwr.zpi.Object;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
-import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
+import javafx.util.Pair;
 
 import java.util.*;
 
@@ -29,26 +30,41 @@ public class DistributedKnowledge {
     private final Object obj;
     private Map<Integer, BaseProfile> inLM;
     private Map<Integer, BaseProfile> inWM;
-    private List<Set<BaseProfile>> groundingSets = new ArrayList<>();
-    private List<Set<BaseProfile>> dkClasses = new ArrayList<>();
+
+    private List<Formula> mentalModels = new ArrayList<>();
+    /**
+     * Formula represents mental model.
+     */
+    private Map<Formula, Set<BaseProfile>> groundingSets = new HashMap<>();
+    //private List<Set<BaseProfile>> dkClasses = new ArrayList<>();
+    /**
+     * Map of classes for this knowledge distribution. Exact class is certain value in map
+     * and associated key is pair which represent mental model (formula) and memory type used
+     * to build such class.
+     */
+    private Map<Pair<Formula, BPCollection.MemoryType>, Set<BaseProfile>> dkClasses = new HashMap<>();
 
 
 
 
-    public DistributedKnowledge(Agent agent, Formula formula, int time) {
+    public DistributedKnowledge(Agent agent, Formula formula, int time) throws InvalidSentenceFormulaException {
         this.timestamp = time;
         this.formula = formula;
         this.traits = formula.getTraits();
         this.obj = formula.getObject();
 
-        inLM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryTypes.LM);
-        inWM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryTypes.WM);
+        inLM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryType.LM);
+        inWM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryType.WM);
 
-        initSets();
+        //initSets();
         groundingSets = Grounder.getGroundingSets(formula, time,agent.getKnowledgeBase().getBaseProfiles(time));
-        for (int i=0; i < CLASSES_AMOUNT; i=i+2) {
-            setDkClass(i, i/2, inWM);
-            setDkClass(i+1, i/2, inLM);
+
+        Iterator<Formula> it = groundingSets.keySet().iterator();
+        for (int i=0; i < CLASSES_AMOUNT && it.hasNext(); i=i+2) {
+            Formula currMentalModel = it.next();
+            mentalModels.add(currMentalModel);
+            setDkClass(inWM, currMentalModel, BPCollection.MemoryType.WM);
+            setDkClass(inLM, currMentalModel, BPCollection.MemoryType.LM);
         }
 
         //important checking
@@ -67,25 +83,28 @@ public class DistributedKnowledge {
         */
     }
 
+/*
     private void initSets() {
         for (int i=0; i < GROUNDING_SETS_AMOUNT; i++)
             groundingSets.add(new HashSet<>());
-        for (int i=0; i < CLASSES_AMOUNT; i++)
-            dkClasses.add(new HashSet<>());
+       for (int i=0; i < CLASSES_AMOUNT; i++)
+            dkClasses.put(null, new HashSet<>());
+    }*/
+
+    private void setDkClass(Map<Integer, BaseProfile> memory, Formula mentalModel,
+                            BPCollection.MemoryType mem) {
+        Set<BaseProfile> currClass;
+        dkClasses.put(new Pair<>(mentalModel, mem), currClass=new HashSet<>());
+        currClass.addAll(memory.values());
+        currClass.retainAll(groundingSets.get(mentalModel));
     }
 
-    private void setDkClass(int classNbr, int grntSetNbr, Map<Integer, BaseProfile> memory) {
-        Set<BaseProfile> currFromWM = dkClasses.get(classNbr);
-        currFromWM.addAll(memory.values());
-        currFromWM.retainAll(groundingSets.get(grntSetNbr));
-    }
 
-
-    public List<Set<BaseProfile>> getDistributionClasses() {
+    public Map<Pair<Formula, BPCollection.MemoryType>, Set<BaseProfile>> getDistributionClasses() {
         return dkClasses;
     }
 
-    public List<Set<BaseProfile>> getGroundingSets() {
+    public Map<Formula, Set<BaseProfile>> getGroundingSets() {
         return groundingSets;
     }
 
@@ -105,5 +124,18 @@ public class DistributedKnowledge {
 
     public Formula getFormula() {
         return formula;
+    }
+
+    public List<Formula> getMentalModels() {
+        return mentalModels;
+    }
+
+    /**
+     * Gives class according to given formula (mental model) and memory type.
+     *
+     * @return
+     */
+    public Set<BaseProfile> getDkClassByDesc(Formula formula, BPCollection.MemoryType mem) {
+        return dkClasses.get(new Pair<>(formula, mem));
     }
 }

@@ -1,12 +1,11 @@
 package com.pwr.zpi.language;
 
+import com.pwr.zpi.Object;
 import com.pwr.zpi.State;
+import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Stack;
+import java.util.*;
 
 /**
  *
@@ -62,6 +61,10 @@ public class ComplexFormula extends Formula {
     public ComplexFormula(SimpleFormula po1) throws InvalidSentenceFormulaException
     {
         subFormula = new SubFormula(po1, null, null);
+    }
+
+    public ComplexFormula(Object o, Set<Trait> traits, List<State> statesSeq, Operators.Type op) {
+        /*build formula like: state1(trait1(o)) op state2(trait2(o))*/ //todo
     }
 
     /**

@@ -15,6 +15,10 @@ public class Trait <K, V> {
         this.value = value;
     }
 
+    public Trait() {
+
+    }
+
     public K getName() {
         return name;
     }

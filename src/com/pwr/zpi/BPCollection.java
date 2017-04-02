@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class BPCollection {
 
-    public enum MemoryTypes {
+    public enum MemoryType {
         WM, LM
     }
 
@@ -41,7 +41,7 @@ public class BPCollection {
      * @param timestamp Moment in time.
      * @return Base profile from pointed memory related with given timestamp.
      */
-    public Pair<Integer, BaseProfile> getTimedBaseProfile(int timestamp, BPCollection.MemoryTypes memType) {
+    public Pair<Integer, BaseProfile> getTimedBaseProfile(int timestamp, MemoryType memType) {
         switch (memType) {
             case WM:
                 return new Pair<>(timestamp, workingMemory.get(timestamp));
@@ -59,7 +59,7 @@ public class BPCollection {
      * @param memType Specifies type of memory.
      * @return Base profile from pointed memory related with given timestamp.
      */
-    public BaseProfile getBaseProfile(int timestamp, BPCollection.MemoryTypes memType) {
+    public BaseProfile getBaseProfile(int timestamp, MemoryType memType) {
         switch (memType) {
             case WM:
                 return workingMemory.get(timestamp);
@@ -89,8 +89,8 @@ public class BPCollection {
      */
     public Map<Integer, BaseProfile> getTimedBaseProfiles(int timestamp) throws IllegalStateException{
         Map<Integer, BaseProfile> res = new HashMap<>();
-        res.putAll(getTimedBaseProfiles(timestamp, MemoryTypes.LM));
-        res.putAll(getTimedBaseProfiles(timestamp, MemoryTypes.WM));
+        res.putAll(getTimedBaseProfiles(timestamp, MemoryType.LM));
+        res.putAll(getTimedBaseProfiles(timestamp, MemoryType.WM));
         return res;
     }
 
@@ -103,11 +103,11 @@ public class BPCollection {
      * @return Map of base profiles from requested memory.
      * @throws IllegalStateException
      */
-    public Map<Integer, BaseProfile> getTimedBaseProfiles(int timestamp, BPCollection.MemoryTypes memType) throws IllegalStateException{
+    public Map<Integer, BaseProfile> getTimedBaseProfiles(int timestamp, MemoryType memType) throws IllegalStateException{
         if (timestamp <= 0 || timestamp > this.timestamp)
             throw new IllegalStateException("Incorrect timestamp.");
         Map<Integer, BaseProfile> res = new HashMap<>(),
-                selectedMem = memType.equals(MemoryTypes.LM) ? longTermMemory : workingMemory;
+                selectedMem = memType.equals(MemoryType.LM) ? longTermMemory : workingMemory;
 
         for (Map.Entry<Integer, BaseProfile> entry: selectedMem.entrySet()) {
             if (entry.getKey() <= timestamp)
@@ -160,7 +160,7 @@ public class BPCollection {
 
     /*public Set<Object> getAffectedObjects(int time) {
         Set<Object> res = new HashSet<>();
-        res.addAll(getTimedBaseProfile(time, MemoryTypes.LM).getValue().)
+        res.addAll(getTimedBaseProfile(time, MemoryType.LM).getValue().)
     }*/
 
 }

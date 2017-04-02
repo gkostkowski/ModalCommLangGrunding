@@ -18,6 +18,10 @@ public class Object {
         this.traits = traits;
     }
 
+    public Object() {
+
+    }
+
     public int getIdentifier() {
         return identifier;
     }

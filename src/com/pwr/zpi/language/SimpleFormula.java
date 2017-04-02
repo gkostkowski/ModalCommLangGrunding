@@ -4,6 +4,9 @@ import com.pwr.zpi.Object;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * SimpleFormula is understood as atomic formula and it's used as part of ComplexFormula.
  */
@@ -21,6 +24,10 @@ public class SimpleFormula extends Formula {
 
     public SimpleFormula(Object object, Trait trait) {
         this(object, trait, false);
+    }
+
+    public SimpleFormula(Object o, Set<Trait> traits, List<State> statesSeq) {
+        /*build formula like: state1(trait1(o))*/ //todo
     }
 
     /**

@@ -32,6 +32,10 @@ public class BaseProfile extends World {
         this.timestamp = timestamp;
     }
 
+    public BaseProfile() {
+
+    }
+
     public Map<Trait, Set<Object>> getDescribedByTraits() {
         return describedByTraits;
     }
