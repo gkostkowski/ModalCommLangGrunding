@@ -112,6 +112,19 @@ public class BaseProfile extends World {
         return describedByTraits.get(trait);
     }
 
+    /**
+     * Gives objects from appropriate sets. State describes which set should be selected: describedByTraits for State.IS etc.
+     * @param trait
+     * @return Set of objects.
+     */
+    public Set<Object> getByTraitState(Trait trait, State state) {
+        switch (state) {
+            case IS: return describedByTraits.get(trait);
+            case IS_NOT: return notDescribedByTraits.get(trait);
+            default: return indefiniteByTraits.get(trait);
+        }
+    }
+
     public Set<Object> getNotDescribedByTrait(Trait trait) {
         return notDescribedByTraits.get(trait);
     }

@@ -2,8 +2,9 @@ package com.pwr.zpi.language;
 
 import com.pwr.zpi.*;
 import com.pwr.zpi.Object;
+import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
-import javafx.util.Pair;
+import com.pwr.zpi.exceptions.NotApplicableException;
 
 import java.util.Set;
 import java.util.*;
@@ -37,8 +38,8 @@ public class Grounder {
         Map<Formula, Set<BaseProfile>> res = new HashMap<>();
 
         Operators.Type type = null;
-        boolean isComplex=false;
-        if (isComplex=formula instanceof ComplexFormula) {
+        boolean isComplex = false;
+        if (isComplex = formula instanceof ComplexFormula) {
             parts.addAll(((ComplexFormula) formula).getParts());
             type = ((ComplexFormula) formula).getOperator().getType();
         } else
@@ -51,7 +52,7 @@ public class Grounder {
                 List<State> statesSeq = Arrays.asList(states[fstStateCounter], states[sndStateCounter]);
                 Formula mentalModel = isComplex ? new ComplexFormula(o, traits, statesSeq, type) : new SimpleFormula(o, traits, statesSeq);
                 Set<BaseProfile> currSet = null;
-                res.put(mentalModel, currSet=new HashSet<>());
+                res.put(mentalModel, currSet = new HashSet<>());
                 for (BaseProfile bp : all) {
                     if (isFulfilled(o, new ArrayList<>(traits), time, statesSeq, type, bp))
                         currSet.add(bp);
@@ -196,6 +197,12 @@ public class Grounder {
         return getCardNegative(groundingSetPositive, time) / (getCardNegative(groundingSetNegative, time) + getCardPositive(groundingSetPositive, time));
     }
 
+    public static double relativeCard(Map<Formula, Set<BaseProfile>> groundingSets, int time, Formula formula) throws NotApplicableException {
+        //todo
+        return relativeCardConunction(formula, groundingSets, time);
+    }
+
+
     /**
      * Builds distributed knowledge, which will be used to make respective mental models associated
      * with formulas. It can be used to build distribution of different mental models.
@@ -206,13 +213,45 @@ public class Grounder {
      * @param time    Certain moment in time.
      * @return Distribution of knowledge.
      */
-    static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) {
+    static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) throws InvalidSentenceFormulaException {
         return new DistributedKnowledge(agent, formula, time);
     }
 
+/*
+    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) {
+        Operators.Type res;
+        for (Formula mentalModel : dk.getMentalModels()) {
+            res = determineSingleFulfillment(agent, dk, mentalModel);
+        }
+        return null; //todo ?
+    }
+*/
+/*
+
+    */
+/**
+ * Allows to perform multiple checking for epistemical condition fulfillment for same knowledge distribution and
+ * different formulas (but associated with mental models used to generate this certain knowledge distribution).
+ *
+ * @param agent
+ * @param dk
+ * @param formulas
+ * @return
+ *//*
+
+    static boolean determineFulfillments(Agent agent, DistributedKnowledge dk, Formula... formulas) {
+        List<Operators.Type> res = new ArrayList<>();
+        for (Formula f : formulas) {
+            res.add(determineSingleFulfillment(agent, dk, f));
+        }
+        //do sth with results //todo
+        return ?;
+    }
+*/
+
     /**
      * Realizes verification of epistemic fulfillment relationship's conditions for formula given through
-     * knowledge distribution.
+     * knowledge distribution. The given formula should be associated with given knowledge distribution.
      * Checks what type of extension of formula can occur. The following assumption was made: For any extended formula
      * (modal formula) there are only one modal operator which can be applied to this formula at once.
      * According to that, this method returns type of operator which can be used in formula without breaking
@@ -224,93 +263,118 @@ public class Grounder {
      * @return Type of operator which can be applied to formula given through distribution of knowledge.
      * @see DistributedKnowledge
      */
-    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) {
-        Operators.Type res;
-        for (Formula mentalModel : dk.getMentalModels()) {
-            res = determineSingleFulfillment(agent, dk, mentalModel);
-        }
-        return null; //todo ?
-    }
-
-
-    static Operators.Type determineSingleFulfillment(Agent agent, DistributedKnowledge dk, Formula mentalModel) {
+    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
         int timestamp = dk.getTimestamp();
         BaseProfile lmBp = new BaseProfile();
         BaseProfile wmBp = new BaseProfile();
         Set<Object> objects = new HashSet<>();
 
-        Object describedObj = mentalModel.getObject();
-        Set<Trait> describedTrait = mentalModel.getTraits();
+        Object describedObj = formula.getObject();
+        Set<Trait> describedTraits = formula.getTraits();
+        List<State> states = formula.getStates();
         //mentalModel.
         //boolean isNegated = state.equals(State.IS) ? true : false;
 
-        Set<Object> objsWithClearState = new HashSet<>();
+        List<Set<Object>> objsWithClearState = new ArrayList<>();
         /**
          * Represents objsWithPositiveState or objsWithNegativeState - depending on state value
          */
-        Set<Object> objsWithGivenState = new HashSet<>();
+        List<Set<Object>> objsWithGivenState = new ArrayList<>();
 
-        Set<Object> indefiniteByTrait = new HashSet<>();
-        Formula formula = dk.getFormula();
+        List<Set<Object>> indefiniteByTrait = new ArrayList<>();
+        BPCollection.MemoryType selectedMemory = BPCollection.MemoryType.WM;
 
 
 //        setCommonObjects(timestamp, agent, dk, lmBp, wmBp, objects, describedObj, describedTrait, objsWithClearState,
 //                objsWithGivenState, indefiniteByTrait, isNegated);
-        setCommonObjects(timestamp, agent, lmBp, wmBp, objects, describedObj, describedTrait, objsWithClearState,
-                objsWithGivenState, indefiniteByTrait, isNegated);
+        setCommonObjects(timestamp, agent, lmBp, wmBp, objects, describedObj, describedTraits, objsWithClearState,
+                objsWithGivenState, indefiniteByTrait, states);
 
-        return checkEpistemicalConditions(indefiniteByTrait, describedObj, dk, timestamp, objsWithGivenState, isNegated);
+        Map<Formula, Set<BaseProfile>> groundingSets = dk.getGroundingSets();
+        Set<BaseProfile> selsectedClass = dk.getDkClassByDesc(formula, selectedMemory);
+
+        return checkEpistemicConditions(indefiniteByTrait, describedObj, groundingSets, selsectedClass, timestamp, objsWithGivenState, formula);
     }
 
 
     private static void setCommonObjects(int timestamp, Agent agent, BaseProfile lmBp, BaseProfile wmBp,
-                                         Set<Object> objects, Object describedObj, Trait describedTrait,
-                                         Set<Object> objsWithClearState, Set<Object> objsWithGivenState,
-                                         Set<Object> indefiniteByTrait, boolean isNegated) {
+                                         Set<Object> objects, Object describedObj, Set<Trait> describedTraits,
+                                         List<Set<Object>> objsWithClearState, //one set for each trait
+                                         List<Set<Object>> objsWithGivenState,
+                                         List<Set<Object>> indefiniteByTrait, List<State> states) throws InvalidFormulaException {
         lmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.LM));
-        wmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.LM));
+        wmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.WM));
         objects.addAll(BaseProfile.getObjects(lmBp, wmBp));
 //        describedObj.copy(dk.getObject());
 //        describedTrait.copy(dk.getTrait());
 
-        objsWithClearState.addAll(Object.getObjects(
-                lmBp.getNotDescribedByTrait(describedTrait),
-                wmBp.getNotDescribedByTrait(describedTrait),
-                lmBp.getDescribedByTrait(describedTrait),
-                wmBp.getDescribedByTrait(describedTrait)));
-        if (isNegated) {
-            objsWithGivenState.addAll(Object.getObjects(
-                    lmBp.getNotDescribedByTrait(describedTrait),
-                    wmBp.getNotDescribedByTrait(describedTrait)));
-        } else {
+        if (describedTraits.size() != states.size())
+            throw new com.pwr.zpi.exceptions.InvalidFormulaException("States doesn't match to given traits.");
+        Iterator<State> stateIt = states.iterator();
+        for (Trait t : describedTraits) {
+            objsWithClearState.add(new HashSet<>(Object.getObjects(
+                    lmBp.getNotDescribedByTrait(t),
+                    wmBp.getNotDescribedByTrait(t),
+                    lmBp.getDescribedByTrait(t),
+                    wmBp.getDescribedByTrait(t))));
 
-            objsWithGivenState.addAll(Object.getObjects(
-                    lmBp.getDescribedByTrait(describedTrait),
-                    wmBp.getDescribedByTrait(describedTrait)));
+            State state = stateIt.next();
+            objsWithGivenState.add(new HashSet<>(Object.getObjects(
+                    lmBp.getByTraitState(t, state),
+                    wmBp.getByTraitState(t, state))));
+
+            indefiniteByTrait.add(new HashSet<Object>(objects));
+            indefiniteByTrait.removeAll(objsWithClearState);
         }
-        indefiniteByTrait.addAll(objects);
-        indefiniteByTrait.removeAll(objsWithClearState);
+
     }
 
-    private static Operators.Type checkEpistemicalConditions(Set<Object> indefiniteByTrait, Object describedObj, DistributedKnowledge dk,
-                                                             int timestamp, Set<Object> objsWithSelectedState, boolean isNegated) {
-        Set<BaseProfile> PBfromWM = isNegated ? dk.getRA2() : dk.getRA1();
-        if (indefiniteByTrait.contains(describedObj) && !PBfromWM.isEmpty()) {
-            double currRelCard = isNegated ? relativeNegativeCard(dk.getA1(), dk.getA2(), timestamp)
-                    : relativePositiveCard(dk.getA1(), dk.getA2(), timestamp);
+    /**
+     * Decides for which modal operator, formula given through objects related to traits, can occur.
+     *
+     * @param indefiniteByTrait
+     * @param describedObj
+     * @param
+     * @param timestamp
+     * @param
+     * @param
+     * @return
+     */
+    private static Operators.Type checkEpistemicConditions(List<Set<Object>> indefiniteByTrait, Object describedObj,
+                                                           Map<Formula, Set<BaseProfile>> groundingSets, Set<BaseProfile> selectedClass,
+                                                           int timestamp, List<Set<Object>> objsWithGivenState,
+                                                           Formula formula) throws NotApplicableException {
+        if (eachContains(indefiniteByTrait, describedObj, Operators.Type.AND) && !selectedClass.isEmpty()) {
+            double currRelCard = relativeCard(groundingSets, timestamp, formula);
             if (currRelCard >= MIN_POS && currRelCard < MAX_POS)
                 return Operators.Type.POS;
             if (currRelCard >= MIN_BEL && currRelCard < MAX_BEL)
-                return Operators.Type.POS;
+                return Operators.Type.BEL;
             if (currRelCard == KNOW)
-                return Operators.Type.POS;
-        } else if (objsWithSelectedState.contains(describedObj)) {
-            return Operators.Type.POS;
+                return Operators.Type.KNOW;
         } else {
+            if (eachContains(objsWithGivenState, describedObj, Operators.Type.AND))
+                return Operators.Type.KNOW;
+            else {
             /*can use AND, OR, XOR*/
 
+            }
         }
         return null;
+    }
+
+
+    //todo move to utils
+    private static <T extends Object> boolean eachContains(Collection<Set<T>> c, Object obj, Operators.Type op) {
+        boolean res = op.equals(Operators.Type.AND), curr = false;
+        for (Set<T> elem : c) {
+            curr = elem.contains(obj);
+            switch (op) {
+                case AND: res = res &&  curr;
+                case OR: res = res ||  curr;
+            }
+        }
+        return res;
     }
 
     /**
@@ -330,7 +394,8 @@ public class Grounder {
      * @return
      */
 
-    static Set<BaseProfile> getGroundingSetsConjunction(Object o, Trait P, Trait Q, int time, Set<BaseProfile> all, int i) {
+    static Set<BaseProfile> getGroundingSetsConjunction(Object o, Trait P, Trait Q, int time, Set<BaseProfile> all,
+                                                        int i) {
         Set<BaseProfile> out = new HashSet<BaseProfile>();
         switch (i) {
             case 1:
@@ -341,19 +406,22 @@ public class Grounder {
 
             case 2:
                 for (BaseProfile bp : all) {
-                    if (bp.DetermineIfSetHasTrait(o, P, time) && !bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
+                    if (bp.DetermineIfSetHasTrait(o, P, time) && !bp.DetermineIfSetHasTrait(o, Q, time))
+                        out.add(bp);
                 }
                 break;
 
             case 3:
                 for (BaseProfile bp : all) {
-                    if (!bp.DetermineIfSetHasTrait(o, P, time) && bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
+                    if (!bp.DetermineIfSetHasTrait(o, P, time) && bp.DetermineIfSetHasTrait(o, Q, time))
+                        out.add(bp);
                 }
                 break;
 
             case 4:
                 for (BaseProfile bp : all) {
-                    if (!bp.DetermineIfSetHasTrait(o, P, time) && !bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
+                    if (!bp.DetermineIfSetHasTrait(o, P, time) && !bp.DetermineIfSetHasTrait(o, Q, time))
+                        out.add(bp);
                 }
                 break;
         }
@@ -367,6 +435,7 @@ public class Grounder {
      * @param t            Time taken into consideration when looking for expieriences
      * @return Cardinality of given set
      */
+
     static double getCard(Set<BaseProfile> groundingSet, int t) {
         return groundingSet.size();
     }

@@ -138,4 +138,8 @@ public class DistributedKnowledge {
     public Set<BaseProfile> getDkClassByDesc(Formula formula, BPCollection.MemoryType mem) {
         return dkClasses.get(new Pair<>(formula, mem));
     }
+
+    public Set<BaseProfile> getGroundingSet(Formula formula) {
+        return groundingSets.get(formula);
+    }
 }
