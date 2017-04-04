@@ -25,7 +25,8 @@ public abstract class Formula {
      * @return List of states.
      */
     public List<State> getStates() {
-        return states;
+        return null;
+        //return states;
     }
 
     enum Type {

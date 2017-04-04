@@ -105,6 +105,21 @@ public class ComplexFormula extends Formula {
         subFormula.printSubFormula(subFormula);
     }
 
+    @Override
+    public Set<Trait> getTraits() {
+        return null;
+    }
+
+    @Override
+    public Object getObject() {
+        return null;
+    }
+
+    @Override
+    public Type getType() {
+        return null;
+    }
+
     /**
      * Method return evaluation of ComplexFormula if such is possible
      * @return State of evalueted ComplexFormula

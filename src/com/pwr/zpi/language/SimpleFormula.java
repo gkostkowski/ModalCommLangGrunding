@@ -4,6 +4,8 @@ import com.pwr.zpi.Object;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +30,21 @@ public class SimpleFormula extends Formula {
 
     public SimpleFormula(Object o, Set<Trait> traits, List<State> statesSeq) {
         /*build formula like: state1(trait1(o))*/ //todo
+    }
+
+    @Override
+    public Set<Trait> getTraits() {
+        return new HashSet<Trait>(Arrays.asList(trait));
+    }
+
+    @Override
+    public Object getObject() {
+        return object;
+    }
+
+    @Override
+    public Type getType() {
+        return null;
     }
 
     /**

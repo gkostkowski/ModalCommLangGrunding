@@ -47,7 +47,7 @@ public class DistributedKnowledge {
 
 
 
-    public DistributedKnowledge(Agent agent, Formula formula, int time) throws InvalidSentenceFormulaException {
+    public DistributedKnowledge(Agent agent, Formula formula, int time) throws InvalidFormulaException {
         this.timestamp = time;
         this.formula = formula;
         this.traits = formula.getTraits();

@@ -54,7 +54,7 @@ public class Trait <K, V> {
      * @return State of trait.
      */
     public State stateOfTrait() {
-        int val = (int)this.value;
+        /*int val = (int)this.value;
         if(val > UPPER_BOUND) {
             return State.IS;
         }
@@ -63,7 +63,8 @@ public class Trait <K, V> {
                 return State.IS_NOT;
             else    // <LOWER_BOUND,UPPER_BOUND>
                 return State.MAYHAPS;
-        }
+        }*/
+        return State.MAYHAPS; //todo
     }
 
     public void copy(Trait<K, V> other) {

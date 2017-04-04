@@ -1,8 +1,11 @@
 package com.pwr.zpi.language;
+import com.pwr.zpi.Object;
 import com.pwr.zpi.State;
+import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.Stack;
 
 
@@ -70,6 +73,21 @@ public class SubFormula extends Formula {
             printSubFormula(((SubFormula) formula).formula2);
             System.out.print(")");
         }
+    }
+
+    @Override
+    public Set<Trait> getTraits() {
+        return null;
+    }
+
+    @Override
+    public Object getObject() {
+        return null;
+    }
+
+    @Override
+    public Type getType() {
+        return null;
     }
 
     /**

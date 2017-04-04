@@ -26,27 +26,27 @@ class DistributedKnowledgeTest extends GroovyTestCase {
         def lplus = new Trait("Ladowanie", State.IS)
         def lminpl = new Trait("Ladowanie", State.MAYHAPS)
 
-        def o1 = new Object(1, "o1", [nminpl, pminus, lminpl])
-        def o2 = new Object(2, "o2", [nminpl, pminus, lminpl])
-        def o3 = new Object(3, "o3", [nminpl, pminus, lminpl])
-        def o4 = new Object(4, "o4", [nminpl, pminus, lminpl])
-        def o5 = new Object(5, "o5", [nminpl, pminus, lminpl])
+        def o1 = new Object(1, "o1", [nminpl, pminus, lminpl] as Set)
+        def o2 = new Object(2, "o2", [nminpl, pminus, lminpl] as Set)
+        def o3 = new Object(3, "o3", [nminpl, pminus, lminpl] as Set)
+        def o4 = new Object(4, "o4", [nminpl, pminus, lminpl] as Set)
+        def o5 = new Object(5, "o5", [nminpl, pminus, lminpl] as Set)
 
-        def pb0 = new BaseProfile([nminus: [], nplus: [], nminpl: [o1, o2, o3, o4, o5],
-                                   pminus: [o1, o2, o3, o4, o5], pplus: [], pminpl: [],
-                                   lplus : [], lminus: [], lminpl: [o1, o2, o3, o4, o5]], 0) //t=0
-        def pb1 = new BaseProfile([nminus: [], nplus: [o1,o3,o5], nminpl: [o2,o4],
-                                   pminus: [], pplus: [o1,o5], pminpl: [o2,o3,o4],
-                                   lplus : [], lminus: [o1,o3,o5], lminpl: [o2,o4]], 1) //t=2
-        def pb2 = new BaseProfile([nminus: [o2], nplus: [o1,o5], nminpl: [o3,o4],
-                                   pminus: [o5], pplus: [o1], pminpl: [o2,o3,o4],
-                                   lplus : [], lminus: [o1,o2,o5], lminpl: [o3,o4]], 2) //t=5
-        def pb3 = new BaseProfile([nminus: [], nplus: [o1,o3], nminpl: [o2, o4, o5],
-                                   pminus: [], pplus: [o1,o3], pminpl: [o2, o4, o5],
-                                   lplus : [], lminus: [o1,o3], lminpl: [o2, o4, o5]], 3) //t=7
+        def pb0 = new BaseProfile([nminus: [] as Set, nplus: [] as Set, nminpl: [o1, o2, o3, o4, o5] as Set,
+                                   pminus: [o1, o2, o3, o4, o5] as Set, pplus: [] as Set, pminpl: [] as Set,
+                                   lplus : [] as Set, lminus: [] as Set, lminpl: [o1, o2, o3, o4, o5] as Set], 0) //t=0
+        def pb1 = new BaseProfile([nminus: [] as Set, nplus: [o1,o3,o5] as Set, nminpl: [o2,o4] as Set,
+                                   pminus: [] as Set, pplus: [o1,o5] as Set, pminpl: [o2,o3,o4] as Set,
+                                   lplus : [] as Set, lminus: [o1,o3,o5] as Set, lminpl: [o2,o4] as Set], 1) //t=2
+        def pb2 = new BaseProfile([nminus: [o2] as Set, nplus: [o1,o5] as Set, nminpl: [o3,o4] as Set,
+                                   pminus: [o5] as Set, pplus: [o1] as Set, pminpl: [o2,o3,o4] as Set,
+                                   lplus : [] as Set, lminus: [o1,o2,o5] as Set, lminpl: [o3,o4]as Set] , 2) //t=5
+        def pb3 = new BaseProfile([nminus: [] as Set, nplus: [o1,o3] as Set, nminpl: [o2, o4, o5] as Set,
+                                   pminus: [] as Set, pplus: [o1,o3] as Set, pminpl: [o2, o4, o5] as Set,
+                                   lplus : [] as Set, lminus: [o1,o3] as Set, lminpl: [o2, o4, o5] as Set], 3) //t=7
 
         def bpc3 = new BPCollection([3:pb3],[0:pb0, 1:pb1, 2:pb2],3)
-        def agent = new Agent(99, "regular", [n, p, l], bpc3)
+        def agent = new Agent(99, "regular", [n, p, l] as Set, bpc3)
 
 
         def formula = new SimpleFormula(o1, n)
