@@ -1,9 +1,5 @@
 package com.pwr.zpi;
 
-/**
- *
- */
-
 import java.util.*;
 
 /**
@@ -67,13 +63,6 @@ public class BaseProfile extends World {
     public void setTimestamp(int timestamp) {
         this.timestamp = timestamp;
     }
-
-
-
-    /*boolean isPAdequate(Collection<NamedCollection<Name, Object>> PSwT, Trait examinedTrait) {
-        return false;
-    }*/
-
 
 
 

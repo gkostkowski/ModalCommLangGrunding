@@ -15,6 +15,10 @@ import java.util.*;
  */
 public class BPCollection {
 
+    /**
+     * Describes allowed types of agent's memory. According to the accepted theoretical model, there are two memory
+     * levels: Working memory and long-term memory.
+     */
     public enum MemoryType {
         WM, LM
     }
@@ -30,9 +34,13 @@ public class BPCollection {
      * current timestamp set for this BPCollection.
      */
     protected Map<Integer, BaseProfile> longTermMemory;
-    //protected NamedCollection<Integer, BaseProfile> longTermMemory;
     private int timestamp;
 
+    public BPCollection(Map<Integer, BaseProfile> workingMemory, Map<Integer, BaseProfile> longTermMemory, int timestamp) {
+        this.workingMemory = workingMemory;
+        this.longTermMemory = longTermMemory;
+        this.timestamp = timestamp;
+    }
 
     /**
      * Returns base profile from pointed memory related with given timestamp.

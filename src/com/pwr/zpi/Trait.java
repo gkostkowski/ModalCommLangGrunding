@@ -18,6 +18,10 @@ public class Trait <K, V> {
     public Trait() {
 
     }
+    public Trait(Trait<K,V> other) {
+        this.setValue(other.getValue());
+        this.setName(other.getName());
+    }
 
     public K getName() {
         return name;
