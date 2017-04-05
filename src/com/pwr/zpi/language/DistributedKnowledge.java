@@ -26,7 +26,7 @@ public class DistributedKnowledge {
 
     private int timestamp;
     private final Formula formula;
-    private final Set<Trait> traits;
+    private final List<Trait> traits;
     private final Object obj;
     private Map<Integer, BaseProfile> inLM;
     private Map<Integer, BaseProfile> inWM;

@@ -13,7 +13,8 @@ import java.util.Set;
  */
 public abstract class Formula {
 
-    public abstract Set<Trait> getTraits();
+    public abstract List<Trait> getTraits();
+
     public abstract Object getObject();
 
     public abstract Type getType();
