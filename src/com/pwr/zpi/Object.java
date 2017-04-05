@@ -4,15 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Describes object with it's type and set of traits.
- * Represents objects placed in real world and witnessed by agent.
+ * Describes object with it's id, type and set of traits.
+ * Represents objects placed in real world, witnessed by agent.
  */
 public class Object {
     protected int identifier;
     protected String type;
     private Set<Trait> traits; //won't be visible in subclasses
 
-    public Object(int identifier,String type,Set<Trait> traits){
+    public Object(int identifier, String type, Set<Trait> traits){
         this.identifier = identifier;
         this.type = type;
         this.traits = traits;
@@ -48,7 +48,7 @@ public class Object {
 
     /**
      * Checks whether two objects are equal.
-     * Equal when - same types, same traits with same states.
+     * Equal when they have same types, same traits with same states.
      *
      * @param other Other object.
      * @return      true/false
@@ -79,7 +79,7 @@ public class Object {
      * Checks if object has given trait and return it's state.
      *
      * @param trait Given trait.
-     * @return      State of trait or null when object does'nt has trait.
+     * @return      State of trait or null when object doesn't has trait.
      */
     public State hasTrait(Trait trait) {
         for (Trait t : traits) {
@@ -107,6 +107,9 @@ public class Object {
         return res;
     }
 
+    /**
+     * Copies all attributes from other object.
+     */
     public void copy(Object other) {
         setIdentifier(other.getIdentifier());
         setType(other.getType());
