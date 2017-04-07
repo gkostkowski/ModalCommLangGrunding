@@ -33,8 +33,10 @@ public class Grounder {
      */
     static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
         Object o = formula.getObject();
-        List<Trait> traits = formula.getTraits();
-        List<State> states = formula.getStates();
+        Set<Trait> traits = formula.getTraits();
+        State [] states = new State[traits.size()];
+        List<State> s = formula.getStates();
+        states = s.toArray(states);
         if (o == null || traits == null || states == null)
             throw new InvalidFormulaException("Invalid formula");
 
@@ -45,7 +47,7 @@ public class Grounder {
         boolean isComplex = false;
         if (isComplex = formula instanceof ComplexFormula) {
             parts.addAll(((ComplexFormula) formula).getParts());
-            type = ((ComplexFormula) formula).getOperator();
+            type = ((ComplexFormula) formula).getOperator().getType();
         } else
             parts.add(formula);
 
@@ -53,7 +55,7 @@ public class Grounder {
                 sndStateCounter = 0;
         for (Formula atomicFormula : parts) {
             for (State state : states) {
-                List<State> statesSeq = Arrays.asList(states.get(fstStateCounter), states.get(sndStateCounter));
+                List<State> statesSeq = Arrays.asList(states[fstStateCounter], states[sndStateCounter]);
                 Formula mentalModel = isComplex ? new ComplexFormula(o, traits, statesSeq, type) : new SimpleFormula(o, traits, statesSeq);
                 Set<BaseProfile> currSet = null;
                 res.put(mentalModel, currSet = new HashSet<>());
@@ -61,9 +63,9 @@ public class Grounder {
                     if (isFulfilled(o, new ArrayList<>(traits), time, statesSeq, type, bp))
                         currSet.add(bp);
                 }
-                fstStateCounter = (fstStateCounter + 1) % states.size();
+                fstStateCounter = (fstStateCounter + 1) % states.length;
             }
-            sndStateCounter = (sndStateCounter + 1) % states.size();
+            sndStateCounter = (sndStateCounter + 1) % states.length;
         }
         return res;
     }
@@ -100,10 +102,11 @@ public class Grounder {
         }
         return res;
     }
-
+/*
     static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
         return getGroundingSets(formula, time, all);
     }
+    */
 /*
 
     */
@@ -117,7 +120,7 @@ public class Grounder {
      * @param time  Time taken into consideration when looking for expieriences
      * @param all   Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @return List of BaseProfiles which contain Positive Traits
-     *//*
+     */
 
     static Set<BaseProfile> getGroundingSetsPositiveTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
@@ -129,7 +132,6 @@ public class Grounder {
         return baseout;
     }
 
-    */
 /**
      * Defines grounded set A2(t) responsible for induction of mental model m1 connected to object p and trait P
      * A2 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
@@ -140,7 +142,7 @@ public class Grounder {
      * @param time Time taken into consideration when looking for expieriences
      * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @return Set of BaseProfiles which contain Positive Traits
-     *//*
+     */
 
 
     static Set<BaseProfile> getGroundingSetsNegativeTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
@@ -153,34 +155,31 @@ public class Grounder {
         return baseout;
     }
 
-    */
 /**
      * Inductive cardinality GAi grounding set A1
      *
      * @param groundingSet set of Base Profiles which cardinality we desire to know
      * @param t            given time
      * @return Positive Cardinality of Set
-     *//*
+     */
 
     static double getCardPositive(Set<BaseProfile> groundingSet, int t) {
         return groundingSet.size();
     }
 
-    */
 /**
      * Inductive cardinality GAi grounding set A2
      *
      * @param groundingSet set of Base Profiles which cardinality we desire to know
      * @param t            given time
      * @return Cardinality of Set
-     *//*
+     */
 
 
     static double getCardNegative(Set<BaseProfile> groundingSet, int t) {
         return groundingSet.size();
     }
 
-    */
 /**
      * Value of relative power of grounding lambda for base form p(o)
      *
@@ -188,7 +187,7 @@ public class Grounder {
      * @param groundingSetNegative Set of Negative BaseProfiles
      * @param time                 given time
      * @return Cardinality (ratio) of Positive BaseProfiles to all
-     *//*
+     */
 
     static double relativePositiveCard(Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
         if (groundingSetNegative.isEmpty()) {
@@ -197,7 +196,6 @@ public class Grounder {
         return getCardPositive(groundingSetPositive, time) / (getCardNegative(groundingSetNegative, time) + getCardPositive(groundingSetPositive, time));
     }
 
-    */
 /**
      * Value of relative power of grounding lambda for base form not p(o)
      *
@@ -205,7 +203,7 @@ public class Grounder {
      * @param groundingSetNegative Set of Negative BaseProfiles
      * @param time                 Given time
      * @return Cardinality (ratio) of Negative BaseProfiles to all
-     *//*
+     */
 
     static double relativeNegativeCard(Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
         if (groundingSetPositive.isEmpty()) {
@@ -220,7 +218,6 @@ public class Grounder {
     }
 
 
-    */
 /**
      * Builds distributed knowledge, which will be used to make respective mental models associated
      * with formulas. It can be used to build distribution of different mental models.
@@ -230,14 +227,12 @@ public class Grounder {
      * @param formula Formula which
      * @param time    Certain moment in time.
      * @return Distribution of knowledge.
-     *//*
+     */
 
     static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) throws InvalidSentenceFormulaException {
         return new DistributedKnowledge(agent, formula, time);
     }
 
-*/
-/*
     static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) {
         Operators.Type res;
         for (Formula mentalModel : dk.getMentalModels()) {
@@ -245,14 +240,6 @@ public class Grounder {
         }
         return null; //todo ?
     }
-*//*
-
-*/
-/*
-
-    *//*
-
-*/
 /**
  * Allows to perform multiple checking for epistemical condition fulfillment for same knowledge distribution and
  * different formulas (but associated with mental models used to generate this certain knowledge distribution).
@@ -261,9 +248,7 @@ public class Grounder {
  * @param dk
  * @param formulas
  * @return
- *//*
-*/
-/*
+ */
 
     static boolean determineFulfillments(Agent agent, DistributedKnowledge dk, Formula... formulas) {
         List<Operators.Type> res = new ArrayList<>();
@@ -273,10 +258,7 @@ public class Grounder {
         //do sth with results //todo
         return ?;
     }
-*//*
 
-
-    */
 /**
      * Realizes verification of epistemic fulfillment relationship's conditions for formula given through
      * knowledge distribution. The given formula should be associated with given knowledge distribution.
@@ -290,7 +272,7 @@ public class Grounder {
      * @param dk    Distributed knowledge for respective grounding sets related with certain formula.
      * @return Type of operator which can be applied to formula given through distribution of knowledge.
      * @see DistributedKnowledge
-     *//*
+     */
 
     static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
         int timestamp = dk.getTimestamp();
@@ -305,10 +287,9 @@ public class Grounder {
         //boolean isNegated = state.equals(State.IS) ? true : false;
 
         List<Set<Object>> objsWithClearState = new ArrayList<>();
-        */
 /**
          * Represents objsWithPositiveState or objsWithNegativeState - depending on state value
-         *//*
+         */
 
         List<Set<Object>> objsWithGivenState = new ArrayList<>();
 
@@ -360,7 +341,6 @@ public class Grounder {
 
     }
 
-    */
 /**
      * Decides for which modal operator, formula given through objects related to traits, can occur.
      *
@@ -371,7 +351,7 @@ public class Grounder {
      * @param
      * @param
      * @return
-     *//*
+     */
 
     private static Operators.Type checkEpistemicConditions(List<Set<Object>> indefiniteByTrait, Object describedObj,
                                                            Map<Formula, Set<BaseProfile>> groundingSets, Set<BaseProfile> selectedClass,
@@ -389,8 +369,7 @@ public class Grounder {
             if (eachContains(objsWithGivenState, describedObj, Operators.Type.AND))
                 return Operators.Type.KNOW;
             else {
-            */
-/*can use AND, OR, XOR*//*
+/*can use AND, OR, XOR*/
 
 
             }
@@ -412,7 +391,6 @@ public class Grounder {
         return res;
     }
 
-    */
 /**
      * Defines grounded set Ai(t) responsible for induction of mental model mi connected to baseProfile which
      * involves connotations with both objects P,and Q.Depending on i
@@ -428,7 +406,7 @@ public class Grounder {
      * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @param i    indicator,indicating which case we'd like to use
      * @return
-     *//*
+     */
 
 
     static Set<BaseProfile> getGroundingSetsConjunction(Object o, Trait P, Trait Q, int time, Set<BaseProfile> all,
@@ -465,21 +443,19 @@ public class Grounder {
         return out;
     }
 
-    */
 /**
      * Inductive cardinality GAi grounding set Ai
      *
      * @param groundingSet Grounding set which cardinality we wish to know
      * @param t            Time taken into consideration when looking for expieriences
      * @return Cardinality of given set
-     *//*
+     */
 
 
     static double getCard(Set<BaseProfile> groundingSet, int t) {
         return groundingSet.size();
     }
 
-    */
 /**
      * Value of relative power of grounding lambda for base form indicated by i
      * i = 1 p(o) and q(o)
@@ -494,7 +470,7 @@ public class Grounder {
      * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @param i    indicator,indicating which case we'd like to use
      * @return
-     *//*
+     */
 
     static double relativeCardConunction(Object o, Trait P, Trait Q, int time, Set<BaseProfile> all, int i) {
         Set<BaseProfile> Sum = new HashSet<BaseProfile>();
@@ -506,6 +482,6 @@ public class Grounder {
         Sum.addAll(getGroundingSetsConjunction(o, P, Q, time, all, 4));
         return getCard(getGroundingSetsConjunction(o, P, Q, time, all, i), time) / getCard(Sum, time);
     }
-*/
+
 
 }

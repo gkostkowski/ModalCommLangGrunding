@@ -18,6 +18,7 @@ public class Trait <K, V> {
     public Trait() {
 
     }
+
     public Trait(Trait<K,V> other) {
         this.setValue(other.getValue());
         this.setName(other.getName());
@@ -67,6 +68,9 @@ public class Trait <K, V> {
         return State.MAYHAPS; //todo
     }
 
+    /**
+     * Copies all attributes from other trait.
+     */
     public void copy(Trait<K, V> other) {
         setName(other.getName());
         setValue(other.getValue());

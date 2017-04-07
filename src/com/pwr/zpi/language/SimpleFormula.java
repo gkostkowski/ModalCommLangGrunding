@@ -67,9 +67,9 @@ public class SimpleFormula extends Formula {
 
     /**
      * Used to determine whether given object has given trait
-     * by returning its State - trait IS or IS_NOT occurring in object.
+     * by returning its state (trait IS, IS_NOT or MAYHAPS is occurring in object).
      *
-     * @return State of trait's occurrence in object (IS, IS_NOT).
+     * @return State of trait's occurrence in object.
      */
     public State evaluate() {
         State result = object.hasTrait(trait);
