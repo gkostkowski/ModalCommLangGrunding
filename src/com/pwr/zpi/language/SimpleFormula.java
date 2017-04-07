@@ -1,6 +1,6 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.Object;
+import com.pwr.zpi.Observation;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 
@@ -14,21 +14,21 @@ import java.util.Set;
  */
 public class SimpleFormula extends Formula {
 
-    Object object;
+    Observation object;
     Trait trait;
     boolean isNegated;
 
-    public SimpleFormula(Object object, Trait trait, boolean isNegated) {
+    public SimpleFormula(Observation object, Trait trait, boolean isNegated) {
         this.object = object;
         this.trait = trait;
         this.isNegated = isNegated;
     }
 
-    public SimpleFormula(Object object, Trait trait) {
+    public SimpleFormula(Observation object, Trait trait) {
         this(object, trait, false);
     }
 
-    public SimpleFormula(Object o, Set<Trait> traits, List<State> statesSeq) {
+    public SimpleFormula(Observation o, Set<Trait> traits, List<State> statesSeq) {
         /*build formula like: state1(trait1(o))*/ //todo
     }
 
@@ -38,7 +38,7 @@ public class SimpleFormula extends Formula {
     }
 
     @Override
-    public Object getObject() {
+    public Observation getObject() {
         return object;
     }
 

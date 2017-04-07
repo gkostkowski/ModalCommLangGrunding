@@ -166,8 +166,8 @@ public class BPCollection {
     void shiftBaseProfile(Map<Integer, BaseProfile> from, Map<Integer, BaseProfile> to) {
     } //todo
 
-    /*public Set<Object> getAffectedObjects(int time) {
-        Set<Object> res = new HashSet<>();
+    /*public Set<Observation> getAffectedObjects(int time) {
+        Set<Observation> res = new HashSet<>();
         res.addAll(getTimedBaseProfile(time, MemoryType.LM).getValue().)
     }*/
 

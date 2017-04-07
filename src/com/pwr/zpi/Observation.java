@@ -4,21 +4,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Describes object with it's id, type and set of traits.
+ * Describes object's observation with it's id, type and set of traits.
  * Represents objects placed in real world, witnessed by agent.
  */
-public class Object {
+public class Observation {
     protected int identifier;
     protected String type;
     private Set<Trait> traits; //won't be visible in subclasses
 
-    public Object(int identifier, String type, Set<Trait> traits){
+    public Observation(int identifier, String type, Set<Trait> traits){
         this.identifier = identifier;
         this.type = type;
         this.traits = traits;
     }
 
-    public Object() {
+    public Observation() {
 
     }
 
@@ -53,7 +53,7 @@ public class Object {
      * @param other Other object.
      * @return      true/false
      */
-    public boolean equals(Object other) {
+    public boolean equals(Observation other) {
         boolean contains = false;
 
         if(type.equals(other.getType()))
@@ -100,9 +100,9 @@ public class Object {
      * @param sets  Array of sets of objects.
      * @return      Set of objects.
      */
-    public static Set<Object> getObjects(Set<Object> ... sets) {
-        Set<Object> res = new HashSet<>();
-        for (Set<Object> set :sets)
+    public static Set<Observation> getObjects(Set<Observation> ... sets) {
+        Set<Observation> res = new HashSet<>();
+        for (Set<Observation> set :sets)
             res.addAll(set);
         return res;
     }
@@ -110,7 +110,7 @@ public class Object {
     /**
      * Copies all attributes from other object.
      */
-    public void copy(Object other) {
+    public void copy(Observation other) {
         setIdentifier(other.getIdentifier());
         setType(other.getType());
         setTraits(other.getTraits());

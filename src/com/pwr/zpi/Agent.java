@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  *
  */
-public class Agent extends Object {
+public class Agent extends Observation {
     BPCollection knowledgeBase;
 
     public Agent(int identifier, String type, Set<Trait> traits, BPCollection knowledgeBase) {

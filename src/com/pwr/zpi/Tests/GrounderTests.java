@@ -10,9 +10,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.pwr.zpi.BaseProfile;
-import com.pwr.zpi.Trait;
-import com.pwr.zpi.Object;
 import com.pwr.zpi.language.Grounder;
 
 import junit.framework.Assert;
@@ -33,7 +30,7 @@ public class GrounderTests {
     @SuppressWarnings("rawtypes")
     Set<Trait> traitsy = new HashSet<Trait>(Arrays.asList(t,t1,t2,t3));
 
-    Object o = new Object(1, "TestowyTyp", traitsy);
+    Observation o = new Observation(1, "TestowyTyp", traitsy);
 
     Trait<String,Integer> tr1 = new Trait<String,Integer>("Budyn",50);
     Trait<String,Integer> tr2 = new Trait<String,Integer>("Smacznosc",78);
@@ -43,9 +40,9 @@ public class GrounderTests {
     @SuppressWarnings("rawtypes")
     Set<Trait> traitsy2 = new HashSet<Trait>(Arrays.asList(t,t1,t2,t3));
 
-    Object o2 = new Object(1, "TestowyTyp", traitsy);
+    Observation o2 = new Observation(1, "TestowyTyp", traitsy);
 
-    Map<Trait, Set<Object>> SetOTraits = new HashMap<Trait,Set<Object>>();
+    Map<Trait, Set<Observation>> SetOTraits = new HashMap<Trait,Set<Observation>>();
 
     BaseProfile bp ,bp2;
     Set<BaseProfile> SetBP = new HashSet<BaseProfile>();
@@ -56,11 +53,11 @@ public class GrounderTests {
         Grounder tester = new Grounder();
         Class testprivate = tester.getClass();
         Class[] cArg = new Class[4];
-        cArg[0] = Object.class;
+        cArg[0] = Observation.class;
         cArg[1] = Trait.class;
         cArg[2] = int.class;
         cArg[3] = Set.class;
-        SetOTraits.put(t1, new HashSet<Object>(Arrays.asList(o,o2)));
+        SetOTraits.put(t1, new HashSet<Observation>(Arrays.asList(o,o2)));
         bp = new BaseProfile(SetOTraits,10);
         bp.setDescribedByTraits(SetOTraits);
         SetBP.add(bp);
@@ -87,7 +84,7 @@ public class GrounderTests {
         Class[] cArg = new Class[2];
         cArg[0] = Set.class;
         cArg[1] = int.class;
-        SetOTraits.put(t1, new HashSet<Object>(Arrays.asList(o,o2)));
+        SetOTraits.put(t1, new HashSet<Observation>(Arrays.asList(o,o2)));
         bp = new BaseProfile(SetOTraits,10);
         bp.setDescribedByTraits(SetOTraits);
         bp2 = new BaseProfile(SetOTraits,12);
@@ -117,7 +114,7 @@ public class GrounderTests {
         Class[] cArg = new Class[2];
         cArg[0] = Set.class;
         cArg[1] = int.class;
-        SetOTraits.put(t1, new HashSet<Object>(Arrays.asList(o,o2)));
+        SetOTraits.put(t1, new HashSet<Observation>(Arrays.asList(o,o2)));
         bp = new BaseProfile(SetOTraits,10);
         bp.setDescribedByTraits(SetOTraits);
         bp2 = new BaseProfile(SetOTraits,12);
@@ -148,7 +145,7 @@ public class GrounderTests {
         cArg[0] = Set.class;
         cArg[1] = Set.class;
         cArg[2] = int.class;
-        SetOTraits.put(t1, new HashSet<Object>(Arrays.asList(o,o2)));
+        SetOTraits.put(t1, new HashSet<Observation>(Arrays.asList(o,o2)));
         bp = new BaseProfile(SetOTraits,10);
         bp.setDescribedByTraits(SetOTraits);
         bp2 = new BaseProfile(SetOTraits,12);

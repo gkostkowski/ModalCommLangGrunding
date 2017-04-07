@@ -1,6 +1,6 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.Object;
+import com.pwr.zpi.Observation;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
@@ -63,7 +63,7 @@ public class ComplexFormula extends Formula {
         subFormula = new SubFormula(po1, null, null);
     }
 
-    public ComplexFormula(Object o, Set<Trait> traits, List<State> statesSeq, Operators.Type op) {
+    public ComplexFormula(Observation o, Set<Trait> traits, List<State> statesSeq, Operators.Type op) {
         /*build formula like: state1(trait1(o)) op state2(trait2(o))*/ //todo
     }
 
@@ -111,7 +111,7 @@ public class ComplexFormula extends Formula {
     }
 
     @Override
-    public Object getObject() {
+    public Observation getObject() {
         return null;
     }
 

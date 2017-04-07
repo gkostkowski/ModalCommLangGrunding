@@ -1,9 +1,8 @@
 package com.pwr.zpi.language;
 
 import com.pwr.zpi.*;
-import com.pwr.zpi.Object;
+import com.pwr.zpi.Observation;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
-import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 
 import java.util.Set;
@@ -32,7 +31,7 @@ public class Grounder {
      * @return Collection of grounding sets.
      */
     static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
-        Object o = formula.getObject();
+        Observation o = formula.getObject();
         Set<Trait> traits = formula.getTraits();
         State [] states = new State[traits.size()];
         List<State> s = formula.getStates();
@@ -83,7 +82,7 @@ public class Grounder {
      * @param bp
      * @return
      */
-    static private boolean isFulfilled(Object o, List<Trait> traits, int time, List<State> states, Operators.Type op, BaseProfile bp) {
+    static private boolean isFulfilled(Observation o, List<Trait> traits, int time, List<State> states, Operators.Type op, BaseProfile bp) {
         if (traits.size() != states.size())
             throw new IllegalStateException("Number of traits differs from amount of states.");
 
@@ -115,14 +114,14 @@ public class Grounder {
      * A1 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
      * representing expierience object o,having trait P
      *
-     * @param o     Object observed by agent
+     * @param o     Observation observed by agent
      * @param trait Trait of object
      * @param time  Time taken into consideration when looking for expieriences
      * @param all   Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @return List of BaseProfiles which contain Positive Traits
      */
 
-    static Set<BaseProfile> getGroundingSetsPositiveTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
+    static Set<BaseProfile> getGroundingSetsPositiveTrait(Observation o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
         for (BaseProfile bp : all) {
             if (bp.DetermineIfSetHasTrait(o, P, time)) {
@@ -137,7 +136,7 @@ public class Grounder {
      * A2 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
      * representing expierience object o,not having trait P
      *
-     * @param o    Object observed by agent
+     * @param o    Observation observed by agent
      * @param P    Trait of object
      * @param time Time taken into consideration when looking for expieriences
      * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
@@ -145,7 +144,7 @@ public class Grounder {
      */
 
 
-    static Set<BaseProfile> getGroundingSetsNegativeTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
+    static Set<BaseProfile> getGroundingSetsNegativeTrait(Observation o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
         for (BaseProfile bp : all) {
             if (!bp.DetermineIfSetHasTrait(o, P, time)) {
@@ -229,7 +228,7 @@ public class Grounder {
      * @return Distribution of knowledge.
      */
 
-    static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) throws InvalidSentenceFormulaException {
+    static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) throws InvalidFormulaException {
         return new DistributedKnowledge(agent, formula, time);
     }
 
@@ -278,22 +277,22 @@ public class Grounder {
         int timestamp = dk.getTimestamp();
         BaseProfile lmBp = new BaseProfile();
         BaseProfile wmBp = new BaseProfile();
-        Set<Object> objects = new HashSet<>();
+        Set<Observation> objects = new HashSet<>();
 
-        Object describedObj = formula.getObject();
+        Observation describedObj = formula.getObject();
         Set<Trait> describedTraits = formula.getTraits();
         List<State> states = formula.getStates();
         //mentalModel.
         //boolean isNegated = state.equals(State.IS) ? true : false;
 
-        List<Set<Object>> objsWithClearState = new ArrayList<>();
+        List<Set<Observation>> objsWithClearState = new ArrayList<>();
 /**
          * Represents objsWithPositiveState or objsWithNegativeState - depending on state value
          */
 
-        List<Set<Object>> objsWithGivenState = new ArrayList<>();
+        List<Set<Observation>> objsWithGivenState = new ArrayList<>();
 
-        List<Set<Object>> indefiniteByTrait = new ArrayList<>();
+        List<Set<Observation>> indefiniteByTrait = new ArrayList<>();
         BPCollection.MemoryType selectedMemory = BPCollection.MemoryType.WM;
 
 
@@ -310,10 +309,10 @@ public class Grounder {
 
 
     private static void setCommonObjects(int timestamp, Agent agent, BaseProfile lmBp, BaseProfile wmBp,
-                                         Set<Object> objects, Object describedObj, Set<Trait> describedTraits,
-                                         List<Set<Object>> objsWithClearState, //one set for each trait
-                                         List<Set<Object>> objsWithGivenState,
-                                         List<Set<Object>> indefiniteByTrait, List<State> states) throws InvalidFormulaException {
+                                         Set<Observation> objects, Observation describedObj, Set<Trait> describedTraits,
+                                         List<Set<Observation>> objsWithClearState, //one set for each trait
+                                         List<Set<Observation>> objsWithGivenState,
+                                         List<Set<Observation>> indefiniteByTrait, List<State> states) throws InvalidFormulaException {
         lmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.LM));
         wmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.WM));
         objects.addAll(BaseProfile.getObjects(lmBp, wmBp));
@@ -324,18 +323,18 @@ public class Grounder {
             throw new com.pwr.zpi.exceptions.InvalidFormulaException("States doesn't match to given traits.");
         Iterator<State> stateIt = states.iterator();
         for (Trait t : describedTraits) {
-            objsWithClearState.add(new HashSet<>(Object.getObjects(
+            objsWithClearState.add(new HashSet<>(Observation.getObjects(
                     lmBp.getNotDescribedByTrait(t),
                     wmBp.getNotDescribedByTrait(t),
                     lmBp.getDescribedByTrait(t),
                     wmBp.getDescribedByTrait(t))));
 
             State state = stateIt.next();
-            objsWithGivenState.add(new HashSet<>(Object.getObjects(
+            objsWithGivenState.add(new HashSet<>(Observation.getObjects(
                     lmBp.getByTraitState(t, state),
                     wmBp.getByTraitState(t, state))));
 
-            indefiniteByTrait.add(new HashSet<Object>(objects));
+            indefiniteByTrait.add(new HashSet<Observation>(objects));
             indefiniteByTrait.removeAll(objsWithClearState);
         }
 
@@ -353,9 +352,9 @@ public class Grounder {
      * @return
      */
 
-    private static Operators.Type checkEpistemicConditions(List<Set<Object>> indefiniteByTrait, Object describedObj,
+    private static Operators.Type checkEpistemicConditions(List<Set<Observation>> indefiniteByTrait, Observation describedObj,
                                                            Map<Formula, Set<BaseProfile>> groundingSets, Set<BaseProfile> selectedClass,
-                                                           int timestamp, List<Set<Object>> objsWithGivenState,
+                                                           int timestamp, List<Set<Observation>> objsWithGivenState,
                                                            Formula formula) throws NotApplicableException {
         if (eachContains(indefiniteByTrait, describedObj, Operators.Type.AND) && !selectedClass.isEmpty()) {
             double currRelCard = relativeCard(groundingSets, timestamp, formula);
@@ -379,7 +378,7 @@ public class Grounder {
 
 
     //todo move to utils
-    private static <T extends Object> boolean eachContains(Collection<Set<T>> c, Object obj, Operators.Type op) {
+    private static <T extends Observation> boolean eachContains(Collection<Set<T>> c, Observation obj, Operators.Type op) {
         boolean res = op.equals(Operators.Type.AND), curr = false;
         for (Set<T> elem : c) {
             curr = elem.contains(obj);
@@ -394,12 +393,12 @@ public class Grounder {
 /**
      * Defines grounded set Ai(t) responsible for induction of mental model mi connected to baseProfile which
      * involves connotations with both objects P,and Q.Depending on i
-     * i=1 - Returns BaseProfiles where Object o has Trait P and has Trait Q
-     * i=2 - Returns BaseProfiles where Object o has Trait P and does not have Trait Q
-     * i=3 - Returns BaseProfiles where Object o does not have Trait P and has Trait Q
-     * i=4 - Returns BaseProfiles where Object o does not have Trait P and does not have Trait Q
+     * i=1 - Returns BaseProfiles where Observation o has Trait P and has Trait Q
+     * i=2 - Returns BaseProfiles where Observation o has Trait P and does not have Trait Q
+     * i=3 - Returns BaseProfiles where Observation o does not have Trait P and has Trait Q
+     * i=4 - Returns BaseProfiles where Observation o does not have Trait P and does not have Trait Q
      *
-     * @param o    Object observed by agent
+     * @param o    Observation observed by agent
      * @param P    Trait of object
      * @param Q    Trait of object
      * @param time Time taken into consideration when looking for expieriences
@@ -409,7 +408,7 @@ public class Grounder {
      */
 
 
-    static Set<BaseProfile> getGroundingSetsConjunction(Object o, Trait P, Trait Q, int time, Set<BaseProfile> all,
+    static Set<BaseProfile> getGroundingSetsConjunction(Observation o, Trait P, Trait Q, int time, Set<BaseProfile> all,
                                                         int i) {
         Set<BaseProfile> out = new HashSet<BaseProfile>();
         switch (i) {
@@ -463,7 +462,7 @@ public class Grounder {
      * i = 3 not p(o) and q(o)
      * i = 4 not p(o) and not q(o)
      *
-     * @param o    Object observed by agent
+     * @param o    Observation observed by agent
      * @param P    Trait of object
      * @param Q    Trait of object
      * @param time Time taken into consideration when looking for expieriences
@@ -472,7 +471,7 @@ public class Grounder {
      * @return
      */
 
-    static double relativeCardConunction(Object o, Trait P, Trait Q, int time, Set<BaseProfile> all, int i) {
+    static double relativeCardConunction(Observation o, Trait P, Trait Q, int time, Set<BaseProfile> all, int i) {
         Set<BaseProfile> Sum = new HashSet<BaseProfile>();
 
         //OgarnijAdAlla, nie dodaje tych samych obiektów

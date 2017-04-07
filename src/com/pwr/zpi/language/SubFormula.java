@@ -1,12 +1,10 @@
 package com.pwr.zpi.language;
-import com.pwr.zpi.Object;
+import com.pwr.zpi.Observation;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 
-import java.util.Collection;
 import java.util.Set;
-import java.util.Stack;
 
 
 /**
@@ -81,7 +79,7 @@ public class SubFormula extends Formula {
     }
 
     @Override
-    public Object getObject() {
+    public Observation getObject() {
         return null;
     }
 

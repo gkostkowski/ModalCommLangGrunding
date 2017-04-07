@@ -10,20 +10,20 @@ public class BaseProfile extends World {
      * Map of traits and related collections of objects. If some collection is related with certain trait, then
      * it mean that all objects in that collections have this trait.
      */
-    protected static Map<Trait, Set<Object>> describedByTraits;  //set
+    protected static Map<Trait, Set<Observation>> describedByTraits;
     /**
      * Map of traits and related collections of objects. If some collection is related with certain trait, then
      * it mean that all objects in that collections DON'T HAVE this trait.
      */
-    protected Map<Trait, Set<Object>> notDescribedByTraits;
+    protected Map<Trait, Set<Observation>> notDescribedByTraits;
     /**
      * Map of traits and related collections of objects. If some collection is related with certain trait, then
      * it mean that state of having this trait by all objects is unknown.
      */
-    protected Map<Trait, Set<Object>> indefiniteByTraits;
+    protected Map<Trait, Set<Observation>> indefiniteByTraits;
     protected int timestamp;
 
-    public BaseProfile (Map<Trait, Set<Object>> SetOTraits,int timestamp) {
+    public BaseProfile (Map<Trait, Set<Observation>> SetOTraits, int timestamp) {
         this.indefiniteByTraits = SetOTraits;
         this.timestamp = timestamp;
     }
@@ -32,27 +32,27 @@ public class BaseProfile extends World {
 
     }
 
-    public Map<Trait, Set<Object>> getDescribedByTraits() {
+    public Map<Trait, Set<Observation>> getDescribedByTraits() {
         return describedByTraits;
     }
 
-    public void setDescribedByTraits(Map<Trait, Set<Object>> describedByTraits) {
+    public void setDescribedByTraits(Map<Trait, Set<Observation>> describedByTraits) {
         this.describedByTraits = describedByTraits;
     }
 
-    public Map<Trait, Set<Object>> getNotDescribedByTraits() {
+    public Map<Trait, Set<Observation>> getNotDescribedByTraits() {
         return notDescribedByTraits;
     }
 
-    public void setNotDescribedByTraits(Map<Trait, Set<Object>> notDescribedByTraits) {
+    public void setNotDescribedByTraits(Map<Trait, Set<Observation>> notDescribedByTraits) {
         this.notDescribedByTraits = notDescribedByTraits;
     }
 
-    public Map<Trait, Set<Object>> getIndefiniteByTraits() {
+    public Map<Trait, Set<Observation>> getIndefiniteByTraits() {
         return indefiniteByTraits;
     }
 
-    public void setIndefiniteByTraits(Map<Trait, Set<Object>> indefiniteByTraits) {
+    public void setIndefiniteByTraits(Map<Trait, Set<Observation>> indefiniteByTraits) {
         this.indefiniteByTraits = indefiniteByTraits;
     }
 
@@ -66,7 +66,7 @@ public class BaseProfile extends World {
 
 
 
-    public Set<Object> getObjects(){
+    public Set<Observation> getObjects(){
         return objects;
     }
 
@@ -76,8 +76,8 @@ public class BaseProfile extends World {
      * @param baseProfiles Set of base profiles.
      * @return Set of objects.
      */
-    public static Set<Object> getObjects(Set<BaseProfile> baseProfiles) {
-        Set<Object> res = new HashSet<>();
+    public static Set<Observation> getObjects(Set<BaseProfile> baseProfiles) {
+        Set<Observation> res = new HashSet<>();
         for (BaseProfile bp :baseProfiles)
             res.addAll(bp.getObjects());
         return res;
@@ -88,7 +88,7 @@ public class BaseProfile extends World {
      * @param baseProfiles Array of base profiles.
      * @return Set of objects.
      */
-    public static Set<Object> getObjects(BaseProfile ... baseProfiles) {
+    public static Set<Observation> getObjects(BaseProfile ... baseProfiles) {
         return getObjects(new HashSet<BaseProfile>(Arrays.asList(baseProfiles)));
     }
 
@@ -97,7 +97,7 @@ public class BaseProfile extends World {
      * @param trait
      * @return Set of objects.
      */
-    public Set<Object> getDescribedByTrait(Trait trait) {
+    public Set<Observation> getDescribedByTrait(Trait trait) {
         return describedByTraits.get(trait);
     }
 
@@ -106,7 +106,7 @@ public class BaseProfile extends World {
      * @param trait
      * @return Set of objects.
      */
-    public Set<Object> getByTraitState(Trait trait, State state) {
+    public Set<Observation> getByTraitState(Trait trait, State state) {
         switch (state) {
             case IS: return describedByTraits.get(trait);
             case IS_NOT: return notDescribedByTraits.get(trait);
@@ -114,12 +114,12 @@ public class BaseProfile extends World {
         }
     }
 
-    public Set<Object> getNotDescribedByTrait(Trait trait) {
+    public Set<Observation> getNotDescribedByTrait(Trait trait) {
         return notDescribedByTraits.get(trait);
     }
 
-    public boolean DetermineIfSetHasTrait(Object o, @SuppressWarnings("rawtypes") Trait P,int time, State stateOfDescription){
-        Map<Trait, Set<Object>> describedObjects = stateOfDescription.equals(State.IS) ?
+    public boolean DetermineIfSetHasTrait(Observation o, @SuppressWarnings("rawtypes") Trait P, int time, State stateOfDescription){
+        Map<Trait, Set<Observation>> describedObjects = stateOfDescription.equals(State.IS) ?
                 describedByTraits : (stateOfDescription.equals(State.IS_NOT) ?
                     notDescribedByTraits : indefiniteByTraits);
         return describedObjects.containsKey(P);

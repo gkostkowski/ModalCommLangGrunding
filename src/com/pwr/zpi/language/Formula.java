@@ -1,10 +1,9 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.Object;
+import com.pwr.zpi.Observation;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +13,7 @@ import java.util.Set;
 public abstract class Formula {
 
     public abstract Set<Trait> getTraits();
-    public abstract Object getObject();
+    public abstract Observation getObject();
 
     public abstract Type getType();
 
@@ -35,7 +34,7 @@ public abstract class Formula {
     }
 
     abstract State evaluate();
-/*    abstract com.pwr.zpi.Object getAffectedObject();
+/*    abstract com.pwr.zpi.Observation getAffectedObject();
 
     *//**
      * Returns traits affected in formula - only one trait in case of SimpleFormula; two or more in case of ComplexFormula.

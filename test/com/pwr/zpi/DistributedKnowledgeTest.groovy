@@ -1,7 +1,7 @@
 import com.pwr.zpi.Agent
 import com.pwr.zpi.BPCollection
 import com.pwr.zpi.BaseProfile
-import com.pwr.zpi.Object
+import com.pwr.zpi.Observation
 import com.pwr.zpi.State
 import com.pwr.zpi.Trait
 import com.pwr.zpi.language.DistributedKnowledge
@@ -26,11 +26,11 @@ class DistributedKnowledgeTest extends GroovyTestCase {
         def lplus = new Trait("Ladowanie", State.IS)
         def lminpl = new Trait("Ladowanie", State.MAYHAPS)
 
-        def o1 = new Object(1, "o1", [nminpl, pminus, lminpl] as Set)
-        def o2 = new Object(2, "o2", [nminpl, pminus, lminpl] as Set)
-        def o3 = new Object(3, "o3", [nminpl, pminus, lminpl] as Set)
-        def o4 = new Object(4, "o4", [nminpl, pminus, lminpl] as Set)
-        def o5 = new Object(5, "o5", [nminpl, pminus, lminpl] as Set)
+        def o1 = new Observation(1, "o1", [nminpl, pminus, lminpl] as Set)
+        def o2 = new Observation(2, "o2", [nminpl, pminus, lminpl] as Set)
+        def o3 = new Observation(3, "o3", [nminpl, pminus, lminpl] as Set)
+        def o4 = new Observation(4, "o4", [nminpl, pminus, lminpl] as Set)
+        def o5 = new Observation(5, "o5", [nminpl, pminus, lminpl] as Set)
 
         def pb0 = new BaseProfile([nminus: [] as Set, nplus: [] as Set, nminpl: [o1, o2, o3, o4, o5] as Set,
                                    pminus: [o1, o2, o3, o4, o5] as Set, pplus: [] as Set, pminpl: [] as Set,
