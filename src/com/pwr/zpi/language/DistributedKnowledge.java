@@ -1,8 +1,9 @@
 package com.pwr.zpi.language;
 
 import com.pwr.zpi.*;
-import com.pwr.zpi.Observation;
+import com.pwr.zpi.Object;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
+import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -25,8 +26,8 @@ public class DistributedKnowledge {
 
     private int timestamp;
     private final Formula formula;
-    private final Set<Trait> traits;
-    private final Observation obj;
+    private final List<Trait> traits;
+    private final Object obj;
     private Map<Integer, BaseProfile> inLM;
     private Map<Integer, BaseProfile> inWM;
 
@@ -111,7 +112,7 @@ public class DistributedKnowledge {
         return timestamp;
     }
 
-    public Observation getObject() {
+    public Object getObject() {
         return obj;
     }
 

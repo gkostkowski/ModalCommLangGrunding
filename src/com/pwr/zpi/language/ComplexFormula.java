@@ -1,10 +1,11 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.Observation;
+import com.pwr.zpi.Object;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -12,11 +13,147 @@ import java.util.*;
  */
 public class ComplexFormula extends Formula {
 
+    private Operators.Type operator;
+    private SimpleFormula leftPart, rightPart;
+    private List<Trait> traits;
+    private List<State> states;
+    private Object object;
+
+
+    /**
+     * Constructor of Complex formula, for now there is made an assumption that ComplexFormula consists of two SimpleFormulas
+     * that are connected by either AND or OR operator and that share the same Object
+     * @param o Object which is considered in a formula
+     * @param traits list of two traits, respectively for the left part and for the right part of the formula
+     * @param statesSeq states for the two simple formulas, in same order as traits
+     * @param op Operator.Type which is used to connect two SimpleFormulas
+     * @throws InvalidSentenceFormulaException when the sentence is being build improperly
+     */
+    public ComplexFormula(Object o, List<Trait> traits, List<State> statesSeq, Operators.Type op) throws InvalidSentenceFormulaException {
+        if(traits.size() != 2 || traits.size() != statesSeq.size() || op != Operators.Type.AND || op != Operators.Type.OR)
+            throw new InvalidSentenceFormulaException();
+        leftPart = new SimpleFormula(o, traits.subList(0,1), statesSeq.subList(0, 1));
+        rightPart = new SimpleFormula(o, traits.subList(1,2), statesSeq.subList(1, 2));
+        this.operator = op;
+        this.traits = traits;
+        this.states = statesSeq;
+        this.object = o;
+    }
+
+    /**
+     * Constructor just the same as above, only with the assumption that all states equal IS
+     * @param o Object which is considered in a formula
+     * @param traits list of two traits, respectively for the left part and for the right part of the formula
+     * @param op Operator.Type which is used to connect two SimpleFormulas
+     * @throws InvalidSentenceFormulaException when the sentence is being build improperly
+     */
+    public ComplexFormula(Object o, List<Trait> traits, Operators.Type op) throws InvalidSentenceFormulaException
+    {
+        if(traits.size() != 2 || op != Operators.Type.AND || op != Operators.Type.OR)
+            throw new InvalidSentenceFormulaException();
+        leftPart = new SimpleFormula(o, traits.subList(0,1), Arrays.asList(State.IS));
+        rightPart = new SimpleFormula(o, traits.subList(1,2), Arrays.asList(State.IS));
+        this.operator = op;
+        this.traits = traits;
+        this.states = Arrays.asList(State.IS, State.IS);
+        this.object = o;
+    }
+
+    /**
+     *
+     * @return Collection of SimpleFormulas, in order of left part and the right part of formula
+     */
+    public Collection<Formula> getParts() {
+        return Arrays.asList(leftPart, rightPart);
+    }
+
+
+    /**
+     * Returns the information that the formula is modal conjunction
+     * @return the type of formula
+     */
+    public Formula.Type getType()
+    {
+        return Type.MODAL_CONJUNCTION;
+    }
+
+    /**
+     *
+     * @return operator's type of the formula
+     */
+    public Operators.Type getOperator()
+    {
+        return operator;
+    }
+
+    /**
+     *
+     * @return list of Traits of the formula, in order from left to right
+     */
+    public List<Trait> getTraits()
+    {
+        return traits;
+    }
+
+    /**
+     *
+     * @return Object which is considered in formula
+     */
+    @Override
+    public Object getObject() {
+        return object;
+    }
+
+    /**
+     *
+     * @return list of States of traits in the formula, in order from left to right
+     */
+    @Override
+    public List<State> getStates()
+    {
+        return states;
+    }
+
+    /**
+     * evaluates the formula, for now only for the AND and OR operators
+     * @return State of the whole formula
+     */
+    public State evaluate()
+    {
+        if(operator == Operators.Type.AND)
+            return Operators.XandY(leftPart, rightPart);
+        else if(operator == Operators.Type.OR)
+            return Operators.XorY(leftPart, rightPart);
+
+        return null;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * It is a reference to the root of the complex formula
      */
-    private SubFormula subFormula;
-    private Operators operator;
+   // private SubFormula subFormula;
 
     /**
      * Constructor of ComplexFormula for creating sentence with two operannds and an operator
@@ -25,7 +162,7 @@ public class ComplexFormula extends Formula {
      * @param po2 SimpleFormula or ComplexFormula which is right side of sentence
      * @throws InvalidSentenceFormulaException
      */
-    public ComplexFormula(Formula po1, Operators.Type operator, Formula po2)  throws InvalidSentenceFormulaException
+    /*public ComplexFormula(Formula po1, Operators.Type operator, Formula po2)  throws InvalidSentenceFormulaException
     {
         if(operator!=Operators.Type.NOT) {
             if(po1 instanceof ComplexFormula)
@@ -34,7 +171,7 @@ public class ComplexFormula extends Formula {
                 po2 = ((ComplexFormula) po2).subFormula;
             subFormula = new SubFormula(po1, operator, po2);
         }else throw new InvalidSentenceFormulaException();
-    }
+    }*/
 
     /**
      * Constructor of sentence adding operator NOT
@@ -42,7 +179,7 @@ public class ComplexFormula extends Formula {
      * @param po1 formula that is supposed to be negated
      * @throws InvalidSentenceFormulaException
      */
-    public ComplexFormula(Operators.Type operator, Formula po1) throws InvalidSentenceFormulaException
+   /* public ComplexFormula(Operators.Type operator, Formula po1) throws InvalidSentenceFormulaException
     {
         if(operator==Operators.Type.NOT)
         {
@@ -50,7 +187,7 @@ public class ComplexFormula extends Formula {
                 po1 = ((ComplexFormula) po1).subFormula;
             subFormula = new SubFormula(po1, operator, null);
         } else throw new InvalidSentenceFormulaException();
-    }
+    }*/
 
     /**
      * Not vialable, but created anyway
@@ -58,14 +195,11 @@ public class ComplexFormula extends Formula {
      * @param po1 SimpleFormula which is supposed to be in sentence
      * @throws InvalidSentenceFormulaException
      */
-    public ComplexFormula(SimpleFormula po1) throws InvalidSentenceFormulaException
+    /*public ComplexFormula(SimpleFormula po1) throws InvalidSentenceFormulaException
     {
         subFormula = new SubFormula(po1, null, null);
     }
-
-    public ComplexFormula(Observation o, Set<Trait> traits, List<State> statesSeq, Operators.Type op) {
-        /*build formula like: state1(trait1(o)) op state2(trait2(o))*/ //todo
-    }
+*/
 
     /**
      * method adding another part of sentence
@@ -74,7 +208,7 @@ public class ComplexFormula extends Formula {
      * @return true if succeeded or false if not
      * @throws InvalidSentenceFormulaException when sentence couldn't be created
      */
-    public boolean addFormula(Operators.Type operator, Formula formula) throws InvalidSentenceFormulaException
+   /* public boolean addFormula(Operators.Type operator, Formula formula) throws InvalidSentenceFormulaException
     {
         try
         {
@@ -82,49 +216,35 @@ public class ComplexFormula extends Formula {
                 formula = ((ComplexFormula) formula).subFormula;
             subFormula = new SubFormula(subFormula, operator, formula); return true;
         } catch (InvalidSentenceFormulaException e) {return false;}
-    }
+    }*/
 
     /**
      * method negating the complexFormula
      * @return true if succeeded or false if not
      */
-    public boolean negateFormula()
+    /*public boolean negateFormula()
     {
         try
         {
             subFormula = new SubFormula(subFormula, Operators.Type.NOT, null);
             return true;
         } catch (InvalidSentenceFormulaException e) {return false;}
-    }
+    }*/
 
     /**
      * method printing the whole complexFormula
      */
-    public void printFormula()
+  /*  public void printFormula()
     {
         subFormula.printSubFormula(subFormula);
-    }
+    }*/
 
-    @Override
-    public Set<Trait> getTraits() {
-        return null;
-    }
-
-    @Override
-    public Observation getObject() {
-        return null;
-    }
-
-    @Override
-    public Type getType() {
-        return null;
-    }
 
     /**
      * Method return evaluation of ComplexFormula if such is possible
      * @return State of evalueted ComplexFormula
      */
-    public State evaluate()
+/*    public State evaluate()
     {
         try {
             Stack<State> value = evaluate(new Stack<State>(), subFormula);
@@ -134,7 +254,7 @@ public class ComplexFormula extends Formula {
         } catch (InvalidSentenceFormulaException isf) {}
         return null;
     }
-
+*/
     /**
      * Method using reverse Polish notation to evaluate value of complex formula
      * @param values Stack which is used to store temporary values of states
@@ -142,7 +262,7 @@ public class ComplexFormula extends Formula {
      * @return Stack of current values
      * @throws InvalidSentenceFormulaException when ComplexFormula was not created properly and cannot be evaluated
      */
-    private Stack<State> evaluate(Stack<State> values, Formula formula) throws InvalidSentenceFormulaException
+/*    private Stack<State> evaluate(Stack<State> values, Formula formula) throws InvalidSentenceFormulaException
     {
         if(formula == null)
             return values;
@@ -173,8 +293,6 @@ public class ComplexFormula extends Formula {
     public Collection<Formula> getParts() {
         return Arrays.asList(subFormula.getFormula1(), subFormula.getFormula2());
     }
+    */
 
-    public Operators getOperator() {
-        return operator;
-    }
 }

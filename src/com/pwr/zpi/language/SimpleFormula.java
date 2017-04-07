@@ -1,8 +1,9 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.Observation;
+import com.pwr.zpi.Object;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
+import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -28,13 +29,26 @@ public class SimpleFormula extends Formula {
         this(object, trait, false);
     }
 
-    public SimpleFormula(Observation o, Set<Trait> traits, List<State> statesSeq) {
+    /**
+     * Constructor of SimpleFormula
+     * @param o Object which is being considered in Formula
+     * @param traits list of traits which should be size of 1,
+     * @param statesSeq list of states which should be size of 1
+     */
+    public SimpleFormula(Object o, List<Trait> traits, List<State> statesSeq) throws InvalidSentenceFormulaException{
         /*build formula like: state1(trait1(o))*/ //todo
+        if(traits.size() != 1 || traits.size() != statesSeq.size())
+            throw new InvalidSentenceFormulaException();
+        object = o;
+        if(statesSeq.get(0) == State.IS)
+            isNegated = false;
+        else isNegated = true;
+        trait = traits.get(0);
     }
 
     @Override
-    public Set<Trait> getTraits() {
-        return new HashSet<Trait>(Arrays.asList(trait));
+    public List<Trait> getTraits() {
+        return Arrays.asList(trait);
     }
 
     @Override
@@ -42,9 +56,13 @@ public class SimpleFormula extends Formula {
         return object;
     }
 
+    /**
+     * Return information that formula is a simple modality
+     * @return Type of formula
+     */
     @Override
     public Type getType() {
-        return null;
+        return Type.SIMPLE_MODALITY;
     }
 
     /**
