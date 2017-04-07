@@ -33,10 +33,9 @@ public class Grounder {
      */
     static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
         Object o = formula.getObject();
-        Set<Trait> traits = formula.getTraits();
-        State [] states = new State[traits.size()];
+        List<Trait> traits = formula.getTraits();
+        List<State> states = formula.getStates();
         List<State> s = formula.getStates();
-        states = s.toArray(states);
         if (o == null || traits == null || states == null)
             throw new InvalidFormulaException("Invalid formula");
 
@@ -47,7 +46,7 @@ public class Grounder {
         boolean isComplex = false;
         if (isComplex = formula instanceof ComplexFormula) {
             parts.addAll(((ComplexFormula) formula).getParts());
-            type = ((ComplexFormula) formula).getOperator().getType();
+            type = ((ComplexFormula) formula).getOperator();
         } else
             parts.add(formula);
 
@@ -55,7 +54,7 @@ public class Grounder {
                 sndStateCounter = 0;
         for (Formula atomicFormula : parts) {
             for (State state : states) {
-                List<State> statesSeq = Arrays.asList(states[fstStateCounter], states[sndStateCounter]);
+                List<State> statesSeq = Arrays.asList(states.get(fstStateCounter), states.get(sndStateCounter));
                 Formula mentalModel = isComplex ? new ComplexFormula(o, traits, statesSeq, type) : new SimpleFormula(o, traits, statesSeq);
                 Set<BaseProfile> currSet = null;
                 res.put(mentalModel, currSet = new HashSet<>());
@@ -63,9 +62,9 @@ public class Grounder {
                     if (isFulfilled(o, new ArrayList<>(traits), time, statesSeq, type, bp))
                         currSet.add(bp);
                 }
-                fstStateCounter = (fstStateCounter + 1) % states.length;
+                fstStateCounter = (fstStateCounter + 1) % states.size();
             }
-            sndStateCounter = (sndStateCounter + 1) % states.length;
+            sndStateCounter = (sndStateCounter + 1) % states.size();
         }
         return res;
     }
