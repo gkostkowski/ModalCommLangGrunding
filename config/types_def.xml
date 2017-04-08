@@ -1,0 +1,41 @@
+<!-- This is the example file containing types definitions for observed objects.
+	All non-primitive Java types equivalent to primitive ones (and String) are permitted.
+	Names of traits will be stored as Strings. -->
+<types>
+        <collection class="linked-list">
+		<type>
+            <id>1</id>
+            <traits class="linked-list">
+                <trait>
+                    <name>Color</name>
+                    <valueType>String</valueType>
+                </trait>
+                <trait>
+                    <name>Shape</name>
+                    <valueType>String</valueType>
+                </trait>
+                <trait>
+                    <name>Blinking</name>
+                    <valueType>Boolean</valueType>
+                </trait>
+            </traits>
+        </type>
+        <type>
+            <id>2</id>
+            <traits class="linked-list">
+                <trait>
+                    <name>Color</name>
+                    <valueType>String</valueType>
+                </trait>
+                <trait>
+                    <name>NumberOfWalls</name>
+                    <valueType>Integer</valueType>
+                </trait>
+                <trait>
+                    <name>Blinking</name>
+                    <valueType>Boolean</valueType>
+                </trait>
+            </traits>
+        </type>
+		</collection>
+</types>

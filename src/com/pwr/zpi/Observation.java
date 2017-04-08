@@ -115,4 +115,8 @@ public class Observation {
         setType(other.getType());
         setTraits(other.getTraits());
     }
+
+    /*public boolean isTypeOf(ObjectType objType) {
+        return
+    }*/
 }

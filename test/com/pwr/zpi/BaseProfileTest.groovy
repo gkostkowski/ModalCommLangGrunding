@@ -2,8 +2,6 @@ package com.pwr.zpi
 
 import org.junit.Test
 
-//import org.junit.Test
-
 
 /**
  * Created by Grzesiek on 2017-04-04.

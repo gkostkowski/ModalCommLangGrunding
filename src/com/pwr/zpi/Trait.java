@@ -1,5 +1,7 @@
 package com.pwr.zpi;
 
+import java.util.*;
+
 /**
  * Trait - pair of name and value. Defines object's characteristics.
  */
@@ -74,5 +76,23 @@ public class Trait <K, V> {
     public void copy(Trait<K, V> other) {
         setName(other.getName());
         setValue(other.getValue());
+    }
+
+    public TraitSignature<K, V> asTraitSignature() {
+        return new TraitSignature<K, V>(name, value.getClass());
+    }
+
+    /**
+     * Turns set of traits into equivalent set of traits signatures.
+     * @param traits
+     * @param <K> Key type of Trait.
+     * @param <V> Value type of Trait.
+     * @return
+     */
+    public static <K, V> Set<TraitSignature<K, V>> getSignatures(Set<Trait<K,V>> traits) {
+        List<TraitSignature<K, V>> res = new ArrayList<>();
+        for (Trait<K,V> trait :traits)
+            res.add(trait.asTraitSignature());
+        return new HashSet<>(res);
     }
 }
