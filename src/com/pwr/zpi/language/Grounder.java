@@ -148,7 +148,7 @@ public class Grounder {
     static Set<BaseProfile> getGroundingSetsNegativeTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
         for (BaseProfile bp : all) {
-            if (!bp.DetermineIfSetHasTrait(o, P, time)) {
+            if (!bp.DetermineIfSetHasNotTrait(o, P, time)) {
                 baseout.add(bp);
             }
         }
@@ -163,22 +163,6 @@ public class Grounder {
      * @return Positive Cardinality of Set
      */
 
-    static double getCardPositive(Set<BaseProfile> groundingSet, int t) {
-        return groundingSet.size();
-    }
-
-/**
-     * Inductive cardinality GAi grounding set A2
-     *
-     * @param groundingSet set of Base Profiles which cardinality we desire to know
-     * @param t            given time
-     * @return Cardinality of Set
-     */
-
-
-    static double getCardNegative(Set<BaseProfile> groundingSet, int t) {
-        return groundingSet.size();
-    }
 
 /**
      * Value of relative power of grounding lambda for base form p(o)
@@ -193,7 +177,7 @@ public class Grounder {
         if (groundingSetNegative.isEmpty()) {
             return 0;
         }
-        return getCardPositive(groundingSetPositive, time) / (getCardNegative(groundingSetNegative, time) + getCardPositive(groundingSetPositive, time));
+        return getCard(groundingSetPositive, time) / (getCard(groundingSetNegative, time) + getCard(groundingSetPositive, time));
     }
 
 /**
@@ -209,7 +193,7 @@ public class Grounder {
         if (groundingSetPositive.isEmpty()) {
             return 0;
         }
-        return getCardNegative(groundingSetPositive, time) / (getCardNegative(groundingSetNegative, time) + getCardPositive(groundingSetPositive, time));
+        return getCard(groundingSetPositive, time) / (getCard(groundingSetNegative, time) + getCard(groundingSetPositive, time));
     }
 
     public static double relativeCard(Map<Formula, Set<BaseProfile>> groundingSets, int time, Formula formula) throws NotApplicableException {
