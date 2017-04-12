@@ -4,38 +4,44 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Describes object's observation with it's id, type and set of traits.
+ * Describes object's observation with it's time, id and set of traits.
  * Represents objects placed in real world, witnessed by agent.
  */
 public class Observation {
-    protected int identifier;
-    protected String type;
-    private Set<Trait> traits; //won't be visible in subclasses
+    private String identifier;
+    private long time;
+    private Set<Trait> traits;
 
-    public Observation(int identifier, String type, Set<Trait> traits){
+    public Observation(String identifier, Set<Trait> traits){
         this.identifier = identifier;
-        this.type = type;
         this.traits = traits;
+        time = System.currentTimeMillis();
+    }
+
+    public Observation(String identifier, Set<Trait> traits, long time){
+        this.identifier = identifier;
+        this.traits = traits;
+        this.time = time;
     }
 
     public Observation() {
 
     }
 
-    public int getIdentifier() {
+    public String getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(int identifier) {
+    public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
 
-    public String getType() {
-        return type;
+    public long getTime() {
+        return time;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public Set<Trait> getTraits() {
@@ -44,35 +50,6 @@ public class Observation {
 
     public void setTraits(Set<Trait> traits) {
         this.traits = traits;
-    }
-
-    /**
-     * Checks whether two objects are equal.
-     * Equal when they have same types, same traits with same states.
-     *
-     * @param other Other object.
-     * @return      true/false
-     */
-    public boolean equals(Observation other) {
-        boolean contains = false;
-
-        if(type.equals(other.getType()))
-            return false;
-
-        if(traits.size() != other.getTraits().size())
-            return false;
-
-        for (Trait t1 : traits) {
-            for (Trait t2 : other.getTraits()) {
-                if(t1.equals(t2)){
-                    contains = true;
-                    break;
-                }
-            }
-            if(!contains)
-                return false;
-        }
-        return true;
     }
 
     /**
@@ -108,15 +85,55 @@ public class Observation {
     }
 
     /**
+     * Determines type of given observation.
+     *
+     * @param observation Given observation of object.
+     * @return Type of object.
+     */
+    public static ObjectType getType(Observation observation) {
+        return null;    //todo
+    }
+
+    /**
      * Copies all attributes from other object.
      */
     public void copy(Observation other) {
         setIdentifier(other.getIdentifier());
-        setType(other.getType());
+        setTime(other.getTime());
         setTraits(other.getTraits());
     }
 
     /*public boolean isTypeOf(ObjectType objType) {
         return
     }*/
+
+//    /**
+//     * Checks whether two objects are equal.
+//     * Equal when they have same types, same traits with same states.
+//     *
+//     * @param other Other object.
+//     * @return      true/false
+//     */
+//    public boolean equals(Observation other) {
+//        boolean contains = false;
+//
+//        if(type.equals(other.getType()))
+//            return false;
+//
+//        if(traits.size() != other.getTraits().size())
+//            return false;
+//
+//        for (Trait t1 : traits) {
+//            for (Trait t2 : other.getTraits()) {
+//                if(t1.equals(t2)){
+//                    contains = true;
+//                    break;
+//                }
+//            }
+//            if(!contains)
+//                return false;
+//        }
+//        return true;
+//    }
+
 }

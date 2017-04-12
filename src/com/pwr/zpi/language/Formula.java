@@ -1,12 +1,10 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.Object;
+import com.pwr.zpi.Observation;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  *
@@ -15,7 +13,7 @@ public abstract class Formula {
 
     public abstract List<Trait> getTraits();
 
-    public abstract Object getObject();
+    public abstract Observation getObservation();
 
     public abstract Type getType();
 

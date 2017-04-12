@@ -5,11 +5,12 @@ import java.util.Set;
 /**
  *
  */
-public class Agent extends Observation {
+public class Agent {
     BPCollection knowledgeBase;
+    ObservationCollection observations;
+    IMCollection models;
 
-    public Agent(int identifier, String type, Set<Trait> traits, BPCollection knowledgeBase) {
-        super(identifier, type, traits);
+    public Agent(BPCollection knowledgeBase) {
         this.knowledgeBase = knowledgeBase;
     }
 
