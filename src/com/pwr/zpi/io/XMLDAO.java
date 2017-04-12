@@ -50,7 +50,11 @@ public class XMLDAO<Type extends ObjectType> {
         xstream.alias("trait", TraitSignature.class);
     }
 
-
+    /***
+     *
+     * @param filename
+     * @return
+     */
     public Collection<Type> loadTypesDefinitions(String filename) {
         File f = new File(filename);
         Collection<Type> res = null;

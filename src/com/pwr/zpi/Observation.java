@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Describes object's observation with it's id, type and set of traits.
+ * Describes object's observation with it's typeId, type and set of traits.
  * Represents objects placed in real world, witnessed by agent.
  */
 public class Observation {
