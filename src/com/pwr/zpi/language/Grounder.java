@@ -32,7 +32,7 @@ public class Grounder {
      * @return Collection of grounding sets.
      */
     static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
-        Observation o = formula.getObject();
+        Observation o = formula.getObservation();
         Set<Trait> traits = formula.getTraits();
         State [] states = new State[traits.size()];
         List<State> s = formula.getStates();
@@ -111,12 +111,12 @@ public class Grounder {
 
     */
 /**
-     * Defines grounded set A1(t) responsible for induction of mental model m1 connected to object p and trait P
+     * Defines grounded set A1(t) responsible for induction of mental model m1 connected to observation p and trait P
      * A1 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
-     * representing expierience object o,having trait P
+     * representing expierience observation o,having trait P
      *
      * @param o     Object observed by agent
-     * @param trait Trait of object
+     * @param trait Trait of observation
      * @param time  Time taken into consideration when looking for expieriences
      * @param all   Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @return List of BaseProfiles which contain Positive Traits
@@ -133,12 +133,12 @@ public class Grounder {
     }
 
 /**
-     * Defines grounded set A2(t) responsible for induction of mental model m1 connected to object p and trait P
+     * Defines grounded set A2(t) responsible for induction of mental model m1 connected to observation p and trait P
      * A2 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
-     * representing expierience object o,not having trait P
+     * representing expierience observation o,not having trait P
      *
      * @param o    Object observed by agent
-     * @param P    Trait of object
+     * @param P    Trait of observation
      * @param time Time taken into consideration when looking for expieriences
      * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @return Set of BaseProfiles which contain Positive Traits
@@ -148,7 +148,7 @@ public class Grounder {
     static Set<BaseProfile> getGroundingSetsNegativeTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
         for (BaseProfile bp : all) {
-            if (!bp.DetermineIfSetHasTrait(o, P, time)) {
+            if (!bp.DetermineIfSetHasNotTrait(o, P, time)) {
                 baseout.add(bp);
             }
         }
@@ -163,22 +163,6 @@ public class Grounder {
      * @return Positive Cardinality of Set
      */
 
-    static double getCardPositive(Set<BaseProfile> groundingSet, int t) {
-        return groundingSet.size();
-    }
-
-/**
-     * Inductive cardinality GAi grounding set A2
-     *
-     * @param groundingSet set of Base Profiles which cardinality we desire to know
-     * @param t            given time
-     * @return Cardinality of Set
-     */
-
-
-    static double getCardNegative(Set<BaseProfile> groundingSet, int t) {
-        return groundingSet.size();
-    }
 
 /**
      * Value of relative power of grounding lambda for base form p(o)
@@ -193,7 +177,7 @@ public class Grounder {
         if (groundingSetNegative.isEmpty()) {
             return 0;
         }
-        return getCardPositive(groundingSetPositive, time) / (getCardNegative(groundingSetNegative, time) + getCardPositive(groundingSetPositive, time));
+        return getCard(groundingSetPositive, time) / (getCard(groundingSetNegative, time) + getCard(groundingSetPositive, time));
     }
 
 /**
@@ -209,7 +193,7 @@ public class Grounder {
         if (groundingSetPositive.isEmpty()) {
             return 0;
         }
-        return getCardNegative(groundingSetPositive, time) / (getCardNegative(groundingSetNegative, time) + getCardPositive(groundingSetPositive, time));
+        return getCard(groundingSetPositive, time) / (getCard(groundingSetNegative, time) + getCard(groundingSetPositive, time));
     }
 
     public static double relativeCard(Map<Formula, Set<BaseProfile>> groundingSets, int time, Formula formula) throws NotApplicableException {
@@ -280,7 +264,7 @@ public class Grounder {
         BaseProfile wmBp = new BaseProfile();
         Set<Object> objects = new HashSet<>();
 
-        Object describedObj = formula.getObject();
+        Object describedObj = formula.getObservation();
         Set<Trait> describedTraits = formula.getTraits();
         List<State> states = formula.getStates();
         //mentalModel.
@@ -317,7 +301,7 @@ public class Grounder {
         lmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.LM));
         wmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.WM));
         objects.addAll(BaseProfile.getObjects(lmBp, wmBp));
-//        describedObj.copy(dk.getObject());
+//        describedObj.copy(dk.getObservation());
 //        describedTrait.copy(dk.getTrait());
 
         if (describedTraits.size() != states.size())
@@ -400,8 +384,8 @@ public class Grounder {
      * i=4 - Returns BaseProfiles where Object o does not have Trait P and does not have Trait Q
      *
      * @param o    Object observed by agent
-     * @param P    Trait of object
-     * @param Q    Trait of object
+     * @param P    Trait of observation
+     * @param Q    Trait of observation
      * @param time Time taken into consideration when looking for expieriences
      * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @param i    indicator,indicating which case we'd like to use
@@ -464,8 +448,8 @@ public class Grounder {
      * i = 4 not p(o) and not q(o)
      *
      * @param o    Object observed by agent
-     * @param P    Trait of object
-     * @param Q    Trait of object
+     * @param P    Trait of observation
+     * @param Q    Trait of observation
      * @param time Time taken into consideration when looking for expieriences
      * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @param i    indicator,indicating which case we'd like to use

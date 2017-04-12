@@ -1,32 +1,30 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.Object;
+import com.pwr.zpi.Observation;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * SimpleFormula is understood as atomic formula and it's used as part of ComplexFormula.
  */
 public class SimpleFormula extends Formula {
 
-    Observation object;
+    Observation observation;
     Trait trait;
     boolean isNegated;
 
-    public SimpleFormula(Observation object, Trait trait, boolean isNegated) {
-        this.object = object;
+    public SimpleFormula(Observation observation, Trait trait, boolean isNegated) {
+        this.observation = observation;
         this.trait = trait;
         this.isNegated = isNegated;
     }
 
-    public SimpleFormula(Observation object, Trait trait) {
-        this(object, trait, false);
+    public SimpleFormula(Observation observation, Trait trait) {
+        this(observation, trait, false);
     }
 
     /**
@@ -35,11 +33,11 @@ public class SimpleFormula extends Formula {
      * @param traits list of traits which should be size of 1,
      * @param statesSeq list of states which should be size of 1
      */
-    public SimpleFormula(Object o, List<Trait> traits, List<State> statesSeq) throws InvalidSentenceFormulaException{
+    public SimpleFormula(Observation o, List<Trait> traits, List<State> statesSeq) throws InvalidSentenceFormulaException{
         /*build formula like: state1(trait1(o))*/ //todo
         if(traits.size() != 1 || traits.size() != statesSeq.size())
             throw new InvalidSentenceFormulaException();
-        object = o;
+        observation = o;
         if(statesSeq.get(0) == State.IS)
             isNegated = false;
         else isNegated = true;
@@ -52,8 +50,8 @@ public class SimpleFormula extends Formula {
     }
 
     @Override
-    public Observation getObject() {
-        return object;
+    public Observation getObservation() {
+        return observation;
     }
 
     /**
@@ -66,13 +64,13 @@ public class SimpleFormula extends Formula {
     }
 
     /**
-     * Used to determine whether given object has given trait
-     * by returning its state (trait IS, IS_NOT or MAYHAPS is occurring in object).
+     * Used to determine whether given observation has given trait
+     * by returning its state (trait IS, IS_NOT or MAYHAPS is occurring in observation).
      *
-     * @return State of trait's occurrence in object.
+     * @return State of trait's occurrence in observation.
      */
     public State evaluate() {
-        State result = object.hasTrait(trait);
+        State result = observation.hasTrait(trait);
 
         if(isNegated)  // when isNegated is true reverse result
             switch (result) {

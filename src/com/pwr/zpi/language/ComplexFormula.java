@@ -1,12 +1,13 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.Object;
+import com.pwr.zpi.Observation;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -17,7 +18,7 @@ public class ComplexFormula extends Formula {
     private SimpleFormula leftPart, rightPart;
     private List<Trait> traits;
     private List<State> states;
-    private Object object;
+    private Observation observation;
 
 
     /**
@@ -29,7 +30,7 @@ public class ComplexFormula extends Formula {
      * @param op Operator.Type which is used to connect two SimpleFormulas
      * @throws InvalidSentenceFormulaException when the sentence is being build improperly
      */
-    public ComplexFormula(Object o, List<Trait> traits, List<State> statesSeq, Operators.Type op) throws InvalidSentenceFormulaException {
+    public ComplexFormula(Observation o, List<Trait> traits, List<State> statesSeq, Operators.Type op) throws InvalidSentenceFormulaException {
         if(traits.size() != 2 || traits.size() != statesSeq.size() || op != Operators.Type.AND || op != Operators.Type.OR)
             throw new InvalidSentenceFormulaException();
         leftPart = new SimpleFormula(o, traits.subList(0,1), statesSeq.subList(0, 1));
@@ -37,7 +38,7 @@ public class ComplexFormula extends Formula {
         this.operator = op;
         this.traits = traits;
         this.states = statesSeq;
-        this.object = o;
+        this.observation = o;
     }
 
     /**
@@ -47,7 +48,7 @@ public class ComplexFormula extends Formula {
      * @param op Operator.Type which is used to connect two SimpleFormulas
      * @throws InvalidSentenceFormulaException when the sentence is being build improperly
      */
-    public ComplexFormula(Object o, List<Trait> traits, Operators.Type op) throws InvalidSentenceFormulaException
+    public ComplexFormula(Observation o, List<Trait> traits, Operators.Type op) throws InvalidSentenceFormulaException
     {
         if(traits.size() != 2 || op != Operators.Type.AND || op != Operators.Type.OR)
             throw new InvalidSentenceFormulaException();
@@ -56,7 +57,7 @@ public class ComplexFormula extends Formula {
         this.operator = op;
         this.traits = traits;
         this.states = Arrays.asList(State.IS, State.IS);
-        this.object = o;
+        this.observation = o;
     }
 
     /**
@@ -100,8 +101,8 @@ public class ComplexFormula extends Formula {
      * @return Object which is considered in formula
      */
     @Override
-    public Object getObject() {
-        return object;
+    public Observation getObservation() {
+        return observation;
     }
 
     /**

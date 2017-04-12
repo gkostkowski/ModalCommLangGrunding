@@ -79,7 +79,7 @@ public class SubFormula extends Formula {
     }
 
     @Override
-    public Observation getObject() {
+    public Observation getObservation() {
         return null;
     }
 

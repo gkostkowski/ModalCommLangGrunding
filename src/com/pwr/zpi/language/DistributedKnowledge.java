@@ -3,18 +3,17 @@ package com.pwr.zpi.language;
 import com.pwr.zpi.*;
 
 import com.pwr.zpi.exceptions.InvalidFormulaException;
-import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 import javafx.util.Pair;
 
 import java.util.*;
 
 /**
  * Described distributed knowledge as set of classes established for given moment in time,
- * for certain simple or complex formula and associated object. Number of classes depends on kind of grounded formula
+ * for certain simple or complex formula and associated observation. Number of classes depends on kind of grounded formula
  * (which induces mental models).
- * RA1 - Represents set of all base profiles, which are included in working memory and presents object as described by
+ * RA1 - Represents set of all base profiles, which are included in working memory and presents observation as described by
  * given trait.
- * TA1 - Represents set of all base profiles, which are included in long-term memory and presents object as described by
+ * TA1 - Represents set of all base profiles, which are included in long-term memory and presents observation as described by
  * given trait.
  * Etc.
  */
@@ -51,7 +50,7 @@ public class DistributedKnowledge {
         this.timestamp = time;
         this.formula = formula;
         this.traits = formula.getTraits();
-        this.obj = formula.getObject();
+        this.obj = formula.getObservation();
 
         inLM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryType.LM);
         inWM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryType.WM);
