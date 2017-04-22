@@ -19,6 +19,10 @@ public class NonBinaryHolon extends Holon{
 	protected List<Pair<Integer,com.pwr.zpi.language.Operators.Type>> Tao;
 	protected Trait trait;
 	protected Map<com.pwr.zpi.language.Operators.Type,Double> Ratio;
+
+
+	// życzenia Weroniki dla Jaremy :)
+	// IndividualModel individualModel
 	
 	public NonBinaryHolon (Formula formula,Set<BaseProfile> baseProfile,int time,Object o,Trait trait){
 		this.trait = trait;
@@ -101,4 +105,5 @@ public class NonBinaryHolon extends Holon{
 	    }
 
 	}
+
 }
