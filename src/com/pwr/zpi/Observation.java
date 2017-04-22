@@ -8,17 +8,17 @@ import java.util.Set;
  * Represents objects placed in real world, witnessed by agent.
  */
 public class Observation {
-    private String identifier;
+    private Identifier identifier;
     private long time;
     private Set<Trait> traits;
 
-    public Observation(String identifier, Set<Trait> traits){
+    public Observation(Identifier identifier, Set<Trait> traits){
         this.identifier = identifier;
         this.traits = traits;
         time = System.currentTimeMillis();
     }
 
-    public Observation(String identifier, Set<Trait> traits, long time){
+    public Observation(Identifier identifier, Set<Trait> traits, long time){
         this.identifier = identifier;
         this.traits = traits;
         this.time = time;
@@ -28,11 +28,11 @@ public class Observation {
 
     }
 
-    public String getIdentifier() {
+    public Identifier getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(Identifier identifier) {
         this.identifier = identifier;
     }
 
@@ -84,14 +84,8 @@ public class Observation {
         return res;
     }
 
-    /**
-     * Determines type of given observation.
-     *
-     * @param observation Given observation of object.
-     * @return Type of object.
-     */
-    public static ObjectType getType(Observation observation) {
-        return null;    //todo
+    public ObjectType getType(){
+        return identifier.getType();
     }
 
     /**

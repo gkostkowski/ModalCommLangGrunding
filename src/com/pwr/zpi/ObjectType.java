@@ -10,9 +10,9 @@ import java.util.Set;
  */
 public class ObjectType {
     String id;
-    LinkedList<TraitSignature> traits;
+    List<TraitSignature> traits;
 
-    public ObjectType(String id, LinkedList<TraitSignature> traits) {
+    public ObjectType(String id, List<TraitSignature> traits) {
         this.id = id;
         this.traits = traits;
     }
@@ -21,7 +21,7 @@ public class ObjectType {
         return id;
     }
 
-    public LinkedList<TraitSignature> getTraits() {
+    public List<TraitSignature> getTraits() {
         return traits;
     }
 

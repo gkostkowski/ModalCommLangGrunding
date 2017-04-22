@@ -6,9 +6,9 @@ import java.util.Set;
  *
  */
 public class Agent {
-    BPCollection knowledgeBase;
-    ObservationCollection observations;
-    IMCollection models;
+    private BPCollection knowledgeBase;
+    private ObservationCollection observations;
+    private IMCollection models;
 
     public Agent(BPCollection knowledgeBase) {
         this.knowledgeBase = knowledgeBase;
@@ -22,5 +22,19 @@ public class Agent {
         this.knowledgeBase = knowledgeBase;
     }
 
+    public boolean addObservation(Observation observation) {
+        if(!models.isObservationRepresented(observation)) {
+            models.add(new IndividualModel(observation.getIdentifier(), observation.getType()));
+        }
+        return observations.add(observation);
+    }
+
+    public IndividualModel f(Identifier id) {
+        return models.f(id);
+    }
+
+    public IndividualModel g(Observation observation) {
+        return models.g(observation);
+    }
 
 }
