@@ -1,25 +1,27 @@
 package com.pwr.zpi;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Represents types of objects existed in world, which observations are processed in system.
  * It determines allowed set of traits for certain object (and its observation).
  */
 public class ObjectType {
-    String typeId;
-    LinkedList<TraitSignature> traits;
+    String id;
+    List<TraitSignature> traits;
 
-    public ObjectType(String id, LinkedList<TraitSignature> traits) {
-        this.typeId = id;
+    public ObjectType(String id, List<TraitSignature> traits) {
+        this.id = id;
         this.traits = traits;
     }
 
-    public String getTypeId() {
-        return typeId;
+    public String getId() {
+        return id;
     }
 
-    public LinkedList<TraitSignature> getTraits() {
+    public List<TraitSignature> getTraits() {
         return traits;
     }
 
