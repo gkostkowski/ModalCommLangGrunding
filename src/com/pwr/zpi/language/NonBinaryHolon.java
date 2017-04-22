@@ -12,17 +12,27 @@ import com.pwr.zpi.language.Operators.Type;
 
 /**
  * Class represents non binary holon involving information about states that certain formula has been observed in.
+ *
+ *
  */
 
 public class NonBinaryHolon extends Holon{
 	
 	protected List<Pair<Integer,com.pwr.zpi.language.Operators.Type>> Tao;
-	protected Trait trait;
+	protected Formula formula;
+	protected IndividualModel im;
 	protected Map<com.pwr.zpi.language.Operators.Type,Double> Ratio;
 	
-	public NonBinaryHolon (Formula formula,Set<BaseProfile> baseProfile,int time,Object o,Trait trait){
-		this.trait = trait;
-		update(formula,baseProfile,time,o,trait);
+	public NonBinaryHolon (Formula formula,Set<BaseProfile> baseProfile,int time,IndividualModel im){
+		//Obiekt i Trait z Formuły
+		// Individual model koniec końców powinno się wyciągnąć z formuły.
+		//Życzenia Weroniki : Holony dla prostych i złożonych. Nadać holonom sens jako przechowującym cechę i
+		//zaprzeczenie . zmodyfikowac groundera <-- Odłożone w czasie
+		// Części  jest/nie jest
+		//
+		this.im = im;
+		this.formula = formula;
+		update(formula,baseProfile,time);
 	}
     /**
      * Allows holon to update it's mental model on certain Trait
@@ -34,9 +44,9 @@ public class NonBinaryHolon extends Holon{
      *@param trait
      *
      */
-	public void update(Formula formula,Set<BaseProfile> baseProfile,int time,Object o,Trait trait,DistributedKnowledge dk){
+	public void update(Formula formula,Set<BaseProfile> baseProfile,int time,DistributedKnowledge dk){
 		com.pwr.zpi.language.Operators.Type update = Grounder.determineFulfillment(null, dk, formula);
-		Tao.add(new Pair<Integer,com.pwr.zpi.language.Operators.Type>(time,update));
+		Tao.add(new 	Pair<Integer,com.pwr.zpi.language.Operators.Type>(time,update));
 		updateRatio();
 	}
 
@@ -64,6 +74,13 @@ public class NonBinaryHolon extends Holon{
             else{Ratio.put(p.type, 1.0);}
         }
     }
+
+    public com.pwr.zpi.language.Operators.Type getTaoForOperatorType(Formula formula){
+    	//Zwracamy wartość dla  Traita
+		//Formuła.
+		//todo
+	}
+
 
     /**
      *  Returns Operator which has appeared most of times

@@ -13,7 +13,7 @@ public class BinaryHolon extends Holon{
     protected List<Pair<Double,Double>> Tao;
     protected Pair<Double,Double> Ratio;
     protected Trait trait;
-
+    protected Object;
     public BinaryHolon (Trait t,Set<BaseProfile> baseProfile,int time,Object o){
         trait = t;
         update(baseProfile,time,o);
