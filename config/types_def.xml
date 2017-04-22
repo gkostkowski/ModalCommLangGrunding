@@ -9,14 +9,27 @@
                 <trait>
                     <name>Color</name>
                     <valueType>String</valueType>
+                    <domain class="linked-list">
+                        <value> Black </value>
+                        <value> White </value>
+                        <value> Red </value>
+                    </domain>
                 </trait>
                 <trait>
                     <name>Shape</name>
                     <valueType>String</valueType>
+                    <domain class="linked-list">
+                        <value> Square </value>
+                        <value> Round </value>
+                    </domain>
                 </trait>
                 <trait>
                     <name>Blinking</name>
                     <valueType>Boolean</valueType>
+                    <domain class="linked-list">
+                        <value> True </value>
+                        <value> False </value>
+                    </domain>
                 </trait>
             </traits>
         </type>
@@ -26,14 +39,28 @@
                 <trait>
                     <name>Color</name>
                     <valueType>String</valueType>
+                    <domain class="linked-list">
+                        <value> Black </value>
+                        <value> White </value>
+                        <value> Red </value>
+                    </domain>
                 </trait>
                 <trait>
                     <name>NumberOfWalls</name>
                     <valueType>Integer</valueType>
+                    <domain class="linked-list">
+                        <value> 2 </value>
+                        <value> 3 </value>
+                        <value> 4 </value>
+                    </domain>
                 </trait>
                 <trait>
                     <name>Blinking</name>
                     <valueType>Boolean</valueType>
+                    <domain class="linked-list">
+                        <value> True </value>
+                        <value> False </value>
+                    </domain>
                 </trait>
             </traits>
         </type>

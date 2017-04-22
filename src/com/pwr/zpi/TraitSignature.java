@@ -3,6 +3,7 @@ package com.pwr.zpi;
 import com.pwr.zpi.util.TypeMapper;
 
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -14,7 +15,7 @@ public class TraitSignature<K, V> {
     //private K name;
     private String valueType;
 
-
+    private List<V> domain; //todo
 
     public TraitSignature(String name, String valueType) {
         this.name = name;
