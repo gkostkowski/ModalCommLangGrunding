@@ -16,13 +16,13 @@ import java.util.Collection;
 /**
  * Created by Grzegorz Kostkowski on 2017-03-11.
  */
-public class XMLDAO<Type extends ObjectType> {
+public class XMLDAO<T extends ObjectType> {
     protected XStream xstream = new XStream(new DomDriver());
     protected String xml;
     protected static final String DEF_FILEPATH = System.getProperty("user.dir") + "\\config\\types_def.xml";
 
 
-    private Collection<Type> fromFile(final String filepath) {
+    private Collection<T> fromFile(final String filepath) {
         setAliases();
         try {
             File file = new File(filepath);
@@ -30,7 +30,7 @@ public class XMLDAO<Type extends ObjectType> {
                 file.createNewFile();
             else {
                 xml = new String(Files.readAllBytes(Paths.get(filepath)), StandardCharsets.UTF_8);
-                return (Collection<Type>)((DataWrapper<ObjectType>) xstream.fromXML(xml)).getData();
+                return (Collection<T>)((DataWrapper<ObjectType>) xstream.fromXML(xml)).getData();
             }
         } catch (IOException e) {
             return null;
@@ -38,7 +38,7 @@ public class XMLDAO<Type extends ObjectType> {
         return null;
     }
 
-    private Collection<Type> fromFile() {
+    private Collection<T> fromFile() {
         return fromFile(DEF_FILEPATH);
     }
 
@@ -50,10 +50,14 @@ public class XMLDAO<Type extends ObjectType> {
         xstream.alias("trait", TraitSignature.class);
     }
 
-
-    public Collection<Type> loadTypesDefinitions(String filename) {
+    /***
+     *
+     * @param filename
+     * @return
+     */
+    public Collection<T> loadTypesDefinitions(String filename) {
         File f = new File(filename);
-        Collection<Type> res = null;
+        Collection<T> res = null;
         if (f.exists() && f.canRead())
             res = fromFile(filename);
         else
@@ -61,7 +65,7 @@ public class XMLDAO<Type extends ObjectType> {
         return res;
     }
 
-    public Collection<Type> loadTypesDefinitions() {
+    public Collection<T> loadTypesDefinitions() {
         return fromFile(DEF_FILEPATH);
     }
 

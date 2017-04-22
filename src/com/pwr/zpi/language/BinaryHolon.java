@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.pwr.zpi.BaseProfile;
+import com.pwr.zpi.Observation;
 import com.pwr.zpi.Trait;
 
 /**

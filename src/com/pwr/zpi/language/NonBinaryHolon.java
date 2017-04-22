@@ -22,6 +22,10 @@ public class NonBinaryHolon extends Holon{
 	protected Formula formula;
 	protected IndividualModel im;
 	protected Map<com.pwr.zpi.language.Operators.Type,Double> Ratio;
+
+
+	// życzenia Weroniki dla Jaremy :)
+	// IndividualModel individualModel
 	
 	public NonBinaryHolon (Formula formula,Set<BaseProfile> baseProfile,int time,IndividualModel im){
 		//Obiekt i Trait z Formuły
@@ -118,4 +122,5 @@ public class NonBinaryHolon extends Holon{
 	    }
 
 	}
+
 }

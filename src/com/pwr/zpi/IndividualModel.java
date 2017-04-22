@@ -4,6 +4,8 @@ import java.util.Set;
 
 /**
  * Individual model represents exact object witnessed by agent.
+ * IndividualModel is based on one specific ObjectType,
+ * which is a signature for that IndividualModel.
  * There is one individual model for each object.
  */
 public class IndividualModel {
