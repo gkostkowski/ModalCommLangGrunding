@@ -10,7 +10,7 @@ public class BaseProfile{
      * Map of traits and related collections of objects. If some collection is related with certain trait, then
      * it mean that all objects in that collections have this trait.
      */
-    protected static Map<Trait, Set<Observation>> describedByTraits;
+    protected  Map<Trait, Set<Observation>> describedByTraits;
     /**
      * Map of traits and related collections of objects. If some collection is related with certain trait, then
      * it mean that all objects in that collections DON'T HAVE this trait.
@@ -25,13 +25,24 @@ public class BaseProfile{
 
     protected Set<Observation> objects;
 
-    public BaseProfile (Map<Trait, Set<Observation>> SetOTraits, int timestamp) {
-        this.indefiniteByTraits = SetOTraits;
+    protected BaseProfile(int timestamp) {
+        this.describedByTraits = new HashMap<>();
+        this.notDescribedByTraits = new HashMap<>();
+        this.indefiniteByTraits = new HashMap<>();
         this.timestamp = timestamp;
     }
 
-    public BaseProfile() {
-
+    /**
+     *
+     * @param baseProfileMaps Maps should be in following order: describedByTraits, notDescribedByTraits,
+     *                        indefiniteByTraits
+     * @param timestamp
+     */
+    private BaseProfile (List<Map<Trait, Set<Observation>>> baseProfileMaps, int timestamp) {
+        this.timestamp = timestamp;
+        this.describedByTraits = baseProfileMaps.get(0);
+        this.notDescribedByTraits = baseProfileMaps.get(1);
+        this.indefiniteByTraits = baseProfileMaps.get(2);
     }
 
     public Map<Trait, Set<Observation>> getDescribedByTraits() {
@@ -125,6 +136,38 @@ public class BaseProfile{
     }
     public boolean DetermineIfSetHasNotTrait(@SuppressWarnings("rawtypes") Trait P,int time){
         return notDescribedByTraits.containsKey(P);
+    }
+
+    public void addDescribedObservations(Set<Observation> observations, Trait relatedTrait/*, int timestamp*/) {
+        //if (timestamp == this.timestamp)
+            describedByTraits.put(relatedTrait, observations);
+        //else throw new IllegalStateException("Given observation not belong to this BP.");
+    }
+
+    public void addNotDescribedObservations(Set<Observation> observations, Trait relatedTrait) {
+            notDescribedByTraits.put(relatedTrait, observations);
+    }
+
+    public void addIndefiniteObservations(Set<Observation> observations, Trait relatedTrait) {
+            indefiniteByTraits.put(relatedTrait, observations);
+    }
+
+    public void addDescribedObservation(Observation observation, Trait relatedTrait/*, int timestamp*/) {
+        if (!describedByTraits.containsKey(relatedTrait))
+            describedByTraits.put(relatedTrait, new HashSet<>());
+        describedByTraits.get(relatedTrait).add(observation);
+    }
+
+    public void addNotDescribedObservation(Observation observation, Trait relatedTrait) {
+        if (!notDescribedByTraits.containsKey(relatedTrait))
+            notDescribedByTraits.put(relatedTrait, new HashSet<>());
+        notDescribedByTraits.get(relatedTrait).add(observation);
+    }
+
+    public void addIndefiniteObservation(Observation observation, Trait relatedTrait) {
+        if (!indefiniteByTraits.containsKey(relatedTrait))
+            indefiniteByTraits.put(relatedTrait, new HashSet<>());
+        indefiniteByTraits.get(relatedTrait).add(observation);
     }
 
     public void copy(BaseProfile other) {

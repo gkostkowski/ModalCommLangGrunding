@@ -53,25 +53,29 @@ public class BPCollection {
         this.timestamp = INIT_TIMESTAMP;
     }
 
-    public void addToMemory(Map.Entry<Integer, BaseProfile> newMemoryEntry, MemoryType type, int currentTimestamp) {
+    public void addToMemory(BaseProfile newBP, int relatedTimestamp, MemoryType type, int currentTimestamp) {
         switch (type) {
             case LM:
-                longTermMemory.put(newMemoryEntry.getKey(), newMemoryEntry.getValue());
+                longTermMemory.put(relatedTimestamp, newBP);
                 break;
             case WM:
-                workingMemory.put(newMemoryEntry.getKey(), newMemoryEntry.getValue());
+                workingMemory.put(relatedTimestamp, newBP);
                 break;
         }
         timestamp = currentTimestamp;
     }
 
-    /**
-     * Returns base profile from pointed memory related with given timestamp.
-     * Ratains information about timestamp.
-     *
-     * @param timestamp Moment in time.
-     * @return Base profile from pointed memory related with given timestamp.
-     */
+    public void addToMemory(BaseProfile newBP, MemoryType type, int currentTimestamp) {
+        addToMemory(newBP, currentTimestamp, type, currentTimestamp);
+    }
+
+        /**
+         * Returns base profile from pointed memory related with given timestamp.
+         * Ratains information about timestamp.
+         *
+         * @param timestamp Moment in time.
+         * @return Base profile from pointed memory related with given timestamp.
+         */
     public Pair<Integer, BaseProfile> getTimedBaseProfile(int timestamp, MemoryType memType) {
         switch (memType) {
             case WM:

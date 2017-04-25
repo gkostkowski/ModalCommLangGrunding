@@ -1,8 +1,17 @@
 package com.pwr.zpi;
 
+import com.pwr.zpi.exceptions.InvalidFormulaException;
+import com.pwr.zpi.io.XMLDAO;
+import com.pwr.zpi.language.*;
+
+import java.util.*;
+
 public class Main {
 
-    public static void main(String[] args) {
+    private static final int INIT_TIME = 1;
+    private static final int CURR_TIME= 5;
+
+    public static void main(String[] args) throws InvalidFormulaException {
         Agent agent1 = null;
         //ccztytanie pliku kon
         //grzkos {
@@ -158,13 +167,53 @@ public class Main {
         Observation o2o18 = new Observation(null,traitsyo2o18);
 
         BPCollection bpCollection = new BPCollection();
-        bpCollection.addToMemory(new BaseProfile());
+        BaseProfile[] baseProfilesArr = new BaseProfile[CURR_TIME];
+        for (int i= INIT_TIME; i <= CURR_TIME; i++) {
+            baseProfilesArr[i] = new BaseProfile(i);
+        }
+
+        Trait colour = o1t, shape = o1t1, blinking = o1t2;
+
+        baseProfilesArr[0].addDescribedObservation(o1obs1,colour);
+        baseProfilesArr[0].addDescribedObservation(o1obs1,shape);
+        baseProfilesArr[0].addNotDescribedObservation(o1obs1,blinking);
+        bpCollection.addToMemory(baseProfilesArr[0], BPCollection.MemoryType.LM, 1);
+
+        baseProfilesArr[1].addDescribedObservation(o1obs2,colour);
+        baseProfilesArr[1].addDescribedObservation(o1obs2,shape);
+        baseProfilesArr[1].addNotDescribedObservation(o1obs2,blinking);
+        bpCollection.addToMemory(baseProfilesArr[1], BPCollection.MemoryType.LM, 2);
+
+        baseProfilesArr[2].addDescribedObservation(o1obs2,colour);
+        baseProfilesArr[2].addDescribedObservation(o1obs2,shape);
+        baseProfilesArr[2].addDescribedObservation(o1obs2,blinking);
+        bpCollection.addToMemory(baseProfilesArr[2], BPCollection.MemoryType.LM, 3);
+
+        baseProfilesArr[3].addDescribedObservation(o1obs2,colour);
+        baseProfilesArr[3].addDescribedObservation(o1obs2,shape);
+        bpCollection.addToMemory(baseProfilesArr[3], BPCollection.MemoryType.WM, 4);
+
+        baseProfilesArr[4].addDescribedObservation(o1obs1,colour);
+        baseProfilesArr[4].addDescribedObservation(o1obs1,shape);
+        baseProfilesArr[4].addNotDescribedObservation(o1obs1,blinking);
+        bpCollection.addToMemory(baseProfilesArr[4], BPCollection.MemoryType.WM, 5);
+
+        agent1 = new Agent(bpCollection);
+
+        Trait redColour =o1t;
 
         Set<Trait> traitsy1 = new HashSet<Trait>(Arrays.asList(t,t1,t2,t3));
         Set<Trait> traitsy2 = new HashSet<Trait>(Arrays.asList(t4,t5,t6,t7));
         //Potrzebny Identifier
         Observation o1 = new Observation(null,traitsy1);
         Observation o2 = new Observation(null,traitsy2);
+
+        //grzkos
+        Formula f1 = new SimpleFormula(o1,redColour,false);
+
+        DistributedKnowledge dk = new DistributedKnowledge(agent1, f1, 2);
+
+        //grzkos
 
         Formula f1 = new SimpleFormula(o1,t1,true);
         Formula f2 = new SimpleFormula(o1,t2,false);

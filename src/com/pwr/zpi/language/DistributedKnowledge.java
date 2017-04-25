@@ -115,7 +115,7 @@ public class DistributedKnowledge {
         return obj;
     }
 
-    public Set<Trait> getTraits() throws InvalidFormulaException {
+    public List<Trait> getTraits() throws InvalidFormulaException {
         if (traits == null || traits.isEmpty())
             throw new InvalidFormulaException();
         return traits;
