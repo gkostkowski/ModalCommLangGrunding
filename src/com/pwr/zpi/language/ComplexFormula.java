@@ -129,6 +129,28 @@ public class ComplexFormula extends Formula {
         return null;
     }
 
+    public boolean equals(Formula other)
+    {
+        if(other instanceof ComplexFormula)
+            if(observation.getIdentifier().equals(other.getObservation().getIdentifier()))
+                if(compareTraits(other.getTraits()))
+                    if(operator.equals(((ComplexFormula) other).getOperator()))
+                        return true;
+        return false;
+    }
+
+    private boolean compareTraits(List<Trait> otherTraits)
+    {
+        if(traits.get(0).equals(otherTraits.get(0)))
+            if(traits.get(1).equals(otherTraits.get(1)))
+                return true;
+            else return false;
+        else if(traits.get(0).equals(otherTraits.get(1)))
+                if(traits.get(1).equals(otherTraits.get(0)))
+                    return true;
+        return false;
+    }
+
 
 
 

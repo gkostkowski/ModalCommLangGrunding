@@ -23,5 +23,13 @@ public class ObjectType {
         return traits;
     }
 
+    public TraitSignature getSpecificTrait(String name)
+    {
+        for(TraitSignature trait: traits)
+            if(trait.getName().equalsIgnoreCase(name))
+                return trait;
+        return null;
+    }
+
 
 }

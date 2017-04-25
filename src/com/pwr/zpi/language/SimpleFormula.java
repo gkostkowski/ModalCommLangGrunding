@@ -83,4 +83,13 @@ public class SimpleFormula extends Formula {
         return result;
     }
 
+    public boolean equals(Formula other)
+    {
+        if(other instanceof SimpleFormula)
+            if(observation.getIdentifier().equals(other.getObservation().getIdentifier()))
+                if(trait.equals(((SimpleFormula) other).trait))
+                        return true;
+        return false; //todo czy sprawdzać stan isNegated
+    }
+
 }

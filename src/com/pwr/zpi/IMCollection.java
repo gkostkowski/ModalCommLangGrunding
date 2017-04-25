@@ -7,7 +7,8 @@ import java.util.Set;
  * Collection of individual models.
  */
 public class IMCollection {
-    private Set<IndividualModel> individualModelSet;
+
+    private static Set<IndividualModel> individualModelSet;
 
     public IMCollection() {
 
@@ -29,7 +30,8 @@ public class IMCollection {
         return individualModelSet.add(individualModel);
     }
 
-    public IndividualModel f(Identifier id) {
+    //todo mało dokładne nazwy...
+    public static IndividualModel f(Identifier id) {
         for(IndividualModel model : individualModelSet) {
             if (model.getIdentifier().equals(id))
                 return model;
@@ -42,6 +44,19 @@ public class IMCollection {
             if (model.getIdentifier().equals(observation.getIdentifier()))
                 return model;
         }
+        return null;
+    }
+
+    /**
+     * Method finds a specific individual model based on given name
+     * @param name common name for the object
+     * @return IndividualModel of the name
+     */
+    public static IndividualModel getModelFromName(String name)
+    {
+        for(IndividualModel model : individualModelSet)
+            if(model.getName().equals(name))
+                return model;
         return null;
     }
 }

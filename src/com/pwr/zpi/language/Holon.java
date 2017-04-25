@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.pwr.zpi.BaseProfile;
-import com.pwr.zpi.Object;
+import com.pwr.zpi.IndividualModel;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.language.Operators.Type;
 
