@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Represents state of world from agent perspective. It's established for certain moment in time.
  */
-public class BaseProfile extends World {
+public class BaseProfile{
     /**
      * Map of traits and related collections of objects. If some collection is related with certain trait, then
      * it mean that all objects in that collections have this trait.
@@ -22,6 +22,8 @@ public class BaseProfile extends World {
      */
     protected Map<Trait, Set<Observation>> indefiniteByTraits;
     protected int timestamp;
+
+    protected Set<Observation> objects;
 
     public BaseProfile (Map<Trait, Set<Observation>> SetOTraits, int timestamp) {
         this.indefiniteByTraits = SetOTraits;
