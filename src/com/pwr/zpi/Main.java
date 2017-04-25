@@ -1,5 +1,6 @@
 package com.pwr.zpi;
 
+import com.pwr.zpi.io.XMLDAO;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Holon;
 import com.pwr.zpi.language.SimpleFormula;
@@ -12,6 +13,8 @@ public class Main {
         Agent agent1 = null;
         //ccztytanie pliku kon
         //grzkos {
+        XMLDAO xmldao = new XMLDAO();
+        Collection <ObjectType> objectTypes = xmldao.loadTypesDefinitions(Utils.makePath());
 
         // }grzkos
         // ladowanie obiektow typow
@@ -146,6 +149,9 @@ public class Main {
         Trait<String,Boolean> o18t5 = new Trait<String,Boolean>("Blinking",true);
         Set<Trait> traitsyo2o18 = new HashSet<Trait>(Arrays.asList(o18t,o18t1,o18t2,o18t3,o18t4,o18t5));
         Observation o2o18 = new Observation(null,traitsyo2o18);
+
+        BPCollection bpCollection = new BPCollection();
+        bpCollection.addToMemory(new BaseProfile());
 
         Set<Trait> traitsy1 = new HashSet<Trait>(Arrays.asList(t,t1,t2,t3));
         Set<Trait> traitsy2 = new HashSet<Trait>(Arrays.asList(t4,t5,t6,t7));

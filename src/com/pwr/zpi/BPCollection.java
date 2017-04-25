@@ -15,6 +15,8 @@ import java.util.*;
  */
 public class BPCollection {
 
+    private static final int INIT_TIMESTAMP = 0;
+
     /**
      * Describes allowed types of agent's memory. According to the accepted theoretical model, there are two memory
      * levels: Working memory and long-term memory.
@@ -40,6 +42,27 @@ public class BPCollection {
         this.workingMemory = workingMemory;
         this.longTermMemory = longTermMemory;
         this.timestamp = timestamp;
+    }
+
+    /**
+     * Initializes empty BPCollection with initials values.
+     */
+    public BPCollection() {
+        this.workingMemory = new HashMap<>();
+        this.longTermMemory = new HashMap<>();
+        this.timestamp = INIT_TIMESTAMP;
+    }
+
+    public void addToMemory(Map.Entry<Integer, BaseProfile> newMemoryEntry, MemoryType type, int currentTimestamp) {
+        switch (type) {
+            case LM:
+                longTermMemory.put(newMemoryEntry.getKey(), newMemoryEntry.getValue());
+                break;
+            case WM:
+                workingMemory.put(newMemoryEntry.getKey(), newMemoryEntry.getValue());
+                break;
+        }
+        timestamp = currentTimestamp;
     }
 
     /**
