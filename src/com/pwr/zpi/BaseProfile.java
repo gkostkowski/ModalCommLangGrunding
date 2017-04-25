@@ -170,11 +170,11 @@ public class BaseProfile{
         indefiniteByTraits.get(relatedTrait).add(observation);
     }
 
-    public void copy(BaseProfile other) {
+    /*public void copy(BaseProfile other) {
         setDescribedByTraits(other.getDescribedByTraits());
         setNotDescribedByTraits(other.getNotDescribedByTraits());
         setIndefiniteByTraits(getIndefiniteByTraits());
         setTimestamp(other.getTimestamp());
         setObjects(other.getObjects());
-    }
+    }*/
 }

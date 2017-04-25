@@ -168,7 +168,8 @@ public class Main {
 
         BPCollection bpCollection = new BPCollection();
         BaseProfile[] baseProfilesArr = new BaseProfile[CURR_TIME];
-        for (int i= INIT_TIME; i <= CURR_TIME; i++) {
+        int iterations = CURR_TIME - INIT_TIME;
+        for (int i= 0; i <= iterations; i++) {
             baseProfilesArr[i] = new BaseProfile(i);
         }
 
@@ -202,18 +203,19 @@ public class Main {
 
         Trait redColour =o1t;
 
-        Set<Trait> traitsy1 = new HashSet<Trait>(Arrays.asList(t,t1,t2,t3));
+        /*Set<Trait> traitsy1 = new HashSet<Trait>(Arrays.asList(t,t1,t2,t3));
         Set<Trait> traitsy2 = new HashSet<Trait>(Arrays.asList(t4,t5,t6,t7));
         //Potrzebny Identifier
         Observation o1 = new Observation(null,traitsy1);
-        Observation o2 = new Observation(null,traitsy2);
+        Observation o2 = new Observation(null,traitsy2);*/
 
         //grzkos
-        Formula f1 = new SimpleFormula(o1,redColour,false);
+        Formula f1 = new SimpleFormula(o1obs2,redColour,false);
 
         DistributedKnowledge dk = new DistributedKnowledge(agent1, f1, 2);
 
         //grzkos
+/*
 
         Formula f1 = new SimpleFormula(o1,t1,true);
         Formula f2 = new SimpleFormula(o1,t2,false);
@@ -226,13 +228,14 @@ public class Main {
         List<Trait> complexTrait1 = new ArrayList<Trait>(Arrays.asList(t,t4));
         List<Trait> complexTrait2 = new ArrayList<Trait>(Arrays.asList(t2,t7));
         List<Trait> complexTrait3 = new ArrayList<Trait>(Arrays.asList(t7,t2));
+*/
 
         BaseProfile bp1,bp2;
         Set<BaseProfile> SetBP = new HashSet<BaseProfile>();
 
         //stworzenie holonów
         //Brakuje ModelowIndywiduowych,BaseProfili i Distributed Knowledge
-        Holon h1 = new Holon(f1,SetBP,(int)System.currentTimeMillis(),null,null);
+        //Holon h1 = new Holon(f1,SetBP,(int)System.currentTimeMillis(),null,null);
         //uruchomienie metod z groundera (w holonach)
         //zadanie pytan
         //uzyskanie odpowiedzi

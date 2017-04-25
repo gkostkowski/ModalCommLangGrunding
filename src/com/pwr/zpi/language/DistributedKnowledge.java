@@ -56,7 +56,7 @@ public class DistributedKnowledge {
         inWM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryType.WM);
 
         //initSets();
-        groundingSets = Grounder.getGroundingSets(formula, time,agent.getKnowledgeBase().getBaseProfiles(time));
+        //groundingSets = Grounder.getGroundingSets(formula, time,agent.getKnowledgeBase().getBaseProfiles(time)); //todo
 
         Iterator<Formula> it = groundingSets.keySet().iterator();
         for (int i=0; i < CLASSES_AMOUNT && it.hasNext(); i=i+2) {

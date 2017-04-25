@@ -53,7 +53,7 @@ public class Observation {
      * meaning that object is desribed by them and values are from domain
      * @param traits set of observed traits
      */
-    public void setTraits(Set<Trait> traits)
+    /*public void setTraits(Set<Trait> traits)
     {
         IndividualModel model = IMCollection.f(identifier);
         for(Trait trait : traits)
@@ -62,7 +62,7 @@ public class Observation {
                 this.traits.remove(trait); // todo albo tak, albo zwracamy jakiś błąd, bo nie wiemy czy obserwacja była w takim razie prawdziwa
         }
         this.traits = traits;
-    }
+    }*/
 
     /**
      * Checks if object has given trait and return it's state.
@@ -103,11 +103,11 @@ public class Observation {
     /**
      * Copies all attributes from other object.
      */
-    public void copy(Observation other) {
+    /*public void copy(Observation other) {
         setIdentifier(other.getIdentifier());
         setTime(other.getTime());
         setTraits(other.getTraits());
-    }
+    }*/
 
 
 
