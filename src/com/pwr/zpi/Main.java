@@ -117,12 +117,6 @@ public class Main {
         Set<Trait> traitsyo1obs14 = new HashSet<Trait>(Arrays.asList(o14t,o14t1,o14t2));
         Observation o1obs14 = new Observation(null,traitsyo1obs14,14);
 
-        Set<Trait> traitsyo2obs14 = new HashSet<Trait>(Arrays.asList(o14t3,o14t4,o14t5));
-        Observation o2obs14 = new Observation(null,traitsyo2obs14,14);
-
-        Set<Trait> traitsyo3obs14 = new HashSet<Trait>(Arrays.asList(o14t6,o14t7,o14t8));
-        Observation o3obs14 = new Observation(null,traitsyo3obs14,14);
-
         // UPDATE 3
 
         Trait<String,String> o15t = new Trait<String,String>("Colour","Red");
@@ -154,8 +148,7 @@ public class Main {
         Set<Trait> traitsyo2obs17 = new HashSet<Trait>(Arrays.asList(o17t,o17t1,o17t2));
         Observation o2obs17 = new Observation(null,traitsyo2obs17,17);
 
-        Set<Trait> traitsyo3obs17 = new HashSet<Trait>(Arrays.asList(o17t3,o17t4,o17t5));
-        Observation o3obs17 = new Observation(null,traitsyo3obs17,17);
+
 
         Trait<String,String> o18t = new Trait<String,String>("Colour","Red");
         Trait<String,String> o18t1 = new Trait<String,String>("Shape","Sqaure");
@@ -174,6 +167,11 @@ public class Main {
         }
 
         Trait colour = o1t, shape = o1t1, blinking = o1t2;
+        //Update 1
+        Formula form1 = new SimpleFormula(o1obs1,new Trait<String,String>("Colour","Red"),true);
+        Formula form2 = new SimpleFormula(o1obs2,new Trait<String,String>("Colour","Black"),true);
+        Formula form3 = new SimpleFormula(o1obs3,new Trait<String,String>("Shape","Round"),true);
+        Formula form4 = new SimpleFormula(o1obs3,new Trait<String,String>("Blinking","Sqaure"),true);
 
         baseProfilesArr[0].addDescribedObservation(o1obs1,colour);
         baseProfilesArr[0].addDescribedObservation(o1obs1,shape);
@@ -216,10 +214,20 @@ public class Main {
 
         //grzkos
 /*
+        //Update 2
+        Formula form5 = new SimpleFormula(o1obs6,new Trait<String,String>("Colour","Red"),true);
+        Formula form6 = new SimpleFormula(o1obs7,new Trait<String,String>("Colour","Black"),true);
+        Formula form7 = new SimpleFormula(o1obs8,new Trait<String,String>("Shape","Round"),true);
+        Formula form8 = new SimpleFormula(o1obs8,new Trait<String,String>("Shape","Sqaure"),true);
+        Formula form9 = new SimpleFormula(o1obs10,new Trait<String,Boolean>("Blinking",true),true);
+        //Update 3
+        Formula form10 = new SimpleFormula(o2obs11,new Trait<String,String>("Colour","Red"),true);
+        Formula form11 = new SimpleFormula(o2obs12,new Trait<String,String>("Shape","Round"),true);
+        //Update 4
+        Formula form12 = new SimpleFormula(o2obs17,new Trait<String,String>("Colour","Red"),true);
 
-        Formula f1 = new SimpleFormula(o1,t1,true);
-        Formula f2 = new SimpleFormula(o1,t2,false);
-        Formula f3 = new SimpleFormula(o1,t3,false);
+        Formula complexform1 = new ComplexFormula(o2obs17,Arrays.asList(new Trait<String,Integer>("NoOfWalls",3),new Trait<String,Boolean>("Blinking",false)), Operators.Type.AND);
+        Formula complexform2= new ComplexFormula(o2obs17,Arrays.asList(new Trait<String,String>("Colour","Red"),new Trait<String,Boolean>("Blinking",false)), Operators.Type.AND);
 
         Formula f4 = new SimpleFormula(o2,t4,true);
         Formula f5 = new SimpleFormula(o2,t5,false);

@@ -7,15 +7,16 @@ import com.pwr.zpi.State;
  */
 public class Operators {
 
-    private Type type;
+    private static Type type;
 
-    public Type getType() {
-        return type;
-    }
+
 
     public enum Type {
         AND, OR, XOR, NOT,
         POS, BEL, KNOW
+        public Type getType() {
+            return type;
+        }
     }
 
     /**
