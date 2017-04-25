@@ -1,12 +1,5 @@
 package com.pwr.zpi;
 
-import com.pwr.zpi.io.XMLDAO;
-import com.pwr.zpi.language.Formula;
-import com.pwr.zpi.language.Holon;
-import com.pwr.zpi.language.SimpleFormula;
-
-import java.util.*;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -23,84 +16,84 @@ public class Main {
         Trait<String,String> o1t = new Trait<String,String>("Colour","Red");
         Trait<String,String> o1t1 = new Trait<String,String>("Shape","Square");
         Trait<String,Boolean> o1t2 = new Trait<String,Boolean>("Blinking",false);
-        Set<Trait> traitsyo1o1 = new HashSet<Trait>(Arrays.asList(o1t,o1t1,o1t2));
-        Observation o1o1 = new Observation(null,traitsyo1o1);
+        Set<Trait> traitsyo1obs1 = new HashSet<Trait>(Arrays.asList(o1t,o1t1,o1t2));
+        Observation o1obs1 = new Observation(null,traitsyo1obs1,1);
 
         Trait<String,String> o2t = new Trait<String,String>("Colour","Red");
         Trait<String,String> o2t1 = new Trait<String,String>("Shape","Square");
         Trait<String,Boolean> o2t2 = new Trait<String,Boolean>("Blinking",false);
-        Set<Trait> traitsyo1o2 = new HashSet<Trait>(Arrays.asList(o2t,o2t1,o2t2));
-        Observation o1o2 = new Observation(null,traitsyo1o2);
+        Set<Trait> traitsyo1obs2 = new HashSet<Trait>(Arrays.asList(o2t,o2t1,o2t2));
+        Observation o1obs2 = new Observation(null,traitsyo1obs2,2);
 
         Trait<String,String> o3t = new Trait<String,String>("Colour","Red");
         Trait<String,String> o3t1 = new Trait<String,String>("Shape","Square");
         Trait<String,Boolean> o3t2 = new Trait<String,Boolean>("Blinking",true);
-        Set<Trait> traitsyo1o3 = new HashSet<Trait>(Arrays.asList(o3t,o3t1,o3t2));
-        Observation o1o3 = new Observation(null,traitsyo1o3);
+        Set<Trait> traitsyo1obs3 = new HashSet<Trait>(Arrays.asList(o3t,o3t1,o3t2));
+        Observation o1obs3 = new Observation(null,traitsyo1obs3,3);
 
         Trait<String,String> o4t = new Trait<String,String>("Colour","Red");
         Trait<String,String> o4t1 = new Trait<String,String>("Shape","Square");
         Trait<String,Boolean> o4t2 = new Trait<String,Boolean>("Blinking",null);
-        Set<Trait> traitsyo1o4 = new HashSet<Trait>(Arrays.asList(o4t,o4t1,o4t2));
-        Observation o1o4 = new Observation(null,traitsyo1o4);
+        Set<Trait> traitsyo1obs4 = new HashSet<Trait>(Arrays.asList(o4t,o4t1,o4t2));
+        Observation o1obs4 = new Observation(null,traitsyo1obs4,4);
 
         Trait<String,String> o5t = new Trait<String,String>("Colour","Black");
         Trait<String,String> o5t1 = new Trait<String,String>("Shape","Square");
         Trait<String,Boolean> o5t2 = new Trait<String,Boolean>("Blinking",false);
-        Set<Trait> traitsyo1o5 = new HashSet<Trait>(Arrays.asList(o5t,o5t1,o5t2));
-        Observation o1o5 = new Observation(null,traitsyo1o5);
+        Set<Trait> traitsyo1obs5 = new HashSet<Trait>(Arrays.asList(o5t,o5t1,o5t2));
+        Observation o1obs5 = new Observation(null,traitsyo1obs5,5);
 
         //UPDATE 1
 
         Trait<String,String> o6t = new Trait<String,String>("Colour","Black");
         Trait<String,String> o6t1 = new Trait<String,String>("Shape","Square");
         Trait<String,Boolean> o6t2 = new Trait<String,Boolean>("Blinking",true);
-        Set<Trait> traitsyo1o6 = new HashSet<Trait>(Arrays.asList(o6t,o6t1,o6t2));
-        Observation o1o6 = new Observation(null,traitsyo1o6);
+        Set<Trait> traitsyo1obs6 = new HashSet<Trait>(Arrays.asList(o6t,o6t1,o6t2));
+        Observation o1obs6 = new Observation(null,traitsyo1obs6,6);
 
         Trait<String,String> o7t = new Trait<String,String>("Colour","Black");
         Trait<String,String> o7t1 = new Trait<String,String>("Shape",null);
         Trait<String,Boolean> o7t2 = new Trait<String,Boolean>("Blinking",true);
-        Set<Trait> traitsyo1o7 = new HashSet<Trait>(Arrays.asList(o7t,o7t1,o7t2));
-        Observation o1o7 = new Observation(null,traitsyo1o7);
+        Set<Trait> traitsyo1obs7 = new HashSet<Trait>(Arrays.asList(o7t,o7t1,o7t2));
+        Observation o1obs7 = new Observation(null,traitsyo1obs7,7);
 
         Trait<String,String> o8t = new Trait<String,String>("Colour","White");
         Trait<String,String> o8t1 = new Trait<String,String>("Shape","Square");
         Trait<String,Boolean> o8t2 = new Trait<String,Boolean>("Blinking",false);
-        Set<Trait> traitsyo1o8 = new HashSet<Trait>(Arrays.asList(o8t,o8t1,o8t2));
-        Observation o1o8 = new Observation(null,traitsyo1o8);
+        Set<Trait> traitsyo1obs8 = new HashSet<Trait>(Arrays.asList(o8t,o8t1,o8t2));
+        Observation o1obs8 = new Observation(null,traitsyo1obs8,8);
 
         Trait<String,String> o9t = new Trait<String,String>("Colour","White");
         Trait<String,String> o9t1 = new Trait<String,String>("Shape","Round");
         Trait<String,Boolean> o9t2 = new Trait<String,Boolean>("Blinking",true);
-        Set<Trait> traitsyo1o9 = new HashSet<Trait>(Arrays.asList(o9t,o9t1,o9t2));
-        Observation o1o9 = new Observation(null,traitsyo1o9);
+        Set<Trait> traitsyo1obs9 = new HashSet<Trait>(Arrays.asList(o9t,o9t1,o9t2));
+        Observation o1obs9 = new Observation(null,traitsyo1obs9,9);
 
         Trait<String,String> o10t = new Trait<String,String>("Colour","Red");
         Trait<String,String> o10t1 = new Trait<String,String>("Shape","Sqaure");
         Trait<String,Boolean> o10t2 = new Trait<String,Boolean>("Blinking",false);
-        Set<Trait> traitsyo1o10 = new HashSet<Trait>(Arrays.asList(o10t,o10t1,o10t2));
-        Observation o1o10 = new Observation(null,traitsyo1o10);
+        Set<Trait> traitsyo1obs10 = new HashSet<Trait>(Arrays.asList(o10t,o10t1,o10t2));
+        Observation o1obs10 = new Observation(null,traitsyo1obs10,10);
 
         //UPDATE 2
 
         Trait<String,String> o11t = new Trait<String,String>("Colour","Red");
         Trait<String,String> o11t1 = new Trait<String,String>("Shape","Sqaure");
         Trait<String,Boolean> o11t2 = new Trait<String,Boolean>("Blinking",false);
-        Set<Trait> traitsyo2o11 = new HashSet<Trait>(Arrays.asList(o11t,o11t1,o11t2));
-        Observation o2o11 = new Observation(null,traitsyo2o11);
+        Set<Trait> traitsyo2obs11 = new HashSet<Trait>(Arrays.asList(o11t,o11t1,o11t2));
+        Observation o2obs11 = new Observation(null,traitsyo2obs11,11);
 
         Trait<String,String> o12t = new Trait<String,String>("Colour","Red");
         Trait<String,String> o12t1 = new Trait<String,String>("Shape","Sqaure");
         Trait<String,Boolean> o12t2 = new Trait<String,Boolean>("Blinking",false);
-        Set<Trait> traitsyo2o12 = new HashSet<Trait>(Arrays.asList(o12t,o12t1,o12t2));
-        Observation o2o12 = new Observation(null,traitsyo2o12);
+        Set<Trait> traitsyo2obs12 = new HashSet<Trait>(Arrays.asList(o12t,o12t1,o12t2));
+        Observation o2obs12 = new Observation(null,traitsyo2obs12,12);
 
         Trait<String,String> o13t = new Trait<String,String>("Colour","White");
         Trait<String,String> o13t1 = new Trait<String,String>("Shape","Sqaure");
         Trait<String,Boolean> o13t2 = new Trait<String,Boolean>("Blinking",null);
-        Set<Trait> traitsyo2o13 = new HashSet<Trait>(Arrays.asList(o13t,o13t1,o13t2));
-        Observation o2o13 = new Observation(null,traitsyo2o13);
+        Set<Trait> traitsyo2obs13 = new HashSet<Trait>(Arrays.asList(o13t,o13t1,o13t2));
+        Observation o2obs13 = new Observation(null,traitsyo2obs13,13);
 
         Trait<String,String> o14t = new Trait<String,String>("Colour","Red");
         Trait<String,String> o14t1 = new Trait<String,String>("Shape","Sqaure");
@@ -112,34 +105,48 @@ public class Main {
         Trait<String,Integer> o14t7 = new Trait<String,Integer>("Shape",3);
         Trait<String,Boolean> o14t8 = new Trait<String,Boolean>("Blinking",false);
 
-        Set<Trait> traitsyo2o14 = new HashSet<Trait>(Arrays.asList(o14t,o14t1,o14t2,o14t4,o14t5,o14t6,o14t7,o14t8));
-        Observation o2o14 = new Observation(null,traitsyo2o14);
+        Set<Trait> traitsyo1obs14 = new HashSet<Trait>(Arrays.asList(o14t,o14t1,o14t2));
+        Observation o1obs14 = new Observation(null,traitsyo1obs14,14);
+
+        Set<Trait> traitsyo2obs14 = new HashSet<Trait>(Arrays.asList(o14t3,o14t4,o14t5));
+        Observation o2obs14 = new Observation(null,traitsyo2obs14,14);
+
+        Set<Trait> traitsyo3obs14 = new HashSet<Trait>(Arrays.asList(o14t6,o14t7,o14t8));
+        Observation o3obs14 = new Observation(null,traitsyo3obs14,14);
 
         // UPDATE 3
 
         Trait<String,String> o15t = new Trait<String,String>("Colour","Red");
         Trait<String,String> o15t1 = new Trait<String,String>("Shape","Sqaure");
         Trait<String,Boolean> o15t2 = new Trait<String,Boolean>("Blinking",null);
-        Set<Trait> traitsyo2o15 = new HashSet<Trait>(Arrays.asList(o15t,o15t1,o15t2));
-        Observation o2o15 = new Observation(null,traitsyo2o15);
+        Set<Trait> traitsyo2obs15 = new HashSet<Trait>(Arrays.asList(o15t,o15t1,o15t2));
+        Observation o2obs15 = new Observation(null,traitsyo2obs15,15);
 
         Trait<String,String> o16t = new Trait<String,String>("Colour","Red");
         Trait<String,String> o16t1 = new Trait<String,String>("Shape","Sqaure");
         Trait<String,Boolean> o16t2 = new Trait<String,Boolean>("Blinking",false);
         Trait<String,String> o16t3 = new Trait<String,String>("Colour","Red");
-        Trait<String,Integer> o16t4 = new Trait<String,Integer>("Shape",3);
+        Trait<String,Integer> o16t4 = new Trait<String,Integer>("NoOfWalls",3);
         Trait<String,Boolean> o16t5 = new Trait<String,Boolean>("Blinking",false);
-        Set<Trait> traitsyo2o16 = new HashSet<Trait>(Arrays.asList(o16t,o16t1,o16t2,o16t3,o16t4,o16t5));
-        Observation o2o16 = new Observation(null,traitsyo2o16);
+
+        Set<Trait> traitsyo2obs16 = new HashSet<Trait>(Arrays.asList(o16t,o16t1,o16t2));
+        Observation o2obs16 = new Observation(null,traitsyo2obs16,16);
+
+        Set<Trait> traitsyo3obs16 = new HashSet<Trait>(Arrays.asList(o16t3,o16t4,o16t5));
+        Observation o3obs16 = new Observation(null,traitsyo3obs16,16);
 
         Trait<String,String> o17t = new Trait<String,String>("Colour","White");
         Trait<String,String> o17t1 = new Trait<String,String>("Shape","Sqaure");
         Trait<String,Boolean> o17t2 = new Trait<String,Boolean>("Blinking",true);
         Trait<String,String> o17t3 = new Trait<String,String>("Colour","White");
-        Trait<String,Integer> o17t4 = new Trait<String,Integer>("Shape",3);
+        Trait<String,Integer> o17t4 = new Trait<String,Integer>("NoOfWalls",3);
         Trait<String,Boolean> o17t5 = new Trait<String,Boolean>("Blinking",false);
-        Set<Trait> traitsyo2o17 = new HashSet<Trait>(Arrays.asList(o17t,o17t1,o17t2,o17t3,o17t4,o17t5));
-        Observation o2o17 = new Observation(null,traitsyo2o17);
+
+        Set<Trait> traitsyo2obs17 = new HashSet<Trait>(Arrays.asList(o17t,o17t1,o17t2));
+        Observation o2obs17 = new Observation(null,traitsyo2obs17,17);
+
+        Set<Trait> traitsyo3obs17 = new HashSet<Trait>(Arrays.asList(o17t3,o17t4,o17t5));
+        Observation o3obs17 = new Observation(null,traitsyo3obs17,17);
 
         Trait<String,String> o18t = new Trait<String,String>("Colour","Red");
         Trait<String,String> o18t1 = new Trait<String,String>("Shape","Sqaure");

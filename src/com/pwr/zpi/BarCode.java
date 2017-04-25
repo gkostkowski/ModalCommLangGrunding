@@ -15,6 +15,11 @@ public class BarCode extends Identifier {
         return null; //todo
     }
 
+    @Override
+    public String getName() {
+        return null;
+    }
+
     public String getId() {
         return id;
     }
