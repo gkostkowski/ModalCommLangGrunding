@@ -33,7 +33,7 @@ public class Grounder {
      */
     static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
         Observation o = formula.getObservation();
-        Set<Trait> traits = formula.getTraits();
+        List<Trait> traits = formula.getTraits();
         State [] states = new State[traits.size()];
         List<State> s = formula.getStates();
         states = s.toArray(states);
@@ -60,7 +60,7 @@ public class Grounder {
                 Set<BaseProfile> currSet = null;
                 res.put(mentalModel, currSet = new HashSet<>());
                 for (BaseProfile bp : all) {
-                    if (isFulfilled(o, new ArrayList<>(traits), time, statesSeq, type, bp))
+                    if (isFulfilled(new ArrayList<>(traits), time, statesSeq, type, bp))
                         currSet.add(bp);
                 }
                 fstStateCounter = (fstStateCounter + 1) % states.length;
@@ -83,7 +83,7 @@ public class Grounder {
      * @param bp
      * @return
      */
-    static private boolean isFulfilled(Object o, List<Trait> traits, int time, List<State> states, Operators.Type op, BaseProfile bp) {
+    static private boolean isFulfilled( List<Trait> traits, int time, List<State> states, Operators.Type op, BaseProfile bp) {
         if (traits.size() != states.size())
             throw new IllegalStateException("Number of traits differs from amount of states.");
 
@@ -91,7 +91,7 @@ public class Grounder {
             op = Operators.Type.AND;
         boolean res = op.equals(Operators.Type.AND) ? true : false; //so far, applicable only for AND or OR
         for (int i = 0; i < traits.size(); i++) {
-            boolean curr = bp.DetermineIfSetHasTrait(o, traits.get(i), time, states.get(i));
+            boolean curr = bp.DetermineIfSetHasTrait(traits.get(i), time);
             switch (op) {
                 case AND:
                     res = res && curr;
@@ -125,7 +125,7 @@ public class Grounder {
     static Set<BaseProfile> getGroundingSetsPositiveTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
         for (BaseProfile bp : all) {
-            if (bp.DetermineIfSetHasTrait(o, P, time)) {
+            if (bp.DetermineIfSetHasTrait(P, time)) {
                 baseout.add(bp);
             }
         }
@@ -148,7 +148,7 @@ public class Grounder {
     static Set<BaseProfile> getGroundingSetsNegativeTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
         for (BaseProfile bp : all) {
-            if (!bp.DetermineIfSetHasNotTrait(o, P, time)) {
+            if (!bp.DetermineIfSetHasNotTrait(P, time)) {
                 baseout.add(bp);
             }
         }
@@ -211,7 +211,8 @@ public class Grounder {
      * @param formula Formula which
      * @param time    Certain moment in time.
      * @return Distribution of knowledge.
-     */
+     * @throws InvalidFormulaException
+ */
 
     static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) throws InvalidSentenceFormulaException {
         return new DistributedKnowledge(agent, formula, time);
@@ -264,8 +265,8 @@ public class Grounder {
         BaseProfile wmBp = new BaseProfile();
         Set<Object> objects = new HashSet<>();
 
-        Object describedObj = formula.getObservation();
-        Set<Trait> describedTraits = formula.getTraits();
+        Observation describedObj = formula.getObservation();
+        List<Trait> describedTraits = formula.getTraits();
         List<State> states = formula.getStates();
         //mentalModel.
         //boolean isNegated = state.equals(State.IS) ? true : false;
@@ -393,33 +394,33 @@ public class Grounder {
      */
 
 
-    static Set<BaseProfile> getGroundingSetsConjunction(Object o, Trait P, Trait Q, int time, Set<BaseProfile> all,
+    static Set<BaseProfile> getGroundingSetsConjunction( Trait P, Trait Q, int time, Set<BaseProfile> all,
                                                         int i) {
         Set<BaseProfile> out = new HashSet<BaseProfile>();
         switch (i) {
             case 1:
                 for (BaseProfile bp : all) {
-                    if (bp.DetermineIfSetHasTrait(o, P, time) && bp.DetermineIfSetHasTrait(o, Q, time)) out.add(bp);
+                    if (bp.DetermineIfSetHasTrait(P, time) && bp.DetermineIfSetHasTrait(Q, time)) out.add(bp);
                 }
                 break;
 
             case 2:
                 for (BaseProfile bp : all) {
-                    if (bp.DetermineIfSetHasTrait(o, P, time) && !bp.DetermineIfSetHasTrait(o, Q, time))
+                    if (bp.DetermineIfSetHasTrait(P, time) && !bp.DetermineIfSetHasTrait(Q, time))
                         out.add(bp);
                 }
                 break;
 
             case 3:
                 for (BaseProfile bp : all) {
-                    if (!bp.DetermineIfSetHasTrait(o, P, time) && bp.DetermineIfSetHasTrait(o, Q, time))
+                    if (!bp.DetermineIfSetHasTrait(P, time) && bp.DetermineIfSetHasTrait(Q, time))
                         out.add(bp);
                 }
                 break;
 
             case 4:
                 for (BaseProfile bp : all) {
-                    if (!bp.DetermineIfSetHasTrait(o, P, time) && !bp.DetermineIfSetHasTrait(o, Q, time))
+                    if (!bp.DetermineIfSetHasTrait(P, time) && !bp.DetermineIfSetHasTrait(Q, time))
                         out.add(bp);
                 }
                 break;
@@ -460,11 +461,11 @@ public class Grounder {
         Set<BaseProfile> Sum = new HashSet<BaseProfile>();
 
         //OgarnijAdAlla, nie dodaje tych samych obiektów
-        Sum.addAll(getGroundingSetsConjunction(o, P, Q, time, all, 1));
-        Sum.addAll(getGroundingSetsConjunction(o, P, Q, time, all, 2));
-        Sum.addAll(getGroundingSetsConjunction(o, P, Q, time, all, 3));
-        Sum.addAll(getGroundingSetsConjunction(o, P, Q, time, all, 4));
-        return getCard(getGroundingSetsConjunction(o, P, Q, time, all, i), time) / getCard(Sum, time);
+        Sum.addAll(getGroundingSetsConjunction( P, Q, time, all, 1));
+        Sum.addAll(getGroundingSetsConjunction( P, Q, time, all, 2));
+        Sum.addAll(getGroundingSetsConjunction( P, Q, time, all, 3));
+        Sum.addAll(getGroundingSetsConjunction( P, Q, time, all, 4));
+        return getCard(getGroundingSetsConjunction(P, Q, time, all, i), time) / getCard(Sum, time);
     }
 
 
