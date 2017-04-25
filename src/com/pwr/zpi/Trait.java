@@ -78,9 +78,9 @@ public class Trait <K, V> {
         setValue(other.getValue());
     }
 
-    public TraitSignature<K, V> asTraitSignature() {
+   /* public TraitSignature<K, V> asTraitSignature() {
         return new TraitSignature<K, V>(name, value.getClass());
-    }
+    }*/
 
     /**
      * Turns set of traits into equivalent set of traits signatures.
@@ -89,10 +89,10 @@ public class Trait <K, V> {
      * @param <V> Value type of Trait.
      * @return
      */
-    public static <K, V> Set<TraitSignature<K, V>> getSignatures(Set<Trait<K,V>> traits) {
+   /* public static <K, V> Set<TraitSignature<K, V>> getSignatures(Set<Trait<K,V>> traits) {
         List<TraitSignature<K, V>> res = new ArrayList<>();
         for (Trait<K,V> trait :traits)
             res.add(trait.asTraitSignature());
         return new HashSet<>(res);
-    }
+    }*/
 }

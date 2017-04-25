@@ -48,12 +48,18 @@ public class Observation {
         return traits;
     }
 
+    /**
+     * Sets traits which are correct for specific object
+     * meaning that object is desribed by them and values are from domain
+     * @param traits set of observed traits
+     */
     public void setTraits(Set<Trait> traits)
     {
         IndividualModel model = IMCollection.f(identifier);
         for(Trait trait : traits)
         {
-
+            if(model.getType().getSpecificTrait(trait.getName()).isInDomain(trait.getValue()))
+                this.traits.remove(trait); // todo albo tak, albo zwracamy jakiś błąd, bo nie wiemy czy obserwacja była w takim razie prawdziwa
         }
         this.traits = traits;
     }

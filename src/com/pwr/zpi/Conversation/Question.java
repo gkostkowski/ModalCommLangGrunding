@@ -4,6 +4,8 @@ import com.pwr.zpi.*;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
 import com.pwr.zpi.language.Formula;
 
+import java.util.HashSet;
+
 /**
  * Created by Weronika on 24.04.2017.
  */
@@ -28,8 +30,6 @@ public class Question {
         TraitSignature traitS = getTraitSinature();
         if(traitS==null)
             throw new InvalidQuestionException(InvalidQuestionException.NO_FIRST_TRAIT);
-        trait1 = new Trait(traitS.getName(), )
-
 
     }
 
@@ -59,6 +59,16 @@ public class Question {
         }
         return null;
     }
+
+
+    public static void main(String [] args)
+    {
+        IMCollection imcol = new IMCollection(new HashSet<IndividualModel>());
+    }
+
+
+
+
 
 
 
