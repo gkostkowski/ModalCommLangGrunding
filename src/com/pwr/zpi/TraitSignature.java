@@ -15,9 +15,9 @@ public class TraitSignature<K, V> {
     //private K name;
     private String valueType;
 
-    private List<V> domain; //todo
+    private List<String> domain; //todo
 
-    public TraitSignature(String name, String valueType, List<V> domain)
+    public TraitSignature(String name, String valueType, List<String> domain)
     {
         this.name = name;
         try {
@@ -46,19 +46,27 @@ public class TraitSignature<K, V> {
 
     public boolean isInDomain(String value)
     {
-        for(V v : domain)
-            if(String.valueOf(v).equalsIgnoreCase(value))
+        for(String v : domain)
+            if(v.equalsIgnoreCase(value))
                 return true;
         return false;
     }
 
-    public boolean isInDomain(V value)
+    public List<String> getDomain() {
+        return domain;
+    }
+
+    public void setDomain(List<String> domain) {
+        this.domain = domain;
+    }
+
+    /*    public boolean isInDomain(V value)
     {
-        for(V v : domain)
+        for(String v : domain)
             if(v.equals(value))
                 return true;
         return false;
-    }
+    }*/
 
 /*
     public TraitSignature(K name, Class<?> valueType) {

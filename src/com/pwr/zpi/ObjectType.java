@@ -32,4 +32,7 @@ public class ObjectType {
     }
 
 
+    public boolean containsTrait(String name) {
+        return getSpecificTrait(name) != null;
+    }
 }

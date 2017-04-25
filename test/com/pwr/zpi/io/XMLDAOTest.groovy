@@ -8,6 +8,8 @@ import com.pwr.zpi.util.GenericObject
 import org.junit.Test
 
 import java.lang.reflect.Constructor
+import java.nio.file.Path
+import java.nio.file.Paths
 
 /**
  * Created by Grzesiek on 2017-04-08.
@@ -25,9 +27,9 @@ class XMLDAOTest extends GroovyTestCase {
     @Test
     void test() {
         XMLDAO xmldao = new XMLDAO()
-        def filepath = 'D:\\PROJEKTY\\InteliJ\\ModalCommLangGrunding\\config\\types_def.xml'
 
-        println filepath
+        def filepath = makePath()
+
         def res = xmldao.loadTypesDefinitions(filepath);
         assertNotNull res
 
@@ -54,5 +56,12 @@ class XMLDAOTest extends GroovyTestCase {
         assert obj3.getObj() instanceof String
         assert obj4.getObj() instanceof Boolean
 
+    }
+
+    String makePath() {
+        def currDir = System.getProperty("user.dir")
+        String [] parts = currDir.split("\\\\");
+        parts = parts.dropRight(1)
+        def path = parts.join("\\")+ '\\config\\types_def.xml'
     }
 }

@@ -12,7 +12,7 @@ public class Trait <K, V> {
     private String name;
     private V value;
 
-    public Trait(String name,V value){
+    public Trait(String name,V value){  //todo use isSpecifiedForType to check
         this.name = name;
         this.value = value;
     }
@@ -95,4 +95,13 @@ public class Trait <K, V> {
             res.add(trait.asTraitSignature());
         return new HashSet<>(res);
     }*/
+
+    /**
+     * Determines if this trait can describes object which belong to given type.
+     * @param objType Type of object.
+     * @return
+     */
+   boolean isSpecifiedForType(ObjectType objType) {
+       return objType.containsTrait(name);
+   }
 }

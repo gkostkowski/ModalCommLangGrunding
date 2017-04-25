@@ -48,6 +48,7 @@ public class XMLDAO<T extends ObjectType> {
         xstream.alias("type", ObjectType.class);
         xstream.alias("types", DataWrapper.class);
         xstream.alias("trait", TraitSignature.class);
+        xstream.alias("value", String.class);
     }
 
     /***

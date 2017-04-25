@@ -1,10 +1,19 @@
 package com.pwr.zpi;
 
+import com.pwr.zpi.language.Formula;
+import com.pwr.zpi.language.Holon;
+import com.pwr.zpi.language.SimpleFormula;
+
+import java.util.*;
+
 public class Main {
 
     public static void main(String[] args) {
         Agent agent1 = null;
         //ccztytanie pliku kon
+        //grzkos {
+
+        // }grzkos
         // ladowanie obiektow typow
         //obserwacje + zaladowanie do profili bazowych <-- agent
 
