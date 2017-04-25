@@ -51,8 +51,10 @@ public class Observation {
     public void setTraits(Set<Trait> traits)
     {
         IndividualModel model = IMCollection.f(identifier);
-        for(TraitSignature traitSignature : model.getType().getTraits())
-            if(trait.)
+        for(Trait trait : traits)
+        {
+
+        }
         this.traits = traits;
     }
 
