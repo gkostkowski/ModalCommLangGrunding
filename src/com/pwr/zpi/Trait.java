@@ -9,10 +9,10 @@ public class Trait <K, V> {
     public static final int UPPER_BOUND = 70;
     public static final int LOWER_BOUND = 30;
 
-    private K name;
+    private String name;
     private V value;
 
-    public Trait(K name,V value){
+    public Trait(String name,V value){
         this.name = name;
         this.value = value;
     }
@@ -26,11 +26,11 @@ public class Trait <K, V> {
         this.setName(other.getName());
     }
 
-    public K getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(K name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -48,7 +48,7 @@ public class Trait <K, V> {
      * @return true/false
      */
     public boolean equals(Trait other){
-        return name == other.getName() && stateOfTrait() == other.stateOfTrait();
+        return name.equalsIgnoreCase(other.getName()) && value.equals(other.getValue()) && stateOfTrait() == other.stateOfTrait();
     }
 
     /**

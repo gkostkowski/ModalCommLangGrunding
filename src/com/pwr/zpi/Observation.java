@@ -48,7 +48,11 @@ public class Observation {
         return traits;
     }
 
-    public void setTraits(Set<Trait> traits) {
+    public void setTraits(Set<Trait> traits)
+    {
+        IndividualModel model = IMCollection.f(identifier);
+        for(TraitSignature traitSignature : model.getType().getTraits())
+            if(trait.)
         this.traits = traits;
     }
 
@@ -96,6 +100,8 @@ public class Observation {
         setTime(other.getTime());
         setTraits(other.getTraits());
     }
+
+
 
     /*public boolean isTypeOf(ObjectType objType) {
         return

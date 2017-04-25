@@ -18,4 +18,13 @@ public class QRCode extends Identifier{
     public String getId() {
         return String.valueOf(id);
     }
+
+    /**
+     *
+     * @return String representation of a preset name of the object
+     */
+    public String getName()
+    {
+        return  null; //todo
+    }
 }

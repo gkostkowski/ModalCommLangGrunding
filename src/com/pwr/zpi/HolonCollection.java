@@ -3,29 +3,41 @@ import com.pwr.zpi.Observation;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.language.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 
 public class HolonCollection {
 
-    public Set<BinaryHolon> binaryHolonsSet;
-    public Set<NonBinaryHolon> nonBinaryHolonsSet;
+    private static Set<Holon> holonCollection;
+
+    public HolonCollection()
+    {
+
+    }
+
+    public HolonCollection(Set<Holon> holonCollection)
+    {
+        this.holonCollection = holonCollection;
+    }
 
 
-    public static NonBinaryHolon findNonBinaryHolon(Observation observation, Trait trait)
+    public Holon addHolon(Formula formula)
     {
         //todo
-
         return null;
     }
 
-    public static BinaryHolon findBinaryHolon(Observation observation, List<Trait> traits)
+    public static Holon findHolon(Formula formula)
     {
-        //todo
-
+        for(Holon holon : holonCollection)
+            if(holon.getFormula().equals(formula))
+                return holon;
         return null;
     }
+
+
 
 
 

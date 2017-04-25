@@ -11,4 +11,5 @@ public class ObservationCollection {
     public boolean add(Observation observation) {
         return observationSet.add(observation);
     }
+
 }

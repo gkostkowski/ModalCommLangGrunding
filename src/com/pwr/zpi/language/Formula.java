@@ -33,6 +33,8 @@ public abstract class Formula {
         MODAL_CONJUNCTION
     }
 
+    abstract boolean equals(Formula other);
+
     abstract State evaluate();
 /*    abstract com.pwr.zpi.Object getAffectedObject();
 
