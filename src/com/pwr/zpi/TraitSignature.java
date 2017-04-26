@@ -35,6 +35,11 @@ public class TraitSignature<V> {
         return TypeMapper.toType(valueType);
     }
 
+    public String getValueTypeString()
+    {
+        return valueType;
+    }
+
     public Class<?> getValueClass() {
         return TypeMapper.toClass(valueType);
     }
