@@ -21,7 +21,7 @@ public class Main {
         //ccztytanie pliku kon
         //grzkos {
         XMLDAO xmldao = new XMLDAO();
-        Collection <ObjectType> objectTypes = xmldao.loadTypesDefinitions(Utils.makePath());
+        Collection<ObjectType> objectTypes = xmldao.loadTypesDefinitions(Utils.makePath());
 
         // }grzkos
         // ladowanie obiektow typow
@@ -31,9 +31,9 @@ public class Main {
         TraitSignature<String> tColour = new TraitSignature<String>("Colour", "String", dColour);
         List<String> dShape = new ArrayList<String>(Arrays.asList("Square", "Round"));
         TraitSignature<String> tShape = new TraitSignature<String>("Shape", "String", dShape);
-        List<Boolean> dBlinking = new ArrayList<Boolean>(Arrays.asList(true, false));
+        List<String> dBlinking = new ArrayList<String>(Arrays.asList("true", "false"));
         TraitSignature<Boolean> tBlinking = new TraitSignature<Boolean>("Blinking", "Boolean", dBlinking);
-        List<Integer> dNoOfWalls = new ArrayList<Integer>(Arrays.asList(2, 3, 4));
+        List<String> dNoOfWalls = new ArrayList<String>(Arrays.asList("2", "3", "4"));
         TraitSignature<Integer> tNoOfWalls = new TraitSignature<Integer>("NoOfWalls", "Integer", dNoOfWalls);
         ObjectTypeCollection.add(new ObjectType("01", new ArrayList<TraitSignature>(Arrays.asList(tColour, tShape, tBlinking))));
         ObjectTypeCollection.add(new ObjectType("02", new ArrayList<TraitSignature>(Arrays.asList(tColour, tNoOfWalls, tBlinking))));
@@ -162,8 +162,6 @@ public class Main {
         Observation o2obs16 = new Observation(id2,traitsyo2obs16,16);
 
         Set<Trait> traitsyo3obs16 = new HashSet<Trait>(Arrays.asList(o16t3,o16t4,o16t5));
-        Observation o3obs16 = new Observation(null,traitsyo3obs16,16);
-        Set<Trait> traitsyo3obs16 = new HashSet<Trait>(Arrays.asList(o16t3,o16t4,o16t5));
         Observation o3obs16 = new Observation(id3,traitsyo3obs16,16);
 
         Trait<String,String> o17t = new Trait<String,String>("Colour","White");
@@ -203,7 +201,7 @@ public class Main {
         Set<Observation> observations = new HashSet<>(Arrays.asList(o1obs1, o1obs2, o1obs3, o1obs4, o1obs5, o1obs6,
                 o1obs7, o1obs8, o1obs9, o1obs10, o1obs14, o2obs11, o2obs12, o2obs13, o2obs14, o2obs15, o2obs16,
                 o2obs17, o2obs18, o3obs14, o3obs16, o3obs17, o3obs18));
-        agent.addObservations(observations); //dodaje przy okazji odpowiednie modele indywiduowe
+        agent1.addObservations(observations); //dodaje przy okazji odpowiednie modele indywiduowe
 
         Trait colour = o1t, shape = o1t1, blinking = o1t2;
         //Update 1

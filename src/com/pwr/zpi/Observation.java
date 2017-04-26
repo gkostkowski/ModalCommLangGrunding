@@ -95,11 +95,23 @@ public class Observation {
     }
 
     /**
-     * Returns type of object that this observation concern.
-     * @return Type of object.
+     * Returns type of object that this observation concern through finding its individual model.
+     * @return Type of object or null when model not found.
      */
     public ObjectType getType(){
-        return identifier.getType();
+        IndividualModel model = IMCollection.getRepresentationByObservation(this);
+        if (model != null)
+            return getType();
+        else
+            return null;
+    }
+
+    /**
+     * Returns individual model of object that this observation concern.
+     * @return Individual model of object or null when model not found.
+     */
+    public IndividualModel getRepresantatingModel(){
+        return IMCollection.getRepresentationByObservation(this);
     }
 
 }
