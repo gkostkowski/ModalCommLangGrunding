@@ -16,15 +16,11 @@ public class Main {
     private static final int INIT_TIME = 1;
     private static final int CURR_TIME= 5;
     public static void main(String[] args) throws InvalidFormulaException {
-        Agent agent = new Agent();
-
-
-
-        Agent agent1 = null;
+        Agent agent1 = new Agent();
         //ccztytanie pliku kon
         //grzkos {
         XMLDAO xmldao = new XMLDAO();
-        Collection <ObjectType> objectTypes = xmldao.loadTypesDefinitions(Utils.makePath());
+        Collection<ObjectType> objectTypes = xmldao.loadTypesDefinitions(Utils.makePath());
 
         // }grzkos
         // ladowanie obiektow typow
@@ -34,13 +30,13 @@ public class Main {
         TraitSignature<String> tColour = new TraitSignature<String>("Colour", "String", dColour);
         List<String> dShape = new ArrayList<String>(Arrays.asList("Square", "Round"));
         TraitSignature<String> tShape = new TraitSignature<String>("Shape", "String", dShape);
-        List<Boolean> dBlinking = new ArrayList<Boolean>(Arrays.asList(true, false));
-        /*TraitSignature<Boolean> tBlinking = new TraitSignature<Boolean>("Blinking", "Boolean", dBlinking);
-        List<Integer> dNoOfWalls = new ArrayList<Integer>(Arrays.asList(2, 3, 4));
+        List<String> dBlinking = new ArrayList<String>(Arrays.asList("true", "false"));
+        TraitSignature<Boolean> tBlinking = new TraitSignature<Boolean>("Blinking", "Boolean", dBlinking);
+        List<String> dNoOfWalls = new ArrayList<String>(Arrays.asList("2", "3", "4"));
         TraitSignature<Integer> tNoOfWalls = new TraitSignature<Integer>("NoOfWalls", "Integer", dNoOfWalls);
         ObjectTypeCollection.add(new ObjectType("01", new ArrayList<TraitSignature>(Arrays.asList(tColour, tShape, tBlinking))));
         ObjectTypeCollection.add(new ObjectType("02", new ArrayList<TraitSignature>(Arrays.asList(tColour, tNoOfWalls, tBlinking))));
-*/
+
         Identifier id1 = new QRCode("01555");
         Identifier id2 = new BarCode("01555");
         Identifier id3 = new BarCode("02555");

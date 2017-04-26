@@ -1,8 +1,7 @@
-package com.pwr.zpi.Conversation;
+package com.pwr.zpi.conversation;
 
 import com.pwr.zpi.State;
 import com.pwr.zpi.HolonCollection;
-import com.pwr.zpi.exceptions.InvalidQuestionException;
 import com.pwr.zpi.language.*;
 
 import java.util.List;
