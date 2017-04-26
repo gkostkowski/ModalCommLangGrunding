@@ -1,4 +1,4 @@
-package com.pwr.zpi.Conversation;
+package com.pwr.zpi.conversation;
 
 import com.pwr.zpi.*;
 import com.pwr.zpi.exceptions.InvalidQuestionException;

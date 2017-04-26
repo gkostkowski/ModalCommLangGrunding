@@ -1,4 +1,4 @@
-package com.pwr.zpi.Conversation;
+package com.pwr.zpi.conversation;
 
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Holon;

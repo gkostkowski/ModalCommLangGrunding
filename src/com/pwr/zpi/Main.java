@@ -13,13 +13,11 @@ import static com.pwr.zpi.Agent.ObjectTypeCollection;
 
 public class Main {
 
-    public static void main(String[] args) throws InvalidSentenceFormulaException {
-        Agent agent = new Agent();
     private static final int INIT_TIME = 1;
     private static final int CURR_TIME= 5;
 
     public static void main(String[] args) throws InvalidFormulaException {
-        Agent agent1 = null;
+        Agent agent1 = new Agent();
         //ccztytanie pliku kon
         //grzkos {
         XMLDAO xmldao = new XMLDAO();
