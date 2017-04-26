@@ -151,6 +151,13 @@ public class ComplexFormula extends Formula {
         return false;
     }
 
+    public SimpleFormula getLeftPart(){
+        return leftPart;
+    }
+    public SimpleFormula getRightPart(){
+        return rightPart;
+    }
+
 
 
 

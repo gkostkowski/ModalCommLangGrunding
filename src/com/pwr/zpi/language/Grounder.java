@@ -193,8 +193,33 @@ public class Grounder {
     }
 
     public static double relativeCard(Map<Formula, Set<BaseProfile>> groundingSets, int time, Formula formula) throws NotApplicableException {
-        //todo
-        return relativeCardConunction(formula, groundingSets, time);
+        if(formula.getType().equals(Formula.Type.SIMPLE_MODALITY)){
+
+            switch(((ComplexFormula) formula).getOperator()){
+                case AND:
+                    if((boolean) ((ComplexFormula) formula).getLeftPart().isNegated && (boolean) ((ComplexFormula) formula).getRightPart().isNegated){
+                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().trait,((ComplexFormula) formula).getRightPart().trait ,time,groundingSets.get(formula),4);
+                    }
+                    if((boolean) !((ComplexFormula) formula).getLeftPart().isNegated && (boolean) ((ComplexFormula) formula).getRightPart().isNegated){
+                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().trait,((ComplexFormula) formula).getRightPart().trait ,time,groundingSets.get(formula),3);
+                    }
+                    if((boolean) ((ComplexFormula) formula).getLeftPart().isNegated && (boolean) !((ComplexFormula) formula).getRightPart().isNegated){
+                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().trait,((ComplexFormula) formula).getRightPart().trait ,time,groundingSets.get(formula),2);
+                    }
+                    if((boolean) ((ComplexFormula) formula).getLeftPart().isNegated && (boolean) ((ComplexFormula) formula).getRightPart().isNegated){
+                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().trait,((ComplexFormula) formula).getRightPart().trait ,time,groundingSets.get(formula),1);
+                    }
+                    break;
+                case OR:
+                    break;
+                default:
+                    break;
+            }
+        }
+        else{
+            return getCard(groundingSets.get(formula),time);
+        }
+        return 0.0;
     }
 
 
