@@ -4,7 +4,7 @@
 <types>
         <collection class="linked-list">
 		<type>
-            <id>1</id>
+            <id>01</id>
             <traits class="linked-list">
                 <trait>
                     <name>Color</name>
@@ -34,10 +34,10 @@
             </traits>
         </type>
         <type>
-            <id>2</id>
+            <id>02</id>
             <traits class="linked-list">
                 <trait>
-                    <name>Color</name>
+                    <name>Colour</name>
                     <valueType>String</valueType>
                     <domain class="linked-list">
                         <value> Black </value>
@@ -46,7 +46,7 @@
                     </domain>
                 </trait>
                 <trait>
-                    <name>NumberOfWalls</name>
+                    <name>NoOfWalls</name>
                     <valueType>Integer</valueType>
                     <domain class="linked-list">
                         <value> 2 </value>

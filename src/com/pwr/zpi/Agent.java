@@ -13,6 +13,12 @@ public class Agent {
     private IMCollection models;
     public static Set<ObjectType> ObjectTypeCollection = new HashSet<>();
 
+    public Agent() {
+        knowledgeBase = new BPCollection();
+        observations = new ObservationCollection();
+        models = new IMCollection();
+    }
+
     public Agent(BPCollection knowledgeBase) {
         this.knowledgeBase = knowledgeBase;
         observations = new ObservationCollection();

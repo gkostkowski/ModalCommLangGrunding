@@ -15,6 +15,10 @@ import java.util.*;
  */
 public class BPCollection {
 
+    public BPCollection() {
+        //todo
+    }
+
     /**
      * Describes allowed types of agent's memory. According to the accepted theoretical model, there are two memory
      * levels: Working memory and long-term memory.

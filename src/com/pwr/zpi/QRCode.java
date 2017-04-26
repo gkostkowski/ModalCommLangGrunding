@@ -5,14 +5,14 @@ package com.pwr.zpi;
  */
 public class QRCode extends Identifier{
 
-    int id;
+    String id;
 
-    public QRCode(int id) {
+    public QRCode(String id) {
         this.id = id;
     }
 
     public String getIdNumber() {
-        return String.valueOf(id);
+        return id;
     }
 
 }
