@@ -1,12 +1,10 @@
 package com.pwr.zpi.language;
 
 import com.pwr.zpi.*;
-import com.pwr.zpi.Object;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 
-import java.util.Set;
 import java.util.*;
 
 /**
@@ -75,7 +73,6 @@ public class Grounder {
      * of traits and states in given lists.
      * In most cases, it runs for one or two iterations (for complex formula): state1(trait1(o)) op state2(trait2(o)).
      *
-     * @param o
      * @param traits
      * @param time
      * @param states Should be placed in certain positions, respectiovely to traits.
@@ -116,7 +113,6 @@ public class Grounder {
      * representing expierience observation o,having trait P
      *
      * @param o     Object observed by agent
-     * @param trait Trait of observation
      * @param time  Time taken into consideration when looking for expieriences
      * @param all   Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @return List of BaseProfiles which contain Positive Traits
@@ -214,7 +210,7 @@ public class Grounder {
      * @throws InvalidFormulaException
  */
 
-    static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) throws InvalidSentenceFormulaException {
+    static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) throws InvalidFormulaException {
         return new DistributedKnowledge(agent, formula, time);
     }
 
