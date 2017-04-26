@@ -74,7 +74,7 @@ public class IMCollection {
     public static IndividualModel getModelFromName(String name)
     {
         for(IndividualModel model : individualModelSet)
-            if(model.getName().equals(name))
+            if(model.getName().equalsIgnoreCase(name))
                 return model;
         return null;
     }

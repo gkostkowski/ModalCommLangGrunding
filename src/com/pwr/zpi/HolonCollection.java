@@ -1,10 +1,6 @@
 package com.pwr.zpi;
-import com.pwr.zpi.Observation;
-import com.pwr.zpi.Trait;
 import com.pwr.zpi.language.*;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -14,7 +10,6 @@ public class HolonCollection {
 
     public HolonCollection()
     {
-
     }
 
     public HolonCollection(Set<Holon> holonCollection)
@@ -23,9 +18,9 @@ public class HolonCollection {
     }
 
 
-    public Holon addHolon(Formula formula)
+    public static Holon addHolon(Formula formula)
     {
-        //todo
+       // Holon holon = new Holon() todo
         return null;
     }
 
@@ -34,7 +29,7 @@ public class HolonCollection {
         for(Holon holon : holonCollection)
             if(holon.getFormula().equals(formula))
                 return holon;
-        return null;
+        return addHolon(formula);
     }
 
 

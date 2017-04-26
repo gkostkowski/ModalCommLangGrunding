@@ -13,7 +13,7 @@ public class Operators {
 
     public enum Type {
         AND, OR, XOR, NOT,
-        POS, BEL, KNOW
+        POS, BEL, KNOW;
         public Type getType() {
             return type;
         }

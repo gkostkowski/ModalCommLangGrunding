@@ -6,40 +6,38 @@ import com.pwr.zpi.language.Holon;
 import com.pwr.zpi.language.Operators;
 import com.pwr.zpi.language.SimpleFormula;
 
+import java.util.List;
+
 /**
  * Created by Weronika on 25.04.2017.
  */
 public class SimpleStatement extends Statement{
 
 
-    public SimpleStatement(SimpleFormula formula)
+    public SimpleStatement(SimpleFormula formula, List<String> info)
     {
         this.formula = formula;
         holon = HolonCollection.findHolon(formula);
-        if(holon == null)
-        {
-            // holon = new Holon(formula, ) todo
-        }
+        this.info = info;
     }
 
     @Override
     public String generateStatement() {
         Operators.Type operator = holon.getTaoForFormula(formula);
         String answer = "";
-        String name = String.valueOf(formula.getTraits().get(0).getName());
         if(operator == Operators.Type.POS)
-            answer = "It is possible that its' ";
+            answer = "It is possible that ";
         if(operator == Operators.Type.BEL)
-            answer = "I believe that its' ";
+            answer = "I believe that ";
         if(operator == Operators.Type.KNOW)
-            answer = "I know that its' ";
+            answer = "I know that ";
         StringBuilder sb = new StringBuilder(answer);
-        sb.append(name);
+        sb.append(info.get(0) + "'s ");
+        sb.append(info.get(1));
         if(formula.getStates().get(0) == State.IS)
-            sb.append("is ");
-        else sb.append("is not ");
-        String value = String.valueOf(formula.getTraits().get(0).getName());
-        sb.append(value);
+            sb.append(" is ");
+        else sb.append(" is not ");
+        sb.append(info.get(2));
 
         return answer;
     }
