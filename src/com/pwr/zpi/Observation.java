@@ -5,7 +5,7 @@ import java.util.Set;
 
 /**
  * Describes object's observation with it's time, id and set of traits.
- * Represents objects placed in real world, witnessed by agent.
+ * Represents observations placed in real world, witnessed by agent.
  */
 public class Observation {
     private Identifier identifier;
@@ -83,9 +83,9 @@ public class Observation {
     }
 
     /**
-     * Simply gives set of all objects included in given list of sets.
-     * @param sets Array of sets of objects.
-     * @return Set of objects.
+     * Simply gives set of all observations included in given list of sets.
+     * @param sets Array of sets of observations.
+     * @return Set of observations.
      */
     public static Set<Observation> getObjects(Set<Observation> ... sets) {
         Set<Observation> res = new HashSet<>();

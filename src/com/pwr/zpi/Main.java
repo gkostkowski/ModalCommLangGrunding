@@ -1,11 +1,10 @@
 package com.pwr.zpi;
 
-import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
-import com.pwr.zpi.language.*;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.io.XMLDAO;
-import com.pwr.zpi.language.*;
+import com.pwr.zpi.language.DistributedKnowledge;
+import com.pwr.zpi.language.Formula;
+import com.pwr.zpi.language.SimpleFormula;
 
 import java.util.*;
 
@@ -201,7 +200,7 @@ public class Main {
         Set<Observation> observations = new HashSet<>(Arrays.asList(o1obs1, o1obs2, o1obs3, o1obs4, o1obs5, o1obs6,
                 o1obs7, o1obs8, o1obs9, o1obs10, o1obs14, o2obs11, o2obs12, o2obs13, o2obs14, o2obs15, o2obs16,
                 o2obs17, o2obs18, o3obs14, o3obs16, o3obs17, o3obs18));
-        agent.addObservations(observations); //dodaje przy okazji odpowiednie modele indywiduowe
+        agent1.addObservations(observations); //dodaje przy okazji odpowiednie modele indywiduowe
 
         Trait colour = o1t, shape = o1t1, blinking = o1t2;
         //Update 1

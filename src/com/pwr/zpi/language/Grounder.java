@@ -25,7 +25,7 @@ public class Grounder {
      * @param time
      * @param all
      * @param states  Represents especially two states: IS and IS_NOT, which determines if simple formula, part of
-     *                complex formula will require checking associated to objects described by trait or objects
+     *                complex formula will require checking associated to observations described by trait or observations
      *                NOT described by trait.
      * @return Collection of grounding sets.
      */
@@ -214,10 +214,10 @@ public class Grounder {
         return new DistributedKnowledge(agent, formula, time);
     }
 
-    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) {
+    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         Operators.Type res;
         for (Formula mentalModel : dk.getMentalModels()) {
-            res = determineSingleFulfillment(agent, dk, mentalModel);
+            res = determineFulfillment(agent, dk, mentalModel);
         }
         return null; //todo ?
     }
@@ -231,13 +231,13 @@ public class Grounder {
  * @return
  */
 
-    static boolean determineFulfillments(Agent agent, DistributedKnowledge dk, Formula... formulas) {
+    static boolean determineFulfillments(Agent agent, DistributedKnowledge dk, Formula... formulas) throws InvalidFormulaException, NotApplicableException {
         List<Operators.Type> res = new ArrayList<>();
         for (Formula f : formulas) {
-            res.add(determineSingleFulfillment(agent, dk, f));
+            res.add(determineFulfillment(agent, dk, f));
         }
         //do sth with results //todo
-        return ?;
+        return false;
     }
 
 /**
@@ -257,8 +257,8 @@ public class Grounder {
 
     static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
         int timestamp = dk.getTimestamp();
-        BaseProfile lmBp = new BaseProfile();
-        BaseProfile wmBp = new BaseProfile();
+        BaseProfile lmBp = new BaseProfile(dk.getTimestamp());
+        BaseProfile wmBp = new BaseProfile(dk.getTimestamp());
         Set<Object> objects = new HashSet<>();
 
         Observation describedObj = formula.getObservation();
@@ -278,9 +278,9 @@ public class Grounder {
         BPCollection.MemoryType selectedMemory = BPCollection.MemoryType.WM;
 
 
-//        setCommonObjects(timestamp, agent, dk, lmBp, wmBp, objects, describedObj, describedTrait, objsWithClearState,
+//        setCommonObjects(timestamp, agent, dk, lmBp, wmBp, observations, describedObj, describedTrait, objsWithClearState,
 //                objsWithGivenState, indefiniteByTrait, isNegated);
-        setCommonObjects(timestamp, agent, lmBp, wmBp, objects, describedObj, describedTraits, objsWithClearState,
+        setCommonObjects(timestamp, agent, lmBp, wmBp, objects, describedObj, new HashSet<>(describedTraits), objsWithClearState,
                 objsWithGivenState, indefiniteByTrait, states);
 
         Map<Formula, Set<BaseProfile>> groundingSets = dk.getGroundingSets();
@@ -305,14 +305,14 @@ public class Grounder {
             throw new com.pwr.zpi.exceptions.InvalidFormulaException("States doesn't match to given traits.");
         Iterator<State> stateIt = states.iterator();
         for (Trait t : describedTraits) {
-            objsWithClearState.add(new HashSet<>(Object.getObjects(
+            objsWithClearState.add(new HashSet<>(Observation.getObjects(
                     lmBp.getNotDescribedByTrait(t),
                     wmBp.getNotDescribedByTrait(t),
                     lmBp.getDescribedByTrait(t),
                     wmBp.getDescribedByTrait(t))));
 
             State state = stateIt.next();
-            objsWithGivenState.add(new HashSet<>(Object.getObjects(
+            objsWithGivenState.add(new HashSet<>(Observation.getObjects(
                     lmBp.getByTraitState(t, state),
                     wmBp.getByTraitState(t, state))));
 
@@ -323,7 +323,7 @@ public class Grounder {
     }
 
 /**
-     * Decides for which modal operator, formula given through objects related to traits, can occur.
+     * Decides for which modal operator, formula given through observations related to traits, can occur.
      *
      * @param indefiniteByTrait
      * @param describedObj
@@ -374,13 +374,12 @@ public class Grounder {
 
 /**
      * Defines grounded set Ai(t) responsible for induction of mental model mi connected to baseProfile which
-     * involves connotations with both objects P,and Q.Depending on i
+     * involves connotations with both observations P,and Q.Depending on i
      * i=1 - Returns BaseProfiles where Object o has Trait P and has Trait Q
      * i=2 - Returns BaseProfiles where Object o has Trait P and does not have Trait Q
      * i=3 - Returns BaseProfiles where Object o does not have Trait P and has Trait Q
      * i=4 - Returns BaseProfiles where Object o does not have Trait P and does not have Trait Q
      *
-     * @param o    Object observed by agent
      * @param P    Trait of observation
      * @param Q    Trait of observation
      * @param time Time taken into consideration when looking for expieriences

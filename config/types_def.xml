@@ -1,4 +1,4 @@
-<!-- This is the example file containing types definitions for observed objects.
+<!-- This is the example file containing types definitions for observed observations.
 	All non-primitive Java types equivalent to primitive ones (and String) are permitted.
 	Names of traits will be stored as Strings. -->
 <types>

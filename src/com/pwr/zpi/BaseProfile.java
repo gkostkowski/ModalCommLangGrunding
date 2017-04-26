@@ -7,25 +7,25 @@ import java.util.*;
  */
 public class BaseProfile{
     /**
-     * Map of traits and related collections of objects. If some collection is related with certain trait, then
-     * it mean that all objects in that collections have this trait.
+     * Map of traits and related collections of observations. If some collection is related with certain trait, then
+     * it mean that all observations in that collections have this trait.
      */
     protected  Map<Trait, Set<Observation>> describedByTraits;
     /**
-     * Map of traits and related collections of objects. If some collection is related with certain trait, then
-     * it mean that all objects in that collections DON'T HAVE this trait.
+     * Map of traits and related collections of observations. If some collection is related with certain trait, then
+     * it mean that all observations in that collections DON'T HAVE this trait.
      */
     protected Map<Trait, Set<Observation>> notDescribedByTraits;
     /**
-     * Map of traits and related collections of objects. If some collection is related with certain trait, then
-     * it mean that state of having this trait by all objects is unknown.
+     * Map of traits and related collections of observations. If some collection is related with certain trait, then
+     * it mean that state of having this trait by all observations is unknown.
      */
     protected Map<Trait, Set<Observation>> indefiniteByTraits;
     protected int timestamp;
 
-    protected Set<Observation> objects;
+    protected Set<Observation> observations;
 
-    protected BaseProfile(int timestamp) {
+    public BaseProfile(int timestamp) {
         this.describedByTraits = new HashMap<>();
         this.notDescribedByTraits = new HashMap<>();
         this.indefiniteByTraits = new HashMap<>();
@@ -79,45 +79,49 @@ public class BaseProfile{
 
 
 
-    public Set<Observation> getObjects(){
-        return objects;
+    public Set<Observation> getObservations(){
+        return observations;
     }
 
     /**
-     * Returns set of all objects included in given base profiles. Used when as an example merging base profiles
+     * Returns set of all observations included in given base profiles. Used when as an example merging base profiles
      * from working memory and long-term memory.
      * @param baseProfiles Set of base profiles.
-     * @return Set of objects.
+     * @return Set of observations.
      */
     public static Set<Observation> getObjects(Set<BaseProfile> baseProfiles) {
         Set<Observation> res = new HashSet<>();
         for (BaseProfile bp :baseProfiles)
-            res.addAll(bp.getObjects());
+            res.addAll(bp.getObservations());
         return res;
     }
     /**
-     * Returns set of all objects included in given base profiles. Used when as an example merging base profiles
+     * Returns set of all observations included in given base profiles. Used when as an example merging base profiles
      * from working memory and long-term memory.
      * @param baseProfiles Array of base profiles.
-     * @return Set of objects.
+     * @return Set of observations.
      */
     public static Set<Observation> getObjects(BaseProfile ... baseProfiles) {
         return getObjects(new HashSet<BaseProfile>(Arrays.asList(baseProfiles)));
     }
 
+    public void setObservations(Set<Observation> observations) {
+        this.observations = new HashSet<>(observations);
+    }
+
     /**
-     * Returns set of objects indicated with given trait.
+     * Returns set of observations indicated with given trait.
      * @param trait
-     * @return Set of objects.
+     * @return Set of observations.
      */
     public Set<Observation> getDescribedByTrait(Trait trait) {
         return describedByTraits.get(trait);
     }
 
     /**
-     * Gives objects from appropriate sets. State describes which set should be selected: describedByTraits for State.IS etc.
+     * Gives observations from appropriate sets. State describes which set should be selected: describedByTraits for State.IS etc.
      * @param trait
-     * @return Set of objects.
+     * @return Set of observations.
      */
     public Set<Observation> getByTraitState(Trait trait, State state) {
         switch (state) {
@@ -175,6 +179,6 @@ public class BaseProfile{
         setNotDescribedByTraits(other.getNotDescribedByTraits());
         setIndefiniteByTraits(getIndefiniteByTraits());
         setTimestamp(other.getTimestamp());
-        setObjects(other.getObjects());
+        setObservations(other.getObservations());
     }
 }
