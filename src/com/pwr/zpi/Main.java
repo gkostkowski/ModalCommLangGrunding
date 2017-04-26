@@ -13,12 +13,13 @@ import static com.pwr.zpi.Agent.ObjectTypeCollection;
 
 public class Main {
 
-    public static void main(String[] args) throws InvalidSentenceFormulaException {
-        Agent agent = new Agent();
     private static final int INIT_TIME = 1;
     private static final int CURR_TIME= 5;
-
     public static void main(String[] args) throws InvalidFormulaException {
+        Agent agent = new Agent();
+
+
+
         Agent agent1 = null;
         //ccztytanie pliku kon
         //grzkos {
@@ -34,12 +35,12 @@ public class Main {
         List<String> dShape = new ArrayList<String>(Arrays.asList("Square", "Round"));
         TraitSignature<String> tShape = new TraitSignature<String>("Shape", "String", dShape);
         List<Boolean> dBlinking = new ArrayList<Boolean>(Arrays.asList(true, false));
-        TraitSignature<Boolean> tBlinking = new TraitSignature<Boolean>("Blinking", "Boolean", dBlinking);
+        /*TraitSignature<Boolean> tBlinking = new TraitSignature<Boolean>("Blinking", "Boolean", dBlinking);
         List<Integer> dNoOfWalls = new ArrayList<Integer>(Arrays.asList(2, 3, 4));
         TraitSignature<Integer> tNoOfWalls = new TraitSignature<Integer>("NoOfWalls", "Integer", dNoOfWalls);
         ObjectTypeCollection.add(new ObjectType("01", new ArrayList<TraitSignature>(Arrays.asList(tColour, tShape, tBlinking))));
         ObjectTypeCollection.add(new ObjectType("02", new ArrayList<TraitSignature>(Arrays.asList(tColour, tNoOfWalls, tBlinking))));
-
+*/
         Identifier id1 = new QRCode("01555");
         Identifier id2 = new BarCode("01555");
         Identifier id3 = new BarCode("02555");
@@ -163,8 +164,7 @@ public class Main {
         Set<Trait> traitsyo2obs16 = new HashSet<Trait>(Arrays.asList(o16t,o16t1,o16t2));
         Observation o2obs16 = new Observation(id2,traitsyo2obs16,16);
 
-        Set<Trait> traitsyo3obs16 = new HashSet<Trait>(Arrays.asList(o16t3,o16t4,o16t5));
-        Observation o3obs16 = new Observation(null,traitsyo3obs16,16);
+
         Set<Trait> traitsyo3obs16 = new HashSet<Trait>(Arrays.asList(o16t3,o16t4,o16t5));
         Observation o3obs16 = new Observation(id3,traitsyo3obs16,16);
 

@@ -1,6 +1,6 @@
 package com.pwr.zpi;
 
-import static com.pwr.zpi.Main.ObjectTypeCollection;
+import static com.pwr.zpi.Agent.ObjectTypeCollection;
 
 /**
  * Abstract class that allows to use multiple identifiers at the same time.
