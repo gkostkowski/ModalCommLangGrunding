@@ -477,7 +477,7 @@ public class Grounder {
      * @return
      */
 
-    static double relativeCardConunction(Object o, Trait P, Trait Q, int time, Set<BaseProfile> all, int i) {
+    static double relativeCardConunction( Trait P, Trait Q, int time, Set<BaseProfile> all, int i) {
         Set<BaseProfile> Sum = new HashSet<BaseProfile>();
 
         //OgarnijAdAlla, nie dodaje tych samych obiektów

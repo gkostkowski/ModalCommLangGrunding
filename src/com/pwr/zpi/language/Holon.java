@@ -30,7 +30,7 @@ public class Holon{
     protected Map<com.pwr.zpi.language.Operators.Type,Double> Ratio;
 
 
-    public Holon (Formula formula,Set<BaseProfile> baseProfile,int time,IndividualModel im,DistributedKnowledge dk){
+    public Holon (Formula formula,Set<BaseProfile> baseProfile,int time,IndividualModel im,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
         // Individual model koniec końców powinno się wyciągnąć z formuły.
         //Życzenia Weroniki : Holony dla prostych i złożonych. Nadać holonom sens jako przechowującym cechę i
         //zaprzeczenie . zmodyfikowac groundera <-- Odłożone w czasie
@@ -48,9 +48,10 @@ public class Holon{
      *@param o
      *@param time
      *@param trait
-     *
+     *@throws NotApplicableException
+     *@throws InvalidFormulaException
      */
-    public void update(Formula formula,Set<BaseProfile> baseProfile,int time,DistributedKnowledge dk){
+    public void update(Formula formula,Set<BaseProfile> baseProfile,int time,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
         com.pwr.zpi.language.Operators.Type update = Grounder.determineFulfillment(null, dk, formula);
         Tao.add(new 	Pair<Integer,com.pwr.zpi.language.Operators.Type>(time,update));
         updateRatio();
