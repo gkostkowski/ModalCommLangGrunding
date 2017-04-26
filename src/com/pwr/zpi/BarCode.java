@@ -1,9 +1,9 @@
 package com.pwr.zpi;
 
 /**
- * Created by Mateo on 22.04.2017.
+ * Example of identifier.
  */
-public class BarCode extends Identifier {
+public class BarCode extends Identifier{
 
     String id;
 
@@ -11,16 +11,7 @@ public class BarCode extends Identifier {
         this.id = id;
     }
 
-    public ObjectType getType() {
-        return null; //todo
-    }
-
-    @Override
-    public String getName() {
-        return null;
-    }
-
-    public String getId() {
+    public String getIdNumber() {
         return id;
     }
 }

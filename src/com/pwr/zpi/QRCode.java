@@ -1,7 +1,7 @@
 package com.pwr.zpi;
 
 /**
- * Created by Mateo on 22.04.2017.
+ * Example of identifier.
  */
 public class QRCode extends Identifier{
 
@@ -11,20 +11,8 @@ public class QRCode extends Identifier{
         this.id = id;
     }
 
-    public ObjectType getType() {
-        return null; //todo
-    }
-
-    public String getId() {
+    public String getIdNumber() {
         return String.valueOf(id);
     }
 
-    /**
-     *
-     * @return String representation of a preset name of the object
-     */
-    public String getName()
-    {
-        return  null; //todo
-    }
 }
