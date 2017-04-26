@@ -4,13 +4,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Describes object's observation with it's time, typeId and set of traits.
+ * Describes object's observation with it's time, id and set of traits.
  * Represents objects placed in real world, witnessed by agent.
  */
 public class Observation {
     private Identifier identifier;
     private long time;
     private Set<Trait> traits;
+
+    public Observation() {
+
+    }
 
     public Observation(Identifier identifier, Set<Trait> traits){
         this.identifier = identifier;
@@ -22,10 +26,6 @@ public class Observation {
         this.identifier = identifier;
         this.traits = traits;
         this.time = time;
-    }
-
-    public Observation() {
-
     }
 
     public Identifier getIdentifier() {
@@ -50,12 +50,12 @@ public class Observation {
 
     /**
      * Sets traits which are correct for specific object
-     * meaning that object is desribed by them and values are from domain
-     * @param traits set of observed traits
+     * meaning that object is described by them and values are from domain.
+     * @param traits Set of observed traits.
      */
     /*public void setTraits(Set<Trait> traits)
     {
-        IndividualModel model = IMCollection.f(identifier);
+        IndividualModel model = IMCollection.getRepresentationByIdentifier(identifier);
         for(Trait trait : traits)
         {
             if(model.getType().getSpecificTrait(trait.getName()).isInDomain(trait.getValue()))
@@ -66,13 +66,12 @@ public class Observation {
 
     /**
      * Checks if object has given trait and return it's state.
-     *
      * @param trait Given trait.
-     * @return      State of trait or null when object doesn't has trait.
+     * @return State of trait or null when object doesn't has trait.
      */
     public State hasTrait(Trait trait) {
         for (Trait t : traits) {
-            if (t.getName() == trait.getName())
+            if (t.getName().equals(trait.getName()))
                 return t.stateOfTrait();
         }
         return null;
@@ -85,9 +84,8 @@ public class Observation {
 
     /**
      * Simply gives set of all objects included in given list of sets.
-     *
-     * @param sets  Array of sets of objects.
-     * @return      Set of objects.
+     * @param sets Array of sets of objects.
+     * @return Set of objects.
      */
     public static Set<Observation> getObjects(Set<Observation> ... sets) {
         Set<Observation> res = new HashSet<>();
@@ -96,55 +94,12 @@ public class Observation {
         return res;
     }
 
+    /**
+     * Returns type of object that this observation concern.
+     * @return Type of object.
+     */
     public ObjectType getType(){
         return identifier.getType();
     }
-
-    /**
-     * Copies all attributes from other object.
-     */
-    /*public void copy(Observation other) {
-        setIdentifier(other.getIdentifier());
-        setTime(other.getTime());
-        setTraits(other.getTraits());
-    }*/
-
-
-
-    /*public boolean isTypeOf(ObjectType objType) {
-        return
-    }*/
-
-//    /**
-//     * Checks whether two objects are equal.
-//     * Equal when they have same types, same traits with same states.
-//     *
-//     * @param other Other object.
-//     * @return      true/false
-//     */
-//    public boolean equals(Observation other) {
-//        boolean contains = false;
-//
-//        if(type.equals(other.getType()))
-//            return false;
-//
-//        if(traits.size() != other.getTraits().size())
-//            return false;
-//
-//        for (Trait t1 : traits) {
-//            for (Trait t2 : other.getTraits()) {
-//                if(t1.equals(t2)){
-//                    contains = true;
-//                    break;
-//                }
-//            }
-//            if(!contains)
-//                return false;
-//        }
-//        return true;
-//    }
-
-
-
 
 }

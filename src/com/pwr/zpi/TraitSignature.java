@@ -10,9 +10,8 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Grzesiek on 2017-04-08.
  */
-public class TraitSignature<K, V> {
+public class TraitSignature<V> {
     private String name;
-    //private K name;
     private String valueType;
 
     private List<String> domain; //todo

@@ -7,8 +7,8 @@ import java.util.List;
  * It determines allowed set of traits for certain object (and its observation).
  */
 public class ObjectType {
-    String typeId;
-    List<TraitSignature> traits;
+    private String typeId;
+    private List<TraitSignature> traits;
 
     public ObjectType(String id, List<TraitSignature> traits) {
         this.typeId = id;

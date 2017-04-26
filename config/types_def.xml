@@ -46,7 +46,7 @@
                     </domain>
                 </trait>
                 <trait>
-                    <name>NumberOfWalls</name>
+                    <name>NoOfWalls</name>
                     <valueType>Integer</valueType>
                     <domain class="linked-list">
                         <value>2</value>

@@ -1,6 +1,5 @@
 package com.pwr.zpi;
 
-import java.util.Set;
 
 /**
  * Individual model represents exact object witnessed by agent.
@@ -12,12 +11,10 @@ import java.util.Set;
 public class IndividualModel {
     private Identifier identifier;
     private ObjectType type;
-    private String name;
 
     public IndividualModel(Identifier identifier, ObjectType type) {
         this.identifier = identifier;
         this.type = type;
-        name = identifier.getName();
     }
 
     public Identifier getIdentifier() {
@@ -37,12 +34,12 @@ public class IndividualModel {
     }
 
     /**
-     *
-     * @return String representation of models' name
+     * Simply returns name of the object that is understandable by both human and agent.
+     * @return Name of object.
      */
     public String getName()
     {
-        return name;
+        return identifier.getName();
     }
 
 
