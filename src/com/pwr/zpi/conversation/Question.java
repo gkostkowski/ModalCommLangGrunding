@@ -55,7 +55,6 @@ public class Question<V> {
             throw new InvalidQuestionException(InvalidQuestionException.NO_FIRST_VALUE);
         Trait trait = putValue(value1, trait1);
         traits.add(trait);
-        Observation ob = new Observation(model.getIdentifier(), null);
         if(parts[index].equalsIgnoreCase("and"))
         {
             TraitSignature traitSinature2 = getTraitSinature();
@@ -69,7 +68,7 @@ public class Question<V> {
             traits.add(trait2);
             try
             {
-                formula = new ComplexFormula(ob, traits, states, Operators.Type.AND);
+                formula = new ComplexFormula(model, traits, states, Operators.Type.AND);
             } catch (InvalidSentenceFormulaException e) {
                 e.printStackTrace();
             }
@@ -77,7 +76,7 @@ public class Question<V> {
         else
         {
             try {
-                formula = new SimpleFormula(ob, traits, states);
+                formula = new SimpleFormula(model, traits, states);
             } catch (InvalidSentenceFormulaException e) {
                 e.printStackTrace();
             }

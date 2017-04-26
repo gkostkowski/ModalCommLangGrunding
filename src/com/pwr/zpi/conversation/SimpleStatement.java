@@ -1,5 +1,6 @@
 package com.pwr.zpi.conversation;
 
+import com.pwr.zpi.Agent;
 import com.pwr.zpi.HolonCollection;
 import com.pwr.zpi.State;
 import com.pwr.zpi.language.Operators;
@@ -13,10 +14,10 @@ import java.util.List;
 public class SimpleStatement extends Statement{
 
 
-    public SimpleStatement(SimpleFormula formula, List<String> info)
+    public SimpleStatement(SimpleFormula formula, Agent agent, int time, List<String> info)
     {
         this.formula = formula;
-        holon = HolonCollection.findHolon(formula);
+        holon = HolonCollection.findHolon(formula, agent, time);
         this.info = info;
     }
 

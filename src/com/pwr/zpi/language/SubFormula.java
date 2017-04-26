@@ -1,5 +1,5 @@
 package com.pwr.zpi.language;
-import com.pwr.zpi.Observation;
+import com.pwr.zpi.IndividualModel;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
@@ -79,7 +79,7 @@ public class SubFormula extends Formula {
     }
 
     @Override
-    public Observation getObservation() {
+    public IndividualModel getModel() {
         return null;
     }
 

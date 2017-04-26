@@ -1,5 +1,6 @@
 package com.pwr.zpi.language;
 
+import com.pwr.zpi.IndividualModel;
 import com.pwr.zpi.Observation;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
@@ -13,17 +14,17 @@ import java.util.List;
  */
 public class SimpleFormula extends Formula {
 
-    Observation observation;
+    IndividualModel observation;
     Trait trait;
     boolean isNegated;
 
-    public SimpleFormula(Observation observation, Trait trait, boolean isNegated) {
+    public SimpleFormula(IndividualModel observation, Trait trait, boolean isNegated) {
         this.observation = observation;
         this.trait = trait;
         this.isNegated = isNegated;
     }
 
-    public SimpleFormula(Observation observation, Trait trait) {
+    public SimpleFormula(IndividualModel observation, Trait trait) {
         this(observation, trait, false);
     }
 
@@ -33,7 +34,7 @@ public class SimpleFormula extends Formula {
      * @param traits list of traits which should be size of 1,
      * @param statesSeq list of states which should be size of 1
      */
-    public SimpleFormula(Observation o, List<Trait> traits, List<State> statesSeq) throws InvalidSentenceFormulaException{
+    public SimpleFormula(IndividualModel o, List<Trait> traits, List<State> statesSeq) throws InvalidSentenceFormulaException{
         /*build formula like: state1(trait1(o))*/ //todo
         if(traits.size() != 1 || traits.size() != statesSeq.size())
             throw new InvalidSentenceFormulaException();
@@ -50,7 +51,7 @@ public class SimpleFormula extends Formula {
     }
 
     @Override
-    public Observation getObservation() {
+    public IndividualModel getModel() {
         return observation;
     }
 
@@ -70,7 +71,7 @@ public class SimpleFormula extends Formula {
      * @return State of trait's occurrence in observation.
      */
     public State evaluate() {
-        State result = observation.hasTrait(trait);
+        State result = State.IS; // todo observation.hasTrait(trait);
 
         if(isNegated)  // when isNegated is true reverse result
             switch (result) {
@@ -86,7 +87,7 @@ public class SimpleFormula extends Formula {
     public boolean equals(Formula other)
     {
         if(other instanceof SimpleFormula)
-            if(observation.getIdentifier().equals(other.getObservation().getIdentifier()))
+            if(observation.getIdentifier().equals(other.getModel().getIdentifier()))
                 if(trait.equals(((SimpleFormula) other).trait))
                         return true;
         return false; //todo czy sprawdzać stan isNegated

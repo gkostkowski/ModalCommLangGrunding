@@ -1,5 +1,6 @@
 package com.pwr.zpi.language;
 
+import com.pwr.zpi.IndividualModel;
 import com.pwr.zpi.Observation;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
@@ -13,7 +14,7 @@ public abstract class Formula {
 
     public abstract List<Trait> getTraits();
 
-    public abstract Observation getObservation();
+    public abstract IndividualModel getModel();
 
     public abstract Type getType();
 

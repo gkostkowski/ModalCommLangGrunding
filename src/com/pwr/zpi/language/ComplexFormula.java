@@ -1,6 +1,6 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.Observation;
+import com.pwr.zpi.IndividualModel;
 import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
@@ -18,7 +18,7 @@ public class ComplexFormula extends Formula {
     private SimpleFormula leftPart, rightPart;
     private List<Trait> traits;
     private List<State> states;
-    private Observation observation;
+    private IndividualModel observation;
 
 
     /**
@@ -30,7 +30,7 @@ public class ComplexFormula extends Formula {
      * @param op Operator.Type which is used to connect two SimpleFormulas
      * @throws InvalidSentenceFormulaException when the sentence is being build improperly
      */
-    public ComplexFormula(Observation o, List<Trait> traits, List<State> statesSeq, Operators.Type op) throws InvalidSentenceFormulaException {
+    public ComplexFormula(IndividualModel o, List<Trait> traits, List<State> statesSeq, Operators.Type op) throws InvalidSentenceFormulaException {
         if(traits.size() != 2 || traits.size() != statesSeq.size() || op != Operators.Type.AND || op != Operators.Type.OR)
             throw new InvalidSentenceFormulaException();
         leftPart = new SimpleFormula(o, traits.subList(0,1), statesSeq.subList(0, 1));
@@ -48,7 +48,7 @@ public class ComplexFormula extends Formula {
      * @param op Operator.Type which is used to connect two SimpleFormulas
      * @throws InvalidSentenceFormulaException when the sentence is being build improperly
      */
-    public ComplexFormula(Observation o, List<Trait> traits, Operators.Type op) throws InvalidSentenceFormulaException
+    public ComplexFormula(IndividualModel o, List<Trait> traits, Operators.Type op) throws InvalidSentenceFormulaException
     {
         if(traits.size() != 2 || op != Operators.Type.AND || op != Operators.Type.OR)
             throw new InvalidSentenceFormulaException();
@@ -101,7 +101,7 @@ public class ComplexFormula extends Formula {
      * @return Object which is considered in formula
      */
     @Override
-    public Observation getObservation() {
+    public IndividualModel getModel() {
         return observation;
     }
 
@@ -132,7 +132,7 @@ public class ComplexFormula extends Formula {
     public boolean equals(Formula other)
     {
         if(other instanceof ComplexFormula)
-            if(observation.getIdentifier().equals(other.getObservation().getIdentifier()))
+            if(observation.getIdentifier().equals(other.getModel().getIdentifier()))
                 if(compareTraits(other.getTraits()))
                     if(operator.equals(((ComplexFormula) other).getOperator()))
                         return true;

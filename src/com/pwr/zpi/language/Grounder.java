@@ -2,7 +2,6 @@ package com.pwr.zpi.language;
 
 import com.pwr.zpi.*;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
-import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 
 import java.util.*;
@@ -30,7 +29,7 @@ public class Grounder {
      * @return Collection of grounding sets.
      */
     static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
-        Observation o = formula.getObservation();
+        IndividualModel o = formula.getModel();
         List<Trait> traits = formula.getTraits();
         State [] states = new State[traits.size()];
         List<State> s = formula.getStates();
@@ -286,7 +285,7 @@ public class Grounder {
         BaseProfile wmBp = new BaseProfile(dk.getTimestamp());
         Set<Object> objects = new HashSet<>();
 
-        Observation describedObj = formula.getObservation();
+        IndividualModel describedObj = formula.getModel();
         List<Trait> describedTraits = formula.getTraits();
         List<State> states = formula.getStates();
         //mentalModel.
@@ -323,7 +322,7 @@ public class Grounder {
         lmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.LM));
         wmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.WM));
         objects.addAll(BaseProfile.getObjects(lmBp, wmBp));
-//        describedObj.copy(dk.getObservation());
+//        describedObj.copy(dk.getModel());
 //        describedTrait.copy(dk.getTrait());
 
         if (describedTraits.size() != states.size())
@@ -477,7 +476,6 @@ public class Grounder {
      */
 
     static double relativeCardConunction(Trait P, Trait Q, int time, Set<BaseProfile> all, int i) {
-    static double relativeCardConunction( Trait P, Trait Q, int time, Set<BaseProfile> all, int i) {
         Set<BaseProfile> Sum = new HashSet<BaseProfile>();
 
         //OgarnijAdAlla, nie dodaje tych samych obiektów

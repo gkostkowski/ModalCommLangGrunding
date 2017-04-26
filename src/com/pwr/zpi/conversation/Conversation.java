@@ -12,6 +12,11 @@ import com.pwr.zpi.language.SimpleFormula;
 public class Conversation {
 
     Agent agent;
+
+    public Conversation(Agent agent)
+    {
+        this.agent = agent;
+    }
     
     private String giveAnswer(String myQuestion)
     {

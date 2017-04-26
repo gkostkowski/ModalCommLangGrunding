@@ -26,7 +26,7 @@ public class DistributedKnowledge {
     private int timestamp;
     private final Formula formula;
     private final List<Trait> traits;
-    private final Observation obj;
+    private final IndividualModel obj;
     private Map<Integer, BaseProfile> inLM;
     private Map<Integer, BaseProfile> inWM;
 
@@ -50,7 +50,7 @@ public class DistributedKnowledge {
         this.timestamp = time;
         this.formula = formula;
         this.traits = formula.getTraits();
-        this.obj = formula.getObservation();
+        this.obj = formula.getModel();
 
         inLM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryType.LM);
         inWM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryType.WM);
@@ -111,7 +111,7 @@ public class DistributedKnowledge {
         return timestamp;
     }
 
-    public Observation getObservation() {
+    public IndividualModel getObservation() {
         return obj;
     }
 
