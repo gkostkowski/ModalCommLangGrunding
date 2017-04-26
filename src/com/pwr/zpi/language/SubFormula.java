@@ -4,7 +4,7 @@ import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -74,7 +74,7 @@ public class SubFormula extends Formula {
     }
 
     @Override
-    public Set<Trait> getTraits() {
+    public List<Trait> getTraits() {
         return null;
     }
 
@@ -86,6 +86,11 @@ public class SubFormula extends Formula {
     @Override
     public Type getType() {
         return null;
+    }
+
+    @Override
+    boolean equals(Formula other) {
+        return false;
     }
 
     /**

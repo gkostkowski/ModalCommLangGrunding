@@ -468,7 +468,6 @@ public class Grounder {
      * i = 3 not p(o) and q(o)
      * i = 4 not p(o) and not q(o)
      *
-     * @param o    Object observed by agent
      * @param P    Trait of observation
      * @param Q    Trait of observation
      * @param time Time taken into consideration when looking for expieriences
@@ -477,7 +476,7 @@ public class Grounder {
      * @return
      */
 
-    static double relativeCardConunction(Object o, Trait P, Trait Q, int time, Set<BaseProfile> all, int i) {
+    static double relativeCardConunction(Trait P, Trait Q, int time, Set<BaseProfile> all, int i) {
         Set<BaseProfile> Sum = new HashSet<BaseProfile>();
 
         //OgarnijAdAlla, nie dodaje tych samych obiektów
