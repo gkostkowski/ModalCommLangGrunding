@@ -6,6 +6,7 @@ import com.pwr.zpi.State;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,6 +63,13 @@ public class SimpleFormula extends Formula {
     @Override
     public Type getType() {
         return Type.SIMPLE_MODALITY;
+    }
+
+    public List<State> getStates()
+    {
+        List<State> states = new ArrayList<>();
+        states.add((isNegated) ? State.IS_NOT : State.IS);
+        return states;
     }
 
     /**
