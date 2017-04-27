@@ -107,9 +107,9 @@ public class Grounder {
 
     */
 /**
-     * Defines grounded set A1(t) responsible for induction of mental model m1 connected to observation p and trait P
+     * Defines grounded set A1(t) responsible for induction of mental model m1 connected to individualModel p and trait P
      * A1 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
-     * representing expierience observation o,having trait P
+     * representing expierience individualModel o,having trait P
      *
      * @param o     Object observed by agent
      * @param time  Time taken into consideration when looking for expieriences
@@ -128,12 +128,12 @@ public class Grounder {
     }
 
 /**
-     * Defines grounded set A2(t) responsible for induction of mental model m1 connected to observation p and trait P
+     * Defines grounded set A2(t) responsible for induction of mental model m1 connected to individualModel p and trait P
      * A2 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
-     * representing expierience observation o,not having trait P
+     * representing expierience individualModel o,not having trait P
      *
      * @param o    Object observed by agent
-     * @param P    Trait of observation
+     * @param P    Trait of individualModel
      * @param time Time taken into consideration when looking for expieriences
      * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @return Set of BaseProfiles which contain Positive Traits
@@ -196,17 +196,17 @@ public class Grounder {
 
             switch(((ComplexFormula) formula).getOperator()){
                 case AND:
-                    if((boolean) ((ComplexFormula) formula).getLeftPart().isNegated && (boolean) ((ComplexFormula) formula).getRightPart().isNegated){
-                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().trait,((ComplexFormula) formula).getRightPart().trait ,time,groundingSets.get(formula),4);
+                    if((boolean) ((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) ((ComplexFormula) formula).getRightPart().isNegated()){
+                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(),((ComplexFormula) formula).getRightPart().getTrait() ,time,groundingSets.get(formula),4);
                     }
-                    if((boolean) !((ComplexFormula) formula).getLeftPart().isNegated && (boolean) ((ComplexFormula) formula).getRightPart().isNegated){
-                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().trait,((ComplexFormula) formula).getRightPart().trait ,time,groundingSets.get(formula),3);
+                    if((boolean) !((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) ((ComplexFormula) formula).getRightPart().isNegated()){
+                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(),((ComplexFormula) formula).getRightPart().getTrait() ,time,groundingSets.get(formula),3);
                     }
-                    if((boolean) ((ComplexFormula) formula).getLeftPart().isNegated && (boolean) !((ComplexFormula) formula).getRightPart().isNegated){
-                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().trait,((ComplexFormula) formula).getRightPart().trait ,time,groundingSets.get(formula),2);
+                    if((boolean) ((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) !((ComplexFormula) formula).getRightPart().isNegated()){
+                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(),((ComplexFormula) formula).getRightPart().getTrait() ,time,groundingSets.get(formula),2);
                     }
-                    if((boolean) ((ComplexFormula) formula).getLeftPart().isNegated && (boolean) ((ComplexFormula) formula).getRightPart().isNegated){
-                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().trait,((ComplexFormula) formula).getRightPart().trait ,time,groundingSets.get(formula),1);
+                    if((boolean) ((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) ((ComplexFormula) formula).getRightPart().isNegated()){
+                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(),((ComplexFormula) formula).getRightPart().getTrait() ,time,groundingSets.get(formula),1);
                     }
                     break;
                 case OR:
@@ -404,8 +404,8 @@ public class Grounder {
      * i=3 - Returns BaseProfiles where Object o does not have Trait P and has Trait Q
      * i=4 - Returns BaseProfiles where Object o does not have Trait P and does not have Trait Q
      *
-     * @param P    Trait of observation
-     * @param Q    Trait of observation
+     * @param P    Trait of individualModel
+     * @param Q    Trait of individualModel
      * @param time Time taken into consideration when looking for expieriences
      * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @param i    indicator,indicating which case we'd like to use
@@ -467,8 +467,8 @@ public class Grounder {
      * i = 3 not p(o) and q(o)
      * i = 4 not p(o) and not q(o)
      *
-     * @param P    Trait of observation
-     * @param Q    Trait of observation
+     * @param P    Trait of individualModel
+     * @param Q    Trait of individualModel
      * @param time Time taken into consideration when looking for expieriences
      * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @param i    indicator,indicating which case we'd like to use

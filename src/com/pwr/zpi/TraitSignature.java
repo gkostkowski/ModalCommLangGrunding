@@ -10,84 +10,44 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Grzesiek on 2017-04-08.
  */
-public class TraitSignature<V> {
+public class TraitSignature {
     private String name;
-    private String valueType;
 
-    private List<String> domain; //todo
-
-    public TraitSignature(String name, String valueType, List<String> domain)
+    public TraitSignature(String name)
     {
         this.name = name;
-        try {
-            this.valueType = valueType;
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        this.domain = domain;
     }
 
-    public TraitSignature(String name, String valueType) {
-        this(name, valueType, null);
-    }
-
-    public Type getValueType() {
-        return TypeMapper.toType(valueType);
-    }
-
-    public String getValueTypeString()
-    {
-        return valueType;
-    }
-
-    public Class<?> getValueClass() {
-        return TypeMapper.toClass(valueType);
-    }
-
+    /**
+     *
+     * @return name of the TraitSiganture
+     */
     public String getName() {
         return name;
     }
 
-    public boolean isInDomain(String value)
+    /**
+     * method used to check if two traits are about same thing
+     * @param otherName String representation of name of a trait
+     * @return true if same, false if different
+     */
+    public boolean equals(String otherName)
     {
-        for(String v : domain)
-            if(v.equalsIgnoreCase(value))
-                return true;
-        return false;
+        return name.equalsIgnoreCase(otherName);
     }
 
-    public List<String> getDomain() {
-        return domain;
-    }
-
-    public void setDomain(List<String> domain) {
-        this.domain = domain;
-    }
-
-    /*    public boolean isInDomain(V value)
+    /**
+     * method used to check if two Traits are about same thing
+     * @param other second TraitSignature
+     * @return true if same, false otherwise
+     */
+    public boolean equals(TraitSignature other)
     {
-        for(String v : domain)
-            if(v.equals(value))
-                return true;
-        return false;
-    }*/
-
-/*
-    public TraitSignature(K name, Class<?> valueType) {
-        this.name = name;
-        try {
-            this.valueType = (Class<V>) valueType;
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public Class<V> getValueType() {
-        return valueType;
+        return equals(other.getName());
     }
 
-    public K getName() {
-        return name;
-    }
 
-*/
+
+
+
 }

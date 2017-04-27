@@ -12,10 +12,12 @@ import com.pwr.zpi.language.SimpleFormula;
 public class Conversation {
 
     Agent agent;
+    int timestamp;
 
-    public Conversation(Agent agent)
+    public Conversation(Agent agent, int time)
     {
         this.agent = agent;
+        timestamp = time;
     }
     
     private String giveAnswer(String myQuestion)
@@ -26,11 +28,11 @@ public class Conversation {
             Formula formula = question.getFormula();
             if(formula instanceof SimpleFormula)
             {
-                SimpleStatement statement = new SimpleStatement((SimpleFormula)formula, question.getInfo());
+                SimpleStatement statement = new SimpleStatement((SimpleFormula)formula, agent, timestamp, question.getInfo());
                 answer = statement.generateStatement();
             } else
             {
-                ComplexStatement statement = new ComplexStatement((ComplexFormula)formula, question.getInfo());
+                ComplexStatement statement = new ComplexStatement((ComplexFormula)formula, agent, timestamp, question.getInfo());
                 answer = statement.generateStatement();
             }
         } catch (InvalidQuestionException e)

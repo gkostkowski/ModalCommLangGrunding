@@ -1,6 +1,7 @@
 package com.pwr.zpi;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -8,14 +9,19 @@ import java.util.Set;
  */
 public class IMCollection {
 
-    private static Set<IndividualModel> individualModelSet;
+    private Set<IndividualModel> individualModelSet;
+
+    /**
+     * Map that stores names understood by humans and which identifier they represent
+     */
+    private Map<String, Identifier> lexicon;
 
     public IMCollection() {
         individualModelSet = new HashSet<>();
     }
 
     public IMCollection(Set<IndividualModel> individualModelSet) {
-        IMCollection.individualModelSet = individualModelSet;
+        this.individualModelSet = individualModelSet;
     }
 
     /**
@@ -45,7 +51,7 @@ public class IMCollection {
      * @param identifier Identifier of object we are looking for..
      * @return Individual model of object.
      */
-    public static IndividualModel getRepresentationByIdentifier(Identifier identifier) {
+    public IndividualModel getRepresentationByIdentifier(Identifier identifier) {
         for(IndividualModel model : individualModelSet) {
             if (model.getIdentifier().equals(identifier))
                 return model;
@@ -53,12 +59,12 @@ public class IMCollection {
         return null;
     }
 
-    /**
+    /** todo nie powinno tego być
      * Returns the individual model representing object based on its observation.
      * @param observation Observation of object we are looking for.
      * @return Individual model of object.
      */
-    public static IndividualModel getRepresentationByObservation(Observation observation) {
+    public IndividualModel getRepresentationByObservation(Observation observation) {
         for(IndividualModel model : individualModelSet) {
             if (model.getIdentifier().equals(observation.getIdentifier()))
                 return model;
@@ -71,11 +77,11 @@ public class IMCollection {
      * @param name common name for the object
      * @return IndividualModel of the name
      */
-    public static IndividualModel getModelFromName(String name)
+    /*public IndividualModel getModelFromName(String name)
     {
         for(IndividualModel model : individualModelSet)
             if(model.getName().equalsIgnoreCase(name))
                 return model;
         return null;
-    }
+    }*/
 }

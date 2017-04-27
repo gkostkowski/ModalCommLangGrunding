@@ -8,19 +8,6 @@ import static com.pwr.zpi.Agent.ObjectTypeCollection;
 public abstract class Identifier {
 
     /**
-     * Simply name of the object that is understandable by both human and agent.
-     */
-    private String name;
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    /**
      * Simply returns the id number as String.
      * @return Id number.
      */

@@ -1,9 +1,6 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.IndividualModel;
-import com.pwr.zpi.Observation;
-import com.pwr.zpi.State;
-import com.pwr.zpi.Trait;
+import com.pwr.zpi.*;
 
 import java.util.List;
 
@@ -12,7 +9,10 @@ import java.util.List;
  */
 public abstract class Formula {
 
-    public abstract List<Trait> getTraits();
+
+
+
+    public abstract List<TraitSignature> getTraits();
 
     public abstract IndividualModel getModel();
 
@@ -34,7 +34,6 @@ public abstract class Formula {
 
     abstract boolean equals(Formula other);
 
-    abstract State evaluate();
 /*    abstract com.pwr.zpi.Object getAffectedObject();
 
     *//**

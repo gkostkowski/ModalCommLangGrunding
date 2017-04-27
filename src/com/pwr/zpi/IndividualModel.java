@@ -1,6 +1,8 @@
 package com.pwr.zpi;
 
 
+import java.util.List;
+
 /**
  * Individual model represents exact object witnessed by agent.
  * IndividualModel is based on one specific ObjectType,
@@ -34,13 +36,29 @@ public class IndividualModel {
     }
 
     /**
-     * Simply returns name of the object that is understandable by both human and agent.
-     * @return Name of object.
+     * checks if given list of traits contains in models' traits.
+     * @param traits List of TraitSignatures that are supposed to be checked
+     * @return true if all traits describe model, false otherwise
      */
-    public String getName()
+    public boolean checkIfProperTraits(List<TraitSignature> traits)
     {
-        return identifier.getName();
+        for(TraitSignature trait: traits)
+            if(!checkIfContainsTrait(trait))
+                return false;
+        return true;
+
     }
 
-
+    /**
+     * method checks if given TraitSignature describes model
+     * @param trait TraitSignature to be checked
+     * @return true if TraitSignature describes model, false otherwise
+     */
+    public boolean checkIfContainsTrait(TraitSignature trait)
+    {
+        for(TraitSignature traitSignature: getType().getTraits())
+            if(trait.equals(traitSignature))
+                return true;
+        return false;
+    }
 }

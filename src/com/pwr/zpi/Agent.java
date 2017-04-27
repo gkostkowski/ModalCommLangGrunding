@@ -11,6 +11,8 @@ public class Agent {
     private BPCollection knowledgeBase;
     private ObservationCollection observations;
     private IMCollection models;
+    private HolonCollection holons;
+
     public static Set<ObjectType> ObjectTypeCollection = new HashSet<>();
 
     public Agent() {

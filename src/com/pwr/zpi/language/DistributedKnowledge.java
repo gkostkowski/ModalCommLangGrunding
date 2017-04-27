@@ -9,11 +9,11 @@ import java.util.*;
 
 /**
  * Described distributed knowledge as set of classes established for given moment in time,
- * for certain simple or complex formula and associated observation. Number of classes depends on kind of grounded formula
+ * for certain simple or complex formula and associated individualModel. Number of classes depends on kind of grounded formula
  * (which induces mental models).
- * RA1 - Represents set of all base profiles, which are included in working memory and presents observation as described by
+ * RA1 - Represents set of all base profiles, which are included in working memory and presents individualModel as described by
  * given trait.
- * TA1 - Represents set of all base profiles, which are included in long-term memory and presents observation as described by
+ * TA1 - Represents set of all base profiles, which are included in long-term memory and presents individualModel as described by
  * given trait.
  * Etc.
  */
@@ -25,7 +25,7 @@ public class DistributedKnowledge {
 
     private int timestamp;
     private final Formula formula;
-    private final List<Trait> traits;
+    private final List<TraitSignature> traits;
     private final IndividualModel obj;
     private Map<Integer, BaseProfile> inLM;
     private Map<Integer, BaseProfile> inWM;
@@ -115,7 +115,7 @@ public class DistributedKnowledge {
         return obj;
     }
 
-    public List<Trait> getTraits() throws InvalidFormulaException {
+    public List<TraitSignature> getTraits() throws InvalidFormulaException {
         if (traits == null || traits.isEmpty())
             throw new InvalidFormulaException();
         return traits;

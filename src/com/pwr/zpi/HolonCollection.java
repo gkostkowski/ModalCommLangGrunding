@@ -9,7 +9,7 @@ import java.util.Set;
  */
 public class HolonCollection {
 
-    private static Set<Holon> holonCollection;
+    private Set<Holon> holonCollection;
 
     public HolonCollection()
     {
@@ -26,12 +26,12 @@ public class HolonCollection {
     }
 
 
-    /**
+   /* *//**
      * Method adds holon based on Formula
      * @param formula
      * @return
-     */
-    public static Holon addHolon(Formula formula, Agent agent, int timestamp)
+     *//*
+    public Holon addHolon(Formula formula, Agent agent, int timestamp)
     {
         try {
             Holon holon = new Holon(formula, agent.getKnowledgeBase().getBaseProfiles(timestamp), timestamp, formula.getModel(), new DistributedKnowledge(agent, formula, timestamp));
@@ -43,13 +43,13 @@ public class HolonCollection {
         return null;
     }
 
-    public static Holon findHolon(Formula formula, Agent agent, int timestamp)
+    public Holon findHolon(Formula formula, Agent agent, int timestamp)
     {
         for(Holon holon : holonCollection)
             if(holon.getFormula().equals(formula))
                 return holon;
         return addHolon(formula, agent, timestamp);
-    }
+    }*/
 
 
 
