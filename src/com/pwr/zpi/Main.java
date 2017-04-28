@@ -197,10 +197,6 @@ public class Main {
         Set<Trait> traitsyo3obs18 = new HashSet<Trait>(Arrays.asList(o18t,o18t1,o18t2,o18t3,o18t4,o18t5));
         Observation o3obs18 = new Observation(id3,traitsyo3obs18,18);
 
-        Set<Observation> observations = new HashSet<>(Arrays.asList(o1obs1, o1obs2, o1obs3, o1obs4, o1obs5, o1obs6,
-                o1obs7, o1obs8, o1obs9, o1obs10, o1obs14, o2obs11, o2obs12, o2obs13, o2obs14, o2obs15, o2obs16,
-                o2obs17, o2obs18, o3obs14, o3obs16, o3obs17, o3obs18));
-        agent1.addObservations(observations); //dodaje przy okazji odpowiednie modele indywiduowe
 
         Trait colour = o1t, shape = o1t1, blinking = o1t2;
         //Update 1

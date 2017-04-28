@@ -1,6 +1,5 @@
 package com.pwr.zpi;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -11,10 +10,6 @@ public class Observation {
     private Identifier identifier;
     private long time;
     private Set<Trait> traits;
-
-    public Observation() {
-
-    }
 
     public Observation(Identifier identifier, Set<Trait> traits){
         this.identifier = identifier;
@@ -48,50 +43,9 @@ public class Observation {
         return traits;
     }
 
-    /**
-     * Sets traits which are correct for specific object
-     * meaning that object is described by them and values are from domain.
-     * @param traits Set of observed traits.
-     */
-    /*public void setTraits(Set<Trait> traits)
+    public void setTraits(Set<Trait> traits)
     {
-        IndividualModel model = IMCollection.getRepresentationByIdentifier(identifier);
-        for(Trait trait : traits)
-        {
-            if(model.getType().getSpecificTrait(trait.getName()).isInDomain(trait.getValue()))
-                this.traits.remove(trait); // todo albo tak, albo zwracamy jakiś błąd, bo nie wiemy czy obserwacja była w takim razie prawdziwa
-        }
         this.traits = traits;
-    }*/
-
-    /**
-     * Checks if object has given trait and return it's state.
-     * @param trait Given trait.
-     * @return State of trait or null when object doesn't has trait.
-     */
-    public State hasTrait(Trait trait) {
-        for (Trait t : traits) {
-            if (t.getName().equals(trait.getName()))
-                return t.stateOfTrait();
-        }
-        return null;
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    /**
-     * Simply gives set of all observations included in given list of sets.
-     * @param sets Array of sets of observations.
-     * @return Set of observations.
-     */
-    public static Set<Observation> getObjects(Set<Observation> ... sets) {
-        Set<Observation> res = new HashSet<>();
-        for (Set<Observation> set :sets)
-            res.addAll(set);
-        return res;
     }
 
     /**
@@ -99,19 +53,7 @@ public class Observation {
      * @return Type of object or null when model not found.
      */
     public ObjectType getType(){
-        IndividualModel model = IMCollection.getRepresentationByObservation(this);
-        if (model != null)
-            return getType();
-        else
-            return null;
-    }
-
-    /**
-     * Returns individual model of object that this observation concern.
-     * @return Individual model of object or null when model not found.
-     */
-    public IndividualModel getRepresantatingModel(){
-        return IMCollection.getRepresentationByObservation(this);
+        return identifier.getType();
     }
 
 }

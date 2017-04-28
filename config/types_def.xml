@@ -4,7 +4,7 @@
 <types>
         <collection class="linked-list">
 		<type>
-            <typeId>1</typeId>
+            <typeId>01</typeId>
             <traits class="linked-list">
                 <trait>
                     <name>Color</name>
@@ -34,7 +34,7 @@
             </traits>
         </type>
         <type>
-            <typeId>2</typeId>
+            <typeId>02</typeId>
             <traits class="linked-list">
                 <trait>
                     <name>Color</name>

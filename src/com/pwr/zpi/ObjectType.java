@@ -23,6 +23,7 @@ public class ObjectType {
         return traits;
     }
 
+    //todo dokumentacja - jeśli to w ogóle potrzebne {MG}
     public TraitSignature getSpecificTrait(String name)
     {
         for(TraitSignature trait: traits)
@@ -31,7 +32,7 @@ public class ObjectType {
         return null;
     }
 
-
+    //todo tak jak wyżej
     public boolean containsTrait(String name) {
         return getSpecificTrait(name) != null;
     }

@@ -59,19 +59,6 @@ public class IMCollection {
         return null;
     }
 
-    /** todo nie powinno tego być
-     * Returns the individual model representing object based on its observation.
-     * @param observation Observation of object we are looking for.
-     * @return Individual model of object.
-     */
-    public IndividualModel getRepresentationByObservation(Observation observation) {
-        for(IndividualModel model : individualModelSet) {
-            if (model.getIdentifier().equals(observation.getIdentifier()))
-                return model;
-        }
-        return null;
-    }
-
     /**
      * Method finds a specific individual model based on given name.
      * @param name common name for the object
