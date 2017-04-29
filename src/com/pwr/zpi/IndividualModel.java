@@ -40,13 +40,12 @@ public class IndividualModel {
      * @param traits List of TraitSignatures that are supposed to be checked
      * @return true if all traits describe model, false otherwise
      */
-    public boolean checkIfProperTraits(List<TraitSignature> traits)
+    public boolean checkIfContainsTraits(List<TraitSignature> traits)
     {
         for(TraitSignature trait: traits)
             if(!checkIfContainsTrait(trait))
                 return false;
         return true;
-
     }
 
     /**
@@ -56,9 +55,10 @@ public class IndividualModel {
      */
     public boolean checkIfContainsTrait(TraitSignature trait)
     {
-        for(TraitSignature traitSignature: getType().getTraits())
+        for(TraitSignature traitSignature: type.getTraits())
             if(trait.equals(traitSignature))
                 return true;
         return false;
     }
+
 }

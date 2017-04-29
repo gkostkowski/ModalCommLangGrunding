@@ -1,7 +1,5 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.State;
-
 /**
  * Describes language symbols ,which provide logica operations.
  */

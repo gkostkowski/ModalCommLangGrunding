@@ -14,6 +14,8 @@ import java.util.Set;
 import com.pwr.zpi.BaseProfile;
 import com.pwr.zpi.IndividualModel;
 import com.pwr.zpi.Trait;
+import com.pwr.zpi.exceptions.InvalidFormulaException;
+import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.language.Operators.Type;
 
 /**
@@ -30,12 +32,12 @@ public class Holon{
     protected Map<com.pwr.zpi.language.Operators.Type,Double> Ratio;
 
 
-    public Holon (Formula formula,Set<BaseProfile> baseProfile,int time,IndividualModel im,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
-        // Individual model koniec końców powinno się wyciągnąć z formuły.
-        //Życzenia Weroniki : Holony dla prostych i złożonych. Nadać holonom sens jako przechowującym cechę i
-        //zaprzeczenie . zmodyfikowac groundera <-- Odłożone w czasie
-        // Części  jest/nie jest
-        //
+    public Holon (Formula formula,Set<BaseProfile> baseProfile,int time,IndividualModel im,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+        // Życzenia Weroniki : Byłabym zachywycona, gdyby holon dało się utworzyć majac agenta i formułę (można z niej wyciągnąc potrzebne informacje).
+        // Ewentualnie mając agenta, model indywiduowy, ceche/cechy oraz nic/operator.
+        // Fajnie by było gdybym po stronie konwersacji nie musiała wyciągać baseprofili i distributedknowledge, szczególnie, że taka
+        // możliwość i tak powinna siedzieć w holonie, aby móc go uaktualnić. Tak mi się przynajmniej wydaje :) ale jestem gotowa na dyskusję
+        // i kompropmisy :p
         this.im = im;
         this.formula = formula;
         update(formula,baseProfile,time,dk);

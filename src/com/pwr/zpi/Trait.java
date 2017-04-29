@@ -96,12 +96,5 @@ public class Trait <K, V> {
         return new HashSet<>(res);
     }*/
 
-    /**
-     * Determines if this trait can describes object which belong to given type.
-     * @param objType Type of object.
-     * @return
-     */
-   boolean isSpecifiedForType(ObjectType objType) {
-       return objType.containsTrait(name);
-   }
+
 }
