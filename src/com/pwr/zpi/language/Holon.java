@@ -13,10 +13,8 @@ import java.util.Set;
 
 import com.pwr.zpi.BaseProfile;
 import com.pwr.zpi.IndividualModel;
-import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
-import com.pwr.zpi.language.Operators.Type;
 
 /**
  * Class represents holon.
@@ -47,9 +45,7 @@ public class Holon{
      *@param baseProfile
      *@param dk
      *@param formula
-     *@param o
      *@param time
-     *@param trait
      *@throws NotApplicableException
      *@throws InvalidFormulaException
      */

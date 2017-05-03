@@ -1,3 +1,4 @@
+/*
 package com.pwr.zpi.conversation;
 
 import com.pwr.zpi.*;
@@ -8,9 +9,11 @@ import com.pwr.zpi.language.*;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * Created by Weronika on 24.04.2017.
- */
+ *//*
+
 public class Question<V> {
 
     private Formula formula;
@@ -21,7 +24,7 @@ public class Question<V> {
     private int index = 0;
 
     private IndividualModel model;
-    private List<TraitSignature> traitSignatures;
+    private List<Trait> traitSignatures;
     private List<Trait> traits;
     private List<State> states;
 
@@ -46,7 +49,7 @@ public class Question<V> {
         model = IMCollection.getModelFromName(name);
         if(model == null)
             throw new InvalidQuestionException(InvalidQuestionException.NO_OBJECT);
-        TraitSignature trait1 = getTraitSinature();
+        Trait trait1 = getTraitSinature();
         if(trait1==null)
             throw new InvalidQuestionException(InvalidQuestionException.NO_FIRST_TRAIT);
         traitSignatures.add(trait1);
@@ -57,7 +60,7 @@ public class Question<V> {
         traits.add(trait);
         if(parts[index].equalsIgnoreCase("and"))
         {
-            TraitSignature traitSinature2 = getTraitSinature();
+            Trait traitSinature2 = getTraitSinature();
             if(traitSinature2==null)
                 throw new InvalidQuestionException(InvalidQuestionException.NO_SECOND_TRAIT);
             traitSignatures.add(traitSinature2);
@@ -84,13 +87,13 @@ public class Question<V> {
         return formula;
     }
 
-    private TraitSignature getTraitSinature()
+    private Trait getTraitSinature()
     {
         String name = parts[index];
         info.add(name);
         while(index<parts.length-1 && !parts[index].equalsIgnoreCase("and")) // todo inne zdania złożone
         {
-            for(TraitSignature trait: model.getType().getTraits())
+            for(Trait trait: model.getType().getTraits())
                 if(trait.getName().equalsIgnoreCase(name))
                     return trait;
             index++;
@@ -100,7 +103,7 @@ public class Question<V> {
         return null;
     }
 
-    private Trait putValue(String value, TraitSignature trait)
+    private Trait putValue(String value, Trait trait)
     {
         String s = trait.getValueTypeString();
         switch (s)
@@ -119,7 +122,7 @@ public class Question<V> {
         }
     }
 
-    private String getValue(TraitSignature trait)
+    private String getValue(Trait trait)
     {
         String name = "";
         if(parts[index].equalsIgnoreCase("not"))
@@ -140,3 +143,4 @@ public class Question<V> {
     }
 
 }
+*/

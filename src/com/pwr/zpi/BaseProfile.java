@@ -10,7 +10,7 @@ public class BaseProfile{
      * Map of traits and related collections of observations. If some collection is related with certain trait, then
      * it mean that all observations in that collections have this trait.
      */
-    protected  Map<Trait, Set<Observation>> describedByTraits;
+    protected  Map<Trait,Set<Observation>> describedByTraits;
     /**
      * Map of traits and related collections of observations. If some collection is related with certain trait, then
      * it mean that all observations in that collections DON'T HAVE this trait.
@@ -135,10 +135,10 @@ public class BaseProfile{
         return notDescribedByTraits.get(trait);
     }
 
-    public boolean DetermineIfSetHasTrait(@SuppressWarnings("rawtypes") Trait P,int time){
+    public boolean DetermineIfSetHasTrait(@SuppressWarnings("rawtypes") Trait P, int time){
         return describedByTraits.containsKey(P);
     }
-    public boolean DetermineIfSetHasNotTrait(@SuppressWarnings("rawtypes") Trait P,int time){
+    public boolean DetermineIfSetHasNotTrait(@SuppressWarnings("rawtypes") Trait P, int time){
         return notDescribedByTraits.containsKey(P);
     }
 

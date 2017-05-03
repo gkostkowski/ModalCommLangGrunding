@@ -1,3 +1,4 @@
+/*
 package com.pwr.zpi.conversation;
 
 import com.pwr.zpi.Agent;
@@ -7,9 +8,11 @@ import com.pwr.zpi.language.*;
 
 import java.util.List;
 
+*/
 /**
  * Created by Weronika on 22.04.2017.
- */
+ *//*
+
 public class ComplexStatement extends Statement {
 
     public ComplexStatement(ComplexFormula formula, Agent agent, int time, List<String> info)
@@ -48,3 +51,4 @@ public class ComplexStatement extends Statement {
 
 
 }
+*/

@@ -2,7 +2,7 @@ package com.pwr.zpi.language;
 
 import com.pwr.zpi.IndividualModel;
 import com.pwr.zpi.State;
-import com.pwr.zpi.TraitSignature;
+import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,7 +15,7 @@ public class ComplexFormula extends Formula {
 
     private Operators.Type operator;
     private SimpleFormula leftPart, rightPart;
-    private List<TraitSignature> traits;
+    private List<Trait> traits;
     private List<State> states;
     private IndividualModel individualModel;
 
@@ -29,7 +29,7 @@ public class ComplexFormula extends Formula {
      * @param op Operator.Type which is used to connect two SimpleFormulas
      * @throws InvalidFormulaException when the sentence is being build improperly
      */
-    public ComplexFormula(IndividualModel model, List<TraitSignature> traits, List<State> statesSeq, Operators.Type op) throws InvalidFormulaException {
+    public ComplexFormula(IndividualModel model, List<Trait> traits, List<State> statesSeq, Operators.Type op) throws InvalidFormulaException {
         if(model==null || traits == null || statesSeq == null || op == null)
             throw new NullPointerException("One or more parameteres are null");
         if(traits.size() != 2 || statesSeq.size() != 2 || (op != Operators.Type.AND && op != Operators.Type.OR))
@@ -52,7 +52,7 @@ public class ComplexFormula extends Formula {
      * @param op Operator.Type which is used to connect two SimpleFormulas
      * @throws InvalidFormulaException when the sentence is being build improperly
      */
-    public ComplexFormula(IndividualModel model, List<TraitSignature> traits, Operators.Type op) throws InvalidFormulaException
+    public ComplexFormula(IndividualModel model, List<Trait> traits, Operators.Type op) throws InvalidFormulaException
     {
         this(model, traits, Arrays.asList(State.IS, State.IS), op);
     }
@@ -87,7 +87,7 @@ public class ComplexFormula extends Formula {
      *
      * @return list of Traits of the formula, in order from left to right
      */
-    public List<TraitSignature> getTraits()
+    public List<Trait> getTraits()
     {
         return traits;
     }

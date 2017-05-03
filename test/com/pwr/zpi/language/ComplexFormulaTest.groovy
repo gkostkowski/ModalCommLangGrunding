@@ -1,5 +1,10 @@
-package com.pwr.zpi
+package com.pwr.zpi.language
 
+import com.pwr.zpi.IndividualModel
+import com.pwr.zpi.ObjectType
+import com.pwr.zpi.QRCode
+import com.pwr.zpi.State
+import com.pwr.zpi.Trait
 import com.pwr.zpi.language.ComplexFormula
 import com.pwr.zpi.language.Operators
 import com.pwr.zpi.language.SimpleFormula
@@ -15,10 +20,10 @@ class ComplexFormulaTest extends GroovyTestCase
 
     void build()
     {
-        tr1 = new TraitSignature("Red")
-        tr2 = new TraitSignature("Black")
-        tr3 = new TraitSignature("White")
-        tr4 = new TraitSignature("Soft")
+        tr1 = new Trait("Red")
+        tr2 = new Trait("Black")
+        tr3 = new Trait("White")
+        tr4 = new Trait("Soft")
         oType = new ObjectType("Typ1", [tr1, tr2, tr3])
         model = new IndividualModel(new QRCode("ID"), oType)
     }
@@ -97,21 +102,21 @@ class ComplexFormulaTest extends GroovyTestCase
     {
         build()
         def f1 = new ComplexFormula(model, [tr1, tr2], [State.IS, State.IS_NOT], Operators.Type.AND)
-        def f2 = new ComplexFormula(model, [new TraitSignature("Red"),
-                                            new TraitSignature("Black")], [State.IS, State.IS_NOT], Operators.Type.AND)
+        def f2 = new ComplexFormula(model, [new Trait("Red"),
+                                            new Trait("Black")], [State.IS, State.IS_NOT], Operators.Type.AND)
         assert f1.equals(f2)
-        assert !f1.equals(new ComplexFormula(model, [new TraitSignature("Red"),
-                                  new TraitSignature("White")], [State.IS, State.IS_NOT], Operators.Type.AND));
+        assert !f1.equals(new ComplexFormula(model, [new Trait("Red"),
+                                                     new Trait("White")], [State.IS, State.IS_NOT], Operators.Type.AND));
 
-        assert !f1.equals(new ComplexFormula(model, [new TraitSignature("Red"),
-                                  new TraitSignature("Black")], [State.IS_NOT, State.IS_NOT], Operators.Type.AND));
+        assert !f1.equals(new ComplexFormula(model, [new Trait("Red"),
+                                                     new Trait("Black")], [State.IS_NOT, State.IS_NOT], Operators.Type.AND));
 
-        assert !f1.equals(new ComplexFormula(model, [new TraitSignature("Red"),
-                                  new TraitSignature("White")], [State.IS_NOT, State.IS_NOT], Operators.Type.OR));
+        assert !f1.equals(new ComplexFormula(model, [new Trait("Red"),
+                                                     new Trait("White")], [State.IS_NOT, State.IS_NOT], Operators.Type.OR));
 
         def model2 = new IndividualModel(new QRCode("POL"), oType)
-        assert !f1.equals(new ComplexFormula(model2, [new TraitSignature("Red"),
-                                  new TraitSignature("White")], [State.IS_NOT, State.IS_NOT], Operators.Type.OR));
+        assert !f1.equals(new ComplexFormula(model2, [new Trait("Red"),
+                                                      new Trait("White")], [State.IS_NOT, State.IS_NOT], Operators.Type.OR));
 
         assert !f1.equals(new SimpleFormula(model, tr1, false));
     }

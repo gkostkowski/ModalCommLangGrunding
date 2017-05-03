@@ -1,8 +1,10 @@
+package com.pwr.zpi.language
+
 import com.pwr.zpi.IndividualModel
 import com.pwr.zpi.ObjectType
 import com.pwr.zpi.QRCode
 import com.pwr.zpi.State
-import com.pwr.zpi.TraitSignature
+import com.pwr.zpi.Trait
 import com.pwr.zpi.language.SimpleFormula
 import org.junit.Test
 
@@ -18,7 +20,7 @@ class SimpleFormulaTest extends GroovyTestCase
     void build()
     {
         id1 = new QRCode("id1");
-        type1 = new ObjectType("Type1", [new TraitSignature("Red"), new TraitSignature("White"), new TraitSignature("Big")]);
+        type1 = new ObjectType("Type1", [new Trait("Red"), new Trait("White"), new Trait("Big")]);
         model = new IndividualModel(id1, type1);
     }
 
@@ -29,7 +31,7 @@ class SimpleFormulaTest extends GroovyTestCase
     void testContructor1and2()
     {
         build()
-        def trait1 = new TraitSignature("Red");
+        def trait1 = new Trait("Red");
         def sf1 = new SimpleFormula(model, trait1, true);
         assertEquals(true, sf1.isNegated())
         assertEquals(trait1, sf1.getTrait())
@@ -54,7 +56,7 @@ class SimpleFormulaTest extends GroovyTestCase
     void testConstructor3and4()
     {
         build();
-        def trait1 = new TraitSignature("Red");
+        def trait1 = new Trait("Red");
         def sf1 = new SimpleFormula(model, [trait1], [State.IS]);
         assertEquals(false, sf1.isNegated())
         assertEquals([State.IS], sf1.getStates())
@@ -81,8 +83,8 @@ class SimpleFormulaTest extends GroovyTestCase
     void testExceptionsInConstructors()
     {
         build();
-        def trait1 = new TraitSignature("Red")
-        def trait2 = new TraitSignature("Soft")
+        def trait1 = new Trait("Red")
+        def trait2 = new Trait("Soft")
         def a1 = "Number of traits or states is not equal to 1"
         def a2 = "Trait doesn't describe type of the model"
         def a3 = "One of the parameters is null"
@@ -140,8 +142,8 @@ class SimpleFormulaTest extends GroovyTestCase
     void testEqual()
     {
         build()
-        def t1 = new TraitSignature("Red")
-        def t2 = new TraitSignature("White")
+        def t1 = new Trait("Red")
+        def t2 = new Trait("White")
         def f1 = new SimpleFormula(model, t1, true)
 
         def type = new ObjectType("ID", [t1]);
@@ -149,10 +151,10 @@ class SimpleFormulaTest extends GroovyTestCase
         def f2 = new SimpleFormula(model2, t1, true);
         assert false == f1.equals(f2)
 
-        f2 = new SimpleFormula(model, new TraitSignature("Red"), true)
+        f2 = new SimpleFormula(model, new Trait("Red"), true)
         assertEquals(true, f1.equals(f2))
 
-        f2 = new SimpleFormula(model, new TraitSignature("Red"), false)
+        f2 = new SimpleFormula(model, new Trait("Red"), false)
         assert false == f2.equals(f1);
 
         f2 = new SimpleFormula(model, t2, true)

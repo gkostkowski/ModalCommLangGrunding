@@ -12,17 +12,17 @@ import java.util.List;
 public class SimpleFormula extends Formula {
 
     private IndividualModel individualModel;
-    private TraitSignature trait;
+    private Trait trait;
     private boolean isNegated;
 
     /**
      * COnstructor of SimpleFormula
      * @param individualModel individual model which formula describes
-     * @param trait TraitSignature which describes given model
+     * @param trait Trait which describes given model
      * @param isNegated boolean value of whether the state of formula is negated or not
      * @throws InvalidFormulaException when given trait doesn't describe type of the model
      */
-    public SimpleFormula(IndividualModel individualModel, TraitSignature trait, boolean isNegated) throws InvalidFormulaException
+    public SimpleFormula(IndividualModel individualModel, Trait trait, boolean isNegated) throws InvalidFormulaException
     {
         if(individualModel==null || trait == null)
             throw new NullPointerException("One of the parameters is null");
@@ -36,10 +36,10 @@ public class SimpleFormula extends Formula {
     /**
      * Generalised previous constructor, sets state of trait to IS
      * @param model individual model which formula describes
-     * @param trait TraitSignature which describes given model
+     * @param trait Trait which describes given model
      * @throws InvalidFormulaException when given trait doesn't describe type of the model
      */
-    public SimpleFormula(IndividualModel model, TraitSignature trait) throws InvalidFormulaException {
+    public SimpleFormula(IndividualModel model, Trait trait) throws InvalidFormulaException {
         this(model, trait, false);
     }
 
@@ -51,7 +51,7 @@ public class SimpleFormula extends Formula {
      * @throws InvalidFormulaException when sizes of list of states and traits are not equal to 1 or when trait
      *      doesn't describe type of the model
      */
-    public SimpleFormula(IndividualModel model, List<TraitSignature> traits, List<State> statesSeq) throws InvalidFormulaException{
+    public SimpleFormula(IndividualModel model, List<Trait> traits, List<State> statesSeq) throws InvalidFormulaException{
         if(model == null || traits == null || statesSeq == null)
             throw new NullPointerException("One of the parameters is null");
         if(traits.size() != 1 || statesSeq.size() != 1)
@@ -72,12 +72,12 @@ public class SimpleFormula extends Formula {
      * @throws InvalidFormulaException when sizes of list of states and traits are not equal to 1 or when trait
      *      doesn't describe type of the model
      */
-    public SimpleFormula(IndividualModel model, List<TraitSignature> traits) throws InvalidFormulaException
+    public SimpleFormula(IndividualModel model, List<Trait> traits) throws InvalidFormulaException
     {
         this(model, traits, Arrays.asList(State.IS));
     }
 
-    public TraitSignature getTrait()
+    public Trait getTrait()
     {
         return trait;
     }
@@ -89,7 +89,7 @@ public class SimpleFormula extends Formula {
 
 
     @Override
-    public List<TraitSignature> getTraits() {
+    public List<Trait> getTraits() {
         return Arrays.asList(trait);
     }
 

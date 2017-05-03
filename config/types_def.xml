@@ -7,29 +7,13 @@
             <typeId>01</typeId>
             <traits class="linked-list">
                 <trait>
-                    <name>Color</name>
-                    <valueType>String</valueType>
-                    <domain class="linked-list">
-                        <value>Black</value>
-                        <value>White</value>
-                        <value>Red</value>
-                    </domain>
+                    <name>Red</name>
                 </trait>
                 <trait>
-                    <name>Shape</name>
-                    <valueType>String</valueType>
-                    <domain class="linked-list">
-                        <value>Square</value>
-                        <value>Round</value>
-                    </domain>
+                    <name>White</name>
                 </trait>
                 <trait>
                     <name>Blinking</name>
-                    <valueType>Boolean</valueType>
-                    <domain class="linked-list">
-                        <value>True</value>
-                        <value>False</value>
-                    </domain>
                 </trait>
             </traits>
         </type>
@@ -37,30 +21,13 @@
             <typeId>02</typeId>
             <traits class="linked-list">
                 <trait>
-                    <name>Color</name>
-                    <valueType>String</valueType>
-                    <domain class="linked-list">
-                        <value>Black</value>
-                        <value>White</value>
-                        <value>Red</value>
-                    </domain>
+                    <name>Blue</name>
                 </trait>
                 <trait>
-                    <name>NoOfWalls</name>
-                    <valueType>Integer</valueType>
-                    <domain class="linked-list">
-                        <value>2</value>
-                        <value>3</value>
-                        <value>4</value>
-                    </domain>
+                    <name>Soft</name>
                 </trait>
                 <trait>
                     <name>Blinking</name>
-                    <valueType>Boolean</valueType>
-                    <domain class="linked-list">
-                        <value>True</value>
-                        <value>False</value>
-                    </domain>
                 </trait>
             </traits>
         </type>
