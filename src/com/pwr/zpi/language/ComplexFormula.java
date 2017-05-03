@@ -18,7 +18,7 @@ public class ComplexFormula extends Formula {
     private List<TraitSignature> traits;
     private List<State> states;
     private IndividualModel individualModel;
-
+    private FormulaCase formulaCase;
 
     /**
      * Constructor of Complex formula, for now there is made an assumption that ComplexFormula consists of two SimpleFormulas
@@ -40,6 +40,8 @@ public class ComplexFormula extends Formula {
             throw new InvalidFormulaException("Given traits don't describe type of the object");
         leftPart = new SimpleFormula(model, traits.subList(0,1), statesSeq.subList(0, 1));
         rightPart = new SimpleFormula(model, traits.subList(1,2), statesSeq.subList(1, 2));
+        if(leftPart.isNegated()){if(rightPart.isNegated()){formulaCase = FormulaCase.NPNQ;}else{formulaCase=FormulaCase.NPQ;}}
+        else{if(rightPart.isNegated()){formulaCase = FormulaCase.PNQ;}else{formulaCase = FormulaCase.PQ;}}
         this.operator = op;
         this.states = statesSeq;
 
@@ -152,6 +154,15 @@ public class ComplexFormula extends Formula {
         if(traits.get(0).equals(traits.get(1))) response = false;
         else response = individualModel.checkIfContainsTraits(traits);
         return response;
+    }
+    public FormulaCase getFormulaCase(){
+        return formulaCase;
+    }
+    enum FormulaCase {
+        PQ,
+        PNQ,
+        NPQ,
+        NPNQ
     }
 
 }

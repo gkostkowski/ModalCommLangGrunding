@@ -1,0 +1,26 @@
+package com.pwr.zpi.language;
+
+
+public class Pair<K, V> {
+
+    final K Case;
+    final V Value;
+
+    public static <K, V> Pair<K, V> createPair(K element0, V element1) {
+        return new Pair<K, V>(element0, element1);
+    }
+
+    public Pair(K element0, V element1) {
+        this.Case = element0;
+        this.Value = element1;
+    }
+
+    public K getP() {
+        return Case;
+    }
+
+    public V getnot_P() {
+        return Value;
+    }
+
+}

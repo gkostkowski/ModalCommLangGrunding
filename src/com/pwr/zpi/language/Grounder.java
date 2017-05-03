@@ -168,7 +168,7 @@ public class Grounder {
      * @return Cardinality (ratio) of Positive BaseProfiles to all
      */
 
-    static double relativePositiveCard(Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
+    public static double relativePositiveCard(Set<com.pwr.zpi.Observation> set, Set<com.pwr.zpi.Observation> set2, int time) {
         if (groundingSetNegative.isEmpty()) {
             return 0;
         }
@@ -313,6 +313,46 @@ public class Grounder {
         return checkEpistemicConditions(indefiniteByTrait, describedObj, groundingSets, selsectedClass, timestamp, objsWithGivenState, formula);
     }
 
+    static double determineFulfillmentDouble(Agent agent, DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
+        int timestamp = dk.getTimestamp();
+        BaseProfile lmBp = new BaseProfile(dk.getTimestamp());
+        BaseProfile wmBp = new BaseProfile(dk.getTimestamp());
+        Set<Object> objects = new HashSet<>();
+
+        IndividualModel describedObj = formula.getModel();
+        List<Trait> describedTraits = formula.getTraits();
+        List<State> states = formula.getStates();
+        //mentalModel.
+        //boolean isNegated = state.equals(State.IS) ? true : false;
+
+        List<Set<Object>> objsWithClearState = new ArrayList<>();
+/**
+ * Represents objsWithPositiveState or objsWithNegativeState - depending on state value
+ */
+
+        List<Set<Object>> objsWithGivenState = new ArrayList<>();
+
+        List<Set<Object>> indefiniteByTrait = new ArrayList<>();
+        BPCollection.MemoryType selectedMemory = BPCollection.MemoryType.WM;
+
+
+//        setCommonObjects(timestamp, agent, dk, lmBp, wmBp, observations, describedObj, describedTrait, objsWithClearState,
+//                objsWithGivenState, indefiniteByTrait, isNegated);
+        setCommonObjects(timestamp, agent, lmBp, wmBp, objects, describedObj, new HashSet<>(describedTraits), objsWithClearState,
+                objsWithGivenState, indefiniteByTrait, states);
+
+        Map<Formula, Set<BaseProfile>> groundingSets = dk.getGroundingSets();
+        Set<BaseProfile> selsectedClass = dk.getDkClassByDesc(formula, selectedMemory);
+
+        return getValueOfObservation(indefiniteByTrait, describedObj, groundingSets, selsectedClass, timestamp, objsWithGivenState, formula);
+    }
+
+    public static double getValueOfObservation(List<Set<Object>> indefiniteByTrait, IndividualModel describedObj,
+                                               Map<Formula, Set<BaseProfile>> groundingSets, Set<BaseProfile> selectedClass,
+                                               int timestamp, List<Set<Object>> objsWithGivenState,
+                                               Formula formula) throws NotApplicableException{
+        return relativeCard(groundingSets, timestamp, formula);
+    }
 
     private static void setCommonObjects(int timestamp, Agent agent, BaseProfile lmBp, BaseProfile wmBp,
                                          Set<Object> objects, Object describedObj, Set<Trait> describedTraits,

@@ -87,6 +87,7 @@ public class SimpleFormula extends Formula {
         return isNegated;
     }
 
+    public void Negate() {isNegated = !isNegated;}
 
     @Override
     public List<TraitSignature> getTraits() {
