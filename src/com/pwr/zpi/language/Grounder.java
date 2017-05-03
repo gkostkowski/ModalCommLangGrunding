@@ -24,8 +24,8 @@ public class Grounder {
      * @param time
      * @param all
      * @param states  Represents especially two states: IS and IS_NOT, which determines if simple formula, part of
-     *                complex formula will require checking associated to observations described by trait or observations
-     *                NOT described by trait.
+     *                complex formula will require checking associated to observations described by Trait or observations
+     *                NOT described by Trait.
      * @return Collection of grounding sets.
      */
     static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
@@ -79,7 +79,7 @@ public class Grounder {
      * @param bp
      * @return
      */
-    static private boolean isFulfilled( List<Trait> traits, int time, List<State> states, Operators.Type op, BaseProfile bp) {
+    static private boolean isFulfilled(List<Trait> traits, int time, List<State> states, Operators.Type op, BaseProfile bp) {
         if (traits.size() != states.size())
             throw new IllegalStateException("Number of traits differs from amount of states.");
 
@@ -98,14 +98,14 @@ public class Grounder {
         }
         return res;
     }
-/*
+    /*
     static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
         return getGroundingSets(formula, time, all);
     }
-    */
-/*
+  */
 
-    */
+
+
 /**
      * Defines grounded set A1(t) responsible for induction of mental model m1 connected to individualModel p and trait P
      * A1 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
@@ -119,11 +119,11 @@ public class Grounder {
 
     static Set<BaseProfile> getGroundingSetsPositiveTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
-        for (BaseProfile bp : all) {
+        /*for (BaseProfile bp : all) {
             if (bp.DetermineIfSetHasTrait(P, time)) {
                 baseout.add(bp);
             }
-        }
+        }*/
         return baseout;
     }
 
@@ -142,11 +142,11 @@ public class Grounder {
 
     static Set<BaseProfile> getGroundingSetsNegativeTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
-        for (BaseProfile bp : all) {
+      /*  for (BaseProfile bp : all) {
             if (!bp.DetermineIfSetHasNotTrait(P, time)) {
                 baseout.add(bp);
             }
-        }
+        }*/
         return baseout;
     }
 
@@ -354,7 +354,7 @@ public class Grounder {
         return relativeCard(groundingSets, timestamp, formula);
     }
 
-    private static void setCommonObjects(int timestamp, Agent agent, BaseProfile lmBp, BaseProfile wmBp,
+       private static void setCommonObjects(int timestamp, Agent agent, BaseProfile lmBp, BaseProfile wmBp,
                                          Set<Object> objects, Object describedObj, Set<Trait> describedTraits,
                                          List<Set<Object>> objsWithClearState, //one set for each trait
                                          List<Set<Object>> objsWithGivenState,
@@ -369,16 +369,20 @@ public class Grounder {
             throw new com.pwr.zpi.exceptions.InvalidFormulaException("States doesn't match to given traits.");
         Iterator<State> stateIt = states.iterator();
         for (Trait t : describedTraits) {
-            objsWithClearState.add(new HashSet<>(Observation.getObjects(
+        /*    objsWithClearState.add(new HashSet<>(Observation.getObjects(
                     lmBp.getNotDescribedByTrait(t),
                     wmBp.getNotDescribedByTrait(t),
                     lmBp.getDescribedByTrait(t),
                     wmBp.getDescribedByTrait(t))));
+                    todo bledy z powodu obserwacji
+                    */
 
             State state = stateIt.next();
-            objsWithGivenState.add(new HashSet<>(Observation.getObjects(
+            /*objsWithGivenState.add(new HashSet<>(Observation.getObjects(
                     lmBp.getByTraitState(t, state),
                     wmBp.getByTraitState(t, state))));
+                    todo bledy z powodu obserwacji
+                    */
 
             indefiniteByTrait.add(new HashSet<Object>(objects));
             indefiniteByTrait.removeAll(objsWithClearState);
@@ -453,9 +457,9 @@ public class Grounder {
      */
 
 
-    static Set<BaseProfile> getGroundingSetsConjunction( Trait P, Trait Q, int time, Set<BaseProfile> all,
+    static Set<BaseProfile> getGroundingSetsConjunction(Trait P, Trait Q, int time, Set<BaseProfile> all,
                                                         int i) {
-        Set<BaseProfile> out = new HashSet<BaseProfile>();
+        /*Set<BaseProfile> out = new HashSet<BaseProfile>();
         switch (i) {
             case 1:
                 for (BaseProfile bp : all) {
@@ -483,8 +487,8 @@ public class Grounder {
                         out.add(bp);
                 }
                 break;
-        }
-        return out;
+        }*/
+        return null;
     }
 
 /**

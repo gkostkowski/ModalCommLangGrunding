@@ -25,7 +25,7 @@ public class DistributedKnowledge {
 
     private int timestamp;
     private final Formula formula;
-    private final List<TraitSignature> traits;
+    private final List<Trait> traits;
     private final IndividualModel obj;
     private Map<Integer, BaseProfile> inLM;
     private Map<Integer, BaseProfile> inWM;
@@ -115,7 +115,7 @@ public class DistributedKnowledge {
         return obj;
     }
 
-    public List<TraitSignature> getTraits() throws InvalidFormulaException {
+    public List<Trait> getTraits() throws InvalidFormulaException {
         if (traits == null || traits.isEmpty())
             throw new InvalidFormulaException();
         return traits;

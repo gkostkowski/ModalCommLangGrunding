@@ -2,7 +2,7 @@ package com.pwr.zpi.io;
 
 
 import com.pwr.zpi.ObjectType;
-import com.pwr.zpi.TraitSignature;
+import com.pwr.zpi.Trait;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -47,7 +47,7 @@ public class XMLDAO<T extends ObjectType> {
 
         xstream.alias("type", ObjectType.class);
         xstream.alias("types", DataWrapper.class);
-        xstream.alias("trait", TraitSignature.class);
+        xstream.alias("trait", Trait.class);
         xstream.alias("value", String.class);
     }
 

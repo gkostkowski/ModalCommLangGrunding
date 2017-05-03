@@ -8,9 +8,9 @@ import java.util.List;
  */
 public class ObjectType {
     private String typeId;
-    private List<TraitSignature> traits;
+    private List<Trait> traits;
 
-    public ObjectType(String id, List<TraitSignature> traits) {
+    public ObjectType(String id, List<Trait> traits) {
         this.typeId = id;
         this.traits = traits;
     }
@@ -19,7 +19,7 @@ public class ObjectType {
         return typeId;
     }
 
-    public List<TraitSignature> getTraits() {
+    public List<Trait> getTraits() {
         return traits;
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
  */
 public abstract class Formula {
 
-    public abstract List<TraitSignature> getTraits();
+    public abstract List<Trait> getTraits();
 
     public abstract IndividualModel getModel();
 

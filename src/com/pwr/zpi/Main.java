@@ -1,3 +1,4 @@
+/*
 package com.pwr.zpi;
 
 import com.pwr.zpi.exceptions.InvalidFormulaException;
@@ -233,11 +234,13 @@ public class Main {
 
         Trait redColour =o1t;
 
-        /*Set<Trait> traitsy1 = new HashSet<Trait>(Arrays.asList(t,t1,t2,t3));
+        */
+/*Set<Trait> traitsy1 = new HashSet<Trait>(Arrays.asList(t,t1,t2,t3));
         Set<Trait> traitsy2 = new HashSet<Trait>(Arrays.asList(t4,t5,t6,t7));
         //Potrzebny Identifier
         Observation o1 = new Observation(null,traitsy1);
-        Observation o2 = new Observation(null,traitsy2);*/
+        Observation o2 = new Observation(null,traitsy2);*//*
+
 
         //grzkos
         Formula f1 = new SimpleFormula(o1obs2,redColour,false);
@@ -245,6 +248,7 @@ public class Main {
         DistributedKnowledge dk = new DistributedKnowledge(agent1, f1, 2);
 
         //grzkos
+*/
 /*
         //Update 2
         Formula form5 = new SimpleFormula(o1obs6,new Trait<String,String>("Colour","Red"),true);
@@ -268,7 +272,8 @@ public class Main {
         List<Trait> complexTrait1 = new ArrayList<Trait>(Arrays.asList(t,t4));
         List<Trait> complexTrait2 = new ArrayList<Trait>(Arrays.asList(t2,t7));
         List<Trait> complexTrait3 = new ArrayList<Trait>(Arrays.asList(t7,t2));
-*/
+*//*
+
 
         BaseProfile bp1,bp2;
         Set<BaseProfile> SetBP = new HashSet<BaseProfile>();
@@ -281,3 +286,4 @@ public class Main {
         //uzyskanie odpowiedzi
     }
 }
+*/

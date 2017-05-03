@@ -1,3 +1,4 @@
+/*
 package com.pwr.zpi;
 
 import java.lang.reflect.InvocationTargetException;
@@ -165,4 +166,4 @@ public class GrounderTests {
             e.printStackTrace();
         }
     }
-}
+}*/

@@ -3,7 +3,7 @@ import com.pwr.zpi.BPCollection
 import com.pwr.zpi.BaseProfile
 import com.pwr.zpi.Observation
 import com.pwr.zpi.State
-import com.pwr.zpi.Trait
+
 import com.pwr.zpi.language.DistributedKnowledge
 import com.pwr.zpi.language.SimpleFormula
 import org.junit.Test
