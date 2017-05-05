@@ -14,7 +14,7 @@ public abstract class Holon{
     public abstract Pair getStrongest();
     public abstract Pair getWeakest();
     public abstract HolonKind getKind();
-
+    public abstract Formula getFormula();
     enum HolonKind{
         Binary,
         Non_Binary

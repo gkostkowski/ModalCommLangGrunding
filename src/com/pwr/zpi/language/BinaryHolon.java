@@ -13,19 +13,19 @@ public class BinaryHolon extends Holon{
     protected Pair<Double,Double> Tao;
     protected Formula formula;
 
-    public BinaryHolon (Formula formula,Set<BaseProfile> baseProfile,int time,Object o) throws InvalidFormulaException{
+    public BinaryHolon (Formula formula,Agent a,int time) throws InvalidFormulaException{
         this.formula = formula;
-        update(formula,baseProfile,time,o);
+        update(formula,a.getKnowledgeBase().getBaseProfiles(time),time);
     }
 
-    public void update (Formula f,Set<BaseProfile> baseProfile,int time,Object o) throws InvalidFormulaException{
+    public void update (Formula f,Set<BaseProfile> baseProfile,int time) throws InvalidFormulaException{
         if(f.getType()!= Formula.Type.SIMPLE_MODALITY){throw new InvalidFormulaException();}
         else{
             double sumPositive = 0;
             double sumNegative = 0;
             for(BaseProfile bp:baseProfile){
                 sumPositive += Grounder.relativePositiveCard(bp.getDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
-                sumNegative += Grounder.relativePositiveCard(bp.getDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
+                sumNegative += Grounder.relativeNegativeCard(bp.getDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
             }
             sumPositive=sumPositive/baseProfile.size();
             sumNegative=sumNegative/baseProfile.size();
@@ -50,7 +50,9 @@ public class BinaryHolon extends Holon{
     public double getCard(double first,double sec){
         return first/(sec+first);
     }
-
+    public Formula getFormula(){
+        return formula;
+    }
     public double getP(){
         return Tao.getP();
     }

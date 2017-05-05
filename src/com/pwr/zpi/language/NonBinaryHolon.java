@@ -12,10 +12,10 @@ public class NonBinaryHolon extends Holon{
 	protected List<Pair<ComplexFormula.FormulaCase,Double>> TaoList;
 	protected Quadrilateral Tao;
 	protected Formula formula;
-	
-	public NonBinaryHolon (Agent a,Set<BaseProfile> baseProfile,int time,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
+
+	public NonBinaryHolon (Agent a,int time,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
 		formula = dk.getFormula();
-		update(a,baseProfile,time,dk);
+		update(a,a.getKnowledgeBase().getBaseProfiles(time),time,dk);
 	}
 	
 	public void update(Agent a,Set<BaseProfile> baseProfile,int time,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
@@ -54,7 +54,11 @@ public class NonBinaryHolon extends Holon{
 	public HolonKind getKind() {
 		return Holon.HolonKind.Non_Binary;
 	}
-	
+
+	public Formula getFormula(){
+		return formula;
+	}
+
 	static class Quadrilateral {
 
 	    private Double PQ;

@@ -26,6 +26,15 @@ public class HolonCollection {
     }
 
 
+    public Holon getHolon(Formula f){
+        for(Holon h:holonCollection){
+            if(h.getFormula().equals(f)){
+                return h;
+            }
+        }
+        return null;
+    }
+
    /* *//**
      * Method adds holon based on Formula
      * @param formula
