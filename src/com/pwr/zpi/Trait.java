@@ -1,7 +1,10 @@
 package com.pwr.zpi;
 
 /**
- * Created by Grzesiek on 2017-04-08.
+ * Describes trait, which can be used to describe object. Instances of this class
+ * stands for traits signatures, so they don't have attached value.
+ * Trait has its name.
+ * There is assumption that all traits are binary.
  */
 public class Trait {
     private String name;

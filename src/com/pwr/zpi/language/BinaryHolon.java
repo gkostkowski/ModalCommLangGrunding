@@ -4,6 +4,7 @@ package com.pwr.zpi.language;
 import java.util.List;
 import java.util.Set;
 
+import com.pwr.zpi.Agent;
 import com.pwr.zpi.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 
@@ -13,7 +14,7 @@ public class BinaryHolon extends Holon{
     protected Pair<Double,Double> Tao;
     protected Formula formula;
 
-    public BinaryHolon (Formula formula,Agent a,int time) throws InvalidFormulaException{
+    public BinaryHolon (Formula formula, Agent a, int time) throws InvalidFormulaException{
         this.formula = formula;
         update(formula,a.getKnowledgeBase().getBaseProfiles(time),time);
     }
@@ -24,8 +25,8 @@ public class BinaryHolon extends Holon{
             double sumPositive = 0;
             double sumNegative = 0;
             for(BaseProfile bp:baseProfile){
-                sumPositive += Grounder.relativePositiveCard(bp.getDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
-                sumNegative += Grounder.relativeNegativeCard(bp.getDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
+                sumPositive += Grounder.relativePositiveCard(bp.getIMsDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getIMsNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
+                sumNegative += Grounder.relativeNegativeCard(bp.getIMsDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getIMsNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
             }
             sumPositive=sumPositive/baseProfile.size();
             sumNegative=sumNegative/baseProfile.size();

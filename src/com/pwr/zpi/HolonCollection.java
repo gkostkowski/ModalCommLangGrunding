@@ -1,5 +1,6 @@
 package com.pwr.zpi;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
+import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.language.*;
 
 import java.util.Set;
@@ -47,6 +48,8 @@ public class HolonCollection {
             holonCollection.add(holon);
             return holon;
         } catch (InvalidFormulaException e) {
+            e.printStackTrace();
+        } catch (NotApplicableException e) {
             e.printStackTrace();
         }
         return null;

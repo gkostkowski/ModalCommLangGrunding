@@ -5,27 +5,34 @@ import java.util.*;
 /**
  * Represents state of world from agent perspective. It's established for certain moment in time.
  */
-public class BaseProfile{
+public class BaseProfile {
     /**
-     * Map of traits and related collections of observations. If some collection is related with certain trait, then
-     * it mean that all observations in that collections have this trait.
+     * Map of traits and related collections of individual models. If some collection is related with certain trait, then
+     * it mean that all observations in that collections HAVE this trait.
      */
-    protected  Map<Trait,Set<Observation>> describedByTraits;
+    protected Map<Trait, Set<IndividualModel>> describedByTraits;
     /**
-     * Map of traits and related collections of observations. If some collection is related with certain trait, then
+     * Map of traits and related collections of individual models. If some collection is related with certain trait, then
      * it mean that all observations in that collections DON'T HAVE this trait.
      */
-    protected Map<Trait, Set<Observation>> notDescribedByTraits;
+    protected Map<Trait, Set<IndividualModel>> notDescribedByTraits;
     /**
-     * Map of traits and related collections of observations. If some collection is related with certain trait, then
-     * it mean that state of having this trait by all observations is unknown.
+     * Map of traits and related collections of individual models. If some collection is related with certain trait, then
+     * it mean that state of having this trait by all observations is unknown. They are neither described nor not described
+     * by given trait.
      */
-    protected Map<Trait, Set<Observation>> indefiniteByTraits;
+    protected Map<Trait, Set<IndividualModel>> indefiniteByTraits;
     protected int timestamp;
 
-    protected Set<Observation> observations;
+    //protected Set<Observation> observations;
 
+    /**
+     * Common constructor for initializing new empty base profile related with given timestamp.
+     * @param timestamp
+     */
     public BaseProfile(int timestamp) {
+        if (timestamp < 0)
+            throw new IllegalStateException("Not valid timestamp.");
         this.describedByTraits = new HashMap<>();
         this.notDescribedByTraits = new HashMap<>();
         this.indefiniteByTraits = new HashMap<>();
@@ -33,42 +40,36 @@ public class BaseProfile{
     }
 
     /**
-     *
+     * Constructor used for creating complete base profile object.
      * @param baseProfileMaps Maps should be in following order: describedByTraits, notDescribedByTraits,
      *                        indefiniteByTraits
      * @param timestamp
      */
-    private BaseProfile (List<Map<Trait, Set<Observation>>> baseProfileMaps, int timestamp) {
+    private BaseProfile(List<Map<Trait, Set<IndividualModel>>> baseProfileMaps, int timestamp) {
+        if (timestamp < 0)
+            throw new IllegalStateException("Not valid timestamp.");
+        if (baseProfileMaps == null || baseProfileMaps.size() < 3)
+            throw new IllegalStateException("Not valid map of base profiles.");
+        for (Map<Trait, Set<IndividualModel>> map : baseProfileMaps)
+            if (map == null)
+                throw new IllegalStateException("Not valid map of base profiles.");
+
         this.timestamp = timestamp;
         this.describedByTraits = baseProfileMaps.get(0);
         this.notDescribedByTraits = baseProfileMaps.get(1);
         this.indefiniteByTraits = baseProfileMaps.get(2);
     }
 
-    public Map<Trait, Set<Observation>> getDescribedByTraits() {
+
+    public Map<Trait, Set<IndividualModel>> getDescribedByTraits() {
         return describedByTraits;
     }
-
-    public void setDescribedByTraits(Map<Trait, Set<Observation>> describedByTraits) {
-        this.describedByTraits = describedByTraits;
-    }
-
-    public Map<Trait, Set<Observation>> getNotDescribedByTraits() {
+    public Map<Trait, Set<IndividualModel>> getNotDescribedByTraits() {
         return notDescribedByTraits;
     }
-
-    public void setNotDescribedByTraits(Map<Trait, Set<Observation>> notDescribedByTraits) {
-        this.notDescribedByTraits = notDescribedByTraits;
-    }
-
-    public Map<Trait, Set<Observation>> getIndefiniteByTraits() {
+    public Map<Trait, Set<IndividualModel>> getIndefiniteByTraits() {
         return indefiniteByTraits;
     }
-
-    public void setIndefiniteByTraits(Map<Trait, Set<Observation>> indefiniteByTraits) {
-        this.indefiniteByTraits = indefiniteByTraits;
-    }
-
     public int getTimestamp() {
         return timestamp;
     }
@@ -76,109 +77,193 @@ public class BaseProfile{
     public void setTimestamp(int timestamp) {
         this.timestamp = timestamp;
     }
-
-
-
-    public Set<Observation> getObservations(){
-        return observations;
+    public void setDescribedByTraits(Map<Trait, Set<IndividualModel>> describedByTraits) {
+        this.describedByTraits = describedByTraits;
+    }
+    public void setNotDescribedByTraits(Map<Trait, Set<IndividualModel>> notDescribedByTraits) {
+        this.notDescribedByTraits = notDescribedByTraits;
+    }
+    public void setIndefiniteByTraits(Map<Trait, Set<IndividualModel>> indefiniteByTraits) {
+        this.indefiniteByTraits = indefiniteByTraits;
     }
 
+
     /**
-     * Returns set of all observations included in given base profiles. Used when as an example merging base profiles
-     * from working memory and long-term memory.
-     * @param baseProfiles Set of base profiles.
-     * @return Set of observations.
+     * Returns set of individual models related to this base profile.
+     *
+     * @return New set containing Individual models associated with describedByTraits, notDescribedByTraits,
+     * indefiniteByTraits sets.
      */
-    public static Set<Observation> getObjects(Set<BaseProfile> baseProfiles) {
-        Set<Observation> res = new HashSet<>();
-        for (BaseProfile bp :baseProfiles)
-            res.addAll(bp.getObservations());
+    public Set<IndividualModel> getAffectedIMs() {
+        Set<IndividualModel> res = new HashSet<IndividualModel>();
+        getAffectedIMs(describedByTraits, res);
+        getAffectedIMs(notDescribedByTraits, res);
+        getAffectedIMs(indefiniteByTraits, res);
         return res;
     }
+
     /**
-     * Returns set of all observations included in given base profiles. Used when as an example merging base profiles
+     * Returns set of individual models related to given map in this base profile.
+     *
+     * @return New set containing Individual models associated with one of following: describedByTraits, notDescribedByTraits
+     * or indefiniteByTraits set.
+     */
+    private Set<IndividualModel> getAffectedIMs(Map<Trait, Set<IndividualModel>> relatedMap) {
+        return getAffectedIMs(relatedMap, new HashSet<>());
+    }
+
+    /**
+     * Returns set of individual models related to given map in this base profile.
+     *
+     * @param relatedMap One of following (for this base profile): describedByTraits, notDescribedByTrait
+     *                   or indefiniteByTraits set.
+     * @param resultedSet Set witch will be extended to resulted individual models.
+     * @return Given as parameter set extended to set of Individual models associated with given map.
+     */
+    private Set<IndividualModel> getAffectedIMs(Map<Trait, Set<IndividualModel>> relatedMap, Set<IndividualModel> resultedSet) {
+        for (Set<IndividualModel> set : relatedMap.values())
+            resultedSet.addAll(set);
+        return resultedSet;
+    }
+
+    /**
+     * Returns set of all individual models included in given base profiles. Used when as an example merging base profiles
      * from working memory and long-term memory.
-     * @param baseProfiles Array of base profiles.
+     *
+     * @param baseProfileSet Set of base profiles.
      * @return Set of observations.
      */
-    public static Set<Observation> getObjects(BaseProfile ... baseProfiles) {
-        return getObjects(new HashSet<BaseProfile>(Arrays.asList(baseProfiles)));
+    public static Set<IndividualModel> getAffectedIMs(Collection<BaseProfile> baseProfileSet) {
+        Set<IndividualModel> res = new HashSet<>();
+        for (BaseProfile bp : baseProfileSet)
+            res.addAll(bp.getAffectedIMs());
+        return res;
     }
 
-    public void setObservations(Set<Observation> observations) {
-        this.observations = new HashSet<>(observations);
+    public static Set<IndividualModel> getAffectedIMs(BaseProfile ... baseProfileArr) {
+        return getAffectedIMs(Arrays.asList(baseProfileArr));
     }
+
+
+/*    public void setObservations(Set<Observation> observations) {
+        this.observations = new HashSet<>(observations);
+    }*/
 
     /**
-     * Returns set of observations indicated with given trait.
+     * Returns set of individual models described with given trait. Namely, resulted set contains individual models
+     * which were observed as having given trait.
+     *
      * @param trait
-     * @return Set of observations.
+     * @return Set of Individual models.
      */
-    public Set<Observation> getDescribedByTrait(Trait trait) {
+    public Set<IndividualModel> getIMsDescribedByTrait(Trait trait) {
         return describedByTraits.get(trait);
     }
 
     /**
-     * Gives observations from appropriate sets. State describes which set should be selected: describedByTraits for State.IS etc.
+     * Returns set of individual models not described with given trait. Namely, resulted set contains individual models
+     * which were observed as not having given trait.
+     *
      * @param trait
-     * @return Set of observations.
+     * @return Set of Individual models.
      */
-    public Set<Observation> getByTraitState(Trait trait, State state) {
-        switch (state) {
-            case IS: return describedByTraits.get(trait);
-            case IS_NOT: return notDescribedByTraits.get(trait);
-            default: return indefiniteByTraits.get(trait);
-        }
-    }
-
-    public Set<Observation> getNotDescribedByTrait(Trait trait) {
+    public Set<IndividualModel> getIMsNotDescribedByTrait(Trait trait) {
         return notDescribedByTraits.get(trait);
     }
 
-    public boolean DetermineIfSetHasTrait(@SuppressWarnings("rawtypes") Trait P, int time){
+    /**
+     * Returns set of individual models which weren't associated with given trait, so there are no reason to claim whether
+     * they have or not have given trait.
+     *
+     * @param trait
+     * @return Set of Individual models.
+     */
+    public Set<IndividualModel> getIMsIndefiniteByTrait(Trait trait) {
+        return indefiniteByTraits.get(trait);
+    }
+
+    /**
+     * Gives observations from appropriate sets. State describes which set should be selected: describedByTraits for State.IS etc.
+     *
+     * @param trait
+     * @return Set of observations.
+     */
+    public Set<IndividualModel> getIMsByTraitState(Trait trait, State state) {
+        switch (state) {
+            case IS:
+                return describedByTraits.get(trait);
+            case IS_NOT:
+                return notDescribedByTraits.get(trait);
+            default:
+                return indefiniteByTraits.get(trait);
+        }
+    }
+
+
+    public boolean DetermineIfSetHasTrait(Trait P, int time) {
         return describedByTraits.containsKey(P);
     }
-    public boolean DetermineIfSetHasNotTrait(@SuppressWarnings("rawtypes") Trait P, int time){
+
+    /**
+     * //todo co to robi
+     * @param P
+     * @param time
+     * @return
+     */
+    public boolean DetermineIfSetHasNotTrait(@SuppressWarnings("rawtypes") Trait P, int time) {
         return notDescribedByTraits.containsKey(P);
     }
 
-    public void addDescribedObservations(Set<Observation> observations, Trait relatedTrait/*, int timestamp*/) {
+    public void addDescribedObservations(Set<IndividualModel> individualModels, Trait relatedTrait/*, int timestamp*/) {
         //if (timestamp == this.timestamp)
-            describedByTraits.put(relatedTrait, observations);
+        if (individualModels == null || relatedTrait == null)
+            throw new NullPointerException("One of parameters is null.");
+        describedByTraits.put(relatedTrait, individualModels);
         //else throw new IllegalStateException("Given observation not belong to this BP.");
     }
 
-    public void addNotDescribedObservations(Set<Observation> observations, Trait relatedTrait) {
-            notDescribedByTraits.put(relatedTrait, observations);
+    public void addNotDescribedObservations(Set<IndividualModel> individualModels, Trait relatedTrait) {
+        if (individualModels == null || relatedTrait == null)
+            throw new NullPointerException("One of parameters is null.");
+        notDescribedByTraits.put(relatedTrait, individualModels);
     }
 
-    public void addIndefiniteObservations(Set<Observation> observations, Trait relatedTrait) {
-            indefiniteByTraits.put(relatedTrait, observations);
+    public void addIndefiniteObservations(Set<IndividualModel> individualModels, Trait relatedTrait) {
+        if (individualModels == null || relatedTrait == null)
+            throw new NullPointerException("One of parameters is null.");
+        indefiniteByTraits.put(relatedTrait, individualModels);
     }
 
-    public void addDescribedObservation(Observation observation, Trait relatedTrait/*, int timestamp*/) {
+    public void addDescribedObservation(IndividualModel individualModel, Trait relatedTrait/*, int timestamp*/) {
+        if (individualModel == null || relatedTrait == null)
+            throw new NullPointerException("One of parameters is null.");
         if (!describedByTraits.containsKey(relatedTrait))
             describedByTraits.put(relatedTrait, new HashSet<>());
-        describedByTraits.get(relatedTrait).add(observation);
+        describedByTraits.get(relatedTrait).add(individualModel);
     }
 
-    public void addNotDescribedObservation(Observation observation, Trait relatedTrait) {
+    public void addNotDescribedObservation(IndividualModel individualModel, Trait relatedTrait) {
+        if (individualModel == null || relatedTrait == null)
+            throw new NullPointerException("One of parameters is null.");
         if (!notDescribedByTraits.containsKey(relatedTrait))
             notDescribedByTraits.put(relatedTrait, new HashSet<>());
-        notDescribedByTraits.get(relatedTrait).add(observation);
+        notDescribedByTraits.get(relatedTrait).add(individualModel);
     }
 
-    public void addIndefiniteObservation(Observation observation, Trait relatedTrait) {
+    public void addIndefiniteObservation(IndividualModel individualModel, Trait relatedTrait) {
+        if (individualModel == null || relatedTrait == null)
+            throw new NullPointerException("One of parameters is null.");
         if (!indefiniteByTraits.containsKey(relatedTrait))
             indefiniteByTraits.put(relatedTrait, new HashSet<>());
-        indefiniteByTraits.get(relatedTrait).add(observation);
+        indefiniteByTraits.get(relatedTrait).add(individualModel);
     }
 
+
     public void copy(BaseProfile other) {
-        setDescribedByTraits(other.getDescribedByTraits());
-        setNotDescribedByTraits(other.getNotDescribedByTraits());
-        setIndefiniteByTraits(getIndefiniteByTraits());
+        setDescribedByTraits(new HashMap<>(other.getDescribedByTraits()));
+        setNotDescribedByTraits(new HashMap<>(other.getNotDescribedByTraits()));
+        setIndefiniteByTraits(new HashMap<>(getIndefiniteByTraits()));
         setTimestamp(other.getTimestamp());
-        setObservations(other.getObservations());
+        //setObservations(other.getAffectedIMs());
     }
 }

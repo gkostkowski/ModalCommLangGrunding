@@ -6,6 +6,7 @@ import java.util.Set;
  * Describes object's observation with it's time, id and set of traits.
  * Represents observations placed in real world, witnessed by agent.
  */
+@Deprecated
 public class Observation {
     private Identifier identifier;
     private long time;

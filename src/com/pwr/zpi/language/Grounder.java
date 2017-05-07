@@ -169,10 +169,12 @@ public class Grounder {
      */
 
     public static double relativePositiveCard(Set<com.pwr.zpi.Observation> set, Set<com.pwr.zpi.Observation> set2, int time) {
+        /*
         if (groundingSetNegative.isEmpty()) {
             return 0;
         }
         return getCard(groundingSetPositive, time) / (getCard(groundingSetNegative, time) + getCard(groundingSetPositive, time));
+        */return -1.0;
     }
 
 /**
@@ -361,7 +363,7 @@ public class Grounder {
                                          List<Set<Object>> indefiniteByTrait, List<State> states) throws InvalidFormulaException {
         lmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.LM));
         wmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.WM));
-        objects.addAll(BaseProfile.getObjects(lmBp, wmBp));
+        objects.addAll(BaseProfile.getAffectedIMs(lmBp, wmBp));
 //        describedObj.copy(dk.getModel());
 //        describedTrait.copy(dk.getTrait());
 
@@ -369,18 +371,18 @@ public class Grounder {
             throw new com.pwr.zpi.exceptions.InvalidFormulaException("States doesn't match to given traits.");
         Iterator<State> stateIt = states.iterator();
         for (Trait t : describedTraits) {
-        /*    objsWithClearState.add(new HashSet<>(Observation.getObjects(
-                    lmBp.getNotDescribedByTrait(t),
-                    wmBp.getNotDescribedByTrait(t),
-                    lmBp.getDescribedByTrait(t),
-                    wmBp.getDescribedByTrait(t))));
+        /*    objsWithClearState.add(new HashSet<>(Observation.getAffectedIMs(
+                    lmBp.getIMsNotDescribedByTrait(t),
+                    wmBp.getIMsNotDescribedByTrait(t),
+                    lmBp.getIMsDescribedByTrait(t),
+                    wmBp.getIMsDescribedByTrait(t))));
                     todo bledy z powodu obserwacji
                     */
 
             State state = stateIt.next();
-            /*objsWithGivenState.add(new HashSet<>(Observation.getObjects(
-                    lmBp.getByTraitState(t, state),
-                    wmBp.getByTraitState(t, state))));
+            /*objsWithGivenState.add(new HashSet<>(Observation.getAffectedIMs(
+                    lmBp.getIMsByTraitState(t, state),
+                    wmBp.getIMsByTraitState(t, state))));
                     todo bledy z powodu obserwacji
                     */
 
