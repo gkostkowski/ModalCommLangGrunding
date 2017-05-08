@@ -4,9 +4,6 @@ import javafx.util.Pair;
 
 import java.util.*;
 
-/**
- *
- */
 
 /**
  * Collection of BaseProfiles split into working memory(obszar swiadomy/PR) and long-term memory(obszar przedswiadomy/PT).
@@ -25,7 +22,6 @@ public class BPCollection {
         WM, LM
     }
 
-
     /**
      * Map of BaseProfile representing working memory - each for successive moments in time - from beginning till
      * current timestamp set for this BPCollection.
@@ -38,14 +34,8 @@ public class BPCollection {
     protected Map<Integer, BaseProfile> longTermMemory;
     private int timestamp;
 
-    public BPCollection(Map<Integer, BaseProfile> workingMemory, Map<Integer, BaseProfile> longTermMemory, int timestamp) {
-        this.workingMemory = workingMemory;
-        this.longTermMemory = longTermMemory;
-        this.timestamp = timestamp;
-    }
-
     /**
-     * Initializes empty BPCollection with initials values.
+     * Simple constructor to initialize empty BPCollection with initials values. Sets timestamp to default value.
      */
     public BPCollection() {
         this.workingMemory = new HashMap<>();
@@ -53,7 +43,40 @@ public class BPCollection {
         this.timestamp = INIT_TIMESTAMP;
     }
 
+    /**
+     * Constructor for complete initialization with data given as parameters.
+     *
+     * @param workingMemory
+     * @param longTermMemory
+     * @param timestamp
+     */
+    public BPCollection(Map<Integer, BaseProfile> workingMemory, Map<Integer, BaseProfile> longTermMemory, int timestamp) {
+        if (workingMemory == null || longTermMemory == null)
+            throw new NullPointerException("One of parameters is null.");
+        if (timestamp < 0)
+            throw new IllegalStateException("Not valid timestamp.");
+        this.workingMemory = workingMemory;
+        this.longTermMemory = longTermMemory;
+        this.timestamp = timestamp;
+    }
+
+    public BPCollection(Map<Integer, BaseProfile> workingMemory, Map<Integer, BaseProfile> longTermMemory) {
+        this(workingMemory, longTermMemory, INIT_TIMESTAMP);
+    }
+
+
+        /**
+         * Adds given new base profile to specified memory type, according to related timestamp. Updates current timestamp
+         * with given new value.
+         *
+         * @param newBP
+         * @param relatedTimestamp
+         * @param type
+         * @param currentTimestamp
+         */
     public void addToMemory(BaseProfile newBP, int relatedTimestamp, MemoryType type, int currentTimestamp) {
+        if (currentTimestamp < 0 || relatedTimestamp < 0)
+            throw new IllegalStateException("Not valid timestamp.");
         switch (type) {
             case LM:
                 longTermMemory.put(relatedTimestamp, newBP);
@@ -65,18 +88,27 @@ public class BPCollection {
         timestamp = currentTimestamp;
     }
 
+    /**
+     * Adds given new base profile to specified memory type, according to current timestamp given as parameter.
+     *
+     * @param newBP
+     * @param type
+     * @param currentTimestamp
+     */
     public void addToMemory(BaseProfile newBP, MemoryType type, int currentTimestamp) {
         addToMemory(newBP, currentTimestamp, type, currentTimestamp);
     }
 
-        /**
-         * Returns base profile from pointed memory related with given timestamp.
-         * Ratains information about timestamp.
-         *
-         * @param timestamp Moment in time.
-         * @return Base profile from pointed memory related with given timestamp.
-         */
+    /**
+     * Returns base profile from pointed memory related with given timestamp.
+     * Ratains information about timestamp.
+     *
+     * @param timestamp Moment in time.
+     * @return Base profile from pointed memory related with given timestamp.
+     */
     public Pair<Integer, BaseProfile> getTimedBaseProfile(int timestamp, MemoryType memType) {
+        if (timestamp < 0)
+            throw new IllegalStateException("Not valid timestamp.");
         switch (memType) {
             case WM:
                 return new Pair<>(timestamp, workingMemory.get(timestamp));
@@ -91,10 +123,12 @@ public class BPCollection {
      * Returns base profile from pointed memory related with given timestamp.
      *
      * @param timestamp Moment in time.
-     * @param memType Specifies type of memory.
+     * @param memType   Specifies type of memory.
      * @return Base profile from pointed memory related with given timestamp.
      */
     public BaseProfile getBaseProfile(int timestamp, MemoryType memType) {
+        if (timestamp < 0)
+            throw new IllegalStateException("Not valid timestamp.");
         switch (memType) {
             case WM:
                 return workingMemory.get(timestamp);
@@ -107,22 +141,28 @@ public class BPCollection {
 
     /**
      * Returns set of base profiles which are associated with moment in time from range [start, given timestamp].
+     *
      * @param timestamp
      * @return Map of base profiles.
      * @throws IllegalStateException
      */
-    public Set<BaseProfile> getBaseProfiles(int timestamp) throws IllegalStateException{
+    public Set<BaseProfile> getBaseProfiles(int timestamp) throws IllegalStateException {
+        if (timestamp < 0 || timestamp > this.timestamp)
+            throw new IllegalStateException("Incorrect timestamp.");
         return new HashSet<BaseProfile>(getTimedBaseProfiles(timestamp).values());
     }
 
     /**
      * Returns map of base profiles which are associated with moment in time from range [start, given timestamp].
      * It retains information about associated timestamps.
+     *
      * @param timestamp
      * @return Map of base profiles.
      * @throws IllegalStateException
      */
-    public Map<Integer, BaseProfile> getTimedBaseProfiles(int timestamp) throws IllegalStateException{
+    public Map<Integer, BaseProfile> getTimedBaseProfiles(int timestamp) throws IllegalStateException {
+        if (timestamp < 0 || timestamp > this.timestamp)
+            throw new IllegalStateException("Incorrect timestamp.");
         Map<Integer, BaseProfile> res = new HashMap<>();
         res.putAll(getTimedBaseProfiles(timestamp, MemoryType.LM));
         res.putAll(getTimedBaseProfiles(timestamp, MemoryType.WM));
@@ -133,18 +173,19 @@ public class BPCollection {
      * Returns map of base profiles which are associated with moment in time from range [start, given timestamp],
      * differentiated between momory type.
      * It retains information about associated timestamps.
+     *
      * @param timestamp
      * @param memType
      * @return Map of base profiles from requested memory.
      * @throws IllegalStateException
      */
-    public Map<Integer, BaseProfile> getTimedBaseProfiles(int timestamp, MemoryType memType) throws IllegalStateException{
-        if (timestamp <= 0 || timestamp > this.timestamp)
+    public Map<Integer, BaseProfile> getTimedBaseProfiles(int timestamp, MemoryType memType) throws IllegalStateException {
+        if (timestamp < 0 || timestamp > this.timestamp)
             throw new IllegalStateException("Incorrect timestamp.");
         Map<Integer, BaseProfile> res = new HashMap<>(),
                 selectedMem = memType.equals(MemoryType.LM) ? longTermMemory : workingMemory;
 
-        for (Map.Entry<Integer, BaseProfile> entry: selectedMem.entrySet()) {
+        for (Map.Entry<Integer, BaseProfile> entry : selectedMem.entrySet()) {
             if (entry.getKey() <= timestamp)
                 res.put(entry.getKey(), entry.getValue());
         }
