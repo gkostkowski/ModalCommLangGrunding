@@ -1,5 +1,7 @@
 package com.pwr.zpi;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.*;
 
 /**
@@ -265,5 +267,20 @@ public class BaseProfile {
         setIndefiniteByTraits(new HashMap<>(getIndefiniteByTraits()));
         setTimestamp(other.getTimestamp());
         //setObservations(other.getAffectedIMs());
+    }
+
+    /**
+     * Joins observations from all given profiles into one base profile (it's the first one - will be modified ).
+     * @param baseProfiles
+     */
+    public static void joinBaseProfiles(BaseProfile ... baseProfiles) {
+        if (baseProfiles == null || baseProfiles.length ==0)
+            throw new IllegalStateException("Array not specified or empty.");
+        if (baseProfiles.length>1) {
+            BaseProfile toModify = baseProfiles[0];
+            //todo
+            throw new NotImplementedException();
+            //
+        }
     }
 }

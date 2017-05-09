@@ -8,7 +8,7 @@ import javafx.util.Pair;
 import java.util.*;
 
 /**
- * Described distributed knowledge as set of classes established for given moment in time,
+ * Class represents distribution of knowledge as  a set of "classes" established for given moment in time,
  * for certain simple or complex formula and associated individualModel. Number of classes depends on kind of grounded formula
  * (which induces mental models).
  * RA1 - Represents set of all base profiles, which are included in working memory and presents individualModel as described by
@@ -27,8 +27,8 @@ public class DistributedKnowledge {
     private final Formula formula;
     private final List<Trait> traits;
     private final IndividualModel obj;
-    private Map<Integer, BaseProfile> inLM;
-    private Map<Integer, BaseProfile> inWM;
+    private Set<BaseProfile> inLM;
+    private Set<BaseProfile> inWM;
 
     private List<Formula> mentalModels = new ArrayList<>();
     /**
@@ -52,11 +52,12 @@ public class DistributedKnowledge {
         this.traits = formula.getTraits();
         this.obj = formula.getModel();
 
-        inLM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryType.LM);
-        inWM = agent.getKnowledgeBase().getTimedBaseProfiles(time, BPCollection.MemoryType.WM);
+
+        inLM = agent.getKnowledgeBase().getBaseProfiles(time, BPCollection.MemoryType.LM);
+        inWM = agent.getKnowledgeBase().getBaseProfiles(time, BPCollection.MemoryType.WM);
 
         //initSets();
-        groundingSets = Grounder.getGroundingSets(formula, time,agent.getKnowledgeBase().getBaseProfiles(time));
+        groundingSets = Grounder.getGroundingSets(formula, time,BPCollection.asBaseProfilesSet(inWM, inLM));
 
         Iterator<Formula> it = groundingSets.keySet().iterator();
         for (int i=0; i < CLASSES_AMOUNT && it.hasNext(); i=i+2) {
@@ -90,11 +91,11 @@ public class DistributedKnowledge {
             dkClasses.put(null, new HashSet<>());
     }*/
 
-    private void setDkClass(Map<Integer, BaseProfile> memory, Formula mentalModel,
-                            BPCollection.MemoryType mem) {
+    private void setDkClass(Set<BaseProfile> affectedMemory, Formula mentalModel,
+                            BPCollection.MemoryType memType) {
         Set<BaseProfile> currClass;
-        dkClasses.put(new Pair<>(mentalModel, mem), currClass=new HashSet<>());
-        currClass.addAll(memory.values());
+        dkClasses.put(new Pair<>(mentalModel, memType), currClass=new HashSet<>());
+        currClass.addAll(affectedMemory);
         currClass.retainAll(groundingSets.get(mentalModel));
     }
 

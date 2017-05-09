@@ -1,18 +1,25 @@
 package com.pwr.zpi;
 
-import javafx.util.Pair;
-
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 
 /**
- * Collection of BaseProfiles split into working memory(obszar swiadomy/PR) and long-term memory(obszar przedswiadomy/PT).
- * Contains knowledge collected till moment in time described by timestamp.
+ * This class keeps collection of BaseProfiles split into working memory(obszar swiadomy/PR)
+ * and long-term memory(obszar przedswiadomy/PT) and provides complete set of operations on stored base profiles.
+ * Contains knowledge collected till moment in time described by timestamp. Timestamp is updated according to last recent
+ * timestamp specified among entire base profiles.
  * All operations should be
  */
 public class BPCollection {
 
     private static final int INIT_TIMESTAMP = 0;
+    /**
+     * Determines what should be happen in case of adding base profile with timestamp, which is already noticed. If true
+     * then old base profile will be overridden.
+     */
+    private static final boolean DEFAULT_OVERRIDE_IF_EXISTS = true;
 
     /**
      * Describes allowed types of agent's memory. According to the accepted theoretical model, there are two memory
@@ -26,20 +33,20 @@ public class BPCollection {
      * Map of BaseProfile representing working memory - each for successive moments in time - from beginning till
      * current timestamp set for this BPCollection.
      */
-    protected Map<Integer, BaseProfile> workingMemory;
+    protected Set<BaseProfile> workingMemory;
     /**
      * Map of BaseProfile representing long-term memory - each for successive moments in time - from beginning till
      * current timestamp set for this BPCollection.
      */
-    protected Map<Integer, BaseProfile> longTermMemory;
+    protected Set<BaseProfile> longTermMemory;
     private int timestamp;
 
     /**
      * Simple constructor to initialize empty BPCollection with initials values. Sets timestamp to default value.
      */
     public BPCollection() {
-        this.workingMemory = new HashMap<>();
-        this.longTermMemory = new HashMap<>();
+        this.workingMemory = new HashSet<>();
+        this.longTermMemory = new HashSet<>();
         this.timestamp = INIT_TIMESTAMP;
     }
 
@@ -48,79 +55,122 @@ public class BPCollection {
      *
      * @param workingMemory
      * @param longTermMemory
-     * @param timestamp
      */
-    public BPCollection(Map<Integer, BaseProfile> workingMemory, Map<Integer, BaseProfile> longTermMemory, int timestamp) {
+    public BPCollection(Set<BaseProfile> workingMemory, Set<BaseProfile> longTermMemory) {
         if (workingMemory == null || longTermMemory == null)
             throw new NullPointerException("One of parameters is null.");
-        if (timestamp < 0)
-            throw new IllegalStateException("Not valid timestamp.");
         this.workingMemory = workingMemory;
         this.longTermMemory = longTermMemory;
-        this.timestamp = timestamp;
-    }
-
-    public BPCollection(Map<Integer, BaseProfile> workingMemory, Map<Integer, BaseProfile> longTermMemory) {
-        this(workingMemory, longTermMemory, INIT_TIMESTAMP);
-    }
-
-
-        /**
-         * Adds given new base profile to specified memory type, according to related timestamp. Updates current timestamp
-         * with given new value.
-         *
-         * @param newBP
-         * @param relatedTimestamp
-         * @param type
-         * @param currentTimestamp
-         */
-    public void addToMemory(BaseProfile newBP, int relatedTimestamp, MemoryType type, int currentTimestamp) {
-        if (currentTimestamp < 0 || relatedTimestamp < 0)
-            throw new IllegalStateException("Not valid timestamp.");
-        switch (type) {
-            case LM:
-                longTermMemory.put(relatedTimestamp, newBP);
-                break;
-            case WM:
-                workingMemory.put(relatedTimestamp, newBP);
-                break;
-        }
-        timestamp = currentTimestamp;
+        this.timestamp = spotLastTimestamp();
     }
 
     /**
-     * Adds given new base profile to specified memory type, according to current timestamp given as parameter.
+     * This method infers actual timestamp, basing on the greatest value of timestamp among added base profiles.
+     *
+     * @return
+     */
+    private int spotLastTimestamp() {
+        Set<BaseProfile> storedBPs = getBaseProfiles(Integer.MAX_VALUE);
+        int mostRecent = INIT_TIMESTAMP;
+        if (storedBPs != null && !storedBPs.isEmpty())
+            mostRecent = storedBPs.stream().mapToInt(BaseProfile::getTimestamp).max().getAsInt();
+        return mostRecent;
+    }
+
+
+    /**
+     * Adds given new base profile to specified memory type, according to given base profile timestamp.
+     * If there is already specified base profile with same timestamp, then two actions are possible:
+     * -override old one (default action).
+     * -update old one with observations in new one.
      *
      * @param newBP
      * @param type
-     * @param currentTimestamp
+     * @param overrideIfExisting
      */
-    public void addToMemory(BaseProfile newBP, MemoryType type, int currentTimestamp) {
-        addToMemory(newBP, currentTimestamp, type, currentTimestamp);
-    }
-
-    /**
-     * Returns base profile from pointed memory related with given timestamp.
-     * Ratains information about timestamp.
-     *
-     * @param timestamp Moment in time.
-     * @return Base profile from pointed memory related with given timestamp.
-     */
-    public Pair<Integer, BaseProfile> getTimedBaseProfile(int timestamp, MemoryType memType) {
-        if (timestamp < 0)
-            throw new IllegalStateException("Not valid timestamp.");
-        switch (memType) {
-            case WM:
-                return new Pair<>(timestamp, workingMemory.get(timestamp));
-            case LM:
-                return new Pair<>(timestamp, longTermMemory.get(timestamp));
-            default:
-                return null;
+    public void addToMemory(BaseProfile newBP, MemoryType type, boolean overrideIfExisting) {
+        Set<BaseProfile> affectedMemory = getMemoryContainer(type);
+        BaseProfile alreadyExisted = getBaseProfile(newBP.getTimestamp(), type);
+        if (alreadyExisted != null) {
+            if (!overrideIfExisting)
+                BaseProfile.joinBaseProfiles(newBP, alreadyExisted);
+            affectedMemory.remove(alreadyExisted);
         }
+        affectedMemory.add(newBP);
+        updateTimestamp(newBP);
     }
 
     /**
-     * Returns base profile from pointed memory related with given timestamp.
+     * Performs adding with default behaviour for base profiles with already noticed timestamp.
+     *
+     * @param newBP
+     * @param type
+     */
+    public void addToMemory(BaseProfile newBP, MemoryType type) {
+        addToMemory(newBP, type, DEFAULT_OVERRIDE_IF_EXISTS);
+    }
+
+    /**
+     * Removes one or more base profiles from specified memory.
+     *
+     * @param oldBPs Instances of BaseProfile.
+     * @param type
+     * @return Boolean informs if profile was removed. False if all base profiles weren't present in specified memory.
+     */
+    public boolean deleteFromMemory(MemoryType type, List<BaseProfile> oldBPs) {
+        if (type == null || oldBPs == null)
+            throw new NullPointerException("One or more parameters are nulls.");
+        boolean res = false;
+        Set<BaseProfile> affectedMemory = getMemoryContainer(type);
+        for (BaseProfile bp : oldBPs)
+            res = affectedMemory.remove(bp) || res;
+        return res;
+    }
+
+    public boolean deleteFromMemory(MemoryType type, BaseProfile... oldBPs) {
+        return deleteFromMemory(type, Arrays.asList(oldBPs));
+    }
+
+    /**
+     * Removes one or more base profiles from specified memory according to given timestamps.
+     */
+    public boolean deleteFromMemory(MemoryType type, int... oldBPTimestamps) {
+        List<BaseProfile> baseProfilesCollection = Arrays.stream(oldBPTimestamps).mapToObj(t -> getBaseProfile(t, type))
+                .collect(Collectors.toList());
+        if (baseProfilesCollection != null && !baseProfilesCollection.isEmpty())
+            return deleteFromMemory(type, baseProfilesCollection);
+        return false;
+    }
+
+    /**
+     * Updates timestamp if required and return boolean informed if it was performed.
+     * The main difference between this method and spotLastTimestamp is that this method assumes that so far
+     * current timestamp has been set properly and takes into consideration only  base profiles
+     * pointed as new (provided as parameter).
+     *
+     * @param newBPs
+     * @return
+     */
+    private boolean updateTimestamp(BaseProfile... newBPs) {
+        if (newBPs == null || newBPs.length == 0)
+            throw new IllegalStateException("Array not specified or empty.");
+        boolean needUpdate = false;
+        int mostRecentTimestamp;
+
+        if (newBPs.length == 1)
+            mostRecentTimestamp = newBPs[0].timestamp;
+        else mostRecentTimestamp = Arrays.stream(newBPs).mapToInt(BaseProfile::getTimestamp).max().getAsInt();
+
+        if (mostRecentTimestamp > this.timestamp) {
+            needUpdate = true;
+            this.timestamp = mostRecentTimestamp;
+        }
+        return needUpdate;
+    }
+
+
+    /**
+     * Returns base profile from pointed memory related with exact timestamp, given as parameter.
      *
      * @param timestamp Moment in time.
      * @param memType   Specifies type of memory.
@@ -129,67 +179,108 @@ public class BPCollection {
     public BaseProfile getBaseProfile(int timestamp, MemoryType memType) {
         if (timestamp < 0)
             throw new IllegalStateException("Not valid timestamp.");
-        switch (memType) {
-            case WM:
-                return workingMemory.get(timestamp);
+        if (memType == null)
+            throw new NullPointerException("Memory type not specified.");
+        Set<BaseProfile> affectedMemory = getMemoryContainer(memType);
+        Optional<BaseProfile> potentialRes = affectedMemory.stream().filter(bp -> bp.getTimestamp() == timestamp).findAny();
+        return potentialRes.isPresent() ? potentialRes.get() : null;
+    }
+
+
+    /**
+     * Returns set of ALL base profiles from both memories which are associated with
+     * moment in time from range [start, given endTimestamp]
+     *
+     * @param endTimestamp
+     * @return Set of base profiles.
+     * @throws IllegalStateException
+     */
+    public Set<BaseProfile> getBaseProfiles(int endTimestamp) throws IllegalStateException {
+        if (endTimestamp < 0)
+            throw new IllegalStateException("Incorrect endTimestamp.");
+        Set<BaseProfile> res = new HashSet<>();
+        res.addAll(getBaseProfiles(endTimestamp, MemoryType.LM));
+        res.addAll(getBaseProfiles(endTimestamp, MemoryType.WM));
+        return res;
+    }
+
+    public static Set<BaseProfile> asBaseProfilesSet(Set<BaseProfile>... bps) throws IllegalStateException {
+        if (bps == null)
+            throw new NullPointerException("Array is null.");
+        Set<BaseProfile> res = new HashSet<>();
+        for (Set<BaseProfile> bp : bps)
+            res.addAll(bp);
+        return res;
+    }
+
+
+    /**
+     * Returns set of base profiles which are associated with moment in time from range [beginning, given endTimestamp],
+     * from specified memory.
+     *
+     * @param endTimestamp
+     * @param memType
+     * @return Set of base profiles from requested memory.
+     * @throws IllegalStateException
+     */
+    public Set<BaseProfile> getBaseProfiles(int endTimestamp, MemoryType memType) throws IllegalStateException {
+        if (endTimestamp < 0)
+            throw new IllegalStateException("Incorrect endTimestamp.");
+        Set<BaseProfile> affectedMemory = getMemoryContainer(memType);
+        return affectedMemory.stream().filter(bp -> bp.timestamp <= endTimestamp).collect(Collectors.toSet());
+    }
+
+    /**
+     * Shifts given BaseProfile from source memory to destination memory.
+     * Note: adding to destination will be performed even if given base profile is wasn't present in source to
+     * keep state after operation consistent.
+     *
+     * @param toMove
+     */
+    void shiftBaseProfile(MemoryType src, MemoryType dest, BaseProfile toMove) {
+        if (!src.equals(dest)) {
+            getMemoryContainer(src).remove(toMove);
+            addToMemory(toMove, dest, true);
+        }
+    }
+
+    /**
+     * Duplicate given BaseProfile placed in source memory to destination memory.
+     * Throws exception if source doesn't contain given base profile.
+     *
+     * @param toDuplicate
+     */
+    public void duplicateBaseProfile(MemoryType src, MemoryType dest, BaseProfile toDuplicate) {
+        if (!src.equals(dest))
+            addToMemory(toDuplicate, dest, true);
+        if (!getMemoryContainer(src).contains(toDuplicate))
+            throw new IllegalStateException("Memory specified as source doesn't contain given base profile.");
+    }
+
+    /**
+     * Returns memory which contains given base profile.
+     *
+     * @param bp
+     * @return
+     */
+    public Set<BaseProfile> determineIncludingMemory(BaseProfile bp) {
+        Set<BaseProfile> res = null;
+        if (workingMemory.contains(bp))
+            res = workingMemory;
+        else if (longTermMemory.contains(bp))
+            res = longTermMemory;
+        return res;
+    }
+
+    public Set<BaseProfile> getMemoryContainer(MemoryType type) {
+        switch (type) {
             case LM:
-                return longTermMemory.get(timestamp);
+                return longTermMemory;
+            case WM:
+                return workingMemory;
             default:
                 return null;
         }
-    }
-
-    /**
-     * Returns set of base profiles which are associated with moment in time from range [start, given timestamp].
-     *
-     * @param timestamp
-     * @return Map of base profiles.
-     * @throws IllegalStateException
-     */
-    public Set<BaseProfile> getBaseProfiles(int timestamp) throws IllegalStateException {
-        if (timestamp < 0 || timestamp > this.timestamp)
-            throw new IllegalStateException("Incorrect timestamp.");
-        return new HashSet<BaseProfile>(getTimedBaseProfiles(timestamp).values());
-    }
-
-    /**
-     * Returns map of base profiles which are associated with moment in time from range [start, given timestamp].
-     * It retains information about associated timestamps.
-     *
-     * @param timestamp
-     * @return Map of base profiles.
-     * @throws IllegalStateException
-     */
-    public Map<Integer, BaseProfile> getTimedBaseProfiles(int timestamp) throws IllegalStateException {
-        if (timestamp < 0 || timestamp > this.timestamp)
-            throw new IllegalStateException("Incorrect timestamp.");
-        Map<Integer, BaseProfile> res = new HashMap<>();
-        res.putAll(getTimedBaseProfiles(timestamp, MemoryType.LM));
-        res.putAll(getTimedBaseProfiles(timestamp, MemoryType.WM));
-        return res;
-    }
-
-    /**
-     * Returns map of base profiles which are associated with moment in time from range [start, given timestamp],
-     * differentiated between momory type.
-     * It retains information about associated timestamps.
-     *
-     * @param timestamp
-     * @param memType
-     * @return Map of base profiles from requested memory.
-     * @throws IllegalStateException
-     */
-    public Map<Integer, BaseProfile> getTimedBaseProfiles(int timestamp, MemoryType memType) throws IllegalStateException {
-        if (timestamp < 0 || timestamp > this.timestamp)
-            throw new IllegalStateException("Incorrect timestamp.");
-        Map<Integer, BaseProfile> res = new HashMap<>(),
-                selectedMem = memType.equals(MemoryType.LM) ? longTermMemory : workingMemory;
-
-        for (Map.Entry<Integer, BaseProfile> entry : selectedMem.entrySet()) {
-            if (entry.getKey() <= timestamp)
-                res.put(entry.getKey(), entry.getValue());
-        }
-        return res;
     }
 
     public int getTimestamp() {
@@ -200,43 +291,20 @@ public class BPCollection {
         this.timestamp = timestamp;
     }
 
-    public void setWorkingMemory(Map<Integer, BaseProfile> workingMemory) {
+    public void setWorkingMemory(Set<BaseProfile> workingMemory) {
         this.workingMemory = workingMemory;
     }
 
-    public void setLongTermMemory(Map<Integer, BaseProfile> longTermMemory) {
+    public void setLongTermMemory(Set<BaseProfile> longTermMemory) {
         this.longTermMemory = longTermMemory;
     }
 
-    public Map<Integer, BaseProfile> getWorkingMemory() {
+    public Set<BaseProfile> getWorkingMemory() {
         return workingMemory;
     }
 
-    public Map<Integer, BaseProfile> getLongTermMemory() {
+    public Set<BaseProfile> getLongTermMemory() {
         return longTermMemory;
     }
-
-
-    void moveToWM(Map.Entry<Integer, BaseProfile> toMove) {
-    }
-
-    void moveToLM(Map.Entry<Integer, BaseProfile> toMove) {
-    }
-
-    /**
-     * Moves Existing Base Profile from one memory region to another.
-     * Assumes two possibles scenarios: shifting from working memory to long-term memory or
-     * from long-term memory to working memory.
-     *
-     * @param from
-     * @param to
-     */
-    void shiftBaseProfile(Map<Integer, BaseProfile> from, Map<Integer, BaseProfile> to) {
-    } //todo
-
-    /*public Set<Observation> getAffectedObjects(int time) {
-        Set<Observation> res = new HashSet<>();
-        res.addAll(getTimedBaseProfile(time, MemoryType.LM).getValue().)
-    }*/
 
 }
