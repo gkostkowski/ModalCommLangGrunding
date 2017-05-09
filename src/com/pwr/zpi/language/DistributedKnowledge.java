@@ -3,6 +3,7 @@ package com.pwr.zpi.language;
 import com.pwr.zpi.*;
 
 import com.pwr.zpi.exceptions.InvalidFormulaException;
+import com.pwr.zpi.exceptions.NotConsistentDKException;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -38,7 +39,7 @@ public class DistributedKnowledge {
     //private List<Set<BaseProfile>> dkClasses = new ArrayList<>();
     /**
      * Map of classes for this knowledge distribution. Exact class is certain value in map
-     * and associated key is pair which represent mental model (formula) and memory type used
+     * and associated key is pair which represent mental model (formula) and memory type which are used
      * to build such class.
      */
     private Map<Pair<Formula, BPCollection.MemoryType>, Set<BaseProfile>> dkClasses = new HashMap<>();
@@ -46,18 +47,22 @@ public class DistributedKnowledge {
 
 
 
-    public DistributedKnowledge(Agent agent, Formula formula, int time) throws InvalidFormulaException {
-        this.timestamp = time;
+    public DistributedKnowledge(Agent agent, Formula formula, int timestamp) throws InvalidFormulaException, NotConsistentDKException {
+        if (agent == null || formula == null)
+            throw new NullPointerException("One of parameters is null.");
+        if (timestamp < 0)
+            throw new IllegalStateException("Not valid timestamp.");
+
+        this.timestamp = timestamp;
         this.formula = formula;
         this.traits = formula.getTraits();
         this.obj = formula.getModel();
 
-
-        inLM = agent.getKnowledgeBase().getBaseProfiles(time, BPCollection.MemoryType.LM);
-        inWM = agent.getKnowledgeBase().getBaseProfiles(time, BPCollection.MemoryType.WM);
+        inLM = agent.getKnowledgeBase().getBaseProfiles(timestamp, BPCollection.MemoryType.LM);
+        inWM = agent.getKnowledgeBase().getBaseProfiles(timestamp, BPCollection.MemoryType.WM);
 
         //initSets();
-        groundingSets = Grounder.getGroundingSets(formula, time,BPCollection.asBaseProfilesSet(inWM, inLM));
+        //groundingSets = Grounder.getGroundingSets(formula, timestamp,BPCollection.asBaseProfilesSet(inWM, inLM));
 
         Iterator<Formula> it = groundingSets.keySet().iterator();
         for (int i=0; i < CLASSES_AMOUNT && it.hasNext(); i=i+2) {
@@ -67,6 +72,18 @@ public class DistributedKnowledge {
             setDkClass(inLM, currMentalModel, BPCollection.MemoryType.LM);
         }
 
+        checkIfConsistent();
+
+    }
+
+    public DistributedKnowledge(Agent agent, Formula formula) throws InvalidFormulaException, NotConsistentDKException {
+        this(agent, formula, agent.getKnowledgeBase().getTimestamp());
+    }
+
+        /**
+         * Performs checking to ensure that knowledge distribution was built in proper way.
+         */
+    private void checkIfConsistent() throws NotConsistentDKException {
         //important checking
         //todo
         /*Set<BaseProfile> check3_9_1 = new HashSet<BaseProfile>(RA1);
@@ -81,6 +98,8 @@ public class DistributedKnowledge {
         check3_10_2.addAll(TA2);
         assert check3_10_1.equals(A1) && check3_10_2.equals(A2);
         */
+        if (false)
+            throw new NotConsistentDKException();
     }
 
 /*

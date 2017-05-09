@@ -3,6 +3,8 @@ package com.pwr.zpi.language;
 import com.pwr.zpi.*;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.exceptions.NotConsistentDKException;
+import com.sun.istack.internal.Nullable;
 
 import java.util.*;
 
@@ -16,22 +18,24 @@ public class Grounder {
     public static final double MIN_BEL = 0.61;
     public static final double MAX_BEL = 0.99;
     private static final double KNOW = 1.0;
-/*
-    /**
-     * Gives complete collection of grounding sets for certain formula. It supports simple and complex formulas.
-     *
-     * @param formula Considered formula.
-     * @param time
-     * @param all
-     * @param states  Represents especially two states: IS and IS_NOT, which determines if simple formula, part of
-     *                complex formula will require checking associated to observations described by Trait or observations
-     *                NOT described by Trait.
-     * @return Collection of grounding sets.
-     */
+
+    /*
+        /**
+         * Gives complete collection of grounding sets for certain formula (in this context may be known as mental model).
+         * It supports simple and complex formulas.
+         *
+         * @param formula Considered formula.
+         * @param time
+         * @param all
+         * @param states  Represents especially two states: IS and IS_NOT, which determines weather simple formula, part of
+         *                complex formula will require checking associated to observations described by Trait or observations
+         *                NOT described by Trait.
+         * @return Collection of grounding sets.
+         */
     static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
         IndividualModel o = formula.getModel();
         List<Trait> traits = formula.getTraits();
-        State [] states = new State[traits.size()];
+        State[] states = new State[traits.size()];
         List<State> s = formula.getStates();
         states = s.toArray(states);
         if (o == null || traits == null || states == null)
@@ -105,15 +109,14 @@ public class Grounder {
   */
 
 
-
-/**
+    /**
      * Defines grounded set A1(t) responsible for induction of mental model m1 connected to individualModel p and trait P
      * A1 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
      * representing expierience individualModel o,having trait P
      *
-     * @param o     Object observed by agent
-     * @param time  Time taken into consideration when looking for expieriences
-     * @param all   Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
+     * @param o    Object observed by agent
+     * @param time Time taken into consideration when looking for expieriences
+     * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
      * @return List of BaseProfiles which contain Positive Traits
      */
 
@@ -127,7 +130,7 @@ public class Grounder {
         return baseout;
     }
 
-/**
+    /**
      * Defines grounded set A2(t) responsible for induction of mental model m1 connected to individualModel p and trait P
      * A2 contains everu base profiledefining state of knowledge SW(t) recorded by agent to point of time t and
      * representing expierience individualModel o,not having trait P
@@ -151,15 +154,15 @@ public class Grounder {
     }
 
 /**
-     * Inductive cardinality GAi grounding set A1
-     *
-     * @param groundingSet set of Base Profiles which cardinality we desire to know
-     * @param t            given time
-     * @return Positive Cardinality of Set
-     */
+ * Inductive cardinality GAi grounding set A1
+ *
+ * @param groundingSet set of Base Profiles which cardinality we desire to know
+ * @param t            given time
+ * @return Positive Cardinality of Set
+ */
 
 
-/**
+    /**
      * Value of relative power of grounding lambda for base form p(o)
      *
      * @param groundingSetPositive Set of Positive BaseProfiles
@@ -174,10 +177,11 @@ public class Grounder {
             return 0;
         }
         return getCard(groundingSetPositive, time) / (getCard(groundingSetNegative, time) + getCard(groundingSetPositive, time));
-        */return -1.0;
+        */
+        return -1.0;
     }
 
-/**
+    /**
      * Value of relative power of grounding lambda for base form not p(o)
      *
      * @param groundingSetPositive Set of Positive BaseProfiles
@@ -194,21 +198,21 @@ public class Grounder {
     }
 
     public static double relativeCard(Map<Formula, Set<BaseProfile>> groundingSets, int time, Formula formula) throws NotApplicableException {
-        if(formula.getType().equals(Formula.Type.SIMPLE_MODALITY)){
+        if (formula.getType().equals(Formula.Type.SIMPLE_MODALITY)) {
 
-            switch(((ComplexFormula) formula).getOperator()){
+            switch (((ComplexFormula) formula).getOperator()) {
                 case AND:
-                    if((boolean) ((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) ((ComplexFormula) formula).getRightPart().isNegated()){
-                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(),((ComplexFormula) formula).getRightPart().getTrait() ,time,groundingSets.get(formula),4);
+                    if ((boolean) ((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) ((ComplexFormula) formula).getRightPart().isNegated()) {
+                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(), ((ComplexFormula) formula).getRightPart().getTrait(), time, groundingSets.get(formula), 4);
                     }
-                    if((boolean) !((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) ((ComplexFormula) formula).getRightPart().isNegated()){
-                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(),((ComplexFormula) formula).getRightPart().getTrait() ,time,groundingSets.get(formula),3);
+                    if ((boolean) !((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) ((ComplexFormula) formula).getRightPart().isNegated()) {
+                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(), ((ComplexFormula) formula).getRightPart().getTrait(), time, groundingSets.get(formula), 3);
                     }
-                    if((boolean) ((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) !((ComplexFormula) formula).getRightPart().isNegated()){
-                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(),((ComplexFormula) formula).getRightPart().getTrait() ,time,groundingSets.get(formula),2);
+                    if ((boolean) ((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) !((ComplexFormula) formula).getRightPart().isNegated()) {
+                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(), ((ComplexFormula) formula).getRightPart().getTrait(), time, groundingSets.get(formula), 2);
                     }
-                    if((boolean) ((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) ((ComplexFormula) formula).getRightPart().isNegated()){
-                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(),((ComplexFormula) formula).getRightPart().getTrait() ,time,groundingSets.get(formula),1);
+                    if ((boolean) ((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) ((ComplexFormula) formula).getRightPart().isNegated()) {
+                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(), ((ComplexFormula) formula).getRightPart().getTrait(), time, groundingSets.get(formula), 1);
                     }
                     break;
                 case OR:
@@ -216,15 +220,14 @@ public class Grounder {
                 default:
                     break;
             }
-        }
-        else{
-            return getCard(groundingSets.get(formula),time);
+        } else {
+            return getCard(groundingSets.get(formula), time);
         }
         return 0.0;
     }
 
 
-/**
+    /**
      * Builds distributed knowledge, which will be used to make respective mental models associated
      * with formulas. It can be used to build distribution of different mental models.
      * Builded distributed knowledge is related to certain moment in time.
@@ -234,10 +237,16 @@ public class Grounder {
      * @param time    Certain moment in time.
      * @return Distribution of knowledge.
      * @throws InvalidFormulaException
- */
+     */
 
+    @Nullable
     static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) throws InvalidFormulaException {
-        return new DistributedKnowledge(agent, formula, time);
+        try {
+            return new DistributedKnowledge(agent, formula, time);
+        } catch (NotConsistentDKException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
@@ -247,15 +256,16 @@ public class Grounder {
         }
         return null; //todo ?
     }
-/**
- * Allows to perform multiple checking for epistemical condition fulfillment for same knowledge distribution and
- * different formulas (but associated with mental models used to generate this certain knowledge distribution).
- *
- * @param agent
- * @param dk
- * @param formulas
- * @return
- */
+
+    /**
+     * Allows to perform multiple checking for epistemical condition fulfillment for same knowledge distribution and
+     * different formulas (but associated with mental models used to generate this certain knowledge distribution).
+     *
+     * @param agent
+     * @param dk
+     * @param formulas
+     * @return
+     */
 
     static boolean determineFulfillments(Agent agent, DistributedKnowledge dk, Formula... formulas) throws InvalidFormulaException, NotApplicableException {
         List<Operators.Type> res = new ArrayList<>();
@@ -266,7 +276,7 @@ public class Grounder {
         return false;
     }
 
-/**
+    /**
      * Realizes verification of epistemic fulfillment relationship's conditions for formula given through
      * knowledge distribution. The given formula should be associated with given knowledge distribution.
      * Checks what type of extension of formula can occur. The following assumption was made: For any extended formula
@@ -295,8 +305,8 @@ public class Grounder {
 
         List<Set<Object>> objsWithClearState = new ArrayList<>();
 /**
-         * Represents objsWithPositiveState or objsWithNegativeState - depending on state value
-         */
+ * Represents objsWithPositiveState or objsWithNegativeState - depending on state value
+ */
 
         List<Set<Object>> objsWithGivenState = new ArrayList<>();
 
@@ -352,11 +362,11 @@ public class Grounder {
     public static double getValueOfObservation(List<Set<Object>> indefiniteByTrait, IndividualModel describedObj,
                                                Map<Formula, Set<BaseProfile>> groundingSets, Set<BaseProfile> selectedClass,
                                                int timestamp, List<Set<Object>> objsWithGivenState,
-                                               Formula formula) throws NotApplicableException{
+                                               Formula formula) throws NotApplicableException {
         return relativeCard(groundingSets, timestamp, formula);
     }
 
-       private static void setCommonObjects(int timestamp, Agent agent, BaseProfile lmBp, BaseProfile wmBp,
+    private static void setCommonObjects(int timestamp, Agent agent, BaseProfile lmBp, BaseProfile wmBp,
                                          Set<Object> objects, Object describedObj, Set<Trait> describedTraits,
                                          List<Set<Object>> objsWithClearState, //one set for each trait
                                          List<Set<Object>> objsWithGivenState,
@@ -392,7 +402,7 @@ public class Grounder {
 
     }
 
-/**
+    /**
      * Decides for which modal operator, formula given through observations related to traits, can occur.
      *
      * @param indefiniteByTrait
@@ -435,14 +445,16 @@ public class Grounder {
         for (Set<T> elem : c) {
             curr = elem.contains(obj);
             switch (op) {
-                case AND: res = res &&  curr;
-                case OR: res = res ||  curr;
+                case AND:
+                    res = res && curr;
+                case OR:
+                    res = res || curr;
             }
         }
         return res;
     }
 
-/**
+    /**
      * Defines grounded set Ai(t) responsible for induction of mental model mi connected to baseProfile which
      * involves connotations with both observations P,and Q.Depending on i
      * i=1 - Returns BaseProfiles where Object o has Trait P and has Trait Q
@@ -493,7 +505,7 @@ public class Grounder {
         return null;
     }
 
-/**
+    /**
      * Inductive cardinality GAi grounding set Ai
      *
      * @param groundingSet Grounding set which cardinality we wish to know
@@ -506,7 +518,7 @@ public class Grounder {
         return groundingSet.size();
     }
 
-/**
+    /**
      * Value of relative power of grounding lambda for base form indicated by i
      * i = 1 p(o) and q(o)
      * i = 2 p(o) and not q(o)
@@ -525,10 +537,10 @@ public class Grounder {
         Set<BaseProfile> Sum = new HashSet<BaseProfile>();
 
         //OgarnijAdAlla, nie dodaje tych samych obiektów
-        Sum.addAll(getGroundingSetsConjunction( P, Q, time, all, 1));
-        Sum.addAll(getGroundingSetsConjunction( P, Q, time, all, 2));
-        Sum.addAll(getGroundingSetsConjunction( P, Q, time, all, 3));
-        Sum.addAll(getGroundingSetsConjunction( P, Q, time, all, 4));
+        Sum.addAll(getGroundingSetsConjunction(P, Q, time, all, 1));
+        Sum.addAll(getGroundingSetsConjunction(P, Q, time, all, 2));
+        Sum.addAll(getGroundingSetsConjunction(P, Q, time, all, 3));
+        Sum.addAll(getGroundingSetsConjunction(P, Q, time, all, 4));
         return getCard(getGroundingSetsConjunction(P, Q, time, all, i), time) / getCard(Sum, time);
     }
 
