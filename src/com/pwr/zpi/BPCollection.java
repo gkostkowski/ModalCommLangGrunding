@@ -1,7 +1,6 @@
 package com.pwr.zpi;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 
@@ -253,7 +252,7 @@ public class BPCollection {
     public void duplicateBaseProfile(MemoryType src, MemoryType dest, BaseProfile toDuplicate) {
         if (!src.equals(dest))
             addToMemory(toDuplicate, dest, true);
-        if (!getMemoryContainer(src).contains(toDuplicate))
+        if (!new ArrayList<>(getMemoryContainer(src)).contains(toDuplicate))
             throw new IllegalStateException("Memory specified as source doesn't contain given base profile.");
     }
 
@@ -265,9 +264,9 @@ public class BPCollection {
      */
     public Set<BaseProfile> determineIncludingMemory(BaseProfile bp) {
         Set<BaseProfile> res = null;
-        if (workingMemory.contains(bp))
+        if (new ArrayList<>(workingMemory).contains(bp))
             res = workingMemory;
-        else if (longTermMemory.contains(bp))
+        else if (new ArrayList<>(longTermMemory).contains(bp))
             res = longTermMemory;
         return res;
     }
