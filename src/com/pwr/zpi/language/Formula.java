@@ -24,7 +24,7 @@ public abstract class Formula {
      * @return List of states.
      */
 
-    enum Type {
+    public enum Type {
         SIMPLE_MODALITY,
         MODAL_CONJUNCTION
     }
