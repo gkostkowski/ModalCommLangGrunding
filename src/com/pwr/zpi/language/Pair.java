@@ -15,11 +15,11 @@ public class Pair<K, V> {
         this.Value = element1;
     }
 
-    public K getP() {
+    public K getK() {
         return Case;
     }
 
-    public V getnot_P() {
+    public V getV() {
         return Value;
     }
 

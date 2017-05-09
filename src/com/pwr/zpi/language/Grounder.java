@@ -120,14 +120,12 @@ public class Grounder {
      * @return Cardinality (ratio) of Positive BaseProfiles to all
      */
 
-    public static double relativePositiveCard(Set<com.pwr.zpi.Observation> set, Set<com.pwr.zpi.Observation> set2, int time) {
-        /*
+    public static double relativePositiveCard(Set<IndividualModel> set, Set<IndividualModel> set2, int time) {
+
         if (groundingSetNegative.isEmpty()) {
             return 0;
         }
         return getCard(groundingSetPositive, time) / (getCard(groundingSetNegative, time) + getCard(groundingSetPositive, time));
-        */
-        return -1.0;
     }
 
     /**
@@ -137,7 +135,7 @@ public class Grounder {
      * @return Cardinality (ratio) of Negative BaseProfiles to all
      */
 
-    static double relativeNegativeCard(Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
+    static double relativeNegativeCard(Set<IndividualModel> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
         if (groundingSetPositive.isEmpty()) {
             return 0;
         }
@@ -461,7 +459,7 @@ public class Grounder {
      */
 
 
-    static double getCard(Set<BaseProfile> groundingSet, int t) {
+    static double getCard(Set<IndividualModel> groundingSet, int t) {
         return groundingSet.size();
     }
 

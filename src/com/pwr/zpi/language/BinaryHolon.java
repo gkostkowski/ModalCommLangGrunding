@@ -10,7 +10,7 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 
 public class BinaryHolon extends Holon{
 
-    protected List<Pair<Double,Double>> TaoList;
+    protected List<Pair<Double,Double>> TaoList = new ArrayList<Pair<Double,Double>>();
     protected Pair<Double,Double> Tao;
     protected Formula formula;
 
@@ -28,8 +28,10 @@ public class BinaryHolon extends Holon{
                 sumPositive += Grounder.relativePositiveCard(bp.getIMsDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getIMsNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
                 sumNegative += Grounder.relativeNegativeCard(bp.getIMsDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getIMsNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
             }
-            sumPositive=sumPositive/baseProfile.size();
-            sumNegative=sumNegative/baseProfile.size();
+            if(sumPositive!= 0){
+                sumPositive=sumPositive/baseProfile.size();}
+            if(sumNegative!= 0){
+                sumNegative=sumNegative/baseProfile.size();}
             TaoList.add(new Pair<Double,Double>(sumPositive,sumNegative));
             updateRatio();
         }
@@ -45,7 +47,8 @@ public class BinaryHolon extends Holon{
             allP += p.Case;
             allNot_P += p.Value;
         }
-        Tao = new Pair<Double,Double>(getCard(allP/TaoList.size(),allNot_P/TaoList.size()),getCard(allNot_P/TaoList.size(),allP/TaoList.size()));
+        if(allP!=0 && allNot_P !=0){
+        Tao = new Pair<Double,Double>(getCard(allP/TaoList.size(),allNot_P/TaoList.size()),getCard(allNot_P/TaoList.size(),allP/TaoList.size()));}
     }
 
     public double getCard(double first,double sec){
@@ -55,10 +58,13 @@ public class BinaryHolon extends Holon{
         return formula;
     }
     public double getP(){
-        return Tao.getP();
+        return Tao.getK();
     }
     public double getnot_P(){
-        return Tao.getnot_P();
+        return Tao.getV();
+    }
+    public Formula getFormula(){
+        return formula;
     }
 	/*public com.pwr.zpi.language.Operators.Type getDominant(){
 	return Tao.getP() > Tao.getnot_P() ? com.pwr.zpi.language.Operators.Type.KNOW :com.pwr.zpi.language.Operators.Type.NOT ;
@@ -66,12 +72,12 @@ public class BinaryHolon extends Holon{
 
     @Override
     public com.pwr.zpi.language.Pair<Boolean,Double> getStrongest() {
-        return Tao.getP() >= Tao.getnot_P() ? (new Pair<Boolean,Double>(true,Tao.getP())) : (new Pair<Boolean,Double>(false,Tao.getnot_P()));
+        return Tao.getK() >= Tao.getV() ? (new Pair<Boolean,Double>(true,Tao.getK())) : (new Pair<Boolean,Double>(false,Tao.getV()));
     }
 
     @Override
     public com.pwr.zpi.language.Pair<Boolean,Double> getWeakest() {
-        return Tao.getP() < Tao.getnot_P() ? (new Pair<Boolean,Double>(true,Tao.getP())) : (new Pair<Boolean,Double>(false,Tao.getnot_P()));
+        return Tao.getK() < Tao.getV() ? (new Pair<Boolean,Double>(true,Tao.getK())) : (new Pair<Boolean,Double>(false,Tao.getV()));
     }
 
     @Override
