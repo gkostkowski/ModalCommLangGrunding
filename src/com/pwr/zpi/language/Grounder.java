@@ -8,9 +8,6 @@ import com.sun.istack.internal.Nullable;
 
 import java.util.*;
 
-/**
- *
- */
 public class Grounder {
 
     public static final double MIN_POS = 0.1;  //todo set proper values
@@ -53,11 +50,156 @@ public class Grounder {
     }
 
 
-    /*
-    static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
-        return getGroundingSets(formula, time, all);
+
+    /**
+     * Builds distributed knowledge, which will be used to make respective mental models associated
+     * with formulas. It is used to build distribution of different mental models.
+     * Built distributed knowledge is related to certain moment in time.
+     *
+     * @param agent   The knowledge subject.
+     * @param formula Formula
+     * @param time    Certain moment in time.
+     * @return Distribution of knowledge.
+     * @throws InvalidFormulaException
+     */
+
+    @Nullable
+    static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) throws InvalidFormulaException {
+        try {
+            return new DistributedKnowledge(agent, formula, time);
+        } catch (NotConsistentDKException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-  */
+
+    /**
+     * Builds distributed knowledge, which will be used to make respective mental models associated
+     * with formulas. It is used to build distribution of different mental models.
+     * Built distributed knowledge is related to timestamp of last registered by this agent base profile.
+     *
+     * @param agent   The knowledge subject.
+     * @param formula Formula
+     * @return Distribution of knowledge.
+     * @throws InvalidFormulaException
+     */
+    @Nullable
+    static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula) throws InvalidFormulaException {
+        try {
+            return new DistributedKnowledge(agent, formula);
+        } catch (NotConsistentDKException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+        Operators.Type res;
+        for (Formula mentalModel : dk.getComplementaryFormulas()) {
+            res = determineFulfillment(agent, dk, mentalModel);
+        }
+        return null; //todo ?
+    }
+
+    /**
+     * Realizes verification of epistemic fulfillment relationship's conditions for formula given through
+     * knowledge distribution. The given formula should be associated with given knowledge distribution.
+     * Checks what type of extension of formula can occur. The following assumption was made: For any extended formula
+     * (modal formula) there are only one modal operator which can be applied to this formula at once.
+     * According to that, this method returns type of operator which can be used in formula without breaking
+     * epistemic fulfillment relationship's conditions.
+     * Timestamp is taken from given distribution of knowledge.
+     *
+     * @param agent Subject of knowledge.
+     * @param dk    Distributed knowledge for respective grounding sets related with certain formula.
+     * @return Type of operator which can be applied to formula given through distribution of knowledge.
+     * @see DistributedKnowledge
+     */
+
+    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
+        DistributedKnowledge.DKMode dkMode = dk.getDkComplexity();
+        if (dkMode.equals(DistributedKnowledge.DKMode.SINGLE) && !dk.getFormula().equals(formula)
+                || dkMode.equals(DistributedKnowledge.DKMode.COMPLEX) && !dk.getComplementaryFormulas().contains(formula))
+            throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
+
+        int timestamp = dk.getTimestamp();
+
+        return checkEpistemicConditions(formula, dk);
+    }
+
+
+    /**
+     * Decides which modal operator can occur for given formula. If none of possible, then null is returned.
+     * @param formula
+     * @param dk
+     * @param timestamp
+     * @return
+     */
+    @Nullable
+    public static Operators.Type checkEpistemicConditions(Formula formula, DistributedKnowledge dk,
+                                                          int timestamp) throws NotApplicableException {
+        boolean amongNoClearStateObjects = true;
+        boolean amongClearStateObjects = true;
+
+        for (int i = 0; i < formula.getTraits().size(); i++) {  //supports complex formulas
+            Set<IndividualModel> clearStatesObjects = dk.getRelatedObservationsBase()
+                    .getIMsByTraitStates(formula.getTraits().get(i), new State[]{State.IS, State.IS_NOT}, timestamp);
+            amongNoClearStateObjects = amongNoClearStateObjects && !new ArrayList<>(clearStatesObjects).contains(formula.getModel());
+
+            Set<IndividualModel> selectedStatesObjects = dk.getRelatedObservationsBase()
+                    .getIMsByTraitState(formula.getTraits().get(i), formula.getStates().get(i), timestamp);
+            amongClearStateObjects = amongClearStateObjects && new ArrayList<>(selectedStatesObjects).contains(formula.getModel());
+        }
+
+        boolean isPresentInWM = !dk.getDkClassByDesc(formula, BPCollection.MemoryType.WM).isEmpty();
+        Operators.Type res = null;
+
+        if (amongNoClearStateObjects) {
+            double currRelCard = relativeCard(dk.getGroundingSets(), timestamp, formula);
+            Operators.Type [] checkedOps = {Operators.Type.POS, Operators.Type.BEL, Operators.Type.KNOW};
+            for (int i =0; i < checkedOps.length && res == null;i++)
+                res = checkEpistemicCondition(true, isPresentInWM, currRelCard, checkedOps[i]);
+        } else if (amongClearStateObjects)
+            res = Operators.Type.KNOW;
+
+        return res;
+    }
+
+    public static Operators.Type checkEpistemicConditions(Formula formula, DistributedKnowledge dk)
+            throws NotApplicableException {
+        return checkEpistemicConditions(formula, dk, dk.getTimestamp());
+    }
+
+    /**
+     * Performs checking for single epistemic condition.
+     *
+     * @param amongNoClearStateObjects Flag determining if related individual model is among other individual models
+     *                                 neither described as having trait(s) (listed in formula) nor not having mentioned trait(s).
+     * @param isPresentInWM            Flag determining weather desired observation (agreeable with formula) is present
+     *                                 in one of distributed knowledge classes related with working memory.
+     * @param relativeCard        Relative cardinality for given formula.
+     * @param inspectedOperator   Modal operator which possibility of occurrence is examined.
+     * @return Given modal operator if it is applicable or null in other way.
+     */
+    private static Operators.Type checkEpistemicCondition(boolean amongNoClearStateObjects, boolean isPresentInWM,
+                                                          double relativeCard, Operators.Type inspectedOperator) {
+        double minRange, maxRange;
+        switch (inspectedOperator) {
+            case POS:
+                minRange = MIN_POS;
+                maxRange = MAX_POS;
+                break;
+            case BEL:
+                minRange = MIN_BEL;
+                maxRange = MAX_BEL;
+                break;
+            default:
+                minRange = maxRange = KNOW;
+        }
+        return amongNoClearStateObjects && isPresentInWM && relativeCard >= minRange && relativeCard <= maxRange ?
+                inspectedOperator : null;
+    }
+
 
 
     /**
@@ -120,7 +262,7 @@ public class Grounder {
      * @return Cardinality (ratio) of Positive BaseProfiles to all
      */
 
-    public static double relativePositiveCard(Set<IndividualModel> set, Set<IndividualModel> set2, int time) {
+    public static double relativePositiveCard(Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
 
         if (groundingSetNegative.isEmpty()) {
             return 0;
@@ -135,7 +277,7 @@ public class Grounder {
      * @return Cardinality (ratio) of Negative BaseProfiles to all
      */
 
-    static double relativeNegativeCard(Set<IndividualModel> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
+    static double relativeNegativeCard(Set<BaseProfile> groundingSetPositive, Set<BaseProfile> groundingSetNegative, int time) {
         if (groundingSetPositive.isEmpty()) {
             return 0;
         }
@@ -169,234 +311,6 @@ public class Grounder {
             return getCard(groundingSets.get(formula), time);
         }
         return 0.0;
-    }
-
-
-    /**
-     * Builds distributed knowledge, which will be used to make respective mental models associated
-     * with formulas. It can be used to build distribution of different mental models.
-     * Built distributed knowledge is related to certain moment in time.
-     *
-     * @param agent   The knowledge subject.
-     * @param formula Formula which
-     * @param time    Certain moment in time.
-     * @return Distribution of knowledge.
-     * @throws InvalidFormulaException
-     */
-
-    @Nullable
-    static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) throws InvalidFormulaException {
-        try {
-            return new DistributedKnowledge(agent, formula, time);
-        } catch (NotConsistentDKException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
-        Operators.Type res;
-        for (Formula mentalModel : dk.getComplementaryFormulas()) {
-            res = determineFulfillment(agent, dk, mentalModel);
-        }
-        return null; //todo ?
-    }
-
-    /**
-     * Allows to perform multiple checking for epistemical condition fulfillment for same knowledge distribution and
-     * different formulas (but associated with mental models used to generate this certain knowledge distribution).
-     *
-     * @param agent
-     * @param dk
-     * @param formulas
-     * @return
-     */
-
-    static boolean determineFulfillments(Agent agent, DistributedKnowledge dk, Formula... formulas) throws InvalidFormulaException, NotApplicableException {
-        List<Operators.Type> res = new ArrayList<>();
-        for (Formula f : formulas) {
-            res.add(determineFulfillment(agent, dk, f));
-        }
-        //do sth with results //todo
-        return false;
-    }
-
-    /**
-     * Realizes verification of epistemic fulfillment relationship's conditions for formula given through
-     * knowledge distribution. The given formula should be associated with given knowledge distribution.
-     * Checks what type of extension of formula can occur. The following assumption was made: For any extended formula
-     * (modal formula) there are only one modal operator which can be applied to this formula at once.
-     * According to that, this method returns type of operator which can be used in formula without breaking
-     * epistemic fulfillment relationship's conditions.
-     * Timestamp is taken from given distribution of knowledge.
-     *
-     * @param agent Subject of knowledge.
-     * @param dk    Distributed knowledge for respective grounding sets related with certain formula.
-     * @return Type of operator which can be applied to formula given through distribution of knowledge.
-     * @see DistributedKnowledge
-     */
-
-    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
-        int timestamp = dk.getTimestamp();
-        BaseProfile lmBp = new BaseProfile(dk.getTimestamp());
-        BaseProfile wmBp = new BaseProfile(dk.getTimestamp());
-        Set<Object> objects = new HashSet<>();
-
-        IndividualModel describedObj = formula.getModel();
-        List<Trait> describedTraits = formula.getTraits();
-        List<State> states = formula.getStates();
-        //mentalModel.
-        //boolean isNegated = state.equals(State.IS) ? true : false;
-
-        List<Set<Object>> objsWithClearState = new ArrayList<>();
-/**
- * Represents objsWithPositiveState or objsWithNegativeState - depending on state value
- */
-
-        List<Set<Object>> objsWithGivenState = new ArrayList<>();
-
-        List<Set<Object>> indefiniteByTrait = new ArrayList<>();
-        BPCollection.MemoryType selectedMemory = BPCollection.MemoryType.WM;
-
-
-//        setCommonObjects(timestamp, agent, dk, lmBp, wmBp, observations, describedObj, describedTrait, objsWithClearState,
-//                objsWithGivenState, indefiniteByTrait, isNegated);
-        setCommonObjects(timestamp, agent, lmBp, wmBp, objects, describedObj, new HashSet<>(describedTraits), objsWithClearState,
-                objsWithGivenState, indefiniteByTrait, states);
-
-        Map<Formula, Set<BaseProfile>> groundingSets = dk.getGroundingSets();
-        Set<BaseProfile> selsectedClass = dk.getDkClassByDesc(formula, selectedMemory);
-
-        return checkEpistemicConditions(indefiniteByTrait, describedObj, groundingSets, selsectedClass, timestamp, objsWithGivenState, formula);
-    }
-
-    static double determineFulfillmentDouble(Agent agent, DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
-        int timestamp = dk.getTimestamp();
-        BaseProfile lmBp = new BaseProfile(dk.getTimestamp());
-        BaseProfile wmBp = new BaseProfile(dk.getTimestamp());
-        Set<Object> objects = new HashSet<>();
-
-        IndividualModel describedObj = formula.getModel();
-        List<Trait> describedTraits = formula.getTraits();
-        List<State> states = formula.getStates();
-        //mentalModel.
-        //boolean isNegated = state.equals(State.IS) ? true : false;
-
-        List<Set<Object>> objsWithClearState = new ArrayList<>();
-/**
- * Represents objsWithPositiveState or objsWithNegativeState - depending on state value
- */
-
-        List<Set<Object>> objsWithGivenState = new ArrayList<>();
-
-        List<Set<Object>> indefiniteByTrait = new ArrayList<>();
-        BPCollection.MemoryType selectedMemory = BPCollection.MemoryType.WM;
-
-
-//        setCommonObjects(timestamp, agent, dk, lmBp, wmBp, observations, describedObj, describedTrait, objsWithClearState,
-//                objsWithGivenState, indefiniteByTrait, isNegated);
-        setCommonObjects(timestamp, agent, lmBp, wmBp, objects, describedObj, new HashSet<>(describedTraits), objsWithClearState,
-                objsWithGivenState, indefiniteByTrait, states);
-
-        Map<Formula, Set<BaseProfile>> groundingSets = dk.getGroundingSets();
-        Set<BaseProfile> selsectedClass = dk.getDkClassByDesc(formula, selectedMemory);
-
-        return getValueOfObservation(indefiniteByTrait, describedObj, groundingSets, selsectedClass, timestamp, objsWithGivenState, formula);
-    }
-
-    public static double getValueOfObservation(List<Set<Object>> indefiniteByTrait, IndividualModel describedObj,
-                                               Map<Formula, Set<BaseProfile>> groundingSets, Set<BaseProfile> selectedClass,
-                                               int timestamp, List<Set<Object>> objsWithGivenState,
-                                               Formula formula) throws NotApplicableException {
-        return relativeCard(groundingSets, timestamp, formula);
-    }
-
-    private static void setCommonObjects(int timestamp, Agent agent, BaseProfile lmBp, BaseProfile wmBp,
-                                         Set<Object> objects, Object describedObj, Set<Trait> describedTraits,
-                                         List<Set<Object>> objsWithClearState, //one set for each trait
-                                         List<Set<Object>> objsWithGivenState,
-                                         List<Set<Object>> indefiniteByTrait, List<State> states) throws InvalidFormulaException {
-        lmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.LM));
-        wmBp.copy(agent.getKnowledgeBase().getBaseProfile(timestamp, BPCollection.MemoryType.WM));
-        objects.addAll(BaseProfile.getAffectedIMs(lmBp, wmBp));
-//        describedObj.copy(dk.getModel());
-//        describedTrait.copy(dk.getTrait());
-
-        if (describedTraits.size() != states.size())
-            throw new com.pwr.zpi.exceptions.InvalidFormulaException("States doesn't match to given traits.");
-        Iterator<State> stateIt = states.iterator();
-        for (Trait t : describedTraits) {
-        /*    objsWithClearState.add(new HashSet<>(Observation.getAffectedIMs(
-                    lmBp.getIMsNotDescribedByTrait(t),
-                    wmBp.getIMsNotDescribedByTrait(t),
-                    lmBp.getIMsDescribedByTrait(t),
-                    wmBp.getIMsDescribedByTrait(t))));
-                    todo bledy z powodu obserwacji
-                    */
-
-            State state = stateIt.next();
-            /*objsWithGivenState.add(new HashSet<>(Observation.getAffectedIMs(
-                    lmBp.getIMsByTraitState(t, state),
-                    wmBp.getIMsByTraitState(t, state))));
-                    todo bledy z powodu obserwacji
-                    */
-
-            indefiniteByTrait.add(new HashSet<Object>(objects));
-            indefiniteByTrait.removeAll(objsWithClearState);
-        }
-
-    }
-
-    /**
-     * Decides for which modal operator, formula given through observations related to traits, can occur.
-     *
-     * @param indefiniteByTrait
-     * @param describedObj
-     * @param
-     * @param timestamp
-     * @param
-     * @param
-     * @return
-     */
-
-    private static Operators.Type checkEpistemicConditions(List<Set<Object>> indefiniteByTrait, Object describedObj,
-                                                           Map<Formula, Set<BaseProfile>> groundingSets, Set<BaseProfile> selectedClass,
-                                                           int timestamp, List<Set<Object>> objsWithGivenState,
-                                                           Formula formula) throws NotApplicableException {
-        if (eachContains(indefiniteByTrait, describedObj, Operators.Type.AND) && !selectedClass.isEmpty()) {
-            double currRelCard = relativeCard(groundingSets, timestamp, formula);
-            if (currRelCard >= MIN_POS && currRelCard < MAX_POS)
-                return Operators.Type.POS;
-            if (currRelCard >= MIN_BEL && currRelCard < MAX_BEL)
-                return Operators.Type.BEL;
-            if (currRelCard == KNOW)
-                return Operators.Type.KNOW;
-        } else {
-            if (eachContains(objsWithGivenState, describedObj, Operators.Type.AND))
-                return Operators.Type.KNOW;
-            else {
-/*can use AND, OR, XOR*/
-
-
-            }
-        }
-        return null;
-    }
-
-
-    //todo move to utils
-    private static <T extends Object> boolean eachContains(Collection<Set<T>> c, Object obj, Operators.Type op) {
-        boolean res = op.equals(Operators.Type.AND), curr = false;
-        for (Set<T> elem : c) {
-            curr = new ArrayList<>(elem).contains(obj);
-            switch (op) {
-                case AND:
-                    res = res && curr;
-                case OR:
-                    res = res || curr;
-            }
-        }
-        return res;
     }
 
     /**
@@ -459,7 +373,7 @@ public class Grounder {
      */
 
 
-    static double getCard(Set<IndividualModel> groundingSet, int t) {
+    static double getCard(Set<BaseProfile> groundingSet, int t) {
         return groundingSet.size();
     }
 

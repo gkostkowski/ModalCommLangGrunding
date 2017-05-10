@@ -4,6 +4,7 @@ import com.pwr.zpi.*;
 
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
+import com.sun.istack.internal.NotNull;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -39,9 +40,11 @@ public class DistributedKnowledge {
     private int timestamp;
     private final Formula formula;
     private final List<Trait> traits;
-    private final IndividualModel obj;
+    private final IndividualModel individualModel;
     private Set<BaseProfile> inLM;
     private Set<BaseProfile> inWM;
+
+    private BPCollection relatedObservationsBase;
 
     private List<Formula> formulas = new ArrayList<>();
     /**
@@ -67,14 +70,15 @@ public class DistributedKnowledge {
         this.timestamp = timestamp;
         this.formula = formula;
         this.traits = formula.getTraits();
-        this.obj = formula.getModel();
+        this.individualModel = formula.getModel();
         dkClasses = new HashMap<>();
         dkComplexity = makeCompleteDistribution ? DKMode.COMPLEX : DKMode.SINGLE;
 
-        inLM = agent.getKnowledgeBase().getBaseProfiles(timestamp, BPCollection.MemoryType.LM);
-        inWM = agent.getKnowledgeBase().getBaseProfiles(timestamp, BPCollection.MemoryType.WM);
+        relatedObservationsBase = agent.getKnowledgeBase();
 
-        //initSets();
+        inLM = relatedObservationsBase.getBaseProfiles(timestamp, BPCollection.MemoryType.LM);
+        inWM = relatedObservationsBase.getBaseProfiles(timestamp, BPCollection.MemoryType.WM);
+
         if (makeCompleteDistribution)
             groundingSets = Grounder.getGroundingSets(formula, BPCollection.asBaseProfilesSet(inWM, inLM));
         else {
@@ -136,7 +140,7 @@ public class DistributedKnowledge {
         if (!ra.containsAll(intersection1))
             throw new NotConsistentDKException();
         Set<BaseProfile> intersection2 = new HashSet<BaseProfile>(inLM);
-        intersection1.retainAll(groundingSet);
+        intersection2.retainAll(groundingSet);
         if (!ta.containsAll(intersection2))
             throw new NotConsistentDKException();
         Set<BaseProfile> intersection3 = new HashSet<BaseProfile>(ra);
@@ -158,6 +162,12 @@ public class DistributedKnowledge {
     }
 
 
+    /**
+     * Return knowledge distribution classes. Note that if there are no base profile that fulfills requirements then
+     * empty map entries will be returned.
+     * @return
+     */
+    @NotNull
     public Map<Pair<Formula, BPCollection.MemoryType>, Set<BaseProfile>> getDistributionClasses() {
         return dkClasses;
     }
@@ -171,7 +181,7 @@ public class DistributedKnowledge {
     }
 
     public IndividualModel getObservation() {
-        return obj;
+        return individualModel;
     }
 
     public List<Trait> getTraits() throws InvalidFormulaException {
@@ -197,5 +207,13 @@ public class DistributedKnowledge {
 
     public Set<BaseProfile> getGroundingSet(Formula formula) {
         return groundingSets.get(formula);
+    }
+
+    public DKMode getDkComplexity() {
+        return dkComplexity;
+    }
+
+    public BPCollection getRelatedObservationsBase() {
+        return relatedObservationsBase;
     }
 }

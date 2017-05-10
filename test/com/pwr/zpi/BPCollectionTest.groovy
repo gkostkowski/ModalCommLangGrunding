@@ -3,6 +3,7 @@ import com.pwr.zpi.BaseProfile
 import com.pwr.zpi.IndividualModel
 import com.pwr.zpi.ObjectType
 import com.pwr.zpi.QRCode
+import com.pwr.zpi.State
 import com.pwr.zpi.Trait
 import org.junit.Test
 
@@ -16,6 +17,9 @@ class BPCollectionTest extends GroovyTestCase {
     BaseProfile bp1, bp2, bp3, bp4, bp5, bp2_2;
     int t0, t1, t2, t3, t4, t5
     BPCollection testBpc
+    def tr1, tr2, tr3, tr4, tr5
+    def is= State.IS, isNot = State.IS_NOT, mayhaps = State.MAYHAPS
+    def model1, model2, model3, model4, model5, model6, model7
 
     /**
      * Builds dependencies.
@@ -25,8 +29,7 @@ class BPCollectionTest extends GroovyTestCase {
      */
     void build() {
 
-        def tr1, tr2, tr3, tr4, tr5
-        def model1, model2, model3, model4, model5, model6, model7
+
         def usedIMs
         int defTime = 1
 
@@ -68,7 +71,8 @@ class BPCollectionTest extends GroovyTestCase {
                                indefiniteByTraits] as List, t1)
         bp3 = new BaseProfile([describedByTraits, notDescribedByTraits,
                                indefiniteByTraits] as List, t3)
-        bp4 = new BaseProfile([describedByTraits, notDescribedByTraits,
+        bp4 = new BaseProfile([[(tr1): [model1, model2] as Set<IndividualModel>,
+                                (tr2): [model3, model1, model4] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>, notDescribedByTraits,
                                indefiniteByTraits] as List, t4)
         bp5 = new BaseProfile(t5)
     }
@@ -256,5 +260,18 @@ class BPCollectionTest extends GroovyTestCase {
     void testSpotLastTimestamp() {
 
     }
+
+    @Test
+    void testGetIMsByTraitState() {
+        buildTestObject()
+        def resIMs
+        resIMs= testBpc.getIMsByTraitState(tr1, is, t5)
+        assertEquals([model1, model3, model4] as Set, resIMs = testBpc.getIMsByTraitState(tr2, is, t4))
+        assertEquals([model3, model4] as Set, resIMs = testBpc.getIMsByTraitState(tr2, is, t3))
+        assertEquals([] as Set, resIMs = testBpc.getIMsByTraitState(tr5, is, t5))
+
+    }
+
+
 
 }

@@ -10,8 +10,10 @@ import com.pwr.zpi.State
 import com.pwr.zpi.Trait
 import com.pwr.zpi.language.ComplexFormula
 import com.pwr.zpi.language.DistributedKnowledge
+import com.pwr.zpi.language.Formula
 import com.pwr.zpi.language.Operators
 import com.pwr.zpi.language.SimpleFormula
+import javafx.util.Pair
 import org.junit.Test
 
 class DistributedKnowledgeTest extends GroovyTestCase {
@@ -63,13 +65,13 @@ class DistributedKnowledgeTest extends GroovyTestCase {
 
     Map<Trait, Set<IndividualModel>> describedByTraits, notDescribedByTraits,
                                      indefiniteByTraits;
-    BaseProfile bp1, bp2, bp3, bp4, bp5, bp2_2;
+    BaseProfile bp1, bp2, bp3, bp4, bp5, bp6, bp2_2;
     int t0, t1, t2, t3, t4, t5
     BPCollection bpCollection1
     Agent agent
-    SimpleFormula sformula1,sformula2
-    ComplexFormula cformula1
-    DistributedKnowledge testDk,testDk1,testDk2
+    SimpleFormula sformula1, sformula2, sformula3
+    ComplexFormula cformula1, cformula2
+    DistributedKnowledge testDk, testDk1, testDk2, testDk3, testDk4, testDk5, testDk6
 
     /**
      * Builds dependencies.
@@ -89,7 +91,7 @@ class DistributedKnowledgeTest extends GroovyTestCase {
         tr3 = new Trait("White")
         tr4 = new Trait("Soft")
         tr5 = new Trait("Warm")
-        def oType1 = new ObjectType("Type1", [tr1, tr2, tr3])
+        def oType1 = new ObjectType("Type1", [tr1, tr2, tr3, tr4])
         def oType2 = new ObjectType("Type2", [tr1, tr4])
         def oType3 = new ObjectType("Type3", [tr2, tr3])
         def oType4 = new ObjectType("Type4", [tr2, tr4])
@@ -104,9 +106,9 @@ class DistributedKnowledgeTest extends GroovyTestCase {
         model6 = new IndividualModel(new QRCode("ID6"), oType6)
         model7 = new IndividualModel(new QRCode("ID7"), oType7)
 
-        describedByTraits = [(tr1): [model1, model2] as Set<IndividualModel>,
-                             (tr2): [model3, model4] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>;
-        notDescribedByTraits = [(tr1): [model6] as Set,
+        describedByTraits = [(tr1): [model2] as Set<IndividualModel>,
+                             (tr2): [model1, model3, model4] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>;
+        notDescribedByTraits = [(tr1): [model1, model6] as Set,
                                 (tr4): [model6] as Set]
         indefiniteByTraits = [(tr1): [model5] as Set,
                               (tr2): [model5] as Set]
@@ -125,25 +127,37 @@ class DistributedKnowledgeTest extends GroovyTestCase {
         bp4 = new BaseProfile([describedByTraits, notDescribedByTraits,
                                indefiniteByTraits] as List, t4)
         bp5 = new BaseProfile(t5)
+        bp6 = new BaseProfile([describedByTraits, [(tr1): [model1, model6] as Set,
+                                                   (tr4): [model1, model6] as Set],
+                               indefiniteByTraits] as List, t4)
 
 
-        bpCollection1 = new BPCollection([bp1, bp2] as Set, [bp3, bp4] as Set)
+        bpCollection1 = new BPCollection([bp1, bp2] as Set, [bp3, bp4, bp6] as Set)
 
         agent = new Agent(bpCollection1)
 
-        def formulaIM = new IndividualModel(new QRCode("ID1"), oType1);
+        def formulaIM = model1
 
-        sformula1 = new SimpleFormula(formulaIM, tr1, false);
-        sformula2 = new SimpleFormula(formulaIM, tr1, true);
-        cformula1 = new ComplexFormula(formulaIM, [tr1, tr2], [State.IS_NOT, State.IS], Operators.Type.AND)
+        sformula1 = new SimpleFormula(formulaIM, tr2, false); // black(individualModel:id1)
+        sformula2 = new SimpleFormula(formulaIM, tr1, true); // !red(individualModel:id1)
+        sformula3 = new SimpleFormula(formulaIM, tr4, true); // !warm(individualModel:id1)
+        cformula1 = new ComplexFormula(formulaIM, [tr1, tr2],
+                [State.IS_NOT, State.IS], Operators.Type.AND) // !red(individualModel:id1) && black(individualModel:id1)
+        cformula2 = new ComplexFormula(formulaIM, [tr1, tr2],
+                [State.IS, State.IS_NOT], Operators.Type.AND) // red(individualModel:id1) && !black(individualModel:id1)
 
     }
 
     void buildTestObject() {
         build()
         def currTime = agent.knowledgeBase.getTimestamp()
-        testDk1 = new DistributedKnowledge(agent, sformula1)
-        testDk2 = new DistributedKnowledge(agent, cformula1)
+        testDk1 = new DistributedKnowledge(agent, sformula1) //with simple formula - at least one matching base profile
+        testDk2 = new DistributedKnowledge(agent, cformula1) //with complex formula - at least one matching base profile
+        testDk3 = new DistributedKnowledge(agent, sformula2) //with other simple formula - at least one matching base profile
+        testDk4 = new DistributedKnowledge(agent, sformula1, t3) // till given timestamp
+        testDk5 = new DistributedKnowledge(agent, sformula3) //only one matching base profile
+        testDk6 = new DistributedKnowledge(agent, cformula2) // empty results
+
     }
 
     @Test
@@ -151,14 +165,62 @@ class DistributedKnowledgeTest extends GroovyTestCase {
         build()
         testDk1 = new DistributedKnowledge(agent, sformula1)
         testDk2 = new DistributedKnowledge(agent, cformula1)
-        shouldFail { testDk = new DistributedKnowledge(agent, null)}
-        shouldFail { testDk = new DistributedKnowledge(null, sformula1)}
+
+        shouldFail { testDk = new DistributedKnowledge(agent, null) }
+        shouldFail { testDk = new DistributedKnowledge(null, sformula1) }
     }
 
     @Test
     void testDK() {  //general checking
         buildTestObject()
         def dkClasses = testDk1.getDistributionClasses()
-        println(dkClasses)
+        assert dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.WM)).contains(bp1)
+        assert !dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.WM)).contains(bp2)
+        assert dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.LM)).contains(bp3)
+        assert dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.LM)).contains(bp4)
+        assert !dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.LM)).contains(bp5)
+        assert !dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.WM)).contains(bp5)
+
+        dkClasses = testDk2.getDistributionClasses()
+        assert dkClasses.get(new Pair(cformula1, BPCollection.MemoryType.WM)).contains(bp1)
+        assert !dkClasses.get(new Pair(cformula1, BPCollection.MemoryType.WM)).contains(bp2)
+        assert dkClasses.get(new Pair(cformula1, BPCollection.MemoryType.LM)).contains(bp3)
+        assert dkClasses.get(new Pair(cformula1, BPCollection.MemoryType.LM)).contains(bp4)
+        assert !dkClasses.get(new Pair(cformula1, BPCollection.MemoryType.LM)).contains(bp5)
+        assert !dkClasses.get(new Pair(cformula1, BPCollection.MemoryType.WM)).contains(bp5)
+        assertNull dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.WM))
+
+
+        dkClasses = testDk3.getDistributionClasses()
+        assert dkClasses.get(new Pair(sformula2, BPCollection.MemoryType.WM)).contains(bp1)
+        assertNull dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.WM))
+        assertNull dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.LM))
+        assert dkClasses.get(new Pair(sformula2, BPCollection.MemoryType.LM)).contains(bp3)
+        assert dkClasses.get(new Pair(sformula2, BPCollection.MemoryType.LM)).contains(bp4)
+        assert !dkClasses.get(new Pair(sformula2, BPCollection.MemoryType.LM)).contains(bp5)
+        assert !dkClasses.get(new Pair(sformula2, BPCollection.MemoryType.WM)).contains(bp5)
+
+
+        dkClasses = testDk4.getDistributionClasses()
+        assert dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.WM)).contains(bp1)
+        assert !dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.WM)).contains(bp2)
+        assert dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.LM)).contains(bp3)
+        assert !dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.LM)).contains(bp4)
+        assert !dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.LM)).contains(bp5)
+        assert !dkClasses.get(new Pair(sformula1, BPCollection.MemoryType.WM)).contains(bp5)
+
+        dkClasses = testDk5.getDistributionClasses()
+        assert !dkClasses.get(new Pair(sformula3, BPCollection.MemoryType.WM)).contains(bp1)
+        assert !dkClasses.get(new Pair(sformula3, BPCollection.MemoryType.WM)).contains(bp2)
+        assert !dkClasses.get(new Pair(sformula3, BPCollection.MemoryType.LM)).contains(bp3)
+        assert !dkClasses.get(new Pair(sformula3, BPCollection.MemoryType.LM)).contains(bp4)
+        assert !dkClasses.get(new Pair(sformula3, BPCollection.MemoryType.LM)).contains(bp5)
+        assert !dkClasses.get(new Pair(sformula3, BPCollection.MemoryType.WM)).contains(bp6)
+        assert dkClasses.get(new Pair(sformula3, BPCollection.MemoryType.LM)).contains(bp6)
+
+        dkClasses = testDk6.getDistributionClasses()
+        assert !dkClasses.isEmpty()
+        for (def entry : dkClasses)
+            assert entry.value.isEmpty()
     }
 }
