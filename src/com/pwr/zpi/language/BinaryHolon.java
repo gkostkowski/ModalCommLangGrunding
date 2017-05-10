@@ -63,9 +63,6 @@ public class BinaryHolon extends Holon{
     public double getnot_P(){
         return Tao.getV();
     }
-    public Formula getFormula(){
-        return formula;
-    }
 	/*public com.pwr.zpi.language.Operators.Type getDominant(){
 	return Tao.getP() > Tao.getnot_P() ? com.pwr.zpi.language.Operators.Type.KNOW :com.pwr.zpi.language.Operators.Type.NOT ;
 	}*/
