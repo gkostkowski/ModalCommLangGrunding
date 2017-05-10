@@ -6,10 +6,11 @@ import com.pwr.zpi.BaseProfile
 import com.pwr.zpi.IndividualModel
 import com.pwr.zpi.ObjectType
 import com.pwr.zpi.QRCode
+import com.pwr.zpi.State
 import com.pwr.zpi.Trait
 import com.pwr.zpi.language.ComplexFormula
 import com.pwr.zpi.language.DistributedKnowledge
-import com.pwr.zpi.language.Formula
+import com.pwr.zpi.language.Operators
 import com.pwr.zpi.language.SimpleFormula
 import org.junit.Test
 
@@ -68,7 +69,7 @@ class DistributedKnowledgeTest extends GroovyTestCase {
     Agent agent
     SimpleFormula sformula1,sformula2
     ComplexFormula cformula1
-    DistributedKnowledge testDk
+    DistributedKnowledge testDk,testDk1,testDk2
 
     /**
      * Builds dependencies.
@@ -95,13 +96,13 @@ class DistributedKnowledgeTest extends GroovyTestCase {
         def oType5 = new ObjectType("Type5", [tr3, tr4])
         def oType6 = new ObjectType("Type6", [tr2, tr4, tr1])
         def oType7 = new ObjectType("Type7", [tr2, tr4, tr1, tr3])
-        model1 = new IndividualModel(new QRCode("ID"), oType1)
-        model2 = new IndividualModel(new QRCode("ID"), oType2)
-        model3 = new IndividualModel(new QRCode("ID"), oType3)
-        model4 = new IndividualModel(new QRCode("ID"), oType4)
-        model5 = new IndividualModel(new QRCode("ID"), oType5)
-        model6 = new IndividualModel(new QRCode("ID"), oType6)
-        model7 = new IndividualModel(new QRCode("ID"), oType7)
+        model1 = new IndividualModel(new QRCode("ID1"), oType1)
+        model2 = new IndividualModel(new QRCode("ID2"), oType2)
+        model3 = new IndividualModel(new QRCode("ID3"), oType3)
+        model4 = new IndividualModel(new QRCode("ID4"), oType4)
+        model5 = new IndividualModel(new QRCode("ID5"), oType5)
+        model6 = new IndividualModel(new QRCode("ID6"), oType6)
+        model7 = new IndividualModel(new QRCode("ID7"), oType7)
 
         describedByTraits = [(tr1): [model1, model2] as Set<IndividualModel>,
                              (tr2): [model3, model4] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>;
@@ -130,27 +131,34 @@ class DistributedKnowledgeTest extends GroovyTestCase {
 
         agent = new Agent(bpCollection1)
 
-        def formulaIM = new IndividualModel(new QRCode("id1"), oType1);
+        def formulaIM = new IndividualModel(new QRCode("ID1"), oType1);
 
-        sformula1 = new SimpleFormula(formulaIM, tr2, false);
-        sformula2 = new SimpleFormula(formulaIM, tr2, true);
+        sformula1 = new SimpleFormula(formulaIM, tr1, false);
+        sformula2 = new SimpleFormula(formulaIM, tr1, true);
+        cformula1 = new ComplexFormula(formulaIM, [tr1, tr2], [State.IS_NOT, State.IS], Operators.Type.AND)
+
     }
 
     void buildTestObject() {
         build()
         def currTime = agent.knowledgeBase.getTimestamp()
-        testDk = new DistributedKnowledge(agent, sformula1, currTime)
+        testDk1 = new DistributedKnowledge(agent, sformula1)
+        testDk2 = new DistributedKnowledge(agent, cformula1)
     }
 
     @Test
     void testConstructor() {
         build()
-        testDk = new DistributedKnowledge(agent, sformula1)
+        testDk1 = new DistributedKnowledge(agent, sformula1)
+        testDk2 = new DistributedKnowledge(agent, cformula1)
         shouldFail { testDk = new DistributedKnowledge(agent, null)}
         shouldFail { testDk = new DistributedKnowledge(null, sformula1)}
     }
 
     @Test
-    void testGetGroundingSet() {
+    void testDK() {  //general checking
+        buildTestObject()
+        def dkClasses = testDk1.getDistributionClasses()
+        println(dkClasses)
     }
 }

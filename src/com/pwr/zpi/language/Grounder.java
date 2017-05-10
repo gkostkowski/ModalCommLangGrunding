@@ -25,83 +25,34 @@ public class Grounder {
          * It supports simple and complex formulas.
          *
          * @param formula Considered formula.
-         * @param time
-         * @param all
-         * @param states  Represents especially two states: IS and IS_NOT, which determines weather simple formula, part of
-         *                complex formula will require checking associated to observations described by Trait or observations
-         *                NOT described by Trait.
-         * @return Collection of grounding sets.
+         * @param all Sef of all available (for agent) base profiles, regardless memory type.
+         * @return Map of grounding sets as values and respective formulas as keys.
          */
-    static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
-        IndividualModel o = formula.getModel();
-        List<Trait> traits = formula.getTraits();
-        State[] states = new State[traits.size()];
-        List<State> s = formula.getStates();
-        states = s.toArray(states);
-        if (o == null || traits == null || states == null)
-            throw new InvalidFormulaException("Invalid formula");
+    static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, Set<BaseProfile> all) throws InvalidFormulaException {
+        if (formula == null || all == null)
+            throw new NullPointerException("One of parameters is null.");
 
-        List<Formula> parts = new ArrayList<>();
         Map<Formula, Set<BaseProfile>> res = new HashMap<>();
 
-        Operators.Type type = null;
-        boolean isComplex = false;
-        if (isComplex = formula instanceof ComplexFormula) {
-            parts.addAll(((ComplexFormula) formula).getParts());
-            type = ((ComplexFormula) formula).getOperator().getType();
-        } else
-            parts.add(formula);
+        Set<Formula> complementaryFormulas = formula.getComplementaryFormulas();
+        for (Formula f : complementaryFormulas)
+            res.put(f, getGroundingSet(f, all));
+        return res;
+    }
 
-        int fstStateCounter = 0,
-                sndStateCounter = 0;
-        for (Formula atomicFormula : parts) {
-            for (State state : states) {
-                List<State> statesSeq = Arrays.asList(states[fstStateCounter], states[sndStateCounter]);
-                Formula mentalModel = isComplex ? new ComplexFormula(o, traits, statesSeq, type) : new SimpleFormula(o, traits, statesSeq);
-                Set<BaseProfile> currSet = null;
-                res.put(mentalModel, currSet = new HashSet<>());
-                for (BaseProfile bp : all) {
-                    if (isFulfilled(new ArrayList<>(traits), time, statesSeq, type, bp))
-                        currSet.add(bp);
-                }
-                fstStateCounter = (fstStateCounter + 1) % states.length;
-            }
-            sndStateCounter = (sndStateCounter + 1) % states.length;
+    static Set<BaseProfile> getGroundingSet(Formula formula, Set<BaseProfile> all) throws InvalidFormulaException {
+        if (formula == null || all == null)
+            throw new NullPointerException("One of parameters is null.");
+
+        Set<BaseProfile> res = new HashSet<>();
+        for (BaseProfile bp : all) {
+            if (formula.isFormulaFulfilled(bp))
+                res.add(bp);
         }
         return res;
     }
 
-    /**
-     * Checks if condition (for sample or complex formula) is fulfilled. While building condition, takes into account order
-     * of traits and states in given lists.
-     * In most cases, it runs for one or two iterations (for complex formula): state1(trait1(o)) op state2(trait2(o)).
-     *
-     * @param traits
-     * @param time
-     * @param states Should be placed in certain positions, respectiovely to traits.
-     * @param op
-     * @param bp
-     * @return
-     */
-    static private boolean isFulfilled(List<Trait> traits, int time, List<State> states, Operators.Type op, BaseProfile bp) {
-        if (traits.size() != states.size())
-            throw new IllegalStateException("Number of traits differs from amount of states.");
 
-        if (op == null) //case for simple formula
-            op = Operators.Type.AND;
-        boolean res = op.equals(Operators.Type.AND) ? true : false; //so far, applicable only for AND or OR
-        for (int i = 0; i < traits.size(); i++) {
-            boolean curr = bp.DetermineIfSetHasTrait(traits.get(i), time);
-            switch (op) {
-                case AND:
-                    res = res && curr;
-                    break;
-                case OR:
-                    res = res || curr;
-            }
-        }
-        return res;
-    }
     /*
     static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, int time, Set<BaseProfile> all) throws InvalidFormulaException {
         return getGroundingSets(formula, time, all);
@@ -165,9 +116,7 @@ public class Grounder {
     /**
      * Value of relative power of grounding lambda for base form p(o)
      *
-     * @param groundingSetPositive Set of Positive BaseProfiles
-     * @param groundingSetNegative Set of Negative BaseProfiles
-     * @param time                 given time
+     * @param time given time
      * @return Cardinality (ratio) of Positive BaseProfiles to all
      */
 
@@ -182,9 +131,7 @@ public class Grounder {
     /**
      * Value of relative power of grounding lambda for base form not p(o)
      *
-     * @param groundingSetPositive Set of Positive BaseProfiles
-     * @param groundingSetNegative Set of Negative BaseProfiles
-     * @param time                 Given time
+     * @param time Given time
      * @return Cardinality (ratio) of Negative BaseProfiles to all
      */
 
@@ -228,7 +175,7 @@ public class Grounder {
     /**
      * Builds distributed knowledge, which will be used to make respective mental models associated
      * with formulas. It can be used to build distribution of different mental models.
-     * Builded distributed knowledge is related to certain moment in time.
+     * Built distributed knowledge is related to certain moment in time.
      *
      * @param agent   The knowledge subject.
      * @param formula Formula which
@@ -249,7 +196,7 @@ public class Grounder {
 
     static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         Operators.Type res;
-        for (Formula mentalModel : dk.getMentalModels()) {
+        for (Formula mentalModel : dk.getComplementaryFormulas()) {
             res = determineFulfillment(agent, dk, mentalModel);
         }
         return null; //todo ?
@@ -441,7 +388,7 @@ public class Grounder {
     private static <T extends Object> boolean eachContains(Collection<Set<T>> c, Object obj, Operators.Type op) {
         boolean res = op.equals(Operators.Type.AND), curr = false;
         for (Set<T> elem : c) {
-            curr = elem.contains(obj);
+            curr = new ArrayList<>(elem).contains(obj);
             switch (op) {
                 case AND:
                     res = res && curr;

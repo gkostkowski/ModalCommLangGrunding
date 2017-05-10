@@ -61,4 +61,21 @@ public class IndividualModel {
         return false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IndividualModel that = (IndividualModel) o;
+
+        if (!getIdentifier().equals(that.getIdentifier())) return false;
+        return getType().equals(that.getType());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getIdentifier().hashCode();
+        result = 31 * result + getType().hashCode();
+        return result;
+    }
 }

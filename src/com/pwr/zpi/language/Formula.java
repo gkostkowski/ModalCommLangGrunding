@@ -1,8 +1,11 @@
 package com.pwr.zpi.language;
 
 import com.pwr.zpi.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -16,6 +19,20 @@ public abstract class Formula {
     public abstract Type getType();
 
     public abstract List<State> getStates();
+
+    /**
+     * Produces set of formulas which are complementary to this one. Amount and form of this formulas depends
+     * @return
+     */
+    public Set<Formula> getComplementaryFormulas() {
+        Set<Formula> res = new HashSet<>();
+        res.add(this);
+
+        // make rest of formulas
+        throw new NotImplementedException();
+
+        //return res;
+    }
 
     /**
      * Gives list of successive states. Classic case will contains states which describe whether parts of formula[traits]
@@ -38,4 +55,40 @@ public abstract class Formula {
      * @return Collections of affected traits.
      *//*
     abstract Collection<Trait> getAffectedTraits();*/
+
+    /**
+     * Checks if given base profile is in accordance with mental model implied through this formula.
+     * In other words, it checks if this formula is fulfilled by this base profile.
+     * Such situation takes place when:
+     * a. given base profile contains information about object mentioned in formula and
+     * b. this object was classified as having or not having trait(s) mentioned in formula and
+     * c. state of this trait's observation is agreeable with state of traits asked in formula
+     * <p>
+     * While building condition, takes into account order of traits and states in given lists.
+     *
+     * @param bp
+     * @return
+     */
+    public boolean isFormulaFulfilled(BaseProfile bp) {
+        IndividualModel object = getModel();
+        List<Trait> traits = getTraits();
+        List<State> states = getStates();
+        Operators.Type op = getType().equals(Formula.Type.SIMPLE_MODALITY) ? null
+                :(getType().equals(Formula.Type.MODAL_CONJUNCTION) ? Operators.Type.AND :Operators.Type.OR);
+
+        boolean res = op != null && op.equals(Operators.Type.AND) ? true : false;
+        for (int i = 0; i < traits.size(); i++) {
+            boolean partialRes = bp.checkIfObserved(object, traits.get(i), states.get(i));
+            if (op == null)
+                res = partialRes;
+            else switch (op) {
+                case AND:
+                    res = res && partialRes;
+                    break;
+                case OR:
+                    res = res || partialRes;
+            }
+        }
+        return res;
+    }
 }

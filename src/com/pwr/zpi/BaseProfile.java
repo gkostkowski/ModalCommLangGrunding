@@ -201,8 +201,29 @@ public class BaseProfile {
         }
     }
 
+    /**
+     * This method determines weather given object was included in this base profile observations and if
+     * one of its trait's value is as expected. This expectation is expressed through state parameter.
+     * @param object
+     * @param trait
+     * @param state
+     * @return
+     */
+    public boolean checkIfObserved(IndividualModel object, Trait trait, State state) {
+        if (object == null || trait == null || state == null)
+            throw new NullPointerException("One of parameters is null.");
+        switch (state) {
+            case IS:
+                return describedByTraits.containsKey(trait) && new ArrayList<>(describedByTraits.get(trait)).contains(object);
+            case IS_NOT:
+                return notDescribedByTraits.containsKey(trait) && new ArrayList<>(notDescribedByTraits.get(trait)).contains(object);
+            case MAYHAPS:
+                return indefiniteByTraits.containsKey(trait) && new ArrayList<>(indefiniteByTraits.get(trait)).contains(object);
+            default: return false;
+        }
+    }
 
-    public boolean DetermineIfSetHasTrait(Trait P, int time) {
+    public boolean DetermineIfSetHasTrait(Trait P, int time) {  //todo do wyrzucenia jesli nie uzywane przez Jareme
         return describedByTraits.containsKey(P);
     }
 
@@ -212,7 +233,7 @@ public class BaseProfile {
      * @param time
      * @return
      */
-    public boolean DetermineIfSetHasNotTrait(@SuppressWarnings("rawtypes") Trait P, int time) {
+    public boolean DetermineIfSetHasNotTrait(@SuppressWarnings("rawtypes") Trait P, int time) { //todo do wyrzucenia jesli nie uzywane przez Jareme
         return notDescribedByTraits.containsKey(P);
     }
 
