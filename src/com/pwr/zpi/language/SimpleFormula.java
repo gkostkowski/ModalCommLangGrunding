@@ -141,7 +141,6 @@ public class SimpleFormula extends Formula {
         if(other instanceof SimpleFormula)
             if(individualModel.getIdentifier().equals(other.getModel().getIdentifier()))
                 if(trait.equals(((SimpleFormula) other).trait))
-                    if(isNegated==((SimpleFormula) other).isNegated())
                         return true;
         return false;
     }

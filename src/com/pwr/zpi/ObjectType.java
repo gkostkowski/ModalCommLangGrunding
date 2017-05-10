@@ -26,6 +26,20 @@ public class ObjectType {
         return traits;
     }
 
+
+    /**
+     * Method that return a trait based on a given name
+     * @param name name of Trait
+     * @return Trait with a given name or null if object doesn't contain such trait
+     */
+    public Trait findTraitByName(String name)
+    {
+        for(Trait trait: traits)
+            if(trait.equals(name))
+                return trait;
+        return null;
+    }
+
     public static Collection<ObjectType> getObjectTypes() {
         return new XMLDAO<>().loadTypesDefinitions();
     }

@@ -8,10 +8,14 @@ public class InvalidQuestionException extends Exception {
     public static final int NO_OBJECT = 1;
     public static final int NO_FIRST_TRAIT = 2;
     public static final int NO_SECOND_TRAIT = 3;
-    public static final int NO_FIRST_VALUE = 4;
-    public static final int NO_SECOND_VALUE = 5;
+    public static final int NO_OPERATOR = 4;
 
-    private int mistake;
+    private int mistake = 0;
+
+    public InvalidQuestionException()
+    {
+        super();
+    }
 
     public InvalidQuestionException(int i)
     {
@@ -19,10 +23,9 @@ public class InvalidQuestionException extends Exception {
         mistake = i;
     }
 
-    public InvalidQuestionException(String message, int i)
+    public InvalidQuestionException(String message)
     {
         super(message);
-        mistake = i;
     }
 
     public int getMistake() {
@@ -33,11 +36,11 @@ public class InvalidQuestionException extends Exception {
     {
         switch (mistake)
         {
-            case NO_OBJECT: return "No such object in memory, sorry";
-            case NO_FIRST_TRAIT: return "No such trait as the first one in the object, sorry";
-            case NO_FIRST_VALUE: return "No such value of the first trait in the object, sorry";
-            case NO_SECOND_TRAIT: return "No such trait as the second one in the object, sorry";
-            case NO_SECOND_VALUE: return "No such value of the second trait in the object, sorry";
+            case NO_OBJECT: return "No such object in memory";
+            case NO_FIRST_TRAIT: return "No such trait as the first one in this object";
+            case NO_SECOND_TRAIT: return "No such trait as the second one in this object";
+            case NO_OPERATOR: return "No operator";
+            case 0: return "Something wrong";
             default: return null;
         }
     }

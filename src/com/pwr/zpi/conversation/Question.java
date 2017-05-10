@@ -1,146 +1,106 @@
-/*
+
 package com.pwr.zpi.conversation;
 
 import com.pwr.zpi.*;
+import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
-import com.pwr.zpi.exceptions.InvalidSentenceFormulaException;
 import com.pwr.zpi.language.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-*/
 /**
  * Created by Weronika on 24.04.2017.
- *//*
+ */
 
-public class Question<V> {
+public class Question {
 
-    private Formula formula;
-    private List<String> info;
-
-
+    private Agent agent;
     private String[] parts;
-    private int index = 0;
+    private int length;
+    private int index;
 
-    private IndividualModel model;
-    private List<Trait> traitSignatures;
-    private List<Trait> traits;
-    private List<State> states;
+    private IndividualModel individualModel;
+    private String name;
 
-    public Question(String question) throws InvalidQuestionException
+    public Question(String question, Agent agent)
     {
+        this.agent = agent;
         parts = question.split(" ");
-        states = new ArrayList<>();
-        traitSignatures = new ArrayList<>();
-        traits = new ArrayList<>();
-        info = new ArrayList<>();
+        length = parts.length;
     }
 
-    public List<String> getInfo()
+    public Formula getFormula() throws InvalidQuestionException, InvalidFormulaException
     {
-        return info;
-    }
-
-    public Formula getFormula() throws InvalidQuestionException
-    {
-        String name = parts[1]+parts[2];
-        info.add(parts[1]+ " " + parts[2]);
-        model = IMCollection.getModelFromName(name);
-        if(model == null)
-            throw new InvalidQuestionException(InvalidQuestionException.NO_OBJECT);
-        Trait trait1 = getTraitSinature();
-        if(trait1==null)
-            throw new InvalidQuestionException(InvalidQuestionException.NO_FIRST_TRAIT);
-        traitSignatures.add(trait1);
-        String value1 = getValue(trait1);
-        if(value1==null)
-            throw new InvalidQuestionException(InvalidQuestionException.NO_FIRST_VALUE);
-        Trait trait = putValue(value1, trait1);
-        traits.add(trait);
-        if(parts[index].equalsIgnoreCase("and"))
-        {
-            Trait traitSinature2 = getTraitSinature();
-            if(traitSinature2==null)
-                throw new InvalidQuestionException(InvalidQuestionException.NO_SECOND_TRAIT);
-            traitSignatures.add(traitSinature2);
-            String value2 = getValue(traitSinature2);
-            if(value2==null)
-                throw new InvalidQuestionException(InvalidQuestionException.NO_SECOND_VALUE);
-            Trait trait2 = putValue(value2, traitSinature2);
-            traits.add(trait2);
-            try
-            {
-                formula = new ComplexFormula(model, traits, states, Operators.Type.AND);
-            } catch (InvalidSentenceFormulaException e) {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
-            try {
-                formula = new SimpleFormula(model, traits, states);
-            } catch (InvalidSentenceFormulaException e) {
-                e.printStackTrace();
-            }
-        }
-        return formula;
-    }
-
-    private Trait getTraitSinature()
-    {
-        String name = parts[index];
-        info.add(name);
-        while(index<parts.length-1 && !parts[index].equalsIgnoreCase("and")) // todo inne zdania złożone
-        {
-            for(Trait trait: model.getType().getTraits())
-                if(trait.getName().equalsIgnoreCase(name))
-                    return trait;
-            index++;
-            name += parts[index];
-            info.get(info.size()-1).concat(" " + parts[index]);
-        }
-        return null;
-    }
-
-    private Trait putValue(String value, Trait trait)
-    {
-        String s = trait.getValueTypeString();
-        switch (s)
-        {
-            case "Boolean" : return new Trait(trait.getName(), Boolean.valueOf(value));
-            case "Integer" : return new Trait(trait.getName(), Integer.valueOf(value));
-            case "String" : return new Trait(trait.getName(), value);
-            case "Byte" : return new Trait(trait.getName(), Byte.valueOf(value));
-            case "Double" : return new Trait(trait.getName(), Double.valueOf(value));
-            case "Float" : return new Trait(trait.getName(), Float.valueOf(value));
-            case "Long" : return new Trait(trait.getName(), Long.valueOf(value));
-            case "Short" : return new Trait(trait.getName(), Short.valueOf(value));
-            case "Character" : return new Trait(trait.getName(), value.charAt(0));
-            default: return null;
-
-        }
-    }
-
-    private String getValue(Trait trait)
-    {
-        String name = "";
+        if(length<2)
+            throw new InvalidQuestionException();
+        List<Trait> traits = new ArrayList<>();
+        List<State> states = new ArrayList<>();
+        findIndividualModel();
         if(parts[index].equalsIgnoreCase("not"))
         {
             states.add(State.IS_NOT);
             index++;
-        } else states.add(State.IS);
-        info.add(parts[index]);
-        do
+        }
+        else states.add(State.IS);
+        traits.add(findTraits(1));
+        if(index<length)
         {
-            name += parts[index];
+            Operators.Type op;
+            switch (parts[index].toLowerCase())
+            {
+                case "and": op = Operators.Type.AND; break;
+                default: throw new InvalidQuestionException(InvalidQuestionException.NO_OPERATOR);
+            }
             index++;
-            if(trait.isInDomain(name))
-                return name;
-            info.get(info.size()-1).concat(" " + parts[index]);
-        } while(index<parts.length && !parts[index].equalsIgnoreCase("and")); // todo inne zdania złożone
-        return null;
+            if(parts[index].equalsIgnoreCase("not")) {
+                states.add(State.IS_NOT);
+                index++;
+            }
+            else states.add(State.IS);
+            traits.add(findTraits(2));
+            return new ComplexFormula(individualModel, traits, states, op);
+        }
+        else return new SimpleFormula(individualModel, traits, states);
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
+    private void findIndividualModel() throws InvalidQuestionException
+    {
+        String name = parts[1];
+        individualModel = agent.getModels().getRepresentationByName(name);
+        index=2;
+        while(index<length-1 && individualModel==null)
+        {
+            name += " " + parts[index];
+            individualModel = agent.getModels().getRepresentationByName(name);
+            index++;
+        }
+        this.name = name;
+        if(individualModel==null)
+            throw new InvalidQuestionException(InvalidQuestionException.NO_OBJECT);
+    }
+
+    private Trait findTraits(int which) throws InvalidQuestionException
+    {
+        String name = parts[index];
+        index++;
+        Trait trait = individualModel.getType().findTraitByName(name);
+        while(index<length && trait == null)
+        {
+            name +=parts[index];
+            trait = individualModel.getType().findTraitByName(name);
+            index++;
+        }
+        if(trait == null)
+            if(which==1)
+                throw new InvalidQuestionException(InvalidQuestionException.NO_FIRST_TRAIT);
+            else throw new InvalidQuestionException(InvalidQuestionException.NO_SECOND_TRAIT);
+        return trait;
+    }
 }
-*/
+

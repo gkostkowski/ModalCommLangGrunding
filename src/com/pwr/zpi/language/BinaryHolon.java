@@ -1,6 +1,7 @@
 package com.pwr.zpi.language;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,8 +26,8 @@ public class BinaryHolon extends Holon{
             double sumPositive = 0;
             double sumNegative = 0;
             for(BaseProfile bp:baseProfile){
-                sumPositive += Grounder.relativePositiveCard(bp.getIMsDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getIMsNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
-                sumNegative += Grounder.relativeNegativeCard(bp.getIMsDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getIMsNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
+      //          sumPositive += Grounder.relativePositiveCard(bp.getIMsDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getIMsNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
+      //          sumNegative += Grounder.relativeNegativeCard(bp.getIMsDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getIMsNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
             }
             if(sumPositive!= 0){
                 sumPositive=sumPositive/baseProfile.size();}
@@ -57,9 +58,11 @@ public class BinaryHolon extends Holon{
     public Formula getFormula(){
         return formula;
     }
+
     public double getP(){
         return Tao.getK();
     }
+
     public double getnot_P(){
         return Tao.getV();
     }

@@ -14,8 +14,8 @@ public class NonBinaryHolon extends Holon{
 	protected Quadrilateral Tao;
 	protected Formula formula;
 
-	public NonBinaryHolon (Agent a,int time,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
-		formula = dk.getFormula();
+	public NonBinaryHolon (Agent a,int time) throws InvalidFormulaException, NotApplicableException{
+		formula = //todo dk.getFormula();
 		update(a,a.getKnowledgeBase().getBaseProfiles(time),time,dk);
 	}
 	
@@ -60,7 +60,11 @@ public class NonBinaryHolon extends Holon{
 		return formula;
 	}
 
-	static class Quadrilateral {
+	public Quadrilateral getTao() {
+		return Tao;
+	}
+
+	public static class Quadrilateral {
 
 	    private Double PQ;
 	    private Double NPQ;

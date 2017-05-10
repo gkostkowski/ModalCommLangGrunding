@@ -48,6 +48,12 @@ public class Agent {
         models = new IMCollection();
     }
 
+    public Agent(BPCollection knowledgeBase, IMCollection models, HolonCollection holons) {
+        this.knowledgeBase = knowledgeBase;
+        this.models = models;
+        this.holons = holons;
+    }
+
     public BPCollection getKnowledgeBase() {
         return knowledgeBase;
     }
@@ -103,4 +109,11 @@ public class Agent {
         }
     }
 
+    public HolonCollection getHolons() {
+        return holons;
+    }
+
+    public void setHolons(HolonCollection holons) {
+        this.holons = holons;
+    }
 }

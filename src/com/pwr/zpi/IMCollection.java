@@ -1,6 +1,7 @@
 package com.pwr.zpi;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +28,7 @@ public class IMCollection {
         for (Identifier id: identifiers) {
             individualModelSet.add(new IndividualModel(id, id.getType()));
         }
+        lexicon = new HashMap<>();
     }
 
     public IMCollection(Set<IndividualModel> individualModelSet) {
@@ -71,13 +73,17 @@ public class IMCollection {
     /**
      * Method finds a specific individual model based on given name.
      * @param name common name for the object
-     * @return IndividualModel of the name
+     * @return IndividualModel of that name
      */
-    /*public IndividualModel getModelFromName(String name)
+    public IndividualModel getRepresentationByName(String name)
     {
-        for(IndividualModel model : individualModelSet)
-            if(model.getName().equalsIgnoreCase(name))
-                return model;
-        return null;
-    }*/
+        name = name.toLowerCase();
+        Identifier identifier = lexicon.get(name);
+        return (identifier==null)? null: getRepresentationByIdentifier(identifier);
+    }
+
+    public void addNameToModel(Identifier identifier, String name)
+    {
+        lexicon.put(name.toLowerCase(), identifier);
+    }
 }
