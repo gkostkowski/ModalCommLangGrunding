@@ -16,25 +16,28 @@ public class Grounder {
     public static final double MAX_BEL = 0.99;
     private static final double KNOW = 1.0;
 
-    /*
-        /**
-         * Gives complete collection of grounding sets for certain formula (in this context may be known as mental model).
-         * It supports simple and complex formulas.
-         *
-         * @param formula Considered formula.
-         * @param all Sef of all available (for agent) base profiles, regardless memory type.
-         * @return Map of grounding sets as values and respective formulas as keys.
-         */
-    static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, Set<BaseProfile> all) throws InvalidFormulaException {
-        if (formula == null || all == null)
+
+    /**
+     * Gives complete collection of grounding sets for certain formulas (in this context may be known as mental model).
+     * It supports simple and complex formulas.
+     *
+     * @param formulas Considered formulas.
+     * @param all      Sef of all available (for agent) base profiles, regardless memory type.
+     * @return Map of grounding sets as values and respective formulas as keys.
+     */
+    static Map<Formula, Set<BaseProfile>> getGroundingSets(Collection<Formula> formulas, Set<BaseProfile> all) throws InvalidFormulaException {
+        if (formulas == null || all == null)
             throw new NullPointerException("One of parameters is null.");
 
         Map<Formula, Set<BaseProfile>> res = new HashMap<>();
 
-        Set<Formula> complementaryFormulas = formula.getComplementaryFormulas();
-        for (Formula f : complementaryFormulas)
+        for (Formula f : formulas)
             res.put(f, getGroundingSet(f, all));
         return res;
+    }
+
+    static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, Set<BaseProfile> all) throws InvalidFormulaException {
+        return getGroundingSets(formula.getComplementaryFormulas(), all);
     }
 
     static Set<BaseProfile> getGroundingSet(Formula formula, Set<BaseProfile> all) throws InvalidFormulaException {
@@ -51,78 +54,32 @@ public class Grounder {
 
 
 
-    /**
-     * Builds distributed knowledge, which will be used to make respective mental models associated
-     * with formulas. It is used to build distribution of different mental models.
-     * Built distributed knowledge is related to certain moment in time.
-     *
-     * @param agent   The knowledge subject.
-     * @param formula Formula
-     * @param time    Certain moment in time.
-     * @return Distribution of knowledge.
-     * @throws InvalidFormulaException
-     */
-
-    @Nullable
-    static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula, int time) throws InvalidFormulaException {
-        try {
-            return new DistributedKnowledge(agent, formula, time);
-        } catch (NotConsistentDKException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * Builds distributed knowledge, which will be used to make respective mental models associated
-     * with formulas. It is used to build distribution of different mental models.
-     * Built distributed knowledge is related to timestamp of last registered by this agent base profile.
-     *
-     * @param agent   The knowledge subject.
-     * @param formula Formula
-     * @return Distribution of knowledge.
-     * @throws InvalidFormulaException
-     */
-    @Nullable
-    static DistributedKnowledge distributeKnowledge(Agent agent, Formula formula) throws InvalidFormulaException {
-        try {
-            return new DistributedKnowledge(agent, formula);
-        } catch (NotConsistentDKException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         Operators.Type res;
         for (Formula mentalModel : dk.getComplementaryFormulas()) {
-            res = determineFulfillment(agent, dk, mentalModel);
+            res = determineFulfillment(dk, mentalModel);
         }
         return null; //todo ?
     }
 
     /**
-     * Realizes verification of epistemic fulfillment relationship's conditions for formula given through
-     * knowledge distribution. The given formula should be associated with given knowledge distribution.
+     * Realizes verification of epistemic fulfillment relationship's conditions for provided formula.
+     * The given formula should be associated with given knowledge distribution.
      * Checks what type of extension of formula can occur. The following assumption was made: For any extended formula
      * (modal formula) there are only one modal operator which can be applied to this formula at once.
      * According to that, this method returns type of operator which can be used in formula without breaking
      * epistemic fulfillment relationship's conditions.
      * Timestamp is taken from given distribution of knowledge.
      *
-     * @param agent Subject of knowledge.
      * @param dk    Distributed knowledge for respective grounding sets related with certain formula.
      * @return Type of operator which can be applied to formula given through distribution of knowledge.
      * @see DistributedKnowledge
      */
-
-    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
+    static Operators.Type determineFulfillment(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
         DistributedKnowledge.DKMode dkMode = dk.getDkComplexity();
         if (dkMode.equals(DistributedKnowledge.DKMode.SINGLE) && !dk.getFormula().equals(formula)
                 || dkMode.equals(DistributedKnowledge.DKMode.COMPLEX) && !dk.getComplementaryFormulas().contains(formula))
             throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
-
-        int timestamp = dk.getTimestamp();
 
         return checkEpistemicConditions(formula, dk);
     }
@@ -130,6 +87,7 @@ public class Grounder {
 
     /**
      * Decides which modal operator can occur for given formula. If none of possible, then null is returned.
+     *
      * @param formula
      * @param dk
      * @param timestamp
@@ -156,8 +114,8 @@ public class Grounder {
 
         if (amongNoClearStateObjects) {
             double currRelCard = relativeCard(dk.getGroundingSets(), timestamp, formula);
-            Operators.Type [] checkedOps = {Operators.Type.POS, Operators.Type.BEL, Operators.Type.KNOW};
-            for (int i =0; i < checkedOps.length && res == null;i++)
+            Operators.Type[] checkedOps = {Operators.Type.POS, Operators.Type.BEL, Operators.Type.KNOW};
+            for (int i = 0; i < checkedOps.length && res == null; i++)
                 res = checkEpistemicCondition(true, isPresentInWM, currRelCard, checkedOps[i]);
         } else if (amongClearStateObjects)
             res = Operators.Type.KNOW;
@@ -177,8 +135,8 @@ public class Grounder {
      *                                 neither described as having trait(s) (listed in formula) nor not having mentioned trait(s).
      * @param isPresentInWM            Flag determining weather desired observation (agreeable with formula) is present
      *                                 in one of distributed knowledge classes related with working memory.
-     * @param relativeCard        Relative cardinality for given formula.
-     * @param inspectedOperator   Modal operator which possibility of occurrence is examined.
+     * @param relativeCard             Relative cardinality for given formula.
+     * @param inspectedOperator        Modal operator which possibility of occurrence is examined.
      * @return Given modal operator if it is applicable or null in other way.
      */
     private static Operators.Type checkEpistemicCondition(boolean amongNoClearStateObjects, boolean isPresentInWM,
@@ -199,7 +157,6 @@ public class Grounder {
         return amongNoClearStateObjects && isPresentInWM && relativeCard >= minRange && relativeCard <= maxRange ?
                 inspectedOperator : null;
     }
-
 
 
     /**

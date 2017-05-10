@@ -136,7 +136,7 @@ class SimpleFormulaTest extends GroovyTestCase
     }
 
     /**
-     * Test method that compares two formulas
+     * Test method that compares two complementaryFormulas
      */
     @Test
     void testEqual()

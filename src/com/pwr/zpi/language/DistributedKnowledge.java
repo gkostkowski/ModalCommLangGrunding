@@ -15,6 +15,7 @@ import java.util.*;
  * (which induces mental models).
  * Note: By default, each instance of this class contains knowledge distribution for ONE formula (and therefore ONE mental model).
  * This behaviour can be extended thorough passing appropriate flag to constructor.
+ * Regardless mentioned flag, each knowledge distribution contains complete collection of grounding sets.
  * RA1 - Represents set of all base profiles, which are included in working memory and presents individualModel as described by
  * given trait.
  * TA1 - Represents set of all base profiles, which are included in long-term memory and presents individualModel as described by
@@ -29,7 +30,7 @@ public class DistributedKnowledge {
      */
     enum DKMode {
         SINGLE, //only for one mental model.
-        COMPLEX //for all possible mental models, according to given formula extended to "transitive" formulas
+        COMPLEX //for all possible mental models, according to given formula extended to "transitive" complementaryFormulas
         // associated with respective mental models.
     }
 
@@ -46,7 +47,10 @@ public class DistributedKnowledge {
 
     private BPCollection relatedObservationsBase;
 
-    private List<Formula> formulas = new ArrayList<>();
+    /**
+     * Complementary formulas for this.formula. For convenience, complementary formulas contains also this.formula.
+     */
+    private List<Formula> complementaryFormulas = new ArrayList<>();
     /**
      * Formula represents mental model.
      */
@@ -62,6 +66,7 @@ public class DistributedKnowledge {
 
     public DistributedKnowledge(Agent agent, Formula formula, int timestamp, boolean makeCompleteDistribution)
             throws InvalidFormulaException, NotConsistentDKException {
+        makeCompleteDistribution =true;
         if (agent == null || formula == null)
             throw new NullPointerException("One of parameters is null.");
         if (timestamp < 0)
@@ -79,21 +84,20 @@ public class DistributedKnowledge {
         inLM = relatedObservationsBase.getBaseProfiles(timestamp, BPCollection.MemoryType.LM);
         inWM = relatedObservationsBase.getBaseProfiles(timestamp, BPCollection.MemoryType.WM);
 
-        if (makeCompleteDistribution)
-            groundingSets = Grounder.getGroundingSets(formula, BPCollection.asBaseProfilesSet(inWM, inLM));
-        else {
+//        if (makeCompleteDistribution)
+        complementaryFormulas = formula.getComplementaryFormulas();
+        groundingSets = Grounder.getGroundingSets(complementaryFormulas, BPCollection.asBaseProfilesSet(inWM, inLM));
+        /*else {
             groundingSets = new HashMap<>();
             groundingSets.put(formula,
                     Grounder.getGroundingSet(formula, BPCollection.asBaseProfilesSet(inWM, inLM)));
-        }
+        }*/
 
-        Iterator<Formula> it = groundingSets.keySet().iterator();
-        for (; it.hasNext();) {
-            Formula currFormula = it.next();
-            if (makeCompleteDistribution)
-                formulas.add(currFormula);
-            setDkClass(inWM, currFormula, BPCollection.MemoryType.WM);
-            setDkClass(inLM, currFormula, BPCollection.MemoryType.LM);
+        for (Formula cformula : complementaryFormulas) {
+//            if (makeCompleteDistribution)
+//                complementaryFormulas.add(currFormula);
+            setDkClass(inWM, cformula, BPCollection.MemoryType.WM);
+            setDkClass(inLM, cformula, BPCollection.MemoryType.LM);
         }
 
         checkIfConsistent();
@@ -121,7 +125,7 @@ public class DistributedKnowledge {
     private void checkIfConsistent() throws NotConsistentDKException {
         if (dkComplexity.equals(DKMode.SINGLE))
             makeChecking(formula);
-        else for (Formula currFormula: formulas)
+        else for (Formula currFormula: complementaryFormulas)
             makeChecking(currFormula);
     }
 
@@ -193,7 +197,7 @@ public class DistributedKnowledge {
     }
 
     public List<Formula> getComplementaryFormulas() {
-        return formulas;
+        return complementaryFormulas;
     }
 
     /**
