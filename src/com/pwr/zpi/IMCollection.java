@@ -1,5 +1,6 @@
 package com.pwr.zpi;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +18,15 @@ public class IMCollection {
     private Map<String, Identifier> lexicon;
 
     public IMCollection() {
+        buildIMs();
+    }
+
+    private void buildIMs() {
         individualModelSet = new HashSet<>();
+        Collection<Identifier> identifiers = Identifier.readIdentifiers();
+        for (Identifier id: identifiers) {
+            individualModelSet.add(new IndividualModel(id, id.getType()));
+        }
     }
 
     public IMCollection(Set<IndividualModel> individualModelSet) {

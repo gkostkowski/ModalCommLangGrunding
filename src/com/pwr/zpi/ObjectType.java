@@ -1,5 +1,8 @@
 package com.pwr.zpi;
 
+import com.pwr.zpi.io.XMLDAO;
+
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -21,6 +24,10 @@ public class ObjectType {
 
     public List<Trait> getTraits() {
         return traits;
+    }
+
+    public static Collection<ObjectType> getObjectTypes() {
+        return new XMLDAO<>().loadTypesDefinitions();
     }
 
 }

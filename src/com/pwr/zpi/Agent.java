@@ -6,6 +6,7 @@ import com.pwr.zpi.language.DistributedKnowledge;
 import com.pwr.zpi.language.Formula;
 import com.sun.istack.internal.Nullable;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,21 +19,33 @@ public class Agent {
     private IMCollection models;
     private HolonCollection holons;
 
-    public static Set<ObjectType> ObjectTypeCollection = new HashSet<>();
+    public static Collection<ObjectType> objectTypeCollection;
 
     public Agent() {
+        init();
         knowledgeBase = new BPCollection();
-        models = new IMCollection();
+        holons = new HolonCollection();
     }
 
     public Agent(BPCollection knowledgeBase) {
+        init();
         this.knowledgeBase = knowledgeBase;
-        models = new IMCollection();
+        holons = new HolonCollection();
     }
 
     public Agent(BPCollection knowledgeBase, IMCollection models) {
-        this.knowledgeBase = knowledgeBase;
+        init();
         this.models = models;
+        this.knowledgeBase = knowledgeBase;
+        holons = new HolonCollection();
+    }
+
+    /**
+     * Performs initials actions related to loading semantic memory: builds instances of ObjectTypes and IndividualModels.
+     */
+    private void init() {
+        objectTypeCollection = ObjectType.getObjectTypes();
+        models = new IMCollection();
     }
 
     public BPCollection getKnowledgeBase() {
