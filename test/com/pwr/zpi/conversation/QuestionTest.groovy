@@ -8,7 +8,7 @@ import com.pwr.zpi.QRCode
 import com.pwr.zpi.State
 import com.pwr.zpi.Trait
 import com.pwr.zpi.language.ComplexFormula
-import com.pwr.zpi.language.Operators
+import com.pwr.zpi.language.LogicOperator
 import com.pwr.zpi.language.SimpleFormula
 import org.junit.Test
 
@@ -54,7 +54,7 @@ class QuestionTest extends GroovyTestCase {
         question1 = new Question("Is pepe pan dziobak not black", agent)
         assert question1.getFormula().equals(new SimpleFormula(model2, trait2, true))
         question1 = new Question("Is pepe pan dziobak not black and soft", agent)
-        assert question1.getFormula().equals(new ComplexFormula(model2, [trait2, trait3], [State.IS_NOT, State.IS], Operators.Type.AND))
+        assert question1.getFormula().equals(new ComplexFormula(model2, [trait2, trait3], [State.IS_NOT, State.IS], LogicOperator.AND))
     }
 
     @Test

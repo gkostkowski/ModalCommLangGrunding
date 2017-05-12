@@ -17,7 +17,7 @@ import com.pwr.zpi.language.NonBinaryHolon.FormulaCase;
 public class ComplexFormula extends Formula {
 
     private static final int COMPLEMENTARY_FORMULAS_NUMBER = 4;
-    private Operators.Type operator;
+    private LogicOperator operator;
     private SimpleFormula leftPart, rightPart;
     private List<Trait> traits;
     private List<State> states;
@@ -34,10 +34,10 @@ public class ComplexFormula extends Formula {
      * @param op        Operator.Type which is used to connect two SimpleFormulas
      * @throws InvalidFormulaException when the sentence is being build improperly
      */
-    public ComplexFormula(IndividualModel model, List<Trait> traits, List<State> statesSeq, Operators.Type op) throws InvalidFormulaException {
+    public ComplexFormula(IndividualModel model, List<Trait> traits, List<State> statesSeq, LogicOperator op) throws InvalidFormulaException {
         if (model == null || traits == null || statesSeq == null || op == null)
             throw new NullPointerException("One or more parameteres are null");
-        if (traits.size() != 2 || statesSeq.size() != 2 || (op != Operators.Type.AND && op != Operators.Type.OR))
+        if (traits.size() != 2 || statesSeq.size() != 2 || (op != LogicOperator.AND && op != LogicOperator.OR))
             throw new InvalidFormulaException("Either size of traits or states is not 2 or operator is not valid");
         this.individualModel = model;
         this.traits = traits;
@@ -71,7 +71,7 @@ public class ComplexFormula extends Formula {
      * @param op     Operator.Type which is used to connect two SimpleFormulas
      * @throws InvalidFormulaException when the sentence is being build improperly
      */
-    public ComplexFormula(IndividualModel model, List<Trait> traits, Operators.Type op) throws InvalidFormulaException {
+    public ComplexFormula(IndividualModel model, List<Trait> traits, LogicOperator op) throws InvalidFormulaException {
         this(model, traits, Arrays.asList(State.IS, State.IS), op);
     }
 
@@ -94,7 +94,7 @@ public class ComplexFormula extends Formula {
     /**
      * @return operator's type of the formula
      */
-    public Operators.Type getOperator() {
+    public LogicOperator getOperator() {
         return operator;
     }
 

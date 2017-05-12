@@ -11,7 +11,7 @@ import com.pwr.zpi.Trait
 import com.pwr.zpi.language.ComplexFormula
 import com.pwr.zpi.language.DistributedKnowledge
 import com.pwr.zpi.language.Formula
-import com.pwr.zpi.language.Operators
+import com.pwr.zpi.language.LogicOperator
 import com.pwr.zpi.language.SimpleFormula
 import javafx.util.Pair
 import org.junit.Test
@@ -99,9 +99,9 @@ class DistributedKnowledgeTest extends GroovyTestCase {
         sformula2 = new SimpleFormula(formulaIM, tr1, true); // !red(individualModel:id1)
         sformula3 = new SimpleFormula(formulaIM, tr4, true); // !warm(individualModel:id1)
         cformula1 = new ComplexFormula(formulaIM, [tr1, tr2],
-                [State.IS_NOT, State.IS], Operators.Type.AND) // !red(individualModel:id1) && black(individualModel:id1)
+                [State.IS_NOT, State.IS], LogicOperator.AND) // !red(individualModel:id1) && black(individualModel:id1)
         cformula2 = new ComplexFormula(formulaIM, [tr1, tr2],
-                [State.IS, State.IS_NOT], Operators.Type.AND) // red(individualModel:id1) && !black(individualModel:id1)
+                [State.IS, State.IS_NOT], LogicOperator.AND) // red(individualModel:id1) && !black(individualModel:id1)
 
     }
 

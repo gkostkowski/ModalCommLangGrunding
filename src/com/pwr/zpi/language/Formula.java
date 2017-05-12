@@ -67,10 +67,10 @@ public abstract class Formula {
         IndividualModel object = getModel();
         List<Trait> traits = getTraits();
         List<State> states = getStates();
-        Operators.Type op = getType().equals(Formula.Type.SIMPLE_MODALITY) ? null
-                :(getType().equals(Formula.Type.MODAL_CONJUNCTION) ? Operators.Type.AND :Operators.Type.OR);
+        LogicOperator op = getType().equals(Formula.Type.SIMPLE_MODALITY) ? null
+                :(getType().equals(Formula.Type.MODAL_CONJUNCTION) ? LogicOperator.AND :LogicOperator.OR);
 
-        boolean res = op != null && op.equals(Operators.Type.AND) ? true : false;
+        boolean res = op != null && op.equals(LogicOperator.AND) ? true : false;
         for (int i = 0; i < traits.size(); i++) {
             boolean partialRes = bp.checkIfObserved(object, traits.get(i), states.get(i));
             if (op == null)
