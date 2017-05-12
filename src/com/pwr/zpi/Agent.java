@@ -18,9 +18,6 @@ public class Agent {
     private BPCollection knowledgeBase;
     private IMCollection models;
     private HolonCollection holons;
-    // W agencie można zrobić metodę ,która tworzy distributed Knowledge
-    public static Set<ObjectType> ObjectTypeCollection = new HashSet<>();
-
     public static Collection<ObjectType> objectTypeCollection;
 
     public Agent() {
@@ -44,6 +41,7 @@ public class Agent {
 
     /**
      * Performs initials actions related to loading semantic memory: builds instances of ObjectTypes and IndividualModels.
+     * Note: builds IMs according to config file and objects occurences in DB entries.
      */
     private void init() {
         objectTypeCollection = ObjectType.getObjectTypes();
@@ -109,6 +107,14 @@ public class Agent {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public <T>void registerObservation(T newObservation, int timestamp) {
+        models.captureNewIM(newObservation);
+        knowledgeBase.addToMemory(newObservation.toBaseProfile());
+        //lub
+        knowledgeBase.includeNewObservation(newObservation); // domyslnie bedzie
+
     }
 
     public HolonCollection getHolons() {

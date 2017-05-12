@@ -86,4 +86,19 @@ public class IMCollection {
     {
         lexicon.put(name.toLowerCase(), identifier);
     }
+
+    /**
+     * Method analyses incoming new observation and adds instance of IndividualModel into system if it is not present.
+     * @param newObservation
+     * @param <T>
+     */
+    public <T> void captureNewIM(T newObservation) {
+        Identifier newId = newObservation.getIndividualModelId();
+        if (getIMById(newId) == null)
+            individualModelSet.add(new IndividualModel(newId, newObservation.getType()));
+    }
+
+    private IndividualModel getIMById(Identifier newId) {
+        return individualModelSet.stream().filter(im -> im.getIdentifier().equals(newId)).findAny().get();
+    }
 }

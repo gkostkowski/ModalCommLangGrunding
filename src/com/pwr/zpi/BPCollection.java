@@ -19,6 +19,8 @@ public class BPCollection {
      * then old base profile will be overridden.
      */
     private static final boolean DEFAULT_OVERRIDE_IF_EXISTS = true;
+    private static final int MAX_WM_CAPACITY = 1000
+            ;
 
     /**
      * Describes allowed types of agent's memory. According to the accepted theoretical model, there are two memory
@@ -89,22 +91,36 @@ public class BPCollection {
      */
     public void addToMemory(BaseProfile newBP, MemoryType type, boolean overrideIfExisting) {
         Set<BaseProfile> affectedMemory = getMemoryContainer(type);
-        BaseProfile alreadyExisted = getBaseProfile(newBP.getTimestamp(), type);
+        BaseProfile alreadyExisted = getBaseProfile(newBP.getTimestamp());
         if (alreadyExisted != null) {
             if (!overrideIfExisting)
                 BaseProfile.joinBaseProfiles(newBP, alreadyExisted);
             affectedMemory.remove(alreadyExisted);
         }
+        if (workingMemory.size() == MAX_WM_CAPACITY)
+            shiftBaseProfile(MemoryType.WM, MemoryType.LM, getOldestBP(MemoryType.WM));
         affectedMemory.add(newBP);
         updateTimestamp(newBP);
     }
 
+    private BaseProfile getOldestBP(MemoryType memoryType) {
+        return getMemoryContainer(memoryType).stream().min(Comparator.comparing(BaseProfile::getTimestamp)).get();
+    }
+
     /**
-     * Performs adding with default behaviour for base profiles with already noticed timestamp.
-     *
+     * By default, adds new bp to working memory.
      * @param newBP
-     * @param type
      */
+    public void addToMemory(BaseProfile newBP) {
+        addToMemory(newBP, MemoryType.WM);
+    }
+
+        /**
+         * Performs adding with default behaviour for base profiles with already noticed timestamp.
+         *
+         * @param newBP
+         * @param type
+         */
     public void addToMemory(BaseProfile newBP, MemoryType type) {
         addToMemory(newBP, type, DEFAULT_OVERRIDE_IF_EXISTS);
     }
@@ -167,6 +183,17 @@ public class BPCollection {
         return needUpdate;
     }
 
+
+    /**
+     * Returns base profile from any memory related with exact timestamp, given as parameter.
+     * Useful when checking if base profile for given timestamp exists.
+     * @param timestamp Moment in time.
+     * @return Base profile from pointed memory related with given timestamp.
+     */
+    public BaseProfile getBaseProfile(int timestamp) {
+        BaseProfile res = getBaseProfile(timestamp, MemoryType.WM);
+        return res != null ? res : getBaseProfile(timestamp, MemoryType.LM);
+    }
 
     /**
      * Returns base profile from pointed memory related with exact timestamp, given as parameter.

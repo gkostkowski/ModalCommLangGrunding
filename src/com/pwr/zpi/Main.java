@@ -287,3 +287,25 @@ public class Main {
     }
 }
 */
+
+package com.pwr.zpi;
+
+class Main{
+
+    /**
+     * Realizacja przykładowych przebiegow - opis rozpatrywanych przypadkow:
+     *  case 1:
+     *      budowanie agenta od zera - bez bazy wiedzy czy kolekcji modeli indywiduowych - tak jak W RZECZYWISTOŚCI
+     *      będzie to miało miejsce.
+     *  case 2:
+     *      budowanie agenta z określoną bazą wiedzy oraz związanymi modelami indywiduowymi.
+     *      Uwaga: żeby zadziałalo trzeba dostarczyć identifiers z bazy danych, wyciągniętych z rekordów w bd
+     * @param args
+     */
+    static public void main(String ... args){
+
+        BPCollection knowledgeBase=null;
+        IMCollection models=null;
+        Agent agent1 = new Agent(knowledgeBase, models);
+    }
+}
