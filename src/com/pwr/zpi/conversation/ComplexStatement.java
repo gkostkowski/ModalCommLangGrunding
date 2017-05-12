@@ -13,10 +13,10 @@ public class ComplexStatement extends Statement {
     ComplexFormula formula;
     NonBinaryHolon holon;
 
-    private final double MIN_POS = 0.2;
-    private final double MAX_POS = 0.6;
-    private final double MIN_BEL = 0.7;
-    private final double MAX_BEL = 0.9;
+    private final double MIN_POS = Grounder.MIN_POS;
+    private final double MAX_POS = Grounder.MAX_POS;
+    private final double MIN_BEL = Grounder.MIN_BEL;
+    private final double MAX_BEL = Grounder.MAX_BEL;
 
    public ComplexStatement(ComplexFormula formula, Agent agent, int timestamp, String name)
    {

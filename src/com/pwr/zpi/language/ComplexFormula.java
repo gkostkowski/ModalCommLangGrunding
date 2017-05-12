@@ -187,5 +187,23 @@ public class ComplexFormula extends Formula {
         return formulaCase;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        ComplexFormula that = (ComplexFormula) o;
+
+        if (getOperator() != that.getOperator()) return false;
+        if (!getLeftPart().equals(that.getLeftPart())) return false;
+        return getRightPart().equals(that.getRightPart());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getOperator().hashCode();
+        result = 31 * result + getLeftPart().hashCode();
+        result = 31 * result + getRightPart().hashCode();
+        return result;
+    }
 }

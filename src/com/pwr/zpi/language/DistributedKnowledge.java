@@ -23,21 +23,18 @@ import java.util.*;
  * Etc.
  */
 public class DistributedKnowledge {
-    private static final DKMode DEFAULT_DK_COMPLEXITY = DKMode.SINGLE;
-
     /**
-     * Describes possible versions of distributed knowledge.
+     * Describes possible versions of distributed knowledge: Simple if false (building only dk classes associated 
+     * with given formula) or complex if true (building all dk classes - also for mental models related to 
+     * complementary formulas)
      */
-    enum DKMode {
-        SINGLE, //only for one mental model.
-        COMPLEX //for all possible mental models, according to given formula extended to "transitive" complementaryFormulas
-        // associated with respective mental models.
-    }
+    private static final boolean DEFAULT_DK_IS_COMPLEX = false;
 
+    
     /**
      * Describes what kind of knowledge distribution this instance represents.
      */
-    private DKMode dkComplexity = DEFAULT_DK_COMPLEXITY;
+    private boolean dkIsComplex;
     private int timestamp;
     private final Formula formula;
     private final List<Trait> traits;
@@ -66,7 +63,6 @@ public class DistributedKnowledge {
 
     public DistributedKnowledge(Agent agent, Formula formula, int timestamp, boolean makeCompleteDistribution)
             throws InvalidFormulaException, NotConsistentDKException {
-        makeCompleteDistribution =true;
         if (agent == null || formula == null)
             throw new NullPointerException("One of parameters is null.");
         if (timestamp < 0)
@@ -77,7 +73,7 @@ public class DistributedKnowledge {
         this.traits = formula.getTraits();
         this.individualModel = formula.getModel();
         dkClasses = new HashMap<>();
-        dkComplexity = makeCompleteDistribution ? DKMode.COMPLEX : DKMode.SINGLE;
+        dkIsComplex = makeCompleteDistribution;
 
         relatedObservationsBase = agent.getKnowledgeBase();
 
@@ -92,12 +88,15 @@ public class DistributedKnowledge {
             groundingSets.put(formula,
                     Grounder.getGroundingSet(formula, BPCollection.asBaseProfilesSet(inWM, inLM)));
         }*/
-
+        
+        if (makeCompleteDistribution)
         for (Formula cformula : complementaryFormulas) {
-//            if (makeCompleteDistribution)
-//                complementaryFormulas.add(currFormula);
             setDkClass(inWM, cformula, BPCollection.MemoryType.WM);
             setDkClass(inLM, cformula, BPCollection.MemoryType.LM);
+        }
+        else {
+            setDkClass(inWM, formula, BPCollection.MemoryType.WM);
+            setDkClass(inLM, formula, BPCollection.MemoryType.LM);
         }
 
         checkIfConsistent();
@@ -106,7 +105,7 @@ public class DistributedKnowledge {
 
     public DistributedKnowledge(Agent agent, Formula formula)
             throws InvalidFormulaException, NotConsistentDKException {
-        this(agent, formula, agent.getKnowledgeBase().getTimestamp(),false);
+        this(agent, formula, agent.getKnowledgeBase().getTimestamp(), DEFAULT_DK_IS_COMPLEX);
     }
 
     public DistributedKnowledge(Agent agent, Formula formula, int timestamp)
@@ -123,7 +122,7 @@ public class DistributedKnowledge {
      * Performs checking to ensure that knowledge distribution was built in proper way.
      */
     private void checkIfConsistent() throws NotConsistentDKException {
-        if (dkComplexity.equals(DKMode.SINGLE))
+        if (!dkIsComplex)
             makeChecking(formula);
         else for (Formula currFormula: complementaryFormulas)
             makeChecking(currFormula);
@@ -213,8 +212,8 @@ public class DistributedKnowledge {
         return groundingSets.get(formula);
     }
 
-    public DKMode getDkComplexity() {
-        return dkComplexity;
+    public boolean isDkComplex() {
+        return dkIsComplex;
     }
 
     public BPCollection getRelatedObservationsBase() {

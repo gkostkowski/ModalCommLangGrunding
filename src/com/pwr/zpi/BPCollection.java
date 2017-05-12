@@ -203,6 +203,10 @@ public class BPCollection {
         return res;
     }
 
+    public Set<BaseProfile> getBaseProfiles() throws IllegalStateException {
+        return getBaseProfiles(timestamp);
+    }
+
     public static Set<BaseProfile> asBaseProfilesSet(Set<BaseProfile>... bps) throws IllegalStateException {
         if (bps == null)
             throw new NullPointerException("Array is null.");

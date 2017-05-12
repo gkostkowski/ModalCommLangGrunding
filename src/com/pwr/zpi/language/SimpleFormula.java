@@ -154,4 +154,23 @@ public class SimpleFormula extends Formula {
         return individualModel.checkIfContainsTrait(trait);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SimpleFormula that = (SimpleFormula) o;
+
+        if (isNegated() != that.isNegated()) return false;
+        if (!individualModel.equals(that.individualModel)) return false;
+        return getTrait().equals(that.getTrait());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = individualModel.hashCode();
+        result = 31 * result + getTrait().hashCode();
+        result = 31 * result + (isNegated() ? 1 : 0);
+        return result;
+    }
 }

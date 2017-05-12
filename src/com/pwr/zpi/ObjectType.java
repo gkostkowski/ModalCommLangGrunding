@@ -44,4 +44,21 @@ public class ObjectType {
         return new XMLDAO<>().loadTypesDefinitions();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ObjectType that = (ObjectType) o;
+
+        if (!getTypeId().equals(that.getTypeId())) return false;
+        return getTraits().containsAll(that.getTraits());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getTypeId().hashCode();
+        result = 31 * result + getTraits().hashCode();
+        return result;
+    }
 }

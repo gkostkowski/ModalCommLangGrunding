@@ -3,18 +3,17 @@ package com.pwr.zpi.language;
 import com.pwr.zpi.*;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
-import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.sun.istack.internal.Nullable;
 
 import java.util.*;
 
 public class Grounder {
 
-    public static final double MIN_POS = 0.1;  //todo set proper values
+    public static final double MIN_POS = 0.2;
     public static final double MAX_POS = 0.6;
-    public static final double MIN_BEL = 0.61;
-    public static final double MAX_BEL = 0.99;
-    private static final double KNOW = 1.0;
+    public static final double MIN_BEL = 0.7;
+    public static final double MAX_BEL = 0.9;
+    public static final double KNOW = 1.0;
 
 
     /**
@@ -25,7 +24,7 @@ public class Grounder {
      * @param all      Sef of all available (for agent) base profiles, regardless memory type.
      * @return Map of grounding sets as values and respective formulas as keys.
      */
-    static Map<Formula, Set<BaseProfile>> getGroundingSets(Collection<Formula> formulas, Set<BaseProfile> all) throws InvalidFormulaException {
+    public static Map<Formula, Set<BaseProfile>> getGroundingSets(Collection<Formula> formulas, Set<BaseProfile> all) throws InvalidFormulaException {
         if (formulas == null || all == null)
             throw new NullPointerException("One of parameters is null.");
 
@@ -36,11 +35,11 @@ public class Grounder {
         return res;
     }
 
-    static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, Set<BaseProfile> all) throws InvalidFormulaException {
+    public static Map<Formula, Set<BaseProfile>> getGroundingSets(Formula formula, Set<BaseProfile> all) throws InvalidFormulaException {
         return getGroundingSets(formula.getComplementaryFormulas(), all);
     }
 
-    static Set<BaseProfile> getGroundingSet(Formula formula, Set<BaseProfile> all) throws InvalidFormulaException {
+    public static Set<BaseProfile> getGroundingSet(Formula formula, Set<BaseProfile> all) throws InvalidFormulaException {
         if (formula == null || all == null)
             throw new NullPointerException("One of parameters is null.");
 
@@ -54,7 +53,7 @@ public class Grounder {
 
 
 
-    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+    public static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         Operators.Type res;
         for (Formula mentalModel : dk.getComplementaryFormulas()) {
             res = determineFulfillment(dk, mentalModel);
@@ -75,10 +74,10 @@ public class Grounder {
      * @return Type of operator which can be applied to formula given through distribution of knowledge.
      * @see DistributedKnowledge
      */
-    static Operators.Type determineFulfillment(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
-        DistributedKnowledge.DKMode dkMode = dk.getDkComplexity();
-        if (dkMode.equals(DistributedKnowledge.DKMode.SINGLE) && !dk.getFormula().equals(formula)
-                || dkMode.equals(DistributedKnowledge.DKMode.COMPLEX) && !dk.getComplementaryFormulas().contains(formula))
+    public static Operators.Type determineFulfillment(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
+        boolean isComplex = dk.isDkComplex();
+        if (!isComplex && !dk.getFormula().equals(formula)
+                || isComplex && !dk.getComplementaryFormulas().contains(formula))
             throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
 
         return checkEpistemicConditions(formula, dk);
@@ -139,7 +138,7 @@ public class Grounder {
      * @param inspectedOperator        Modal operator which possibility of occurrence is examined.
      * @return Given modal operator if it is applicable or null in other way.
      */
-    private static Operators.Type checkEpistemicCondition(boolean amongNoClearStateObjects, boolean isPresentInWM,
+    public static Operators.Type checkEpistemicCondition(boolean amongNoClearStateObjects, boolean isPresentInWM,
                                                           double relativeCard, Operators.Type inspectedOperator) {
         double minRange, maxRange;
         switch (inspectedOperator) {

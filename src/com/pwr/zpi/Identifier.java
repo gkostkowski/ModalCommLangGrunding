@@ -1,5 +1,6 @@
 package com.pwr.zpi;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static com.pwr.zpi.Agent.objectTypeCollection;
@@ -29,20 +30,13 @@ public abstract class Identifier {
 
     /**
      * Checks whether this identifier is equal to another identifier.
-     * @param other_identifier Identifier that is being compared to.
+     * @param otherIdentifier Identifier that is being compared to.
      * @return Equal - true/false.
      */
-    public boolean equals(Identifier other_identifier) {
-        if(other_identifier.getClass() != this.getClass())
-            return false;
-        else{
-            if (this.getIdNumber().equals(other_identifier.getIdNumber())) {
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
+    @Override
+    public boolean equals(Object otherIdentifier) {
+        return otherIdentifier.getClass() == this.getClass()
+                && this.getIdNumber().equals(((Identifier)otherIdentifier).getIdNumber());
     }
 
     /**
@@ -52,7 +46,7 @@ public abstract class Identifier {
      * @return Collection of unique identifiers.
      */
     public static Collection<Identifier> readIdentifiers() {
-        Collection<Identifier> res = null;
+        Collection<Identifier> res = new ArrayList<>();
         //todo
         return res;
     }

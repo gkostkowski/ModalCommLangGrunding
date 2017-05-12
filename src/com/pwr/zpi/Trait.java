@@ -32,7 +32,7 @@ public class Trait implements Comparable<Trait> {
     @Override
     public boolean equals(Object otherName)
     {
-        return name.equalsIgnoreCase((String)otherName);
+        return this.toString().equalsIgnoreCase(otherName.toString());
     }
 
     @Override
@@ -45,5 +45,12 @@ public class Trait implements Comparable<Trait> {
     @Override
     public int compareTo(Trait o) {
         return name.compareTo(o.name);
+    }
+
+    @Override
+    public String toString() {
+        return "Trait{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }
