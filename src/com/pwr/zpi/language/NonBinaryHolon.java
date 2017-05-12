@@ -12,6 +12,8 @@ public class NonBinaryHolon extends Holon{
 	protected Quadrilateral Tao;
 	protected Formula formula;
 
+	public NonBinaryHolon (Agent a,int time) throws InvalidFormulaException, NotApplicableException{
+		formula = //todo dk.getFormula();
 	//Wywalić TaoList, ogarnąć BP
 	//Enumik przeszedł tutaj,poprawić. Najlepiej jednak go wyjąć bo Weronika chce się nim bawić.
 
@@ -63,7 +65,11 @@ public class NonBinaryHolon extends Holon{
 		return formula;
 	}
 
-	static class Quadrilateral {
+	public Quadrilateral getTao() {
+		return Tao;
+	}
+
+	public static class Quadrilateral {
 
 	    private Double PQ;
 	    private Double NPQ;

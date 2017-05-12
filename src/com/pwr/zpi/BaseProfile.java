@@ -104,6 +104,16 @@ public class BaseProfile {
         return res;
     }
 
+    public Set<IndividualModel> getAffectedIMs(State ... selectedStates) {
+        if (selectedStates == null)
+            throw new NullPointerException("Specified array is null.");
+        Set<IndividualModel> res = new HashSet<IndividualModel>();
+        getAffectedIMs(describedByTraits, res);
+        getAffectedIMs(notDescribedByTraits, res);
+        getAffectedIMs(indefiniteByTraits, res);
+        return res;
+    }
+
     /**
      * Returns set of individual models related to given map in this base profile.
      *
@@ -185,7 +195,9 @@ public class BaseProfile {
     }
 
     /**
-     * Gives observations from appropriate sets. State describes which set should be selected: describedByTraits for State.IS etc.
+     * Gives Individual models from appropriate sets. State indicates individual models trait's state, which is used
+     * as selection criteria.
+     * For given trait, state describes which individual models should be selected: describedByTraits for State.IS etc.
      *
      * @param trait
      * @return Set of observations.

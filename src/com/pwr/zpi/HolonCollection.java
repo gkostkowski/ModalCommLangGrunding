@@ -1,6 +1,7 @@
 package com.pwr.zpi;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.language.*;
 
 import java.util.Set;
@@ -27,34 +28,40 @@ public class HolonCollection {
     }
 
 
-    public Holon getHolon(Formula f){
+    public Holon getHolon(Formula formula, Agent agent, int timeStamp){
         for(Holon h:holonCollection){
-            if(h.getFormula().equals(f)){
+            if(h.getFormula().equals(formula)){
                 return h;
             }
         }
-        return null;
+        return addHolon(formula, agent, timeStamp);
     }
 
-   /* *//**
+   /**
      * Method adds holon based on Formula
      * @param formula
      * @return
-     *//*
+     */
     public Holon addHolon(Formula formula, Agent agent, int timestamp)
     {
+        Holon holon = null;
         try {
-            Holon holon = new Holon(formula, agent.getKnowledgeBase().getBaseProfiles(timestamp), timestamp, formula.getModel(), new DistributedKnowledge(agent, formula, timestamp));
+            if(formula instanceof SimpleFormula)
+                holon = new BinaryHolon(formula, agent, timestamp);
+            else try {
+                holon = new NonBinaryHolon(agent, timestamp, new DistributedKnowledge(agent, formula, timestamp));
+            } catch (NotConsistentDKException e) {
+                e.printStackTrace();
+            }
             holonCollection.add(holon);
-            return holon;
         } catch (InvalidFormulaException e) {
             e.printStackTrace();
         } catch (NotApplicableException e) {
             e.printStackTrace();
         }
-        return null;
+        return holon;
     }
-
+    /*
     public Holon findHolon(Formula formula, Agent agent, int timestamp)
     {
         for(Holon holon : holonCollection)

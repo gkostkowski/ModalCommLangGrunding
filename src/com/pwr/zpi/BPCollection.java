@@ -282,7 +282,47 @@ public class BPCollection {
         }
     }
 
-    public int getTimestamp() {
+    /**
+     * Gives Individual models from specified memory sources which contains given trait and value of this trait is
+     * same as required. Timestamp is used to takes into consideration only this observations which are related
+     * with time range: [initial time, endTimestamp].
+     * @param trait
+     * @param state
+     * @param endTimestamp
+     * @param affectedMemories
+     * @return
+     */
+    public Set<IndividualModel> getIMsByTraitState(Trait trait, State state, int endTimestamp, MemoryType ... affectedMemories) {
+        if (affectedMemories == null)
+            throw new NullPointerException("Memory sources not specified.");
+        if (endTimestamp < 0)
+            throw new IllegalStateException("Not valid endTimestamp.");
+
+        Set<IndividualModel> res = new HashSet<>();
+        for (MemoryType mem : affectedMemories) {
+            Set<BaseProfile> observations = getBaseProfiles(endTimestamp, mem);
+            for (BaseProfile bp : observations) {
+                Set<IndividualModel> matchedIMs = bp.getIMsByTraitState(trait, state);
+                if (matchedIMs != null && !matchedIMs.isEmpty())
+                    res.addAll(matchedIMs);
+            }
+
+        }
+        return res;
+    }
+
+    public Set<IndividualModel> getIMsByTraitState(Trait trait, State state, int endTimestamp) {
+        return getIMsByTraitState(trait, state, endTimestamp, MemoryType.WM, MemoryType.LM);
+    }
+
+    public Set<IndividualModel> getIMsByTraitStates(Trait trait, State []states, int endTimestamp) {
+        Set<IndividualModel> res = new HashSet<>();
+        for (State s: states)
+            res.addAll(getIMsByTraitState(trait, s, endTimestamp, MemoryType.WM, MemoryType.LM));
+        return res;
+    }
+
+        public int getTimestamp() {
         return timestamp;
     }
 

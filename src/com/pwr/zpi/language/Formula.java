@@ -1,11 +1,12 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.pwr.zpi.BaseProfile;
+import com.pwr.zpi.IndividualModel;
+import com.pwr.zpi.State;
+import com.pwr.zpi.Trait;
+import com.pwr.zpi.exceptions.InvalidFormulaException;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  *
@@ -21,18 +22,11 @@ public abstract class Formula {
     public abstract List<State> getStates();
 
     /**
-     * Produces set of formulas which are complementary to this one. Amount and form of this formulas depends
+     * Produces set of formulas which are complementary to this one. Amount and form of this formulas depends on
+     * formula type. For convenience, given formula is also included in resulted collection.
      * @return
      */
-    public Set<Formula> getComplementaryFormulas() {
-        Set<Formula> res = new HashSet<>();
-        res.add(this);
-
-        // make rest of formulas
-        throw new NotImplementedException();
-
-        //return res;
-    }
+    public abstract List<Formula> getComplementaryFormulas() throws InvalidFormulaException;
 
     /**
      * Gives list of successive states. Classic case will contains states which describe whether parts of formula[traits]

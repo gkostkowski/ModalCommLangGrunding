@@ -29,15 +29,10 @@ public class Trait implements Comparable<Trait> {
      * @param otherName String representation of name of a trait
      * @return true if same, false if different
      */
-    public boolean equals(String otherName)
-    {
-        return name.equalsIgnoreCase(otherName);
-    }
-
     @Override
-    public boolean equals(Object other)
+    public boolean equals(Object otherName)
     {
-        return other instanceof Trait && ((Trait)other).name == this.name;
+        return name.equalsIgnoreCase((String)otherName);
     }
 
     @Override
@@ -46,7 +41,6 @@ public class Trait implements Comparable<Trait> {
         result = 31 * result + name.hashCode();
         return result;
     }
-
 
     @Override
     public int compareTo(Trait o) {

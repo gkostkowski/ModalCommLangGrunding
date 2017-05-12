@@ -115,6 +115,20 @@ public class SimpleFormula extends Formula {
         return states;
     }
 
+    /**
+     * Produces set of formulas which are complementary to this one. Amount and form of this formulas depends on
+     * formula type. For convenience, given formula is also included in resulted collection.
+     *
+     * @return
+     */
+    @Override
+    public List<Formula> getComplementaryFormulas() throws InvalidFormulaException {
+        List<Formula> res = new ArrayList<>();
+        res.add(this);
+        res.add(new SimpleFormula(individualModel, trait, !isNegated));
+        return res;
+    }
+
 
     /**
      * used to check if two Formulas are equal - concern same individual model,
@@ -127,7 +141,6 @@ public class SimpleFormula extends Formula {
         if(other instanceof SimpleFormula)
             if(individualModel.getIdentifier().equals(other.getModel().getIdentifier()))
                 if(trait.equals(((SimpleFormula) other).trait))
-                    if(isNegated==((SimpleFormula) other).isNegated())
                         return true;
         return false;
     }

@@ -1,9 +1,9 @@
-package com.pwr.zpi
+package com.pwr.zpi.util
 
 /**
  * Created by Grzesiek on 2017-04-25.
  */
-class Utils {
+class Utils { //todo napisz w javie
     static String makePath() {
         String [] parts = System.getProperty("user.dir").split("\\\\");
         parts = parts.dropRight(1)
