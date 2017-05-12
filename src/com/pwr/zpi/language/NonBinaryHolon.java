@@ -1,18 +1,20 @@
 package com.pwr.zpi.language;
-import java.util.List;
-import java.util.Set;
+
 
 import com.pwr.zpi.Agent;
 import com.pwr.zpi.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
-import com.pwr.zpi.language.ComplexFormula.FormulaCase;
-
+import java.util.*;
 public class NonBinaryHolon extends Holon{
-	
-	protected List<Pair<ComplexFormula.FormulaCase,Double>> TaoList;
+
+	protected List<Pair<FormulaCase,Double>> TaoList;
 	protected Quadrilateral Tao;
 	protected Formula formula;
+
+	//Wywalić TaoList, ogarnąć BP
+	//Enumik przeszedł tutaj,poprawić. Najlepiej jednak go wyjąć bo Weronika chce się nim bawić.
+
 
 	public NonBinaryHolon (Agent a,int time,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
 		formula = dk.getFormula();
@@ -21,7 +23,8 @@ public class NonBinaryHolon extends Holon{
 	
 	public void update(Agent a,Set<BaseProfile> baseProfile,int time,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
 		double update = Grounder.determineFulfillmentDouble(a, dk, formula);
-		TaoList.add(new Pair<ComplexFormula.FormulaCase,Double>(((ComplexFormula) dk.getFormula()).getFormulaCase(),update));
+		//Przeprowadzic dla wszystko PQ,PNQ,NPQ,NPNQ,najlepiej dla komplementarnej formuły
+		TaoList.add(new Pair<FormulaCase,Double>(((ComplexFormula) dk.getFormula()).getFormulaCase(),update));
 	}
 	
 	public void forgetOldest(){
@@ -31,11 +34,11 @@ public class NonBinaryHolon extends Holon{
 	
 	public void updateRatio(){
 		Double[] temp = new Double[4];
-		for(Pair<ComplexFormula.FormulaCase,Double> p:TaoList){
-			if(p.Case==ComplexFormula.FormulaCase.PQ){temp[0] += p.Value;}
-			else if(p.Case==ComplexFormula.FormulaCase.NPQ){temp[1] += p.Value;}
-			else if(p.Case==ComplexFormula.FormulaCase.PNQ){temp[2] += p.Value;}
-			else if(p.Case==ComplexFormula.FormulaCase.NPNQ){temp[3] += p.Value;}
+		for(Pair<FormulaCase,Double> p:TaoList){
+			if(p.Case==FormulaCase.PQ){temp[0] += p.Value;}
+			else if(p.Case==FormulaCase.NPQ){temp[1] += p.Value;}
+			else if(p.Case==FormulaCase.PNQ){temp[2] += p.Value;}
+			else if(p.Case==FormulaCase.NPNQ){temp[3] += p.Value;}
 		}
 		for(int i =0;i<=temp.length;i++){temp[i] = temp[i]/TaoList.size();}
 		Tao = new Quadrilateral(temp[0],temp[1],temp[2],temp[3]);
@@ -114,5 +117,11 @@ public class NonBinaryHolon extends Holon{
 	    public void setNPNQ(Double var){
 	    	NPNQ = var;
 	    }
+	}
+	enum FormulaCase {
+		PQ,
+		PNQ,
+		NPQ,
+		NPNQ
 	}
 }

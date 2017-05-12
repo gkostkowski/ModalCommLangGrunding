@@ -7,6 +7,7 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import com.pwr.zpi.language.NonBinaryHolon.FormulaCase;
 
 /**
  *
@@ -158,11 +159,6 @@ public class ComplexFormula extends Formula {
     public FormulaCase getFormulaCase(){
         return formulaCase;
     }
-    enum FormulaCase {
-        PQ,
-        PNQ,
-        NPQ,
-        NPNQ
-    }
+
 
 }

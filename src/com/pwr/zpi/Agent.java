@@ -11,7 +11,7 @@ public class Agent {
     private BPCollection knowledgeBase;
     private IMCollection models;
     private HolonCollection holons;
-
+    // W agencie można zrobić metodę ,która tworzy distributed Knowledge
     public static Set<ObjectType> ObjectTypeCollection = new HashSet<>();
 
     public Agent() {
