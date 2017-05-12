@@ -86,10 +86,9 @@ public class IMCollection {
     /**
      * Method analyses incoming new observation and adds instance of IndividualModel into system if it is not present.
      * @param newObservation
-     * @param <T>
      */
     public void captureNewIM(Observation newObservation) {
-        Identifier newId = newObservation.getIndividualModelId();
+        Identifier newId = newObservation.getIdentifier();
         if (getIMById(newId) == null)
             individualModelSet.add(new IndividualModel(newId, newObservation.getType()));
     }

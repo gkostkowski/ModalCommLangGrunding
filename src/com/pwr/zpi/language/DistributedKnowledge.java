@@ -24,13 +24,13 @@ import java.util.*;
  */
 public class DistributedKnowledge {
     /**
-     * Describes possible versions of distributed knowledge: Simple if false (building only dk classes associated 
-     * with given formula) or complex if true (building all dk classes - also for mental models related to 
+     * Describes possible versions of distributed knowledge: Simple if false (building only dk classes associated
+     * with given formula) or complex if true (building all dk classes - also for mental models related to
      * complementary formulas)
      */
     private static final boolean DEFAULT_DK_IS_COMPLEX = false;
 
-    
+
     /**
      * Describes what kind of knowledge distribution this instance represents.
      */
@@ -88,12 +88,12 @@ public class DistributedKnowledge {
             groundingSets.put(formula,
                     Grounder.getGroundingSet(formula, BPCollection.asBaseProfilesSet(inWM, inLM)));
         }*/
-        
+
         if (makeCompleteDistribution)
-        for (Formula cformula : complementaryFormulas) {
-            setDkClass(inWM, cformula, BPCollection.MemoryType.WM);
-            setDkClass(inLM, cformula, BPCollection.MemoryType.LM);
-        }
+            for (Formula cformula : complementaryFormulas) {
+                setDkClass(inWM, cformula, BPCollection.MemoryType.WM);
+                setDkClass(inLM, cformula, BPCollection.MemoryType.LM);
+            }
         else {
             setDkClass(inWM, formula, BPCollection.MemoryType.WM);
             setDkClass(inLM, formula, BPCollection.MemoryType.LM);
@@ -110,7 +110,7 @@ public class DistributedKnowledge {
 
     public DistributedKnowledge(Agent agent, Formula formula, int timestamp)
             throws InvalidFormulaException, NotConsistentDKException {
-        this(agent, formula, timestamp,false);
+        this(agent, formula, timestamp, false);
     }
 
     public DistributedKnowledge(Agent agent, Formula formula, boolean makeCompleteDistribution)
@@ -124,12 +124,13 @@ public class DistributedKnowledge {
     private void checkIfConsistent() throws NotConsistentDKException {
         if (!dkIsComplex)
             makeChecking(formula);
-        else for (Formula currFormula: complementaryFormulas)
+        else for (Formula currFormula : complementaryFormulas)
             makeChecking(currFormula);
     }
 
     /**
      * Performs checking for classes associated with single mental model.
+     *
      * @param formula
      * @throws NotConsistentDKException
      */
@@ -158,7 +159,7 @@ public class DistributedKnowledge {
 
     private void setDkClass(Set<BaseProfile> affectedMemory, Formula formula,
                             BPCollection.MemoryType memType) {
-        Set<BaseProfile> currClass= new HashSet<>();
+        Set<BaseProfile> currClass = new HashSet<>();
         dkClasses.put(new Pair<>(formula, memType), currClass);
         currClass.addAll(affectedMemory);
         currClass.retainAll(groundingSets.get(formula));
@@ -168,6 +169,7 @@ public class DistributedKnowledge {
     /**
      * Return knowledge distribution classes. Note that if there are no base profile that fulfills requirements then
      * empty map entries will be returned.
+     *
      * @return
      */
     @NotNull

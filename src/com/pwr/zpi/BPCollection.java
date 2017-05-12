@@ -19,7 +19,16 @@ public class BPCollection {
      * then old base profile will be overridden.
      */
     private static final boolean DEFAULT_OVERRIDE_IF_EXISTS = true;
-    private static final int MAX_WM_CAPACITY = 1000;
+    private static final int MAX_WM_CAPACITY = 10;
+
+    /**
+     * By default, inserts to bp located in wm
+     * @param newObservation
+     */
+    public void includeNewObservation(Observation newObservation) {
+        new BaseProfile(newObservation.getTimestamp());
+
+    }
 
     /**
      * Describes allowed types of agent's memory. According to the accepted theoretical model, there are two memory

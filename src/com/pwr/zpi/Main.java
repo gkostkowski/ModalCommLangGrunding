@@ -290,6 +290,9 @@ public class Main {
 
 package com.pwr.zpi;
 
+import java.util.HashMap;
+import java.util.Set;
+
 class Main {
 
     /**
@@ -305,14 +308,36 @@ class Main {
      */
     static public void main(String... args) {
 
+        // G ============
         /*CASE 1*/
         Agent agent1 = new Agent();
-        agent1.registerBaseProfile();
+        QRCode [] qrCodes = new QRCode[]{new QRCode("kod001"), new QRCode("kod002"), new QRCode("kod003"),
+                new QRCode("kod004")};
+
+        int t=0;
+        Trait[] tr = new Trait[]{
+                new Trait("Red"),
+                new Trait("Black"),
+                new Trait("Square"), //[2]
+                new Trait("White"), //[3]
+                new Trait("Round"),
+                new Trait("Blinking")
+        };
+        Observation[] observations = new Observation[]{
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>(){{put(tr[0], true);put(tr[2], true);put(tr[5], false); }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>(){{put(tr[0], true); }}, t++),
+        };
+        for (Observation observation: observations)
+            agent1.registerObservation(observation);
 
         /*CASE 2*/
         BPCollection knowledgeBase = null;
         IMCollection models = null;
         //...
         Agent agent2 = new Agent(knowledgeBase, models);
+
+        // G ============
+
+
     }
 }

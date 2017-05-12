@@ -109,9 +109,9 @@ public class Agent {
         }
     }
 
-    public <T>void registerObservation(Observation newObservation, int timestamp) {
+    public <T>void registerObservation(Observation newObservation) {
         models.captureNewIM(newObservation);
-        knowledgeBase.addToMemory(newObservation.toBaseProfile());
+        //knowledgeBase.addToMemory(newObservation.toBaseProfile());
         //lub
         knowledgeBase.includeNewObservation(newObservation); // domyslnie bedzie
 

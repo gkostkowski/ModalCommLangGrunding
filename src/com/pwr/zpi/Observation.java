@@ -1,30 +1,28 @@
 package com.pwr.zpi;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
- * Describes object's observation with it's time, id and set of valuedTraits.
+ * Describes object's observation with it's timestamp, id and set of valuedTraits.
  * Represents observations placed in real world, witnessed by agent.
  */
 @Deprecated
 public class Observation {
     private Identifier identifier;
-    private long time;
+    private int timestamp;
     //private Set<Trait> valuedTraits;
-    Map<Trait, Boolean> valuedTraits;
+    private Map<Trait, Boolean> valuedTraits;
 
 
-    public Observation(Identifier identifier, Set<Trait> traits){
+    public Observation(Identifier identifier, Map<Trait, Boolean> traits){
         this.identifier = identifier;
         this.valuedTraits = traits;
-        time = System.currentTimeMillis();
+        timestamp = (int)System.currentTimeMillis();
     }
 
-    public Observation(Identifier identifier, Set<Trait> traits, long time){
-        this.identifier = identifier;
-        this.valuedTraits = traits;
-        this.time = time;
+    public Observation(Identifier identifier, Map<Trait, Boolean> traits, int timestamp){
+        this(identifier, traits);
+        this.timestamp = timestamp;
     }
 
     public Identifier getIdentifier() {
@@ -35,19 +33,19 @@ public class Observation {
         this.identifier = identifier;
     }
 
-    public long getTime() {
-        return time;
+    public int getTimestamp() {
+        return timestamp;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setTimestamp(int timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public Set<Trait> getTraits() {
+    public Map<Trait, Boolean> getTraits() {
         return valuedTraits;
     }
 
-    public void setTraits(Set<Trait> traits)
+    public void setTraits(Map<Trait, Boolean> traits)
     {
         this.valuedTraits = traits;
     }
