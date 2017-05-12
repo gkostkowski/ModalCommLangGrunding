@@ -358,6 +358,9 @@ public class Grounder {
         Sum.addAll(getGroundingSetsConjunction(P, Q, time, all, 4));
         return getCard(getGroundingSetsConjunction(P, Q, time, all, i), time) / getCard(Sum, time);
     }
-
+    static double determineFulfillmentDouble(DistributedKnowledge dk,Formula f){
+    //todo
+        return 0;
+    }
 
 }

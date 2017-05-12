@@ -14,7 +14,6 @@ public class SimpleFormula extends Formula {
     private IndividualModel individualModel;
     private Trait trait;
     private boolean isNegated;
-
     /**
      * COnstructor of SimpleFormula
      * @param individualModel individual model which formula describes
@@ -87,7 +86,7 @@ public class SimpleFormula extends Formula {
         return isNegated;
     }
 
-    public void Negate() {isNegated = !isNegated;}
+    public void negate() {isNegated = !isNegated;}
 
     @Override
     public List<Trait> getTraits() {
