@@ -19,8 +19,7 @@ public class BPCollection {
      * then old base profile will be overridden.
      */
     private static final boolean DEFAULT_OVERRIDE_IF_EXISTS = true;
-    private static final int MAX_WM_CAPACITY = 1000
-            ;
+    private static final int MAX_WM_CAPACITY = 1000;
 
     /**
      * Describes allowed types of agent's memory. According to the accepted theoretical model, there are two memory
@@ -85,22 +84,24 @@ public class BPCollection {
      * -override old one (default action).
      * -update old one with observations in new one.
      *
-     * @param newBP
+     * @param newBPs
      * @param type
      * @param overrideIfExisting
      */
-    public void addToMemory(BaseProfile newBP, MemoryType type, boolean overrideIfExisting) {
-        Set<BaseProfile> affectedMemory = getMemoryContainer(type);
-        BaseProfile alreadyExisted = getBaseProfile(newBP.getTimestamp());
-        if (alreadyExisted != null) {
-            if (!overrideIfExisting)
-                BaseProfile.joinBaseProfiles(newBP, alreadyExisted);
-            affectedMemory.remove(alreadyExisted);
+    public void addToMemory(MemoryType type, boolean overrideIfExisting, BaseProfile ... newBPs) {
+        for (BaseProfile newBP : newBPs) {
+            Set<BaseProfile> affectedMemory = getMemoryContainer(type);
+            BaseProfile alreadyExisted = getBaseProfile(newBP.getTimestamp());
+            if (alreadyExisted != null) {
+                if (!overrideIfExisting)
+                    BaseProfile.joinBaseProfiles(newBP, alreadyExisted);
+                affectedMemory.remove(alreadyExisted);
+            }
+            if (workingMemory.size() == MAX_WM_CAPACITY)
+                shiftBaseProfile(MemoryType.WM, MemoryType.LM, getOldestBP(MemoryType.WM));
+            affectedMemory.add(newBP);
+            updateTimestamp(newBP);
         }
-        if (workingMemory.size() == MAX_WM_CAPACITY)
-            shiftBaseProfile(MemoryType.WM, MemoryType.LM, getOldestBP(MemoryType.WM));
-        affectedMemory.add(newBP);
-        updateTimestamp(newBP);
     }
 
     private BaseProfile getOldestBP(MemoryType memoryType) {
@@ -109,20 +110,21 @@ public class BPCollection {
 
     /**
      * By default, adds new bp to working memory.
-     * @param newBP
+     *
+     * @param newBPs
      */
-    public void addToMemory(BaseProfile newBP) {
-        addToMemory(newBP, MemoryType.WM);
+    public void addToMemory(BaseProfile ... newBPs) {
+        addToMemory(MemoryType.WM, newBPs);
     }
 
-        /**
-         * Performs adding with default behaviour for base profiles with already noticed timestamp.
-         *
-         * @param newBP
-         * @param type
-         */
-    public void addToMemory(BaseProfile newBP, MemoryType type) {
-        addToMemory(newBP, type, DEFAULT_OVERRIDE_IF_EXISTS);
+    /**
+     * Performs adding with default behaviour for base profiles with already noticed timestamp.
+     *
+     * @param newBPs
+     * @param type
+     */
+    public void addToMemory(MemoryType type, BaseProfile ... newBPs) {
+        addToMemory(type, DEFAULT_OVERRIDE_IF_EXISTS, newBPs);
     }
 
     /**
@@ -187,6 +189,7 @@ public class BPCollection {
     /**
      * Returns base profile from any memory related with exact timestamp, given as parameter.
      * Useful when checking if base profile for given timestamp exists.
+     *
      * @param timestamp Moment in time.
      * @return Base profile from pointed memory related with given timestamp.
      */
@@ -270,7 +273,7 @@ public class BPCollection {
     void shiftBaseProfile(MemoryType src, MemoryType dest, BaseProfile toMove) {
         if (!src.equals(dest)) {
             getMemoryContainer(src).remove(toMove);
-            addToMemory(toMove, dest, true);
+            addToMemory(dest, true, toMove);
         }
     }
 
@@ -282,7 +285,7 @@ public class BPCollection {
      */
     public void duplicateBaseProfile(MemoryType src, MemoryType dest, BaseProfile toDuplicate) {
         if (!src.equals(dest))
-            addToMemory(toDuplicate, dest, true);
+            addToMemory(dest, true, toDuplicate);
         if (!new ArrayList<>(getMemoryContainer(src)).contains(toDuplicate))
             throw new IllegalStateException("Memory specified as source doesn't contain given base profile.");
     }
@@ -317,13 +320,14 @@ public class BPCollection {
      * Gives Individual models from specified memory sources which contains given trait and value of this trait is
      * same as required. Timestamp is used to takes into consideration only this observations which are related
      * with time range: [initial time, endTimestamp].
+     *
      * @param trait
      * @param state
      * @param endTimestamp
      * @param affectedMemories
      * @return
      */
-    public Set<IndividualModel> getIMsByTraitState(Trait trait, State state, int endTimestamp, MemoryType ... affectedMemories) {
+    public Set<IndividualModel> getIMsByTraitState(Trait trait, State state, int endTimestamp, MemoryType... affectedMemories) {
         if (affectedMemories == null)
             throw new NullPointerException("Memory sources not specified.");
         if (endTimestamp < 0)
@@ -346,14 +350,14 @@ public class BPCollection {
         return getIMsByTraitState(trait, state, endTimestamp, MemoryType.WM, MemoryType.LM);
     }
 
-    public Set<IndividualModel> getIMsByTraitStates(Trait trait, State []states, int endTimestamp) {
+    public Set<IndividualModel> getIMsByTraitStates(Trait trait, State[] states, int endTimestamp) {
         Set<IndividualModel> res = new HashSet<>();
-        for (State s: states)
+        for (State s : states)
             res.addAll(getIMsByTraitState(trait, s, endTimestamp, MemoryType.WM, MemoryType.LM));
         return res;
     }
 
-        public int getTimestamp() {
+    public int getTimestamp() {
         return timestamp;
     }
 

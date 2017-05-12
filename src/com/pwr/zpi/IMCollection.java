@@ -1,10 +1,6 @@
 package com.pwr.zpi;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Collection of individual models. Used to find or add new model.
@@ -92,13 +88,19 @@ public class IMCollection {
      * @param newObservation
      * @param <T>
      */
-    public <T> void captureNewIM(T newObservation) {
+    public void captureNewIM(Observation newObservation) {
         Identifier newId = newObservation.getIndividualModelId();
         if (getIMById(newId) == null)
             individualModelSet.add(new IndividualModel(newId, newObservation.getType()));
     }
 
-    private IndividualModel getIMById(Identifier newId) {
+    public <T> void captureNewIM(Set<IndividualModel> allIMs) {
+        for (IndividualModel im : allIMs)
+            if (!new ArrayList(individualModelSet).contains(im))
+                individualModelSet.add(im);
+    }
+
+        private IndividualModel getIMById(Identifier newId) {
         return individualModelSet.stream().filter(im -> im.getIdentifier().equals(newId)).findAny().get();
     }
 }

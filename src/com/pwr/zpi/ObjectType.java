@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Represents types of observations existed in world, which observations are processed in system.
- * It determines allowed set of traits for certain object (and its observation).
+ * It determines allowed set of valuedTraits for certain object (and its observation).
  */
 public class ObjectType {
     private String typeId;

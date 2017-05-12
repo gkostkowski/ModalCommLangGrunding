@@ -36,9 +36,9 @@ public class IndividualModel {
     }
 
     /**
-     * checks if given list of traits contains in models' traits.
+     * checks if given list of valuedTraits contains in models' valuedTraits.
      * @param traits List of TraitSignatures that are supposed to be checked
-     * @return true if all traits describe model, false otherwise
+     * @return true if all valuedTraits describe model, false otherwise
      */
     public boolean checkIfContainsTraits(List<Trait> traits)
     {

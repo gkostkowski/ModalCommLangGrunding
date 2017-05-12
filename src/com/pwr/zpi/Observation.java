@@ -1,26 +1,29 @@
 package com.pwr.zpi;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
- * Describes object's observation with it's time, id and set of traits.
+ * Describes object's observation with it's time, id and set of valuedTraits.
  * Represents observations placed in real world, witnessed by agent.
  */
 @Deprecated
 public class Observation {
     private Identifier identifier;
     private long time;
-    private Set<Trait> traits;
+    //private Set<Trait> valuedTraits;
+    Map<Trait, Boolean> valuedTraits;
+
 
     public Observation(Identifier identifier, Set<Trait> traits){
         this.identifier = identifier;
-        this.traits = traits;
+        this.valuedTraits = traits;
         time = System.currentTimeMillis();
     }
 
     public Observation(Identifier identifier, Set<Trait> traits, long time){
         this.identifier = identifier;
-        this.traits = traits;
+        this.valuedTraits = traits;
         this.time = time;
     }
 
@@ -41,12 +44,12 @@ public class Observation {
     }
 
     public Set<Trait> getTraits() {
-        return traits;
+        return valuedTraits;
     }
 
     public void setTraits(Set<Trait> traits)
     {
-        this.traits = traits;
+        this.valuedTraits = traits;
     }
 
     /**

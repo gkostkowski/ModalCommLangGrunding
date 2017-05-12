@@ -109,11 +109,17 @@ public class Agent {
         }
     }
 
-    public <T>void registerObservation(T newObservation, int timestamp) {
+    public <T>void registerObservation(Observation newObservation, int timestamp) {
         models.captureNewIM(newObservation);
         knowledgeBase.addToMemory(newObservation.toBaseProfile());
         //lub
         knowledgeBase.includeNewObservation(newObservation); // domyslnie bedzie
+
+    }
+
+    public void registerBaseProfile(BaseProfile newBp) {
+        models.captureNewIM(newBp.getAffectedIMs());
+        knowledgeBase.addToMemory(newBp);
 
     }
 

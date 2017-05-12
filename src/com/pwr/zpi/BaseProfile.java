@@ -9,17 +9,17 @@ import java.util.*;
  */
 public class BaseProfile {
     /**
-     * Map of traits and related collections of individual models. If some collection is related with certain trait, then
+     * Map of valuedTraits and related collections of individual models. If some collection is related with certain trait, then
      * it mean that all observations in that collections HAVE this trait.
      */
     protected Map<Trait, Set<IndividualModel>> describedByTraits;
     /**
-     * Map of traits and related collections of individual models. If some collection is related with certain trait, then
+     * Map of valuedTraits and related collections of individual models. If some collection is related with certain trait, then
      * it mean that all observations in that collections DON'T HAVE this trait.
      */
     protected Map<Trait, Set<IndividualModel>> notDescribedByTraits;
     /**
-     * Map of traits and related collections of individual models. If some collection is related with certain trait, then
+     * Map of valuedTraits and related collections of individual models. If some collection is related with certain trait, then
      * it mean that state of having this trait by all observations is unknown. They are neither described nor not described
      * by given trait.
      */
