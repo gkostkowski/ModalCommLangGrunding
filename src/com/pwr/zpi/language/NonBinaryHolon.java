@@ -8,42 +8,37 @@ import com.pwr.zpi.exceptions.NotApplicableException;
 import java.util.*;
 public class NonBinaryHolon extends Holon{
 
-	protected List<Pair<FormulaCase,Double>> TaoList;
 	protected Quadrilateral Tao;
 	protected Formula formula;
 
-	public NonBinaryHolon (Agent a,int time) throws InvalidFormulaException, NotApplicableException {
-		formula = null;//todo dk.getFormula();
-		//Wywalić TaoList, ogarnąć BP
-		//Enumik przeszedł tutaj,poprawić. Najlepiej jednak go wyjąć bo Weronika chce się nim bawić.
+	public NonBinaryHolon (Agent a,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+        formula = dk.getFormula();
+        //Wywalić TaoList, ogarnąć BP
+        //Enumik przeszedł tutaj,poprawić. Najlepiej jednak go wyjąć bo Weronika chce się nim bawić.
 
-	}
-	public NonBinaryHolon (Agent a,int time,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
-		formula = dk.getFormula();
-		update(a,a.getKnowledgeBase().getBaseProfiles(time),time,dk);
-	}
-	
-	public void update(Agent a,Set<BaseProfile> baseProfile,int time,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
-		double update = 0.0;//Grounder.determineFulfillmentDouble(a, dk, formula);
-		//Przeprowadzic dla wszystko PQ,PNQ,NPQ,NPNQ,najlepiej dla komplementarnej formuły
-		TaoList.add(new Pair<FormulaCase,Double>(((ComplexFormula) dk.getFormula()).getFormulaCase(),update));
-	}
-	
-	public void forgetOldest(){
-		//Uwazac na Concurrenta
-		TaoList.remove(TaoList.get(TaoList.size()));
     }
-	
-	public void updateRatio(){
-		Double[] temp = new Double[4];
-		for(Pair<FormulaCase,Double> p:TaoList){
-			if(p.Case==FormulaCase.PQ){temp[0] += p.Value;}
-			else if(p.Case==FormulaCase.NPQ){temp[1] += p.Value;}
-			else if(p.Case==FormulaCase.PNQ){temp[2] += p.Value;}
-			else if(p.Case==FormulaCase.NPNQ){temp[3] += p.Value;}
-		}
-		for(int i =0;i<=temp.length;i++){temp[i] = temp[i]/TaoList.size();}
-		Tao = new Quadrilateral(temp[0],temp[1],temp[2],temp[3]);
+	public void update(Agent a,Set<BaseProfile> baseProfile,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
+		double update = Grounder.determineFulfillmentDouble(dk, formula);
+		//Przeprowadzic dla wszystko PQ,PNQ,NPQ,NPNQ,najlepiej dla komplementarnej formuły
+        double pq = 0;
+        double npq = 0;
+        double pnq = 0;
+        double npnq = 0;
+        for(BaseProfile bp:dk.getGroundingSet(dk.getFormula())) {
+            ((ComplexFormula) dk.getFormula()).setpq();
+            pq += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
+            ((ComplexFormula) dk.getFormula()).setnpq();
+            npq += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
+            ((ComplexFormula) dk.getFormula()).setpnq();
+            pnq += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
+            ((ComplexFormula) dk.getFormula()).setnpnq();
+            npnq += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
+        }
+        if(pq!= 0){pq = pq/dk.getGroundingSet(dk.getFormula()).size();}
+        if(npq!= 0){npq = npq/dk.getGroundingSet(dk.getFormula()).size();}
+        if(pnq!= 0){pnq = pnq/dk.getGroundingSet(dk.getFormula()).size();}
+        if(npnq!= 0){npnq = npnq/dk.getGroundingSet(dk.getFormula()).size();}
+        Tao = new Quadrilateral(pq,npq,pnq,npnq);
 	}
 
 	@Override

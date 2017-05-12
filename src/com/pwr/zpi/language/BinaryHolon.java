@@ -1,25 +1,18 @@
 package com.pwr.zpi.language;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
-import com.pwr.zpi.Agent;
 import com.pwr.zpi.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
-import java.util.ArrayList;
-
 
 public class BinaryHolon extends Holon{
 
-    protected List<Pair<Double,Double>> TaoList = new ArrayList<Pair<Double,Double>>();
     protected Pair<Double,Double> Tao;
     protected Formula formula;
 
-    public BinaryHolon (Formula formula, Agent a, int time) throws InvalidFormulaException{
-        this.formula = formula;
-        update(formula,a.getKnowledgeBase().getBaseProfiles(time),time);
+    public BinaryHolon (DistributedKnowledge dk) throws InvalidFormulaException{
+        this.formula = dk.getFormula();
+        update(dk);
     }
 
     // Odświeżenie Holonu odbywa się w pewnym momencie czasu (Nocy).
@@ -30,7 +23,7 @@ public class BinaryHolon extends Holon{
     //  na temat formuły .Dopóki nie postanowimy zadać kolejnej sesji odświeżania korzystamy ze starego Tao. Podczas kolejnego odświeżenia najstarsze wpisy są zapominane. Holon nie jest updatowany na żywo.
 
     // Zapominanie do zaimplementowania
-    // Jednak potrzebujemy wszystkich profili bazowych.
+    // Jednak potrzebujemy wszystkich profili bazowych. ++
     // TaoList można wyrzucić
 
     //Distributed Knowledge <- I z nich wyciągamy profile bazowe <- które tworzymy z Agenta + formulę i hurrej
@@ -39,37 +32,33 @@ public class BinaryHolon extends Holon{
     //Pamięć przedświadoma
     //Pamięć świadoma
 
-    public void update (Formula f,Set<BaseProfile> baseProfile,int time) throws InvalidFormulaException{
-        if(f.getType()!= Formula.Type.SIMPLE_MODALITY){throw new InvalidFormulaException();}
+    public void update (DistributedKnowledge dk) throws InvalidFormulaException{
+        if(dk.getFormula().getType()!= Formula.Type.SIMPLE_MODALITY){throw new InvalidFormulaException();}
         else{
             double sumPositive = 0;
             double sumNegative = 0;
-            for(BaseProfile bp:baseProfile){
-      //          sumPositive += Grounder.relativePositiveCard(bp.getIMsDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getIMsNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
-      //          sumNegative += Grounder.relativeNegativeCard(bp.getIMsDescribedByTrait(((SimpleFormula) f).getTrait()),bp.getIMsNotDescribedByTrait(((SimpleFormula) f).getTrait()) , time);
+            for(BaseProfile bp:dk.getGroundingSet(dk.getFormula())){
+                if (((SimpleFormula) dk.getFormula()).isNegated()){
+                sumPositive += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
+                ((SimpleFormula) dk.getFormula()).negate();
+                sumNegative += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
+                }else{
+                    sumNegative += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
+                    ((SimpleFormula) dk.getFormula()).negate();
+                    sumPositive += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
+                }
             }
             if(sumPositive!= 0){
-                sumPositive=sumPositive/baseProfile.size();}
+                sumPositive=sumPositive/dk.getGroundingSet(dk.getFormula()).size();}
             if(sumNegative!= 0){
-                sumNegative=sumNegative/baseProfile.size();}
-            TaoList.add(new Pair<Double,Double>(sumPositive,sumNegative));
-            updateRatio();
+                sumNegative=sumNegative/dk.getGroundingSet(dk.getFormula()).size();}
+            Tao = new Pair<Double,Double>(getCard(sumPositive/dk.getGroundingSet(dk.getFormula()).size(),
+                    sumNegative/dk.getGroundingSet(dk.getFormula()).size()),
+                    getCard(sumNegative/dk.getGroundingSet(dk.getFormula()).size(),
+                            sumPositive/dk.getGroundingSet(dk.getFormula()).size()));
         }
-    }
-    public void forgetOldest(){
-        TaoList.remove(TaoList.get(TaoList.size()));
-        updateRatio();
     }
 
-    public void updateRatio(){
-        Double allP = 0.0,allNot_P = 0.0;
-        for (Pair<Double,Double> p:TaoList){
-            allP += p.Case;
-            allNot_P += p.Value;
-        }
-        if(allP!=0 && allNot_P !=0){
-        Tao = new Pair<Double,Double>(getCard(allP/TaoList.size(),allNot_P/TaoList.size()),getCard(allNot_P/TaoList.size(),allP/TaoList.size()));}
-    }
 
     public double getCard(double first,double sec){
         return first/(sec+first);

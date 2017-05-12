@@ -206,4 +206,20 @@ public class ComplexFormula extends Formula {
         result = 31 * result + getRightPart().hashCode();
         return result;
     }
+    public void setpq(){
+        if(leftPart.isNegated())leftPart.negate();
+        if(rightPart.isNegated())rightPart.negate();
+    }
+    public void setnpq(){
+        if(!leftPart.isNegated())leftPart.negate();
+        if(rightPart.isNegated())rightPart.negate();
+    }
+    public void setpnq(){
+        if(leftPart.isNegated())leftPart.negate();
+        if(!rightPart.isNegated())rightPart.negate();
+    }
+    public void setnpnq(){
+        if(!leftPart.isNegated())leftPart.negate();
+        if(!rightPart.isNegated())rightPart.negate();
+    }
 }
