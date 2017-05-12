@@ -46,10 +46,10 @@ public class Question {
         traits.add(findTraits(1));
         if(index<length)
         {
-            Operators.Type op;
+            LogicOperator op;
             switch (parts[index].toLowerCase())
             {
-                case "and": op = Operators.Type.AND; break;
+                case "and": op = LogicOperator.AND; break;
                 default: throw new InvalidQuestionException(InvalidQuestionException.NO_OPERATOR);
             }
             index++;

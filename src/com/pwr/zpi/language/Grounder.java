@@ -54,8 +54,8 @@ public class Grounder {
 
 
 
-    static Operators.Type determineFulfillment(Agent agent, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
-        Operators.Type res;
+    static ModalOperator determineFulfillment(Agent agent, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+        ModalOperator res;
         for (Formula mentalModel : dk.getComplementaryFormulas()) {
             res = determineFulfillment(dk, mentalModel);
         }
@@ -75,7 +75,7 @@ public class Grounder {
      * @return Type of operator which can be applied to formula given through distribution of knowledge.
      * @see DistributedKnowledge
      */
-    static Operators.Type determineFulfillment(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
+    static ModalOperator determineFulfillment(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
         DistributedKnowledge.DKMode dkMode = dk.getDkComplexity();
         if (dkMode.equals(DistributedKnowledge.DKMode.SINGLE) && !dk.getFormula().equals(formula)
                 || dkMode.equals(DistributedKnowledge.DKMode.COMPLEX) && !dk.getComplementaryFormulas().contains(formula))
@@ -94,7 +94,7 @@ public class Grounder {
      * @return
      */
     @Nullable
-    public static Operators.Type checkEpistemicConditions(Formula formula, DistributedKnowledge dk,
+    public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk,
                                                           int timestamp) throws NotApplicableException {
         boolean amongNoClearStateObjects = true;
         boolean amongClearStateObjects = true;
@@ -110,20 +110,20 @@ public class Grounder {
         }
 
         boolean isPresentInWM = !dk.getDkClassByDesc(formula, BPCollection.MemoryType.WM).isEmpty();
-        Operators.Type res = null;
+        ModalOperator res = null;
 
         if (amongNoClearStateObjects) {
             double currRelCard = relativeCard(dk.getGroundingSets(), timestamp, formula);
-            Operators.Type[] checkedOps = {Operators.Type.POS, Operators.Type.BEL, Operators.Type.KNOW};
+            ModalOperator[] checkedOps = {ModalOperator.POS, ModalOperator.BEL, ModalOperator.KNOW};
             for (int i = 0; i < checkedOps.length && res == null; i++)
                 res = checkEpistemicCondition(true, isPresentInWM, currRelCard, checkedOps[i]);
         } else if (amongClearStateObjects)
-            res = Operators.Type.KNOW;
+            res = ModalOperator.KNOW;
 
         return res;
     }
 
-    public static Operators.Type checkEpistemicConditions(Formula formula, DistributedKnowledge dk)
+    public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk)
             throws NotApplicableException {
         return checkEpistemicConditions(formula, dk, dk.getTimestamp());
     }
@@ -139,8 +139,8 @@ public class Grounder {
      * @param inspectedOperator        Modal operator which possibility of occurrence is examined.
      * @return Given modal operator if it is applicable or null in other way.
      */
-    private static Operators.Type checkEpistemicCondition(boolean amongNoClearStateObjects, boolean isPresentInWM,
-                                                          double relativeCard, Operators.Type inspectedOperator) {
+    private static ModalOperator checkEpistemicCondition(boolean amongNoClearStateObjects, boolean isPresentInWM,
+                                                          double relativeCard, ModalOperator inspectedOperator) {
         double minRange, maxRange;
         switch (inspectedOperator) {
             case POS:

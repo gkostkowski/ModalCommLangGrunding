@@ -48,11 +48,7 @@ public class HolonCollection {
         try {
             if(formula instanceof SimpleFormula)
                 holon = new BinaryHolon(formula, agent, timestamp);
-            else try {
-                holon = new NonBinaryHolon(agent, timestamp, new DistributedKnowledge(agent, formula, timestamp));
-            } catch (NotConsistentDKException e) {
-                e.printStackTrace();
-            }
+            else holon = new NonBinaryHolon(agent, timestamp);
             holonCollection.add(holon);
         } catch (InvalidFormulaException e) {
             e.printStackTrace();
