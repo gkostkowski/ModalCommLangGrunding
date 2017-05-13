@@ -97,29 +97,29 @@ public class ComplexStatement extends Statement {
 
        else if(withinBel(pq) && !withinPos(npq) && !withinPos(pnq) &&withinPos(npnq))
            return "I believe that " + name + " is " +
-                   formula.getTraits().get(0).getName() + formula.getOperator()
-                   + formula.getTraits().get(1).getName();
+                   formula.getValuedTraits().get(0).getName() + formula.getOperator()
+                   + formula.getValuedTraits().get(1).getName();
        else if(withinBel(pq) && withinPos(npq)) {
            if (fcase == ComplexFormula.FormulaCase.PQ)
                start = "Yes, ";
            else start = "No, ";
            return start + "I believe that " + name + " is " +
-                   formula.getTraits().get(0).getName() + formula.getOperator()
-                   + formula.getTraits().get(1).getName() + ", but it might not be"
-                   + formula.getTraits().get(0).getName();
+                   formula.getValuedTraits().get(0).getName() + formula.getOperator()
+                   + formula.getValuedTraits().get(1).getName() + ", but it might not be"
+                   + formula.getValuedTraits().get(0).getName();
        }
        else if(withinBel(pq) && withinPos(pnq))
            return "I believe that " + name + " is " +
-                   formula.getTraits().get(0).getName() + formula.getOperator()
-                   + formula.getTraits().get(1).getName() + ", but it might not be"
-                   + formula.getTraits().get(1).getName();
+                   formula.getValuedTraits().get(0).getName() + formula.getOperator()
+                   + formula.getValuedTraits().get(1).getName() + ", but it might not be"
+                   + formula.getValuedTraits().get(1).getName();
        else if(withinBel(pq) && withinPos(npnq))
            return "I believe that " + name + " is " +
-                   formula.getTraits().get(0).getName() + formula.getOperator()
-                   + formula.getTraits().get(1).getName() + ", but it might be any other way";
+                   formula.getValuedTraits().get(0).getName() + formula.getOperator()
+                   + formula.getValuedTraits().get(1).getName() + ", but it might be any other way";
        else if(withinPos(pq) && withinPos(npq) && withinPos(pnq) && withinPos(npnq))
-           return "Well, it might " + valP + "be " + formula.getTraits().get(0).getName() + formula.getOperator() + valQ
-                   + formula.getTraits().get(1).getName() + ", but I would not exclude other options";
+           return "Well, it might " + valP + "be " + formula.getValuedTraits().get(0).getName() + formula.getOperator() + valQ
+                   + formula.getValuedTraits().get(1).getName() + ", but I would not exclude other options";
        else if()
    }
 */

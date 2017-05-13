@@ -25,9 +25,16 @@ public class BPCollection {
      * By default, inserts to bp located in wm
      * @param newObservation
      */
-    public void includeNewObservation(Observation newObservation) {
-        new BaseProfile(newObservation.getTimestamp());
+    public void includeNewObservation(Observation newObservation, IndividualModel individualModel) {
+        int newTimestamp = newObservation.getTimestamp();
+        BaseProfile alreadyExisting = null;
+        if ((alreadyExisting=getBaseProfile(newTimestamp, MemoryType.WM)) == null) {
+            alreadyExisting = new BaseProfile(newObservation.getTimestamp());
+             addToMemory(alreadyExisting);
+        }
 
+        for (Trait trait: newObservation.getValuedTraits().keySet())
+            alreadyExisting.addObservationByValue(individualModel, trait, newObservation.getValuedTraits().get(trait));
     }
 
     /**

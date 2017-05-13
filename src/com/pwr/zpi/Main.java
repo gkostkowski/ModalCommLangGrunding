@@ -328,7 +328,8 @@ class Main {
                 new Observation(qrCodes[1], new HashMap<Trait, Boolean>(){{put(tr[0], true); }}, t++),
         };
 
-//        Agent agent1 = new Agent();
+        Agent agent1 = new Agent();
+        //agent1.discoverObservations();
 //        for (Observation observation: observations)
 //            agent1.registerObservation(observation);
 
@@ -362,5 +363,7 @@ class Main {
         agent3.addObservationToDatabase(obs2[2]);
         agent3.addObservationToDatabase(obs2[3]);
         // M ============
+        System.out.println(agent3.getDatabase().fetchNewObservations());
+        agent3.discoverObservations();
     }
 }

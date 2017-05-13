@@ -1,3 +1,5 @@
+package com.pwr.zpi.Tests;
+
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -93,11 +95,12 @@ public class HolonTests 	{
     	bpc.setTimestamp(2);
     	BaseProfile bp = new BaseProfile(2);
     	bp.addDescribedObservation(im1, t);
-    	bpc.addToMemory(bp, BPCollection.MemoryType.LM, 2);
+    	bpc.addToMemory(BPCollection.MemoryType.LM, bp);
     	a.setKnowledgeBase(bpc);
     	
-    	Holon h1 = new BinaryHolon(sf1,a,2);
-    	
+    	Holon h1 = new BinaryHolon(a.distributeKnowledge(sf1));
+//    	Holon h1 = new BinaryHolon(sf1,a,2);
+
     	Assert.assertEquals(h1.getKind(), Holon.HolonKind.Binary);
     	Assert.assertEquals(h1.getFormula(), sf1);
     	Assert.assertEquals(h1.getStrongest().getK(), true);

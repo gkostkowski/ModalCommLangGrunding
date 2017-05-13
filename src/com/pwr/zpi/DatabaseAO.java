@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import static com.pwr.zpi.Agent.objectTypeCollection;
 
@@ -76,7 +75,7 @@ public class DatabaseAO {
         String tableName = observation.getType().getTypeId();
         String idNumber = observation.getIdentifier().getIdNumber();
         String timestamp = String.valueOf(observation.getTimestamp());
-        Map<Trait, Boolean> traits = observation.getTraits();
+        Map<Trait, Boolean> traits = observation.getValuedTraits();
 
         columns.append("id").append(",").append("timestamp");
         values.append("\"").append(idNumber).append("\"").append(",").append(timestamp);

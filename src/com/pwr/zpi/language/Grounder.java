@@ -75,9 +75,8 @@ public class Grounder {
      * @see DistributedKnowledge
      */
     public static ModalOperator determineFulfillment(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
-        DistributedKnowledge.DKMode dkMode = dk.getDkComplexity();
-        if (dkMode.equals(DistributedKnowledge.DKMode.SINGLE) && !dk.getFormula().equals(formula)
-                || dkMode.equals(DistributedKnowledge.DKMode.COMPLEX) && !dk.getComplementaryFormulas().contains(formula))
+        if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
+                || dk.isDkComplex() && !dk.getComplementaryFormulas().contains(formula))
             throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
 
         return checkEpistemicConditions(formula, dk);

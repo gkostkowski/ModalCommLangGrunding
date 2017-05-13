@@ -293,6 +293,20 @@ public class BaseProfile {
         indefiniteByTraits.get(relatedTrait).add(individualModel);
     }
 
+    /**
+     * Adds given observation to base profile. Destination group is selected according to given boolean value.
+     * @param individualModel
+     * @param relatedTrait
+     * @param value
+     */
+    public void addObservationByValue(IndividualModel individualModel, Trait relatedTrait, Boolean value) {
+        if (value == null)
+            addIndefiniteObservation(individualModel, relatedTrait);
+        else if (value)
+            addDescribedObservation(individualModel, relatedTrait);
+        else if (!value)
+            addNotDescribedObservation(individualModel, relatedTrait);
+    }
 
     public void copy(BaseProfile other) {
         setDescribedByTraits(new HashMap<>(other.getDescribedByTraits()));

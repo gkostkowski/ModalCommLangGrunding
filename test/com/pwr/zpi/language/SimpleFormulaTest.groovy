@@ -50,7 +50,7 @@ class SimpleFormulaTest extends GroovyTestCase
 
     /**
      *  Test konstruktorów, w których podajemy listy cech i stanów
-     *  oraz metod getStates(), getTraits(), getModel()
+     *  oraz metod getStates(), getValuedTraits(), getModel()
      */
     @Test
     void testConstructor3and4()

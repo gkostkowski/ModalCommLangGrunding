@@ -40,7 +40,7 @@ public class Observation {
         this.timestamp = timestamp;
     }
 
-    public Map<Trait, Boolean> getTraits() {
+    public Map<Trait, Boolean> getValuedTraits() {
         return valuedTraits;
     }
 

@@ -15,10 +15,10 @@ public class IMCollection {
     private Map<String, Identifier> lexicon;
 
     public IMCollection() {
-        buildIMs();
+        //buildIMs();
     }
 
-    private void buildIMs() {
+    private void buildIMs() { //not needed anymore
         individualModelSet = new HashSet<>();
         Collection<Identifier> identifiers = Identifier.readIdentifiers();
         for (Identifier id: identifiers) {
@@ -85,12 +85,15 @@ public class IMCollection {
 
     /**
      * Method analyses incoming new observation and adds instance of IndividualModel into system if it is not present.
+     * For convenience, method returns found or newly created IM.
      * @param newObservation
      */
-    public void captureNewIM(Observation newObservation) {
+    public IndividualModel captureNewIM(Observation newObservation) {
         Identifier newId = newObservation.getIdentifier();
-        if (getIMById(newId) == null)
-            individualModelSet.add(new IndividualModel(newId, newObservation.getType()));
+        IndividualModel res;
+        if ((res=getRepresentationByIdentifier(newId)) == null)
+            individualModelSet.add(res=new IndividualModel(newId, newObservation.getType()));
+        return res;
     }
 
     public <T> void captureNewIM(Set<IndividualModel> allIMs) {
@@ -99,7 +102,7 @@ public class IMCollection {
                 individualModelSet.add(im);
     }
 
-    private IndividualModel getIMById(Identifier newId) {
+    /*private IndividualModel getIMById(Identifier newId) {
         return individualModelSet.stream().filter(im -> im.getIdentifier().equals(newId)).findAny().get();
-    }
+    }*/
 }

@@ -31,7 +31,7 @@ public abstract class Formula {
     /**
      * Gives list of successive states. Classic case will contains states which describe whether parts of formula[traits]
      * (in case of complex formula - simple formula is special case and contains one part) occur with or without negation.
-     * The order of returned states is respective to order of traits returned by getTraits().
+     * The order of returned states is respective to order of traits returned by getValuedTraits().
      * @return List of states.
      */
 

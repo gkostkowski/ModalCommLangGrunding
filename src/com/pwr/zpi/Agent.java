@@ -1,10 +1,6 @@
 package com.pwr.zpi;
 
 import com.pwr.zpi.exceptions.InvalidFormulaException;
-import com.pwr.zpi.exceptions.NotConsistentDKException;
-import com.pwr.zpi.language.DistributedKnowledge;
-import com.pwr.zpi.language.Formula;
-import com.sun.istack.internal.Nullable;
 
 import java.util.Collection;
 
@@ -15,37 +11,45 @@ import java.util.Collection;
 public class Agent {
     private BPCollection knowledgeBase;
     private IMCollection models;
-    private HolonCollection holons;
+    //    private HolonCollection holons;
     private DatabaseAO database;
     public static Collection<ObjectType> objectTypeCollection;
+    private boolean listeningMode;
+    private long updatefrequencyInMs = 1000;
 
 
     public Agent() {
         init();
         knowledgeBase = new BPCollection();
-        holons = new HolonCollection();
+        //holons = new HolonCollection();
         database = new DatabaseAO();
     }
 
     public Agent(String databaseFilename) {
         init();
         knowledgeBase = new BPCollection();
-        holons = new HolonCollection();
+        //holons = new HolonCollection();
         database = new DatabaseAO(databaseFilename);
     }
 
     public Agent(BPCollection knowledgeBase) {
         init();
         this.knowledgeBase = knowledgeBase;
-        holons = new HolonCollection();
+        //holons = new HolonCollection();
     }
 
     public Agent(BPCollection knowledgeBase, IMCollection models) {
         init();
         this.models = models;
         this.knowledgeBase = knowledgeBase;
-        holons = new HolonCollection();
+        //holons = new HolonCollection();
     }
+
+/*    public Agent(BPCollection knowledgeBase, IMCollection models, HolonCollection holons) {
+        this.knowledgeBase = knowledgeBase;
+        this.models = models;
+        this.holons = holons;
+    }*/
 
     /**
      * Performs initials actions related to loading semantic memory: builds instances of ObjectTypes and IndividualModels.
@@ -56,11 +60,6 @@ public class Agent {
         models = new IMCollection();
     }
 
-    public Agent(BPCollection knowledgeBase, IMCollection models, HolonCollection holons) {
-        this.knowledgeBase = knowledgeBase;
-        this.models = models;
-        this.holons = holons;
-    }
 
     public BPCollection getKnowledgeBase() {
         return knowledgeBase;
@@ -78,7 +77,18 @@ public class Agent {
         this.models = models;
     }
 
-    /**
+    public DatabaseAO getDatabase() {
+        return database;
+    }
+    /*    public HolonCollection getHolons() {
+        return holons;
+    }
+
+    public void setHolons(HolonCollection holons) {
+        this.holons = holons;
+    }*/
+
+   /* *//**
      * Builds distributed knowledge, which will be used to make respective mental models associated
      * with formulas. It is used to build distribution of different mental models.
      * Built distributed knowledge is related to certain moment in time.
@@ -87,7 +97,7 @@ public class Agent {
      * @param time    Certain moment in time.
      * @return Distribution of knowledge.
      * @throws InvalidFormulaException
-     */
+     *//*
     @Nullable
     public DistributedKnowledge distributeKnowledge(Formula formula, int time) throws InvalidFormulaException {
         try {
@@ -98,7 +108,7 @@ public class Agent {
         }
     }
 
-    /**
+    *//**
      * Builds distributed knowledge, which will be used to make respective mental models associated
      * with formulas. It is used to build distribution of different mental models.
      * Built distributed knowledge is related to timestamp of last registered by this agent base profile.
@@ -106,7 +116,7 @@ public class Agent {
      * @param formula Formula
      * @return Distribution of knowledge.
      * @throws InvalidFormulaException
-     */
+     *//*
     @Nullable
     public DistributedKnowledge distributeKnowledge(Formula formula) throws InvalidFormulaException {
         try {
@@ -116,13 +126,37 @@ public class Agent {
             return null;
         }
     }
+*/
 
-    public <T>void registerObservation(Observation newObservation) {
-        models.captureNewIM(newObservation);
-        //knowledgeBase.addToMemory(newObservation.toBaseProfile());
-        //lub
-        knowledgeBase.includeNewObservation(newObservation); // domyslnie bedzie
+    /**
+     * This is method for realising one of fundamental task: registering task. Precisely, this method includes
+     * observation saved in agent database in program for processing.
+     */
+    public void discoverObservations() {
+        listeningMode = true;
+        System.out.println("Start discovering ...");
+        while (listeningMode) {
+            System.out.println("Waiting for new observations ...");
 
+            Collection<Observation> newObservations = database.fetchNewObservations();
+            if (newObservations != null && !newObservations.isEmpty()) {
+                System.out.println("Processing "+newObservations.size()+" new observation(s).");
+                for (Observation obs : newObservations)
+                    registerObservation(obs);
+            }
+
+            try {
+                Thread.sleep(updatefrequencyInMs);
+            } catch (InterruptedException e) {
+                listeningMode = false;
+            }
+        }
+    }
+
+    public void registerObservation(Observation newObservation) {
+        IndividualModel relatedIM = models.captureNewIM(newObservation);
+
+        knowledgeBase.includeNewObservation(newObservation, relatedIM);
     }
 
     public void registerBaseProfile(BaseProfile newBp) {
@@ -131,15 +165,7 @@ public class Agent {
 
     }
 
-    public HolonCollection getHolons() {
-        return holons;
-    }
-
-    public void setHolons(HolonCollection holons) {
-        this.holons = holons;
-    }
-
-    public void addObservationToDatabase(Observation observation){
+    public void addObservationToDatabase(Observation observation) {
         database.addNewObservation(observation);
     }
 }
