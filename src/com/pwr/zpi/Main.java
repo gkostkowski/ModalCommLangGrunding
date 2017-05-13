@@ -310,10 +310,10 @@ class Main {
 
         // G ============
         /*CASE 1*/
-        QRCode [] qrCodes = new QRCode[]{new QRCode("kod001"), new QRCode("kod002"), new QRCode("kod003"),
+        QRCode[] qrCodes = new QRCode[]{new QRCode("kod001"), new QRCode("kod002"), new QRCode("kod003"),
                 new QRCode("kod004")};
 
-        int t=0;
+        int t = 0;
         Trait[] tr = new Trait[]{
                 new Trait("Red"),
                 new Trait("Black"),
@@ -323,13 +323,21 @@ class Main {
                 new Trait("Blinking")
         };
         Observation[] observations = new Observation[]{
-                new Observation(qrCodes[0], new HashMap<Trait, Boolean>(){{put(tr[0], true);put(tr[2], true);put(tr[5], false); }}, t++),
-                new Observation(qrCodes[0], new HashMap<Trait, Boolean>(){{put(tr[0], true); }}, t++),
-                new Observation(qrCodes[1], new HashMap<Trait, Boolean>(){{put(tr[0], true); }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[2], true);
+                    put(tr[5], false);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                }}, t++),
+                new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                }}, t++),
         };
 
         Agent agent1 = new Agent();
-        //agent1.discoverObservations();
+//        agent1.discoverObservations();
 //        for (Observation observation: observations)
 //            agent1.registerObservation(observation);
 
@@ -349,21 +357,33 @@ class Main {
                 new Trait("Blinking"),
                 new Trait("blinking"),
                 new Trait("Blue"), //[4]
-                new Trait("Soft") };
+                new Trait("Soft")};
         int t2 = 0;
         Observation[] obs2 = new Observation[]{
-                new Observation(qrCodes2[0], new HashMap<Trait, Boolean>(){{put(tr2[0], true);put(tr2[1], true); }}, t2++),
-                new Observation(qrCodes2[1], new HashMap<Trait, Boolean>(){{put(tr2[2], true); }}, t2),
-                new Observation(qrCodes2[2], new HashMap<Trait, Boolean>(){{put(tr2[3], true); }}, t2++),
-                new Observation(qrCodes2[2], new HashMap<Trait, Boolean>(){{put(tr2[0], false); }}, t2) };
+                new Observation(qrCodes2[0], new HashMap<Trait, Boolean>() {{
+                    put(tr2[0], true);
+                    put(tr2[1], true);
+                }}, t2++),
+                new Observation(qrCodes2[1], new HashMap<Trait, Boolean>() {{
+                    put(tr2[2], true);
+                }}, t2),
+                new Observation(qrCodes2[2], new HashMap<Trait, Boolean>() {{
+                    put(tr2[3], true);
+                }}, t2++),
+                new Observation(qrCodes2[2], new HashMap<Trait, Boolean>() {{
+                    put(tr2[0], false);
+                }}, t2)};
 
         Agent agent3 = new Agent("baza1.db");
         agent3.addObservationToDatabase(obs2[0]);
         agent3.addObservationToDatabase(obs2[1]);
         agent3.addObservationToDatabase(obs2[2]);
         agent3.addObservationToDatabase(obs2[3]);
+
         // M ============
         System.out.println(agent3.getDatabase().fetchNewObservations());
         agent3.discoverObservations();
+
+        // ******* SCENARIUSZ ******* todo
     }
 }

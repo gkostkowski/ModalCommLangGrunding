@@ -15,8 +15,10 @@ import static com.pwr.zpi.Agent.objectTypeCollection;
  */
 public class DatabaseAO {
 
-    //todo unikatowe nazwy
+    //todo unikatowe nazwy (filename, path) [utworzyc folder db jesli nie ma)
     //todo listener dla nowych rekordow
+    //todo testy
+    //todo dokumentacja
     public static final String DEF_DATABASE_FILEPATH = "db/baza1.db";
     Connection connection;
 
