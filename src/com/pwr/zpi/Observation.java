@@ -6,7 +6,6 @@ import java.util.Map;
  * Describes object's observation with it's timestamp, id and set of valuedTraits.
  * Represents observations placed in real world, witnessed by agent.
  */
-@Deprecated
 public class Observation {
     private Identifier identifier;
     private int timestamp;

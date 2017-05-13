@@ -99,7 +99,7 @@ public class IMCollection {
                 individualModelSet.add(im);
     }
 
-        private IndividualModel getIMById(Identifier newId) {
+    private IndividualModel getIMById(Identifier newId) {
         return individualModelSet.stream().filter(im -> im.getIdentifier().equals(newId)).findAny().get();
     }
 }

@@ -7,8 +7,6 @@ import com.pwr.zpi.language.Formula;
 import com.sun.istack.internal.Nullable;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Agent is crucial class for project - it has members of collections
@@ -18,12 +16,22 @@ public class Agent {
     private BPCollection knowledgeBase;
     private IMCollection models;
     private HolonCollection holons;
+    private DatabaseAO database;
     public static Collection<ObjectType> objectTypeCollection;
+
 
     public Agent() {
         init();
         knowledgeBase = new BPCollection();
         holons = new HolonCollection();
+        database = new DatabaseAO();
+    }
+
+    public Agent(String databaseFilename) {
+        init();
+        knowledgeBase = new BPCollection();
+        holons = new HolonCollection();
+        database = new DatabaseAO(databaseFilename);
     }
 
     public Agent(BPCollection knowledgeBase) {
@@ -41,7 +49,7 @@ public class Agent {
 
     /**
      * Performs initials actions related to loading semantic memory: builds instances of ObjectTypes and IndividualModels.
-     * Note: builds IMs according to config file and objects occurences in DB entries.
+     * Note: builds IMs according to config file and objects occurrences in DB entries.
      */
     private void init() {
         objectTypeCollection = ObjectType.getObjectTypes();
@@ -129,5 +137,9 @@ public class Agent {
 
     public void setHolons(HolonCollection holons) {
         this.holons = holons;
+    }
+
+    public void addObservationToDatabase(Observation observation){
+        database.addNewObservation(observation);
     }
 }
