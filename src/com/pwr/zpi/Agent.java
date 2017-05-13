@@ -132,25 +132,15 @@ public class Agent {
      * This is method for realising one of fundamental task: registering task. Precisely, this method includes
      * observation saved in agent database in program for processing.
      */
-    public void discoverObservations() {
-        listeningMode = true;
-        System.out.println("Start discovering ...");
-        while (listeningMode) {
-            System.out.println("Waiting for new observations ...");
+    public void discoverObservations(Collection<Observation> newObservations) {
+        System.out.println("Discovering new observations ...");
 
-            Collection<Observation> newObservations = database.fetchNewObservations();
-            if (newObservations != null && !newObservations.isEmpty()) {
-                System.out.println("Processing "+newObservations.size()+" new observation(s).");
-                for (Observation obs : newObservations)
-                    registerObservation(obs);
-            }
-
-            try {
-                Thread.sleep(updatefrequencyInMs);
-            } catch (InterruptedException e) {
-                listeningMode = false;
-            }
+        if (newObservations != null && !newObservations.isEmpty()) {
+            System.out.println("Processing " + newObservations.size() + " new observation(s).");
+            for (Observation obs : newObservations)
+                registerObservation(obs);
         }
+
     }
 
     public void registerObservation(Observation newObservation) {

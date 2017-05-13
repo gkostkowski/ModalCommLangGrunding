@@ -364,6 +364,7 @@ class Main {
         agent3.addObservationToDatabase(obs2[3]);
         // M ============
         System.out.println(agent3.getDatabase().fetchNewObservations());
+        System.out.println(agent3.getDatabase().fetchAllObservations());
         agent3.discoverObservations();
     }
 }
