@@ -1,12 +1,8 @@
 package com.pwr.zpi;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collection;
-import java.util.Map;
+import java.sql.*;
+import java.util.*;
 
 import static com.pwr.zpi.Agent.objectTypeCollection;
 
@@ -15,12 +11,13 @@ import static com.pwr.zpi.Agent.objectTypeCollection;
  */
 public class DatabaseAO {
 
-    //todo unikatowe nazwy (filename, path) [utworzyc folder db jesli nie ma)
-    //todo listener dla nowych rekordow
+    //todo unikatowe nazwy (filename, path) [utworzyc folder db jesli nie ma]
+    //todo listener dla nowych rekordow (handler, trigger, callback)
     //todo testy
     //todo dokumentacja
     public static final String DEF_DATABASE_FILEPATH = "db/baza1.db";
     Connection connection;
+    int lastTimestamp = -1;
 
     public DatabaseAO() {
         String path = (new File(DEF_DATABASE_FILEPATH)).getAbsolutePath();
@@ -106,7 +103,49 @@ public class DatabaseAO {
     }
 
     public Collection<Observation> fetchNewObservations() {
-        //todo
-        return null;
+        //todo lepiej
+        Collection<Observation> newObservations = new HashSet<Observation>();
+
+        int newTimestamp = lastTimestamp;
+        StringBuilder sql = new StringBuilder();
+        try {
+            DatabaseMetaData md = connection.getMetaData();
+            ResultSet tableNamesSet = md.getTables(null, null, "%", null);
+
+            while (tableNamesSet.next()) {
+                String tableName = tableNamesSet.getString(3);
+                sql.append("SELECT * FROM \"").append(tableName).append("\" WHERE timestamp > ").append(String.valueOf(lastTimestamp));
+
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql.toString());
+
+                while(resultSet.next()) {
+                    Identifier identifier = new QRCode(resultSet.getString("id"));
+                    int timestamp = resultSet.getInt("timestamp");
+
+                    List<Trait> typeTraits = identifier.getType().getTraits();
+                    Map<Trait, Boolean> traits = new HashMap<>();
+
+                    for(Trait t: typeTraits){
+                        int value = resultSet.getInt(t.getName());
+                        if(value == 1)
+                            traits.put(t, true);
+                        if(value == 0)
+                            traits.put(t, false);
+                    }
+                    newObservations.add(new Observation(identifier, traits, timestamp));
+
+                    if(timestamp > newTimestamp)
+                        newTimestamp = timestamp;
+                }
+                statement.close();
+                sql.setLength(0);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        lastTimestamp = newTimestamp;
+        return newObservations;
     }
 }

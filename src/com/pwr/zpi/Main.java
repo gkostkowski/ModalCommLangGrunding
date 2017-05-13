@@ -379,11 +379,12 @@ class Main {
         agent3.addObservationToDatabase(obs2[1]);
         agent3.addObservationToDatabase(obs2[2]);
         agent3.addObservationToDatabase(obs2[3]);
+        agent3.getDatabase().fetchNewObservations();
 
         // M ============
-        System.out.println(agent3.getDatabase().fetchNewObservations());
-        System.out.println(agent3.getDatabase().fetchAllObservations());
-        agent3.discoverObservations();
+//        System.out.println(agent3.getDatabase().fetchNewObservations());
+//        System.out.println(agent3.getDatabase().fetchAllObservations());
+//        agent3.discoverObservations();
 
         // ******* SCENARIUSZ ******* todo
     }
