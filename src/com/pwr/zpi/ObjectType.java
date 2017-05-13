@@ -61,4 +61,12 @@ public class ObjectType {
         result = 31 * result + getTraits().hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "ObjectType{" +
+                typeId + ": " +
+                traits +
+                '}';
+    }
 }

@@ -2,8 +2,8 @@
 	All non-primitive Java types equivalent to primitive ones (and String) are permitted.
 	Names of traits will be stored as Strings. -->
 <types>
-        <collection class="linked-list">
-		<type>
+    <collection class="linked-list">
+        <type>
             <typeId>01</typeId>
             <traits class="linked-list">
                 <trait>
@@ -31,5 +31,22 @@
                 </trait>
             </traits>
         </type>
-		</collection>
+        <type>
+            <typeId>03</typeId>
+            <traits class="linked-list">
+                <trait>
+                    <name>Orange</name>
+                </trait>
+                <trait>
+                    <name>Round</name>
+                </trait>
+                <trait>
+                    <name>Sharp</name>
+                </trait>
+                <trait>
+                    <name>Solid</name>
+                </trait>
+            </traits>
+        </type>
+    </collection>
 </types>

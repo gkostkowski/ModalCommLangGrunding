@@ -18,8 +18,10 @@ public class DatabaseAO {
     public static final String DEF_DATABASE_FILEPATH = "db/baza1.db";
     Connection connection;
     int lastTimestamp = -1;
+    Agent agent;
 
-    public DatabaseAO() {
+    public DatabaseAO(Agent agent) {
+        this.agent=agent;
         String path = (new File(DEF_DATABASE_FILEPATH)).getAbsolutePath();
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:" + path);
@@ -29,7 +31,8 @@ public class DatabaseAO {
         addTablesForAllObjectTypes();
     }
 
-    public DatabaseAO(String databaseFilename) {
+    public DatabaseAO(Agent agent, String databaseFilename) {
+        this.agent = agent;
         String path = (new File("db/" + databaseFilename)).getAbsolutePath();
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:" + path);
@@ -147,5 +150,12 @@ public class DatabaseAO {
         }
         lastTimestamp = newTimestamp;
         return newObservations;
+    }
+
+    /**
+     * This method will be called when new observation(s) will appear.
+     */
+    public void updateAgentMemory() {
+        agent.discoverObservations(fetchNewObservations());
     }
 }

@@ -78,4 +78,12 @@ public class IndividualModel {
         result = 31 * result + getType().hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "IndividualModel{" +
+                "identifier=" + identifier +
+                ", type=" + type +
+                '}';
+    }
 }

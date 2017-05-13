@@ -291,7 +291,6 @@ public class Main {
 package com.pwr.zpi;
 
 import java.util.HashMap;
-import java.util.Set;
 
 class Main {
 
@@ -375,11 +374,10 @@ class Main {
                 }}, t2)};
 
         Agent agent3 = new Agent("baza1.db");
-        agent3.addObservationToDatabase(obs2[0]);
+        /*agent3.addObservationToDatabase(obs2[0]);
         agent3.addObservationToDatabase(obs2[1]);
         agent3.addObservationToDatabase(obs2[2]);
-        agent3.addObservationToDatabase(obs2[3]);
-        agent3.getDatabase().fetchNewObservations();
+        agent3.addObservationToDatabase(obs2[3]);*/
 
         // M ============
 //        System.out.println(agent3.getDatabase().fetchNewObservations());
@@ -387,5 +385,8 @@ class Main {
 //        agent3.discoverObservations();
 
         // ******* SCENARIUSZ ******* todo
+
+        agent3.getDatabase().updateAgentMemory();
+        System.out.println(agent3);
     }
 }

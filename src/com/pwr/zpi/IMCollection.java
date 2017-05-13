@@ -15,6 +15,7 @@ public class IMCollection {
     private Map<String, Identifier> lexicon;
 
     public IMCollection() {
+        individualModelSet = new HashSet<>();
         //buildIMs();
     }
 

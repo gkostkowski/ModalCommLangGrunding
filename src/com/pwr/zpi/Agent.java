@@ -22,14 +22,14 @@ public class Agent {
         init();
         knowledgeBase = new BPCollection();
         //holons = new HolonCollection();
-        database = new DatabaseAO();
+        database = new DatabaseAO(this);
     }
 
     public Agent(String databaseFilename) {
         init();
         knowledgeBase = new BPCollection();
         //holons = new HolonCollection();
-        database = new DatabaseAO(databaseFilename);
+        database = new DatabaseAO(this, databaseFilename);
     }
 
     public Agent(BPCollection knowledgeBase) {

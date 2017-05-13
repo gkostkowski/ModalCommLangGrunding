@@ -15,4 +15,10 @@ public class QRCode extends Identifier{
         return id;
     }
 
+    @Override
+    public String toString() {
+        return "QRCode{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }
