@@ -39,14 +39,12 @@ public class BinaryHolon extends Holon {
             double sumPositive = 0;
             double sumNegative = 0;
 
-            if (((SimpleFormula) dk.getFormula()).isNegated()) {
-                sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
-                ((SimpleFormula) dk.getFormula()).negate();
-                sumNegative += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
+            if (((SimpleFormula) dk.getComplementaryFormulas().get(0)).isNegated()) {
+                sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getComplementaryFormulas().get(1));
+                sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0));
             } else {
-                sumNegative += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
-                ((SimpleFormula) dk.getFormula()).negate();
-                sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
+                sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0));
+                sumPositive += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1));
             }
             System.out.println(sumNegative + " " + sumPositive +" " +  dk.getGroundingSet(dk.getFormula()).size());
             if (sumPositive != 0 && dk.getGroundingSet(dk.getFormula()).size() > 0) {
