@@ -18,7 +18,7 @@ class Main {
      *
      * @param args
      */
-    static public void main(String... args) {
+    static public void main(String... args) throws InterruptedException {
 
         // G ============
         /*CASE 1*/
@@ -69,6 +69,7 @@ class Main {
 
         System.out.println("asking...");
         c1.addQuestion("Is Hyzio red");
+        Thread.sleep(1000);
         System.out.println("(EXPECTED: I know)");
 
         Observation[] obsTill4 = new Observation[]{
@@ -81,6 +82,7 @@ class Main {
         agent1.getDatabase().updateAgentMemory();
 
         c1.addQuestion("Is Hyzio red");
+        Thread.sleep(1000);
         System.out.println("(EXPECTED: bel p pos ~p)");
 
 
@@ -94,9 +96,11 @@ class Main {
         agent1.getDatabase().updateAgentMemory();
 
         c1.addQuestion("Is Hyzio blinking");
+        Thread.sleep(1000);
         System.out.println("(EXPECTED: i dont know what to say)");
 
         c1.addQuestion("Is Hyzio white");
+        Thread.sleep(1000);
         System.out.println("(EXPECTED: i know it is not)");
 
         Observation[] obsTill7 = new Observation[]{
@@ -114,9 +118,11 @@ class Main {
         agent1.getDatabase().updateAgentMemory();
 
         c1.addQuestion("Is Hyzio red");
+        Thread.sleep(1000);
         System.out.println("(EXPECTED: pos is pos not is)");
 
         c1.addQuestion("Is Hyzio white");
+        Thread.sleep(1000);
         System.out.println("(EXPECTED: pos is bel not)");
 
 
