@@ -4,6 +4,7 @@ import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.language.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -15,7 +16,7 @@ public class HolonCollection {
 
     public HolonCollection()
     {
-        //todo
+        holonCollection = new HashSet<>();
     }
 
     /**

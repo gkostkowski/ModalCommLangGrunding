@@ -1,5 +1,10 @@
+package language;
+
 import java.util.Arrays;
 
+import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.exceptions.NotConsistentDKException;
+import com.pwr.zpi.language.*;
 import org.junit.Test;
 
 import com.pwr.zpi.Agent;
@@ -11,10 +16,6 @@ import com.pwr.zpi.IndividualModel;
 import com.pwr.zpi.ObjectType;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
-import com.pwr.zpi.language.BinaryHolon;
-import com.pwr.zpi.language.Formula;
-import com.pwr.zpi.language.Holon;
-import com.pwr.zpi.language.SimpleFormula;
 
 import junit.framework.Assert;
 
@@ -95,7 +96,7 @@ public class HolonTests 	{
 	}
 
 	@Test
-	public void BinaryHolonTest() throws InvalidFormulaException, NotConsistentDKException {
+	public void BinaryHolonTest() throws InvalidFormulaException, NotConsistentDKException, NotApplicableException {
 		Formula sf1 = new SimpleFormula(im1,t,false);
 		//Formula sf3 = new SimpleFormula(im3,t3,false);
 
