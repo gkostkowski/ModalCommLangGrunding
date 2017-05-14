@@ -1,6 +1,8 @@
-import java.util.Arrays;
+package com.pwr.zpi.language;
 
-import org.junit.Test;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.pwr.zpi.Agent;
 import com.pwr.zpi.BPCollection;
@@ -11,12 +13,10 @@ import com.pwr.zpi.IndividualModel;
 import com.pwr.zpi.ObjectType;
 import com.pwr.zpi.Trait;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
-import com.pwr.zpi.language.BinaryHolon;
-import com.pwr.zpi.language.Formula;
-import com.pwr.zpi.language.Holon;
-import com.pwr.zpi.language.SimpleFormula;
-
-import junit.framework.Assert;
+import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.exceptions.NotConsistentDKException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("deprecation")
 public class HolonTests 	{
@@ -30,8 +30,8 @@ public class HolonTests 	{
 
 	@Test
 	public void TraitTest() {
-		Assert.assertEquals(t.getName(),"Czerwonosc" );
-		Assert.assertEquals(t.equals("Czerwonosc"),false );
+		Assertions.assertEquals(t.getName(),"Czerwonosc" );
+		Assertions.assertEquals(t.equals("Czerwonosc"),true );
 	}
 
 	Identifier id1 = new BarCode("1");
@@ -40,9 +40,9 @@ public class HolonTests 	{
 
 	@Test
 	public void IdentifierTest() {
-		Assert.assertEquals(id1.getIdNumber(),"1");
-		Assert.assertEquals(id1.equals(id1),true);
-		Assert.assertEquals(id1.equals(id2),false);
+		Assertions.assertEquals(id1.getIdNumber(),"1");
+		Assertions.assertEquals(id1.equals(id1),true);
+		Assertions.assertEquals(id1.equals(id2),false);
 	}
 
 	ObjectType ot1 = new ObjectType("ot1",Arrays.asList(t,t2,t3));
@@ -51,9 +51,8 @@ public class HolonTests 	{
 
 	@Test
 	public void ObjectTypeTest() {
-		Assert.assertEquals(ot1.getTypeId(),"ot1");
-		Assert.assertEquals(ot2.getTraits(),Arrays.asList(t,t3,t1));
-	}
+		Assertions.assertEquals(ot1.getTypeId(),"ot1");
+		Assertions	}
 
 	IndividualModel im1 = new IndividualModel(id1,ot1);
 	IndividualModel im2 = new IndividualModel(id2,ot2);
@@ -61,10 +60,10 @@ public class HolonTests 	{
 
 	@Test
 	public void IndividualModelTest() {
-		Assert.assertEquals(im1.checkIfContainsTrait(t),true);
-		Assert.assertEquals(im1.checkIfContainsTrait(t1),false);
-		Assert.assertEquals(im1.checkIfContainsTraits(Arrays.asList(t,t3,t3)),true);
-		Assert.assertEquals(im2.getIdentifier(),id2);
+		Assertions.assertEquals(im1.checkIfContainsTrait(t),true);
+		Assertions.assertEquals(im1.checkIfContainsTrait(t1),false);
+		Assertions.assertEquals(im1.checkIfContainsTraits(Arrays.asList(t,t3,t3)),true);
+		Assertions.assertEquals(im2.getIdentifier(),id2);
 	}
 
 
@@ -74,11 +73,11 @@ public class HolonTests 	{
 		Formula sf1 = new SimpleFormula(im1,t,false);
 		//Formula sf3 = new SimpleFormula(im3,t3,false);
 
-		Assert.assertEquals(sf1.equals(sf1),true);
-		Assert.assertEquals(sf1.getTraits().get(0).getName(),t.getName());
-		Assert.assertEquals(sf1.getTraits(),Arrays.asList(t));
-		Assert.assertEquals(sf1.getType(), Formula.Type.SIMPLE_MODALITY);
-		Assert.assertEquals(sf1.getModel(), im1);
+		Assertions.assertEquals(sf1.equals(sf1),true);
+		Assertions.assertEquals(sf1.getTraits().get(0).getName(),t.getName());
+		Assertions.assertEquals(sf1.getTraits(),Arrays.asList(t));
+		Assertions.assertEquals(sf1.getType(), Formula.Type.SIMPLE_MODALITY);
+		Assertions.assertEquals(sf1.getModel(), im1);
 	}
 
 	@Test
@@ -88,34 +87,56 @@ public class HolonTests 	{
 		Formula cf3 = new ComplexFormula(im3,Arrays.asList(t4,t3),LogicOperator.AND);
 		//Formula sf3 = new SimpleFormula(im3,t3,false);
 
-		Assert.assertEquals(cf1.equals(cf1),true);
-		Assert.assertEquals(cf1.getModel(),im1);
-		Assert.assertEquals(cf2.getTraits(),Arrays.asList(t1,t3));
-		Assert.assertEquals(cf3.getType(),Formula.Type.MODAL_CONJUNCTION);
+		Assertions.assertEquals(cf1.equals(cf1),true);
+		Assertions.assertEquals(cf1.getModel(),im1);
+		Assertions.assertEquals(cf2.getTraits(),Arrays.asList(t1,t3));
+		Assertions.assertEquals(cf3.getType(),Formula.Type.MODAL_CONJUNCTION);
 	}
 
 	@Test
-	public void BinaryHolonTest() throws InvalidFormulaException, NotConsistentDKException {
+	public void GrounderTest() throws InvalidFormulaException, NotConsistentDKException {
+		Formula sf1 = new SimpleFormula(im1,t,false);
+
+
+		Agent a = new Agent();
+		DistributedKnowledge dk = new DistributedKnowledge(a,sf1);
+
+		//Formula formula, DistributedKnowledge dk,int timestamp
+
+		//Grounder.determineFulfillmentDouble(dk,sf1);
+	}
+
+
+	@Test
+	public void BinaryHolonTest() throws InvalidFormulaException, NotConsistentDKException, NotApplicableException {
 		Formula sf1 = new SimpleFormula(im1,t,false);
 		//Formula sf3 = new SimpleFormula(im3,t3,false);
 
 		Agent a = new Agent();
 
-		BPCollection bpc = new BPCollection();
-		bpc.setTimestamp(2);
-		BaseProfile bp = new BaseProfile(2);
-		bp.addDescribedObservation(im1, t);
-		bpc.addToMemory(bp);
-		a.setKnowledgeBase(bpc);
-
 		DistributedKnowledge dk = new DistributedKnowledge(a,sf1);
-
 		Holon h1 = new BinaryHolon(dk);
 
-		Assert.assertEquals(h1.getKind(), Holon.HolonKind.Binary);
-		Assert.assertEquals(h1.getFormula(), sf1);
-		Assert.assertEquals(h1.getStrongest().getK(), true);
-		Assert.assertEquals(h1.getStrongest().getV(), 0.5);
+		Assertions.assertEquals(h1.getKind(), Holon.HolonKind.Binary);
+		Assertions.assertEquals(h1.getFormula(), sf1);
+		Assertions.assertEquals(h1.getStrongest().getK(), true);
+		Assertions.assertEquals(h1.getStrongest().getV(), 0.0);
+		Assertions.assertEquals(h1.getWeakest().getK(), false);
+		Assertions.assertEquals(h1.getWeakest().getV(), 0.0);
+
+		BaseProfile bp = new BaseProfile(2);
+		bp.addDescribedObservation(im1, t);
+		Set<BaseProfile> setBP = new HashSet<BaseProfile>();
+		setBP.add(bp);
+		dk.setLM(setBP,sf1);
+		Holon h2 = new BinaryHolon(dk);
+
+		BPCollection bpc = new BPCollection();
+		bpc.setTimestamp(2);
+		bpc.addToMemory(bp);
+		dk.setrelatedObservationsBase(bpc);
+
+		Assertions.assertEquals(java.util.Optional.of(Grounder.checkEpistemicConditionsDouble(sf1, dk, 0)), 0.0);
 	}
 
 	@Test

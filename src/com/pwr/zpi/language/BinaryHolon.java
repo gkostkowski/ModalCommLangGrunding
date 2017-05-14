@@ -48,17 +48,19 @@ public class BinaryHolon extends Holon {
                 ((SimpleFormula) dk.getFormula()).negate();
                 sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
             }
-
-            if (sumPositive != 0) {
+            System.out.println(sumNegative + " " + sumPositive +" " +  dk.getGroundingSet(dk.getFormula()).size());
+            if (sumPositive != 0 && dk.getGroundingSet(dk.getFormula()).size() > 0) {
                 sumPositive = sumPositive / dk.getGroundingSet(dk.getFormula()).size();
             }
-            if (sumNegative != 0) {
+            if (sumNegative !=0 && dk.getGroundingSet(dk.getFormula()).size() > 0) {
                 sumNegative = sumNegative / dk.getGroundingSet(dk.getFormula()).size();
             }
-            Tao = new Pair<Double, Double>(getCard(sumPositive / dk.getGroundingSet(dk.getFormula()).size(),
-                    sumNegative / dk.getGroundingSet(dk.getFormula()).size()),
-                    getCard(sumNegative / dk.getGroundingSet(dk.getFormula()).size(),
-                            sumPositive / dk.getGroundingSet(dk.getFormula()).size()));
+            if(dk.getGroundingSet(dk.getFormula()).size() >0){
+                Tao = new Pair<Double, Double>(getCard(sumPositive / dk.getGroundingSet(dk.getFormula()).size(),
+                        sumNegative / dk.getGroundingSet(dk.getFormula()).size()),
+                        getCard(sumNegative / dk.getGroundingSet(dk.getFormula()).size(),
+                                sumPositive / dk.getGroundingSet(dk.getFormula()).size()));}
+            else{Tao = new Pair<Double,Double>(sumPositive,sumNegative);}
         }
     }
 
