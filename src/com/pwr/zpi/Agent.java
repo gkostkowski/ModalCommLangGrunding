@@ -20,7 +20,7 @@ public class Agent {
         init();
         knowledgeBase = new BPCollection();
         holons = new HolonCollection();
-        database = new DatabaseAO();
+        database = new DatabaseAO(this);
     }
 
     /*public Agent(String databaseFilename) {

@@ -22,13 +22,16 @@ public class DatabaseAO {
     public static final String DEF_DATABASE = "baza1.db";
     private Connection connection;
     private int lastTimestamp = -1;
+    private Agent agent;
 
-    public DatabaseAO() {
+    public DatabaseAO(Agent agent) {
+        this.agent = agent;
         String path = Paths.get("db/" + DEF_DATABASE).toString();
         init(path);
     }
 
-    public DatabaseAO(String databaseFilename) {
+    public DatabaseAO(Agent agent, String databaseFilename) {
+        this.agent = agent;
         String path = Paths.get("db/" + databaseFilename).toString();
         init(path);
     }
@@ -170,10 +173,10 @@ public class DatabaseAO {
         return newObservations;
     }
 
-    /*
+    /**
      * This method will be called when new observation(s) will appear.
      */
-//    public void updateAgentMemory() {
-//        agent.discoverObservations(fetchNewObservations());
-//    }
+    public void updateAgentMemory() {
+        agent.discoverObservations(fetchNewObservations());
+    }
 }
