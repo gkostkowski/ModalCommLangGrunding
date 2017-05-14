@@ -357,9 +357,58 @@ public class Grounder {
         Sum.addAll(getGroundingSetsConjunction(P, Q, time, all, 4));
         return getCard(getGroundingSetsConjunction(P, Q, time, all, i), time) / getCard(Sum, time);
     }
-    static double determineFulfillmentDouble(DistributedKnowledge dk,Formula f){
-    //todo
-        return 0;
+
+    /**
+     * Realizes verification of epistemic fulfillment relationship's conditions for provided formula.
+     * The given formula should be associated with given knowledge distribution.
+     * Checks what type of extension of formula can occur. The following assumption was made: For any extended formula
+     * (modal formula) there are only one modal operator which can be applied to this formula at once.
+     * According to that, this method returns type of operator which can be used in formula without breaking
+     * epistemic fulfillment relationship's conditions.
+     * Timestamp is taken from given distribution of knowledge.
+     *
+     * @param dk    Distributed knowledge for respective grounding sets related with certain formula.
+     * @return Double value of Type of operator which can be applied to formula given through distribution of knowledge.
+     * @see DistributedKnowledge
+     */
+    static double determineFulfillmentDouble(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
+        if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
+                || dk.isDkComplex() && !dk.getComplementaryFormulas().contains(formula))
+            throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
+
+        return checkEpistemicConditionsDouble(formula, dk,dk.getTimestamp());
+    }
+
+
+    /**
+     * Returns value of fullfilment of epistemic condition. If none of possible, then null is returned.
+     *
+     * @param formula
+     * @param dk
+     * @param timestamp
+     * @return
+     */
+    @Nullable
+    public static Double checkEpistemicConditionsDouble(Formula formula, DistributedKnowledge dk,
+                                                         int timestamp) throws NotApplicableException {
+        boolean amongNoClearStateObjects = true;
+        boolean amongClearStateObjects = true;
+
+        for (int i = 0; i < formula.getTraits().size(); i++) {
+            Set<IndividualModel> clearStatesObjects = dk.getRelatedObservationsBase()
+                    .getIMsByTraitStates(formula.getTraits().get(i), new State[]{State.IS, State.IS_NOT}, timestamp);
+            amongNoClearStateObjects = amongNoClearStateObjects && !new ArrayList<>(clearStatesObjects).contains(formula.getModel());
+
+            Set<IndividualModel> selectedStatesObjects = dk.getRelatedObservationsBase()
+                    .getIMsByTraitState(formula.getTraits().get(i), formula.getStates().get(i), timestamp);
+            amongClearStateObjects = amongClearStateObjects && new ArrayList<>(selectedStatesObjects).contains(formula.getModel());
+        }
+
+        if (amongNoClearStateObjects) {
+            return relativeCard(dk.getGroundingSets(), timestamp, formula);
+        } else if (amongClearStateObjects)
+            return 1.0;
+        return 0.0;
     }
 
 }

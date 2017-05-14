@@ -24,7 +24,7 @@ public class NonBinaryHolon extends Holon{
         double npq = 0;
         double pnq = 0;
         double npnq = 0;
-        for(BaseProfile bp:dk.getGroundingSet(dk.getFormula())) {
+
             ((ComplexFormula) dk.getFormula()).setpq();
             pq += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
             ((ComplexFormula) dk.getFormula()).setnpq();
@@ -33,7 +33,7 @@ public class NonBinaryHolon extends Holon{
             pnq += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
             ((ComplexFormula) dk.getFormula()).setnpnq();
             npnq += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
-        }
+
         if(pq!= 0){pq = pq/dk.getGroundingSet(dk.getFormula()).size();}
         if(npq!= 0){npq = npq/dk.getGroundingSet(dk.getFormula()).size();}
         if(pnq!= 0){pnq = pnq/dk.getGroundingSet(dk.getFormula()).size();}

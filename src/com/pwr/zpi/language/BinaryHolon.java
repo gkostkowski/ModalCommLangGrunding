@@ -1,16 +1,15 @@
 package com.pwr.zpi.language;
 
 
-
 import com.pwr.zpi.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 
-public class BinaryHolon extends Holon{
+public class BinaryHolon extends Holon {
 
-    protected Pair<Double,Double> Tao;
+    protected Pair<Double, Double> Tao;
     protected Formula formula;
 
-    public BinaryHolon (DistributedKnowledge dk) throws InvalidFormulaException{
+    public BinaryHolon(DistributedKnowledge dk) throws InvalidFormulaException {
         this.formula = dk.getFormula();
         update(dk);
     }
@@ -32,60 +31,64 @@ public class BinaryHolon extends Holon{
     //Pamięć przedświadoma
     //Pamięć świadoma
 
-    public void update (DistributedKnowledge dk) throws InvalidFormulaException{
-        if(dk.getFormula().getType()!= Formula.Type.SIMPLE_MODALITY){throw new InvalidFormulaException();}
-        else{
+    public void update(DistributedKnowledge dk) throws InvalidFormulaException {
+        if (dk.getFormula().getType() != Formula.Type.SIMPLE_MODALITY) {
+            throw new InvalidFormulaException();
+        } else {
             double sumPositive = 0;
             double sumNegative = 0;
-            for(BaseProfile bp:dk.getGroundingSet(dk.getFormula())){
-                if (((SimpleFormula) dk.getFormula()).isNegated()){
-                sumPositive += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
+
+            if (((SimpleFormula) dk.getFormula()).isNegated()) {
+                sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
                 ((SimpleFormula) dk.getFormula()).negate();
-                sumNegative += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
-                }else{
-                    sumNegative += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
-                    ((SimpleFormula) dk.getFormula()).negate();
-                    sumPositive += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
-                }
+                sumNegative += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
+            } else {
+                sumNegative += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
+                ((SimpleFormula) dk.getFormula()).negate();
+                sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
             }
-            if(sumPositive!= 0){
-                sumPositive=sumPositive/dk.getGroundingSet(dk.getFormula()).size();}
-            if(sumNegative!= 0){
-                sumNegative=sumNegative/dk.getGroundingSet(dk.getFormula()).size();}
-            Tao = new Pair<Double,Double>(getCard(sumPositive/dk.getGroundingSet(dk.getFormula()).size(),
-                    sumNegative/dk.getGroundingSet(dk.getFormula()).size()),
-                    getCard(sumNegative/dk.getGroundingSet(dk.getFormula()).size(),
-                            sumPositive/dk.getGroundingSet(dk.getFormula()).size()));
+
+            if (sumPositive != 0) {
+                sumPositive = sumPositive / dk.getGroundingSet(dk.getFormula()).size();
+            }
+            if (sumNegative != 0) {
+                sumNegative = sumNegative / dk.getGroundingSet(dk.getFormula()).size();
+            }
+            Tao = new Pair<Double, Double>(getCard(sumPositive / dk.getGroundingSet(dk.getFormula()).size(),
+                    sumNegative / dk.getGroundingSet(dk.getFormula()).size()),
+                    getCard(sumNegative / dk.getGroundingSet(dk.getFormula()).size(),
+                            sumPositive / dk.getGroundingSet(dk.getFormula()).size()));
         }
     }
 
 
-    public double getCard(double first,double sec){
-        return first/(sec+first);
+    public double getCard(double first, double sec) {
+        return first / (sec + first);
     }
-    public Formula getFormula(){
+
+    public Formula getFormula() {
         return formula;
     }
 
-    public double getP(){
+    public double getP() {
         return Tao.getK();
     }
 
-    public double getnot_P(){
+    public double getnot_P() {
         return Tao.getV();
     }
-	/*public com.pwr.zpi.language.Operators.Type getDominant(){
+    /*public com.pwr.zpi.language.Operators.Type getDominant(){
 	return Tao.getP() > Tao.getnot_P() ? com.pwr.zpi.language.Operators.Type.KNOW :com.pwr.zpi.language.Operators.Type.NOT ;
 	}*/
 
     @Override
-    public com.pwr.zpi.language.Pair<Boolean,Double> getStrongest() {
-        return Tao.getK() >= Tao.getV() ? (new Pair<Boolean,Double>(true,Tao.getK())) : (new Pair<Boolean,Double>(false,Tao.getV()));
+    public com.pwr.zpi.language.Pair<Boolean, Double> getStrongest() {
+        return Tao.getK() >= Tao.getV() ? (new Pair<Boolean, Double>(true, Tao.getK())) : (new Pair<Boolean, Double>(false, Tao.getV()));
     }
 
     @Override
-    public com.pwr.zpi.language.Pair<Boolean,Double> getWeakest() {
-        return Tao.getK() < Tao.getV() ? (new Pair<Boolean,Double>(true,Tao.getK())) : (new Pair<Boolean,Double>(false,Tao.getV()));
+    public com.pwr.zpi.language.Pair<Boolean, Double> getWeakest() {
+        return Tao.getK() < Tao.getV() ? (new Pair<Boolean, Double>(true, Tao.getK())) : (new Pair<Boolean, Double>(false, Tao.getV()));
     }
 
     @Override
