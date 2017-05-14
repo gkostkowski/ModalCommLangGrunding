@@ -52,7 +52,8 @@ public class Conversation implements Runnable {
             else return "I didn't understand the question, sorry. It was because there is " + e.getStringWithInfo();
         } catch (InvalidFormulaException e) {
             return "I couldn't create proper answer, I am really sorry";
-        } catch (Exception e) {return  "Something terrible happened!";}
+        } catch (Exception e) {
+            return  "Something terrible happened!";}
     }
 
     private String getAnswer(Formula formula, String name)
@@ -78,7 +79,7 @@ public class Conversation implements Runnable {
             if(!queue.isEmpty())
             {
 
-                System.out.print(askQuestion(queue.remove()));
+                System.out.println(askQuestion(queue.remove()));
             }
             try
             {

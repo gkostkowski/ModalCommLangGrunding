@@ -335,12 +335,12 @@ class Main {
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
                     put(tr[1], false);
-                    put(tr[2], null);
+                    put(tr[2], true);
                 }}, t++),
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
                     put(tr[1], false);
-                    put(tr[2], true);
+                    put(tr[2], null);
                 }}, t++)
         };
 
@@ -353,12 +353,24 @@ class Main {
 
         agent1.getModels().addNameToModel(qrCodes[0], "Hyzio");
 
-        int tt1 = 5;
+        int tt1 = 3;
         Conversation c1 = new Conversation(agent1, "conv1", tt1);
         c1.start();
 
+        System.out.println("asking...");
         c1.addQuestion("Is Hyzio red");
-        c1.addQuestion("Is Hyzio red and not soft");
+
+        obs = new Observation[]{
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], null);
+                    put(tr[1], false);
+                    put(tr[2], false);
+                }}, t++)};
+        agent1.addObservationToDatabase(obs);
+        agent1.getDatabase().updateAgentMemory();
+        c1.addQuestion("Is Hyzio red");
+
+        //c1.addQuestion("Is Hyzio red and not soft");
 
         try {
             System.in.read();
