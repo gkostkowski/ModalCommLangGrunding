@@ -38,7 +38,8 @@ public class DatabaseAO {
 
     private void init(String path){
         try {
-            Files.createDirectories(Paths.get("db"));
+            //todo if
+                Files.createDirectories(Paths.get("db"));
             connection = DriverManager.getConnection("jdbc:sqlite:" + path);
         } catch (IOException | SQLException e) {
             e.printStackTrace();
@@ -88,8 +89,10 @@ public class DatabaseAO {
 
         for (Map.Entry<Trait, Boolean> entry : traits.entrySet())
         {
-            columns.append(",").append(entry.getKey().getName());
-            values.append(",").append(entry.getValue() ? 1 : 0);
+            if(entry.getValue() != null) {
+                columns.append(",").append(entry.getKey().getName());
+                values.append(",").append(entry.getValue() ? 1 : 0);
+            }
         }
 
         String sql = "INSERT INTO \"" + tableName + "\" (" + columns + ") VALUES (" + values + ");";
@@ -102,11 +105,6 @@ public class DatabaseAO {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    public Collection<Observation> fetchAllObservations() {
-        //todo
-        return null;
     }
 
     public Collection<Observation> fetchNewObservations() {
@@ -135,12 +133,16 @@ public class DatabaseAO {
 
                     for(Trait t: typeTraits){
                         String value = resultSet.getString(t.getName());
-                        if(value == null)
-                            continue;
-                        if(value.equals("1"))
-                            traits.put(t, true);
-                        if(value.equals("0"))
-                            traits.put(t, false);
+                        switch(value){
+                            case "null":
+                                traits.put(t, null);
+                                break;
+                            case "1":
+                                traits.put(t, true);
+                                break;
+                            case "0":
+                                traits.put(t, false);
+                        }
                     }
                     newObservations.add(new Observation(identifier, traits, timestamp));
 

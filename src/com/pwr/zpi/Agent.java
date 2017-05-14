@@ -25,12 +25,12 @@ public class Agent {
         database = new DatabaseAO(this);
     }
 
-    public Agent(String databaseFilename) {
+    /*public Agent(String databaseFilename) {
         init();
         knowledgeBase = new BPCollection();
         holons = new HolonCollection();
         database = new DatabaseAO(this, databaseFilename);
-    }
+    }*/
 
     public Agent(BPCollection knowledgeBase) {
         init();
