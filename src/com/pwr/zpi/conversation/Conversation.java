@@ -79,7 +79,7 @@ public class Conversation implements Runnable {
             if(!queue.isEmpty())
             {
 
-                System.out.print(askQuestion(queue.remove()));
+                System.out.println(askQuestion(queue.remove()));
             }
             try
             {
