@@ -198,6 +198,9 @@ public class DistributedKnowledge {
     }
 
     public List<Formula> getComplementaryFormulas() {
+        /*List<Formula> res=new ArrayList<>();
+        Collections.copy(complementaryFormulas, res);
+        return res;*/
         return complementaryFormulas;
     }
 

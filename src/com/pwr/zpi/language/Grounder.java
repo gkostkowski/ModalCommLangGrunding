@@ -76,7 +76,7 @@ public class Grounder {
      */
     public static ModalOperator determineFulfillment(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
         if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
-                || dk.isDkComplex() && !dk.getComplementaryFormulas().contains(formula))
+                || dk.isDkComplex() && !new ArrayList(dk.getComplementaryFormulas()).contains(formula))
             throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
 
         return checkEpistemicConditions(formula, dk);
@@ -240,7 +240,7 @@ public class Grounder {
     }
 
     public static double relativeCard(Map<Formula, Set<BaseProfile>> groundingSets, int time, Formula formula) throws NotApplicableException {
-        if (formula.getType().equals(Formula.Type.SIMPLE_MODALITY)) {
+        if (!formula.getType().equals(Formula.Type.SIMPLE_MODALITY)) {
 
             switch (((ComplexFormula) formula).getOperator()) {
                 case AND:
@@ -373,7 +373,7 @@ public class Grounder {
      */
     static double determineFulfillmentDouble(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
         if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
-                || dk.isDkComplex() && !dk.getComplementaryFormulas().contains(formula))
+                || dk.isDkComplex() && !new ArrayList(dk.getComplementaryFormulas()).contains(formula))
             throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
 
         return checkEpistemicConditionsDouble(formula, dk,dk.getTimestamp());

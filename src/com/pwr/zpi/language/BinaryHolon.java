@@ -3,13 +3,14 @@ package com.pwr.zpi.language;
 
 import com.pwr.zpi.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
+import com.pwr.zpi.exceptions.NotApplicableException;
 
 public class BinaryHolon extends Holon {
 
     protected Pair<Double, Double> Tao;
     protected Formula formula;
 
-    public BinaryHolon(DistributedKnowledge dk) throws InvalidFormulaException {
+    public BinaryHolon(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         this.formula = dk.getFormula();
         update(dk);
     }
@@ -31,33 +32,33 @@ public class BinaryHolon extends Holon {
     //Pamięć przedświadoma
     //Pamięć świadoma
 
-    public void update(DistributedKnowledge dk) throws InvalidFormulaException {
+    public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         if (dk.getFormula().getType() != Formula.Type.SIMPLE_MODALITY) {
             throw new InvalidFormulaException();
         } else {
             double sumPositive = 0;
             double sumNegative = 0;
 
-            if (((SimpleFormula) dk.getFormula()).isNegated()) {
-                sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
-                ((SimpleFormula) dk.getFormula()).negate();
-                sumNegative += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
+            if (((SimpleFormula) dk.getComplementaryFormulas().get(0)).isNegated()) {
+                sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getComplementaryFormulas().get(1));
+                sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0));
             } else {
-                sumNegative += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
-                ((SimpleFormula) dk.getFormula()).negate();
-                sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getFormula());
+                sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0));
+                sumPositive += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1));
             }
-
-            if (sumPositive != 0) {
+            System.out.println(sumNegative + " " + sumPositive +" " +  dk.getGroundingSet(dk.getFormula()).size());
+            if (sumPositive != 0 && dk.getGroundingSet(dk.getFormula()).size() > 0) {
                 sumPositive = sumPositive / dk.getGroundingSet(dk.getFormula()).size();
             }
-            if (sumNegative != 0) {
+            if (sumNegative !=0 && dk.getGroundingSet(dk.getFormula()).size() > 0) {
                 sumNegative = sumNegative / dk.getGroundingSet(dk.getFormula()).size();
             }
-            Tao = new Pair<Double, Double>(getCard(sumPositive / dk.getGroundingSet(dk.getFormula()).size(),
-                    sumNegative / dk.getGroundingSet(dk.getFormula()).size()),
-                    getCard(sumNegative / dk.getGroundingSet(dk.getFormula()).size(),
-                            sumPositive / dk.getGroundingSet(dk.getFormula()).size()));
+            if(dk.getGroundingSet(dk.getFormula()).size() >0){
+                Tao = new Pair<Double, Double>(getCard(sumPositive / dk.getGroundingSet(dk.getFormula()).size(),
+                        sumNegative / dk.getGroundingSet(dk.getFormula()).size()),
+                        getCard(sumNegative / dk.getGroundingSet(dk.getFormula()).size(),
+                                sumPositive / dk.getGroundingSet(dk.getFormula()).size()));}
+            else{Tao = new Pair<Double,Double>(sumPositive,sumNegative);}
         }
     }
 
