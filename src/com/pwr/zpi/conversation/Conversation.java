@@ -15,6 +15,7 @@ import java.util.Queue;
 public class Conversation implements Runnable {
 
     private final Agent agent;
+    public String name;
     private int timestamp;
 
     private Queue<String> queue;
@@ -22,11 +23,10 @@ public class Conversation implements Runnable {
     private Thread thread;
     private boolean running = false;
 
-    BufferedReader br;
-
-    public Conversation(Agent agent, int timestamp)
+    public Conversation(Agent agent, String name, int timestamp)
     {
         this.agent = agent;
+        this.name = name;
         this.timestamp = timestamp;
         queue = new LinkedList<>();
     }
@@ -48,7 +48,8 @@ public class Conversation implements Runnable {
             Formula formula = question1.getFormula();
             return getAnswer(formula, question1.getName());
         } catch (InvalidQuestionException e) {
-            return "I didn't understand the question, sorry. It was because there is " + e.getStringWithInfo();
+            if(e.getMistake()==InvalidQuestionException.NO_QUESTION) return e.getStringWithInfo();
+            else return "I didn't understand the question, sorry. It was because there is " + e.getStringWithInfo();
         } catch (InvalidFormulaException e) {
             return "I couldn't create proper answer, I am really sorry";
         } catch (Exception e) {return  "Something terrible happened!";}
@@ -76,6 +77,7 @@ public class Conversation implements Runnable {
         {
             if(!queue.isEmpty())
             {
+
                 System.out.print(askQuestion(queue.remove()));
             }
             try
@@ -92,7 +94,6 @@ public class Conversation implements Runnable {
         {
             thread = new Thread(this);
             running = true;
-            br = new BufferedReader(new InputStreamReader(System.in));
             thread.start();
         }
 

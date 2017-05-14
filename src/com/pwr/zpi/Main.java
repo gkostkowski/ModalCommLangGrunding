@@ -397,23 +397,32 @@ class Main {
 
         agent1.getModels().addNameToModel(qrCodes[0], "Hyzio");
 
-
+            // opcja 1 ============
         int timestamp1 = 5; //todo
-        Conversation conversation1 = new Conversation(agent1, timestamp1);
+        Conversation conversation1 = new Conversation(agent1, "agent1", timestamp1);
         conversation1.start();
-
         int timestamp3 = 5; //todo
-        Conversation conversation2 = new Conversation(agent3, timestamp3);
+        Conversation conversation2 = new Conversation(agent3, "agent2", timestamp3);
         conversation2.start();
-
-
         conversation1.addQuestion("Is Hyzio red");
         conversation1.addQuestion("Is Hyzio square");
         conversation1.addQuestion("Is Hyzio not blinking"); //powinno być niewiadome
 
+            // opcja 2 ============
+     /*   int timestamp1 = 5; //todo
+        Conversation conversation1 = new Conversation(agent1, "agent1", timestamp1);
+        int timestamp3 = 5; //todo
+        Conversation conversation2 = new Conversation(agent3, "agent2", timestamp3);
+        MultipleConverstation mc = new MultipleConverstation();
+        mc.addConversation(conversation1);
+        mc.addConversation(conversation2);
+        mc.start();
 
-
+*/
 
         // W =============
+
+
+        //
     }
 }

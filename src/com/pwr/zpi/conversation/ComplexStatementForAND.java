@@ -31,6 +31,17 @@ public class ComplexStatementForAND extends Statement {
        getTaoRatio();
    }
 
+  /* public ComplexStatementForAND(ComplexFormula complexFormula, String name, double pq, double npq, double pnq, double npnq)
+   {
+       this.formula = complexFormula;
+       formulaCase = formula.getFormulaCase();
+       this.name = name;
+       this.pq = pq;
+       this.npq = npq;
+       this.pnq = pnq;
+       this.npnq = npnq;
+   }*/
+
    private void getTaoRatio()
    {
        pq = holon.getTao().getPQ();
@@ -111,17 +122,17 @@ public class ComplexStatementForAND extends Statement {
                    return answer + ", but it is also possible that it is quite the opposite or " + getSentenceForNPQ();
                else if(withinPos(pnq))
                    return answer + ", but it is also possible that one of the traits " +
-                           ((formulaCase== NonBinaryHolon.FormulaCase.NPNQ)? "occurs" : "does not occur");
+                           ((formulaCase== NonBinaryHolon.FormulaCase.NPNQ)? "actually occurs" : "does not occur");
                else return answer + ", but it is also possible that it is " + getSentenceForNPQ();
            }
            else if(withinPos(pnq))
            {
                if(withinPos(pq)||withinPos(npnq))
                    return answer + ", but it is also possible that it is quite the opposite or " + getSentenceForPNQ();
-               else return answer + getSentenceForPNQ();
+               else return answer + ", but it is also possible that " + getSentenceForPNQ();
            }
            else if(withinPos(npnq)||withinPos(pq))
-               return answer + " it is also possible that it is quite the opposite";
+               return answer + ", however it is also possible that it is quite the opposite";
        }
        else
        {
@@ -142,7 +153,7 @@ public class ComplexStatementForAND extends Statement {
            else if(withinPos(npq)||withinPos(pnq))
                return answer + " it is also possible that it is quite the opposite";
        }
-       return null;
+       return answer;
    }
 
    public String checkForPos(double given, String valP, String valQ)

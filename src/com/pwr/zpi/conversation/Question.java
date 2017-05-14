@@ -33,7 +33,7 @@ public class Question {
     public Formula getFormula() throws InvalidQuestionException, InvalidFormulaException
     {
         if(length<2)
-            throw new InvalidQuestionException();
+            throw new InvalidQuestionException(InvalidQuestionException.NO_QUESTION);
         List<Trait> traits = new ArrayList<>();
         List<State> states = new ArrayList<>();
         findIndividualModel();

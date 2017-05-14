@@ -16,21 +16,30 @@ public class SimpleStatement extends Statement{
     BinaryHolon holon;
     SimpleFormula simpleFormula;
 
+    double p;
+    double notP;
+
+
     public SimpleStatement(SimpleFormula formula, Agent agent, int time, String name)
     {
         simpleFormula = formula;
         holon = (BinaryHolon)agent.getHolons().getHolon(formula, agent, time);
-
+        p = holon.getP();
+        notP = holon.getnot_P();
         this.name = name;
     }
+
+/*    public SimpleStatement(SimpleFormula formula, String name, double p, double q)
+    {
+        this.simpleFormula = formula;
+        this.name = name;
+        this.p = p;
+        this.notP = q;
+    }*/
 
     @Override
     public String generateStatement() {
         String answer;
-
-        double p = holon.getP();
-        double notP = holon.getnot_P();
-
         if(simpleFormula.isNegated())
             answer = getSentence(notP, p, State.IS_NOT);
         else answer = getSentence(p, notP, State.IS);
@@ -44,25 +53,25 @@ public class SimpleStatement extends Statement{
         String answer;
         if(state == State.IS)
         {
-            sf = "is ";
-            sa = "is not ";
+            sf = " is ";
+            sa = " is not ";
         } else
         {
-            sa = "is ";
-            sf = "is not ";
+            sa = " is ";
+            sf = " is not ";
         }
         if (first == 1)
             answer = "Yes, I am sure that " + name + sf + simpleFormula.getTrait().getName();
         else if (withinBel(first) && !withinPos(alternative))
             answer = "Yes, I believe that " + name + sf + simpleFormula.getTrait().getName();
         else if (withinBel(first) && withinPos(alternative))
-            answer = "I believe that " + name + sf + simpleFormula.getTrait().getName() + ", but it is also possible that it " + sa;
+            answer = "I believe that " + name + sf + simpleFormula.getTrait().getName() + ", but it is also possible that it" + sa;
         else if (withinPos(first) && !withinBel(alternative))
             answer = "Well, it is possible that " + name + sf + simpleFormula.getTrait().getName();
         else if (withinPos(first) && withinBel(alternative))
-            answer = "Well, it is possible that " + name + sf + simpleFormula.getTrait().getName() + ", but I believe  it " + sa;
+            answer = "Well, it is possible that " + name + sf + simpleFormula.getTrait().getName() + ", but I believe it" + sa;
         else if (withinPos(first)&&withinPos(alternative))
-            answer = "It is both possible that " + name + sf + simpleFormula.getTrait().getName() + " and it " + sa;
+            answer = "It is both possible that " + name + sf + simpleFormula.getTrait().getName() + " and it" + sa;
         else if (alternative==1)
             answer = "No, I am sure that " + name + sa + simpleFormula.getTrait().getName();
         else answer = "I don't know what to think about it";
