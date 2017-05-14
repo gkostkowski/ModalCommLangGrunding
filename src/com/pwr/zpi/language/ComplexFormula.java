@@ -151,6 +151,27 @@ public class ComplexFormula extends Formula {
     public boolean equals(Formula other) {
         if (other instanceof ComplexFormula)
             if (individualModel.getIdentifier().equals(other.getModel().getIdentifier()))
+                if (compareTraitsAndStates((ComplexFormula) other))
+                    if (operator.equals(((ComplexFormula) other).getOperator()))
+                        return true;
+        return false;
+    }
+
+    private boolean compareTraitsAndStates(ComplexFormula formula) {
+        if (traits.get(0).equals(formula.getTraits().get(0)) && states.get(0).equals(formula.getStates().get(0)))
+            if (traits.get(1).equals(formula.getTraits().get(1)) && states.get(1).equals(formula.getStates().get(1)))
+                return true;
+            else return false;
+        else if (traits.get(0).equals(formula.getTraits().get(1)) && states.get(0).equals(formula.getStates().get(1)))
+            if (traits.get(1).equals(formula.getTraits().get(0)) && states.get(1).equals(formula.getStates().get(0)))
+                return true;
+        return false;
+    }
+
+    public boolean isFormulaSimilar(Formula other)
+    {
+        if (other instanceof ComplexFormula)
+            if (individualModel.getIdentifier().equals(other.getModel().getIdentifier()))
                 if (compareTraits((ComplexFormula) other))
                     if (operator.equals(((ComplexFormula) other).getOperator()))
                         return true;
@@ -158,12 +179,12 @@ public class ComplexFormula extends Formula {
     }
 
     private boolean compareTraits(ComplexFormula formula) {
-        if (traits.get(0).equals(formula.getTraits().get(0)) && states.get(0).equals(formula.getStates().get(0)))
-            if (traits.get(1).equals(formula.getTraits().get(1)) && states.get(1).equals(formula.getStates().get(1)))
+        if (traits.get(0).equals(formula.getTraits().get(0)))
+            if (traits.get(1).equals(formula.getTraits().get(1)))
                 return true;
             else return false;
-        else if (traits.get(0).equals(formula.getTraits().get(1)) && states.get(0).equals(formula.getStates().get(1)))
-            if (traits.get(1).equals(formula.getTraits().get(0)) && states.get(1).equals(formula.getStates().get(0)))
+        else if (traits.get(0).equals(formula.getTraits().get(1)))
+            if (traits.get(1).equals(formula.getTraits().get(0)))
                 return true;
         return false;
     }

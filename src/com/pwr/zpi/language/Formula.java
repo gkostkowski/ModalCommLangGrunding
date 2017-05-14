@@ -85,4 +85,7 @@ public abstract class Formula {
         }
         return res;
     }
+
+    abstract public boolean isFormulaSimilar(Formula formula);
+
 }

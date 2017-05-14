@@ -31,7 +31,7 @@ public class HolonCollection {
 
     public Holon getHolon(Formula formula, Agent agent, int timeStamp){
         for(Holon h:holonCollection){
-            if(h.getFormula().equals(formula)){
+            if(h.getFormula().isFormulaSimilar(formula)){
                 return h;
             }
         }

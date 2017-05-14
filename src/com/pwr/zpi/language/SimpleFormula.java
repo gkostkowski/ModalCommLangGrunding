@@ -137,10 +137,8 @@ public class SimpleFormula extends Formula {
      */
     public boolean equals(Formula other)
     {
-        if(other instanceof SimpleFormula)
-            if(individualModel.getIdentifier().equals(other.getModel().getIdentifier()))
-                if(trait.equals(((SimpleFormula) other).trait))
-                        return true;
+       if(isFormulaSimilar(other) && trait.equals(((SimpleFormula) other).trait))
+           return true;
         return false;
     }
 
@@ -171,5 +169,13 @@ public class SimpleFormula extends Formula {
         result = 31 * result + getTrait().hashCode();
         result = 31 * result + (isNegated() ? 1 : 0);
         return result;
+    }
+
+    public boolean isFormulaSimilar(Formula other)
+    {
+        if(other instanceof SimpleFormula)
+            if(individualModel.getIdentifier().equals(other.getModel().getIdentifier()))
+               return true;
+        return false;
     }
 }
