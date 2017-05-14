@@ -373,13 +373,19 @@ class Main {
                 }}, t2++),
                 new Observation(qrCodes2[2], new HashMap<Trait, Boolean>() {{
                     put(tr2[0], false);
+                }}, t2++),
+                new Observation(qrCodes2[0], new HashMap<Trait, Boolean>() {{
+                    put(tr2[2], false);
                 }}, t2)};
 
         Agent agent3 = new Agent("baza1.db");
-        /*agent3.addObservationToDatabase(obs2[0]);
+        agent3.addObservationToDatabase(obs2[0]);
         agent3.addObservationToDatabase(obs2[1]);
         agent3.addObservationToDatabase(obs2[2]);
-        agent3.addObservationToDatabase(obs2[3]);*/
+        agent3.addObservationToDatabase(obs2[3]);
+        System.out.println(agent3.getDatabase().fetchNewObservations());
+        agent3.addObservationToDatabase(obs2[4]);
+        System.out.println(agent3.getDatabase().fetchNewObservations());
 
         // M ============
 //        System.out.println(agent3.getDatabase().fetchNewObservations());

@@ -57,4 +57,9 @@ public class Observation {
         return identifier.getType();
     }
 
+    public String toString(){
+        return "Observation(time: " + timestamp
+                + "; id: " + identifier.getIdNumber()
+                + "; traits: " + valuedTraits;
+    }
 }
