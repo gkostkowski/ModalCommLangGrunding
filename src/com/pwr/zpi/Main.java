@@ -290,6 +290,8 @@ public class Main {
 
 package com.pwr.zpi;
 
+import com.pwr.zpi.conversation.Conversation;
+
 import java.util.HashMap;
 
 class Main {
@@ -388,5 +390,30 @@ class Main {
 
         agent3.getDatabase().updateAgentMemory();
         System.out.println(agent3);
+
+
+
+        // W =============
+
+        agent1.getModels().addNameToModel(qrCodes[0], "Hyzio");
+
+
+        int timestamp1 = 5; //todo
+        Conversation conversation1 = new Conversation(agent1, timestamp1);
+        conversation1.start();
+
+        int timestamp3 = 5; //todo
+        Conversation conversation2 = new Conversation(agent3, timestamp3);
+        conversation2.start();
+
+
+        conversation1.addQuestion("Is Hyzio red");
+        conversation1.addQuestion("Is Hyzio square");
+        conversation1.addQuestion("Is Hyzio not blinking"); //powinno być niewiadome
+
+
+
+
+        // W =============
     }
 }

@@ -11,7 +11,7 @@ import java.util.Collection;
 public class Agent {
     private BPCollection knowledgeBase;
     private IMCollection models;
-    //    private HolonCollection holons;
+    private HolonCollection holons;
     private DatabaseAO database;
     public static Collection<ObjectType> objectTypeCollection;
     private boolean listeningMode;
@@ -21,28 +21,28 @@ public class Agent {
     public Agent() {
         init();
         knowledgeBase = new BPCollection();
-        //holons = new HolonCollection();
+        holons = new HolonCollection();
         database = new DatabaseAO(this);
     }
 
     public Agent(String databaseFilename) {
         init();
         knowledgeBase = new BPCollection();
-        //holons = new HolonCollection();
+        holons = new HolonCollection();
         database = new DatabaseAO(this, databaseFilename);
     }
 
     public Agent(BPCollection knowledgeBase) {
         init();
         this.knowledgeBase = knowledgeBase;
-        //holons = new HolonCollection();
+        holons = new HolonCollection();
     }
 
     public Agent(BPCollection knowledgeBase, IMCollection models) {
         init();
         this.models = models;
         this.knowledgeBase = knowledgeBase;
-        //holons = new HolonCollection();
+        holons = new HolonCollection();
     }
 
 /*    public Agent(BPCollection knowledgeBase, IMCollection models, HolonCollection holons) {
@@ -75,6 +75,11 @@ public class Agent {
 
     public void setModels(IMCollection models) {
         this.models = models;
+    }
+
+    public HolonCollection getHolons()
+    {
+        return holons;
     }
 
     public DatabaseAO getDatabase() {

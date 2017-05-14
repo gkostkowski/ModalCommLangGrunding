@@ -119,7 +119,7 @@ public class NonBinaryHolon extends Holon{
 	    	NPNQ = var;
 	    }
 	}
-	enum FormulaCase {
+	public enum FormulaCase {
 		PQ,
 		PNQ,
 		NPQ,

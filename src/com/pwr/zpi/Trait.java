@@ -49,8 +49,6 @@ public class Trait implements Comparable<Trait> {
 
     @Override
     public String toString() {
-        return "Trait{" +
-                "name='" + name + '\'' +
-                '}';
+        return name;
     }
 }

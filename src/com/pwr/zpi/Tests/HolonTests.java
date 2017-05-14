@@ -1,3 +1,4 @@
+/*
 package com.pwr.zpi.Tests;
 
 import java.util.Arrays;
@@ -107,3 +108,4 @@ public class HolonTests 	{
     	Assert.assertEquals(h1.getStrongest().getV(), 0.5);
     }
 }
+*/

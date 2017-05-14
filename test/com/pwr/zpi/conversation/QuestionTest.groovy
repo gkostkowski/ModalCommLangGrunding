@@ -36,7 +36,6 @@ class QuestionTest extends GroovyTestCase {
         model1 = new IndividualModel(id, objectType)
         model2 = new IndividualModel(id2, objectType)
         agent = new Agent()
-        agent.setModels(new IMCollection())
         agent.getModels().add(model1)
         agent.getModels().add(model2)
         agent.getModels().addNameToModel(id, "Zenek")

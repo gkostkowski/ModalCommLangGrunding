@@ -7,20 +7,28 @@ import com.pwr.zpi.language.ComplexFormula;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.SimpleFormula;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Conversation implements Runnable {
 
     private final Agent agent;
     private int timestamp;
 
-    private String question;
+    private Queue<String> queue;
 
     private Thread thread;
     private boolean running = false;
+
+    BufferedReader br;
 
     public Conversation(Agent agent, int timestamp)
     {
         this.agent = agent;
         this.timestamp = timestamp;
+        queue = new LinkedList<>();
     }
 
     public void setTimestamp(int time)
@@ -28,10 +36,9 @@ public class Conversation implements Runnable {
         timestamp = time;
     }
 
-    public void setQuestion(String question)
+    public void addQuestion(String question)
     {
-        if(question==null)
-            this.question = question;
+        queue.add(question);
     }
 
     private String askQuestion(String question)
@@ -47,7 +54,7 @@ public class Conversation implements Runnable {
         } catch (Exception e) {return  "Something terrible happened!";}
     }
 
-    public String getAnswer(Formula formula, String name)
+    private String getAnswer(Formula formula, String name)
     {
         if(formula instanceof SimpleFormula)
         {
@@ -56,7 +63,7 @@ public class Conversation implements Runnable {
         }
         else
         {
-            ComplexStatement statement = new ComplexStatement((ComplexFormula) formula, agent, timestamp, name);
+            ComplexStatementForAND statement = new ComplexStatementForAND((ComplexFormula) formula, agent, timestamp, name);
             return statement.generateStatement();
         }
 
@@ -67,10 +74,9 @@ public class Conversation implements Runnable {
     {
         while(running)
         {
-            if(question != null)
+            if(!queue.isEmpty())
             {
-                askQuestion(question);//todo komunikacja zewnętrzna
-                question = null;
+                System.out.print(askQuestion(queue.remove()));
             }
             try
             {
@@ -86,6 +92,7 @@ public class Conversation implements Runnable {
         {
             thread = new Thread(this);
             running = true;
+            br = new BufferedReader(new InputStreamReader(System.in));
             thread.start();
         }
 

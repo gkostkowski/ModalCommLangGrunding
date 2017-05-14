@@ -61,8 +61,8 @@ public class SimpleStatement extends Statement{
             answer = "Well, it is possible that " + name + sf + simpleFormula.getTrait().getName();
         else if (withinPos(first) && withinBel(alternative))
             answer = "Well, it is possible that " + name + sf + simpleFormula.getTrait().getName() + ", but I believe  it " + sa;
-        else if (!withinPos(first)&&withinBel(alternative))
-            answer = "No, I believe that " + name + sa + simpleFormula.getTrait().getName();
+        else if (withinPos(first)&&withinPos(alternative))
+            answer = "It is both possible that " + name + sf + simpleFormula.getTrait().getName() + " and it " + sa;
         else if (alternative==1)
             answer = "No, I am sure that " + name + sa + simpleFormula.getTrait().getName();
         else answer = "I don't know what to think about it";
@@ -78,5 +78,6 @@ public class SimpleStatement extends Statement{
     {
         return p>=MIN_POS && p<MAX_POS;
     }
+
 
 }

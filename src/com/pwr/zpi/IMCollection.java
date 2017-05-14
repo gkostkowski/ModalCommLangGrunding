@@ -16,6 +16,7 @@ public class IMCollection {
 
     public IMCollection() {
         individualModelSet = new HashSet<>();
+        lexicon = new HashMap<>();
         //buildIMs();
     }
 
@@ -25,7 +26,6 @@ public class IMCollection {
         for (Identifier id: identifiers) {
             individualModelSet.add(new IndividualModel(id, id.getType()));
         }
-        lexicon = new HashMap<>();
     }
 
     public IMCollection(Set<IndividualModel> individualModelSet) {
