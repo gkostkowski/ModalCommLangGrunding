@@ -14,8 +14,6 @@ public class Agent {
     private HolonCollection holons;
     private DatabaseAO database;
     public static Collection<ObjectType> objectTypeCollection;
-    private boolean listeningMode;
-    private long updatefrequencyInMs = 1000;
 
 
     public Agent() {
@@ -45,11 +43,11 @@ public class Agent {
         holons = new HolonCollection();
     }
 
-/*    public Agent(BPCollection knowledgeBase, IMCollection models, HolonCollection holons) {
+    public Agent(BPCollection knowledgeBase, IMCollection models, HolonCollection holons) {
         this.knowledgeBase = knowledgeBase;
         this.models = models;
         this.holons = holons;
-    }*/
+    }
 
     /**
      * Performs initials actions related to loading semantic memory: builds instances of ObjectTypes and IndividualModels.
@@ -77,21 +75,17 @@ public class Agent {
         this.models = models;
     }
 
-    public HolonCollection getHolons()
-    {
+    public HolonCollection getHolons() {
         return holons;
     }
 
     public DatabaseAO getDatabase() {
         return database;
     }
-    /*    public HolonCollection getHolons() {
-        return holons;
-    }
 
     public void setHolons(HolonCollection holons) {
         this.holons = holons;
-    }*/
+    }
 
    /* *//**
      * Builds distributed knowledge, which will be used to make respective mental models associated
@@ -141,9 +135,11 @@ public class Agent {
         System.out.println("Discovering new observations ...");
 
         if (newObservations != null && !newObservations.isEmpty()) {
-            System.out.println("Processing " + newObservations.size() + " new observation(s).");
-            for (Observation obs : newObservations)
+            System.out.println("Processing " + newObservations.size() + " new observation(s):");
+            for (Observation obs : newObservations) {
+                System.out.println("\t"+obs);
                 registerObservation(obs);
+            }
         }
 
     }
@@ -160,7 +156,8 @@ public class Agent {
 
     }
 
-    public void addObservationToDatabase(Observation observation) {
-        database.addNewObservation(observation);
+    public void addObservationToDatabase(Observation ... observations) {
+        for (Observation obs : observations)
+            database.addNewObservation(obs);
     }
 }

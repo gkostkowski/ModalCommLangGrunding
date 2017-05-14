@@ -57,9 +57,18 @@ public class Observation {
         return identifier.getType();
     }
 
-    public String toString(){
-        return "Observation(time: " + timestamp
-                + "; id: " + identifier.getIdNumber()
-                + "; traits: " + valuedTraits;
+    @Override
+    public String toString() {
+        StringBuilder valTr = new StringBuilder();
+        for (Trait t:valuedTraits.keySet()) {
+            Boolean val = valuedTraits.get(t);
+            valTr.append("\n\t\t");
+            valTr.append(val == null ? "mayhaps " + t : (val ? "is " + t : "is not " + t));
+        }
+
+        return "Observation at "+timestamp+" {" +
+                identifier +"as: "+
+                valTr +
+                '}';
     }
 }

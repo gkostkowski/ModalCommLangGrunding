@@ -3,13 +3,14 @@ package com.pwr.zpi.language;
 
 import com.pwr.zpi.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
+import com.pwr.zpi.exceptions.NotApplicableException;
 
 public class BinaryHolon extends Holon {
 
     protected Pair<Double, Double> Tao;
     protected Formula formula;
 
-    public BinaryHolon(DistributedKnowledge dk) throws InvalidFormulaException {
+    public BinaryHolon(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         this.formula = dk.getFormula();
         update(dk);
     }
@@ -31,7 +32,7 @@ public class BinaryHolon extends Holon {
     //Pamięć przedświadoma
     //Pamięć świadoma
 
-    public void update(DistributedKnowledge dk) throws InvalidFormulaException {
+    public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         if (dk.getFormula().getType() != Formula.Type.SIMPLE_MODALITY) {
             throw new InvalidFormulaException();
         } else {

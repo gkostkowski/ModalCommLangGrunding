@@ -133,16 +133,18 @@ public class DatabaseAO {
 
                     for(Trait t: typeTraits){
                         String value = resultSet.getString(t.getName());
-                        switch(value){
-                            case "null":
-                                traits.put(t, null);
-                                break;
-                            case "1":
-                                traits.put(t, true);
-                                break;
-                            case "0":
-                                traits.put(t, false);
+                        if (value == null)
+                            traits.put(t, null);
+                        else {
+                            switch(value){
+                                case "1":
+                                    traits.put(t, true);
+                                    break;
+                                case "0":
+                                    traits.put(t, false);
+                            }
                         }
+
                     }
                     newObservations.add(new Observation(identifier, traits, timestamp));
 

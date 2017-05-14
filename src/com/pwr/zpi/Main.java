@@ -292,6 +292,7 @@ package com.pwr.zpi;
 
 import com.pwr.zpi.conversation.Conversation;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 class Main {
@@ -311,42 +312,59 @@ class Main {
 
         // G ============
         /*CASE 1*/
-        QRCode[] qrCodes = new QRCode[]{new QRCode("kod001"), new QRCode("kod002"), new QRCode("kod003"),
-                new QRCode("kod004")};
 
-        int t = 0;
+        QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
         Trait[] tr = new Trait[]{
                 new Trait("Red"),
-                new Trait("Black"),
-                new Trait("Square"), //[2]
-                new Trait("White"), //[3]
-                new Trait("Round"),
-                new Trait("Blinking")
-        };
-        Observation[] observations = new Observation[]{
+                new Trait("White"),
+                new Trait("Blinking"),
+                new Trait("Blue"), //[4]
+                new Trait("Soft")};
+        int t = 0;
+        Observation[] obs = new Observation[]{
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
+                    put(tr[1], false);
+                    put(tr[2], false);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], false);
+                    put(tr[2], false);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], false);
+                    put(tr[2], null);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], false);
                     put(tr[2], true);
-                    put(tr[5], false);
-                }}, t++),
-                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
-                }}, t++),
-                new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
-                }}, t++),
+                }}, t++)
         };
 
         Agent agent1 = new Agent();
+        agent1.addObservationToDatabase(obs);
+        agent1.getDatabase().updateAgentMemory();
 //        agent1.discoverObservations();
 //        for (Observation observation: observations)
 //            agent1.registerObservation(observation);
 
-        /*CASE 2*/
-        BPCollection knowledgeBase = null;
-        IMCollection models = null;
-        //...
-//        Agent agent2 = new Agent(knowledgeBase, models);
+        agent1.getModels().addNameToModel(qrCodes[0], "Hyzio");
+
+        int tt1 = 5;
+        Conversation c1 = new Conversation(agent1, "conv1", tt1);
+        c1.start();
+
+        c1.addQuestion("Is Hyzio red");
+        c1.addQuestion("Is Hyzio red and not soft");
+
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // G ============
 
@@ -356,7 +374,6 @@ class Main {
                 new Trait("Red"),
                 new Trait("White"),
                 new Trait("Blinking"),
-                new Trait("blinking"),
                 new Trait("Blue"), //[4]
                 new Trait("Soft")};
         int t2 = 0;
@@ -378,7 +395,7 @@ class Main {
                     put(tr2[2], false);
                 }}, t2)};
 
-        Agent agent3 = new Agent("baza1.db");
+        Agent agent3 = new Agent();
         agent3.addObservationToDatabase(obs2[0]);
         agent3.addObservationToDatabase(obs2[1]);
         agent3.addObservationToDatabase(obs2[2]);
@@ -395,13 +412,14 @@ class Main {
         // ******* SCENARIUSZ ******* todo
 
         agent3.getDatabase().updateAgentMemory();
-        System.out.println(agent3);
+
+        System.out.println(qrCodes[0]);
 
 
 
         // W =============
 
-        agent1.getModels().addNameToModel(qrCodes[0], "Hyzio");
+        agent3.getModels().addNameToModel(qrCodes[0], "Hyzio");
 
             // opcja 1 ============
         int timestamp1 = 5; //todo
