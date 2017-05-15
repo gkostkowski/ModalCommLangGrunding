@@ -49,7 +49,7 @@ public class HolonCollection {
         try {
             if(formula instanceof SimpleFormula)
                 holon = new BinaryHolon(new DistributedKnowledge(agent, formula, timestamp, true));
-            else holon = new NonBinaryHolon(agent, new DistributedKnowledge(agent, formula, timestamp, true));
+            else holon = new NonBinaryHolon(new DistributedKnowledge(agent, formula, timestamp, true));
             holonCollection.add(holon);
         } catch (InvalidFormulaException e) {
             e.printStackTrace();
@@ -60,6 +60,13 @@ public class HolonCollection {
         }
         return holon;
     }
+
+    public void updateBeliefs(Formula formula, Agent agent, int timestamp) throws InvalidFormulaException, NotConsistentDKException, NotApplicableException {
+        for(Holon h : holonCollection){
+            h.update(new DistributedKnowledge(agent, formula, timestamp, true));
+        }
+    }
+
     /*
     public Holon findHolon(Formula formula, Agent agent, int timestamp)
     {

@@ -1,6 +1,7 @@
 package com.pwr.zpi;
 
 import com.pwr.zpi.exceptions.InvalidFormulaException;
+import com.pwr.zpi.language.Holon;
 
 import java.util.Collection;
 

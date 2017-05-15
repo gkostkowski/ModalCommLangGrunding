@@ -11,13 +11,13 @@ public class NonBinaryHolon extends Holon{
 	protected Quadrilateral Tao;
 	protected Formula formula;
 
-	public NonBinaryHolon (Agent a,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+	public NonBinaryHolon (DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         formula = dk.getFormula();
         //Wywalić TaoList, ogarnąć BP
         //Enumik przeszedł tutaj,poprawić. Najlepiej jednak go wyjąć bo Weronika chce się nim bawić.
 
     }
-	public void update(Agent a,Set<BaseProfile> baseProfile,DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
+	public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
 		double update = Grounder.determineFulfillmentDouble(dk, formula);
 		//Przeprowadzic dla wszystko PQ,PNQ,NPQ,NPNQ,najlepiej dla komplementarnej formuły
         double pq = 0;
