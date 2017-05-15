@@ -32,11 +32,6 @@ public class NonBinaryHolon extends Holon{
 		npq = Grounder.determineFulfillmentDouble(dk,temp.get(1));
 		pnq = Grounder.determineFulfillmentDouble(dk,temp.get(2));
 		npnq = Grounder.determineFulfillmentDouble(dk,temp.get(3));
-
-        if(pq!= 0){pq = pq/dk.getGroundingSet(dk.getFormula()).size();}
-        if(npq!= 0){npq = npq/dk.getGroundingSet(dk.getFormula()).size();}
-        if(pnq!= 0){pnq = pnq/dk.getGroundingSet(dk.getFormula()).size();}
-        if(npnq!= 0){npnq = npnq/dk.getGroundingSet(dk.getFormula()).size();}
         Tao = new Quadrilateral(pq,npq,pnq,npnq);}
 	}
 

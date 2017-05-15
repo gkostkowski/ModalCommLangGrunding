@@ -1,5 +1,7 @@
 package com.pwr.zpi;
 
+import com.pwr.zpi.language.Formula;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -362,6 +364,31 @@ public class BPCollection {
         return res;
     }
 
+    public double getMayhapsNumber(int endTimestamp,Formula formula,int i){
+        Set<BaseProfile> out = new HashSet<>();
+        Set<BaseProfile> observations = getBaseProfiles(endTimestamp, MemoryType.LM);
+        Set<BaseProfile> observations2 = getBaseProfiles(endTimestamp, MemoryType.WM);
+        observations.addAll(observations2);
+        double suma = 0;
+        for (BaseProfile bp : observations) {
+            if(bp.checkIfObserved(formula.getModel(), formula.getTraits().get(i), State.MAYHAPS)){
+                suma++;
+            }
+        }
+
+        System.out.println("Suma " +suma + " obser " + observations.size() + " / "  + suma/(observations.size()) );
+        if(suma>0){
+        return suma/observations.size();}
+        else return 0.0;
+    }
+
+    public double getCompleteSize(int endTimestamp) {
+        Set<BaseProfile> out = new HashSet<>();
+        Set<BaseProfile> observations = getBaseProfiles(endTimestamp, MemoryType.LM);
+        Set<BaseProfile> observations2 = getBaseProfiles(endTimestamp, MemoryType.WM);
+        observations.addAll(observations2);
+        return observations.size();
+    }
     public Set<IndividualModel> getIMsByTraitState(Trait trait, State state, int endTimestamp) {
         return getIMsByTraitState(trait, state, endTimestamp, MemoryType.WM, MemoryType.LM);
     }

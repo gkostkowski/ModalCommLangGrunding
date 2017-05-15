@@ -32,7 +32,7 @@ class Main {
         int t = 0;
         Observation[] obsTill3  = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], false);
+                    put(tr[0], true);
                     put(tr[1], false);
                     put(tr[2], false);
                 }}, t++),

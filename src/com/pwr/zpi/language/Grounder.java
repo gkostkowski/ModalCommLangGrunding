@@ -375,7 +375,7 @@ public class Grounder {
         if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
                 || dk.isDkComplex() && !new ArrayList(dk.getComplementaryFormulas()).contains(formula))
             throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
-        return checkEpistemicConditionsDouble(formula, dk);
+        return checkEpistemicConditionsDouble(formula, dk, dk.getTimestamp());
     }
 
 
@@ -384,23 +384,25 @@ public class Grounder {
      *
      * @param formula
      * @param dk
-     * @param timestamp
      * @return
      */
     @Nullable
     public static Double checkEpistemicConditionsDouble(Formula formula, DistributedKnowledge dk
-                                                        ) throws NotApplicableException {
+            , int timestamp) throws NotApplicableException {
+       /* double mayhapsD = 0;
+        for (int i = 0; i < formula.getTraits().size(); i++) {  //supports complex formulas
+            mayhapsD = dk.getRelatedObservationsBase().getMayhapsBP(timestamp,formula,i);
+        }*/
+        if (formula.getType() == Formula.Type.SIMPLE_MODALITY) {
+            return simpleFormulaFinalGrounder(formula, dk);
+        } else if (formula.getType() == Formula.Type.MODAL_CONJUNCTION) {
+            return complexFormulaFinalGrounder(formula, dk);
 
-
-
-            if (formula.getType() == Formula.Type.SIMPLE_MODALITY) {
-                return simpleFormulaFinalGrounder(formula, dk);
-            } else if(formula.getType() == Formula.Type.MODAL_CONJUNCTION) {
-                return complexFormulaFinalGrounder(formula, dk);
-            }
-
+        }
         return 0.0;
     }
+
+
 
     public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) {
 
@@ -408,16 +410,15 @@ public class Grounder {
         for (BaseProfile bp : dk.getGroundingSet(formula)) {
             if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && !((SimpleFormula) formula).isNegated()) {
                 sum++;
-            } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT)&& ((SimpleFormula) formula).isNegated()) {
+            } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT) && ((SimpleFormula) formula).isNegated()) {
                 sum++;
-            }
-            if(bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.MAYHAPS) && ((SimpleFormula) formula).isNegated()){
+            } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.MAYHAPS)) {
                 sum++;
             }
         }
 
         if (sum != 0) {
-            return sum / (dk.getGroundingSet(dk.getComplementaryFormulas().get(0)).size() + dk.getGroundingSet(dk.getComplementaryFormulas().get(1)).size());
+            return sum / dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp());
         }
         return 0.0;
     }
@@ -437,7 +438,7 @@ public class Grounder {
             }
         }
         if (sum != 0) {
-            return sum / (dk.getGroundingSet(dk.getComplementaryFormulas().get(0)).size() + dk.getGroundingSet(dk.getComplementaryFormulas().get(1)).size());
+            return sum / dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp());
         }
         return 0.0;
     }
