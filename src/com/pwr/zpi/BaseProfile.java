@@ -224,14 +224,12 @@ public class BaseProfile {
     public boolean checkIfObserved(IndividualModel object, Trait trait, State state) {
         if (object == null || trait == null || state == null)
             throw new NullPointerException("One of parameters is null.");
-        System.out.println(state);
         switch (state) {
             case IS:
                 return describedByTraits.containsKey(trait) && new ArrayList<>(describedByTraits.get(trait)).contains(object);
             case IS_NOT:
                 return notDescribedByTraits.containsKey(trait) && new ArrayList<>(notDescribedByTraits.get(trait)).contains(object);
-            case MAYHAPS:
-                System.out.println("mayhaps");
+                case MAYHAPS:
                 return indefiniteByTraits.containsKey(trait) && new ArrayList<>(indefiniteByTraits.get(trait)).contains(object);
             default: return false;
         }

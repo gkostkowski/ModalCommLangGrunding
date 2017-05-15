@@ -97,26 +97,14 @@ public class NonBinaryHolon extends Holon{
 	    public Double getPQ(){
 	    	return PQ;
 	    }
-	    public void setPQ(Double var){
-	    	PQ = var;
-	    }
 	    public Double getNPQ(){
 	    	return NPQ;
-	    }
-	    public void setNPQ(Double var){
-	    	NPQ = var;
 	    }
 	    public Double getPNQ(){
 	    	return PNQ;
 	    }
-	    public void setPNQ(Double var){
-	    	PNQ = var;
-	    }
 	    public Double getNPNQ(){
 	    	return NPNQ;
-	    }
-	    public void setNPNQ(Double var){
-	    	NPNQ = var;
 	    }
 	}
 	public enum FormulaCase {

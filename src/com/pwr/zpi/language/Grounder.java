@@ -423,7 +423,9 @@ public class Grounder {
                 sum++;
             } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT)&& ((SimpleFormula) formula).isNegated()) {
                 sum++;
-            } else if(bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.MAYHAPS)){
+            }
+            if(bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.MAYHAPS) && ((SimpleFormula) formula).isNegated()){
+                sum++;
             }
         }
 
