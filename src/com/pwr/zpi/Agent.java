@@ -168,7 +168,9 @@ public class Agent {
 
     public void updateBeliefs(){
         try {
-            holons.updateBeliefs(null, this, 0); //todo
+            System.out.print("Updating beliefs for t="+knowledgeBase.getTimestamp()+"...");
+            holons.updateBeliefs( this, knowledgeBase.getTimestamp());
+            System.out.println("Done.");
         } catch (InvalidFormulaException | NotConsistentDKException | NotApplicableException e) {
             System.out.println("Agent was not able to update holons.");
         }

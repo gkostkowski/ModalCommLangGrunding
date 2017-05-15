@@ -68,7 +68,6 @@ class Main {
         c1.start();
 
         System.out.println("asking...");
-        Thread.sleep(10000);
         c1.addQuestion("Is Hyzio red");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: I know)");
@@ -84,7 +83,6 @@ class Main {
 
 //        agent1.getDatabase().updateAgentMemory();
 
-        Thread.sleep(10000);
         c1.addQuestion("Is Hyzio red");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: bel p pos ~p)");
@@ -100,7 +98,6 @@ class Main {
         agent1.updateBeliefs();
 
 //        agent1.getDatabase().updateAgentMemory();
-        Thread.sleep(10000);
         c1.addQuestion("Is Hyzio blinking");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: i dont know what to say)");
@@ -124,7 +121,6 @@ class Main {
 
         //agent1.getDatabase().updateAgentMemory();
             c1.addQuestion("Is Hyzio red");
-            Thread.sleep(10000);
             System.out.println("(EXPECTED: pos is pos not is)");
 
             c1.addQuestion("Is Hyzio white");
