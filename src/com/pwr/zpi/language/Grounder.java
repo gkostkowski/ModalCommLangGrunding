@@ -375,7 +375,7 @@ public class Grounder {
         if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
                 || dk.isDkComplex() && !new ArrayList(dk.getComplementaryFormulas()).contains(formula))
             throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
-        return checkEpistemicConditionsDouble(formula, dk, dk.getTimestamp());
+        return checkEpistemicConditionsDouble(formula, dk);
     }
 
 
@@ -388,30 +388,17 @@ public class Grounder {
      * @return
      */
     @Nullable
-    public static Double checkEpistemicConditionsDouble(Formula formula, DistributedKnowledge dk,
-                                                        int timestamp) throws NotApplicableException {
-        boolean amongNoClearStateObjects = true;
-        boolean amongClearStateObjects = true;
+    public static Double checkEpistemicConditionsDouble(Formula formula, DistributedKnowledge dk
+                                                        ) throws NotApplicableException {
 
-        for (int i = 0; i < formula.getTraits().size(); i++) {
-            Set<IndividualModel> clearStatesObjects = dk.getRelatedObservationsBase()
-                    .getIMsByTraitStates(formula.getTraits().get(i), new State[]{State.IS, State.IS_NOT}, timestamp);
-            amongNoClearStateObjects = amongNoClearStateObjects && !new ArrayList<>(clearStatesObjects).contains(formula.getModel());
 
-            Set<IndividualModel> selectedStatesObjects = dk.getRelatedObservationsBase()
-                    .getIMsByTraitState(formula.getTraits().get(i), formula.getStates().get(i), timestamp);
-            amongClearStateObjects = amongClearStateObjects && new ArrayList<>(selectedStatesObjects).contains(formula.getModel());
-        }
 
-        if (amongNoClearStateObjects) {
-            return relativeCard(dk.getGroundingSets(), timestamp, formula);
-        } else if (amongClearStateObjects) {
             if (formula.getType() == Formula.Type.SIMPLE_MODALITY) {
                 return simpleFormulaFinalGrounder(formula, dk);
-            } else {
+            } else if(formula.getType() == Formula.Type.MODAL_CONJUNCTION) {
                 return complexFormulaFinalGrounder(formula, dk);
             }
-        }
+
         return 0.0;
     }
 

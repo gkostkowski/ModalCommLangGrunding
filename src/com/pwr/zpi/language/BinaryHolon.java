@@ -53,12 +53,11 @@ public class BinaryHolon extends Holon {
             if (sumNegative !=0 && dk.getGroundingSet(dk.getFormula()).size() > 0) {
                 sumNegative = sumNegative / dk.getGroundingSet(dk.getFormula()).size();
             }
-            if(dk.getGroundingSet(dk.getFormula()).size() >0){
+
                 Tao = new Pair<Double, Double>(getCard(sumPositive / dk.getGroundingSet(dk.getFormula()).size(),
                         sumNegative / dk.getGroundingSet(dk.getFormula()).size()),
                         getCard(sumNegative / dk.getGroundingSet(dk.getFormula()).size(),
-                                sumPositive / dk.getGroundingSet(dk.getFormula()).size()));}
-            else{Tao = new Pair<Double,Double>(sumPositive,sumNegative);}
+                                sumPositive / dk.getGroundingSet(dk.getFormula()).size()));
         }
     }
 

@@ -32,7 +32,7 @@ class Main {
         int t = 0;
         Observation[] obsTill3  = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], null);
+                    put(tr[0], false);
                     put(tr[1], false);
                     put(tr[2], false);
                 }}, t++),
@@ -56,7 +56,7 @@ class Main {
         agent1.getModels().addNameToModel(qrCodes[0], "Hyzio");
         agent1.addObservationToDatabase(obsTill3);
         agent1.updateMemory();
-        agent1.updateBeliefs();
+       // agent1.updateBeliefs();
 //        agent1.getDatabase().updateAgentMemory();
 //        agent1.discoverObservations();
 //        for (Observation observation: observations)

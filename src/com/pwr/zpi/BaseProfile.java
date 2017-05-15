@@ -229,7 +229,7 @@ public class BaseProfile {
                 return describedByTraits.containsKey(trait) && new ArrayList<>(describedByTraits.get(trait)).contains(object);
             case IS_NOT:
                 return notDescribedByTraits.containsKey(trait) && new ArrayList<>(notDescribedByTraits.get(trait)).contains(object);
-                case MAYHAPS:
+            case MAYHAPS:
                 return indefiniteByTraits.containsKey(trait) && new ArrayList<>(indefiniteByTraits.get(trait)).contains(object);
             default: return false;
         }
