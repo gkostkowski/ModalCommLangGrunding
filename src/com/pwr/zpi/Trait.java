@@ -18,16 +18,16 @@ public class Trait implements Comparable<Trait> {
 
     /**
      *
-     * @return name of the TraitSiganture
+     * @return Name of Trait.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * method used to check if two valuedTraits are about same thing
-     * @param otherName String representation of name of a trait
-     * @return true if same, false if different
+     * Method used to check if two valuedTraits are about same thing.
+     * @param otherName String representation of name of a trait.
+     * @return True if same, false if different.
      */
     @Override
     public boolean equals(Object otherName)

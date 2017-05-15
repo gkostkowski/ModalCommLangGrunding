@@ -160,7 +160,7 @@ public class Agent {
     }
 
     /**
-     * Updates episodic memory.
+     * Updates agent's episodic memory by fetching new observations from database.
      */
     public void updateMemory(){
         database.updateAgentMemory();
@@ -175,6 +175,7 @@ public class Agent {
             System.out.println("Agent was not able to update holons.");
         }
     }
+
 
     public void addObservationToDatabase(Observation ... observations) {
         for (Observation obs : observations)
