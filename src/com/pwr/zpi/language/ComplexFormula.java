@@ -147,8 +147,6 @@ public class ComplexFormula extends Formula {
 
 
 
-
-
     /**
      * evaluates the formula, for now only for the AND and OR operators
      *
@@ -249,5 +247,8 @@ public class ComplexFormula extends Formula {
     public void setnpnq(){
         if(!leftPart.isNegated())leftPart.negate();
         if(!rightPart.isNegated())rightPart.negate();
+    }
+    public ComplexFormula copy() throws InvalidFormulaException{
+        return new ComplexFormula(individualModel,traits,states,operator);
     }
 }

@@ -9,36 +9,35 @@ import java.util.*;
 public class NonBinaryHolon extends Holon{
 
 	protected Quadrilateral Tao;
-	protected Formula formula;
+	protected ComplexFormula formula;
 
 	public NonBinaryHolon (DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
-        formula = dk.getFormula();
+        formula = (ComplexFormula) dk.getFormula();
         //Wywalić TaoList, ogarnąć BP
         //Enumik przeszedł tutaj,poprawić. Najlepiej jednak go wyjąć bo Weronika chce się nim bawić.
 
     }
 	public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
-		double update = Grounder.determineFulfillmentDouble(dk, formula);
-		//Przeprowadzic dla wszystko PQ,PNQ,NPQ,NPNQ,najlepiej dla komplementarnej formuły
+		if (dk.getFormula().getType() != Formula.Type.MODAL_CONJUNCTION) {
+			throw new InvalidFormulaException();
+		}else{
         double pq = 0;
         double npq = 0;
         double pnq = 0;
         double npnq = 0;
 
-            ((ComplexFormula) dk.getFormula()).setpq();
-            pq += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
-            ((ComplexFormula) dk.getFormula()).setnpq();
-            npq += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
-            ((ComplexFormula) dk.getFormula()).setpnq();
-            pnq += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
-            ((ComplexFormula) dk.getFormula()).setnpnq();
-            npnq += Grounder.determineFulfillmentDouble(dk,dk.getFormula());
+		List<Formula> temp = getComplementaryFormulasv2((ComplexFormula) dk.getFormula());
+
+		pq = Grounder.determineFulfillmentDouble(dk,temp.get(0));
+		npq = Grounder.determineFulfillmentDouble(dk,temp.get(1));
+		pnq = Grounder.determineFulfillmentDouble(dk,temp.get(2));
+		npnq = Grounder.determineFulfillmentDouble(dk,temp.get(3));
 
         if(pq!= 0){pq = pq/dk.getGroundingSet(dk.getFormula()).size();}
         if(npq!= 0){npq = npq/dk.getGroundingSet(dk.getFormula()).size();}
         if(pnq!= 0){pnq = pnq/dk.getGroundingSet(dk.getFormula()).size();}
         if(npnq!= 0){npnq = npnq/dk.getGroundingSet(dk.getFormula()).size();}
-        Tao = new Quadrilateral(pq,npq,pnq,npnq);
+        Tao = new Quadrilateral(pq,npq,pnq,npnq);}
 	}
 
 	@Override
@@ -58,6 +57,15 @@ public class NonBinaryHolon extends Holon{
 
 	public Formula getFormula(){
 		return formula;
+	}
+
+	@Override
+	public boolean isApplicable(Formula f) throws InvalidFormulaException {
+		if(f.getType() != Formula.Type.MODAL_CONJUNCTION){
+			return false;
+		}
+		if(getComplementaryFormulasv2(formula).contains(f)){return true;}
+		return false;
 	}
 
 	public Quadrilateral getTao() {
@@ -112,5 +120,19 @@ public class NonBinaryHolon extends Holon{
 		PNQ,
 		NPQ,
 		NPNQ
+	}
+
+	public static List<Formula> getComplementaryFormulasv2(ComplexFormula f) throws InvalidFormulaException {
+		List<Formula> res = new ArrayList<>();
+		ComplexFormula pq = f.copy();pq.setpq();
+		ComplexFormula npq = f.copy();npq.setpnq();
+		ComplexFormula pnq = f.copy();pnq.setnpq();
+		ComplexFormula npnq = f.copy();npnq.setnpnq();
+
+		res.add(pq);
+		res.add(pnq);
+		res.add(npq);
+		res.add(npnq);
+		return res;
 	}
 }

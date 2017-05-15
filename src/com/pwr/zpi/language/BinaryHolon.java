@@ -71,9 +71,19 @@ public class BinaryHolon extends Holon {
         return formula;
     }
 
+    @Override
+    public boolean isApplicable(Formula f) throws InvalidFormulaException {
+        if(f.getType() != Formula.Type.SIMPLE_MODALITY){
+            return false;
+        }
+        if(formula.getComplementaryFormulas().contains(formula)){return true;}
+        return false;
+    }
+
     public double getP() {
         return Tao.getK();
     }
+
 
     public double getnot_P() {
         return Tao.getV();

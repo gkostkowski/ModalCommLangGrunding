@@ -18,6 +18,7 @@ public abstract class Holon{
     public abstract Pair getWeakest();
     public abstract HolonKind getKind();
     public abstract Formula getFormula();
+    public abstract boolean isApplicable(Formula f) throws InvalidFormulaException;
     public enum HolonKind{
         Binary,
         Non_Binary

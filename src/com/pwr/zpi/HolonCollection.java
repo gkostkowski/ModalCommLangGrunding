@@ -63,7 +63,7 @@ public class HolonCollection {
 
     public void updateBeliefs(Formula formula, Agent agent, int timestamp) throws InvalidFormulaException, NotConsistentDKException, NotApplicableException {
         for(Holon h : holonCollection){
-            h.update(new DistributedKnowledge(agent, formula, timestamp, true));
+            h.update(new DistributedKnowledge(agent, h.getFormula(), timestamp, true));
         }
     }
 

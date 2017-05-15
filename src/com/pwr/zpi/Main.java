@@ -33,13 +33,13 @@ class Main {
         int t = 0;
         Observation[] obsTill3 /*inclusively*/ = new Observation[]{
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
+                    put(tr[0], null);
                     put(tr[1], false);
                     put(tr[2], false);
                 }}, t++),
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
-                    put(tr[1], false);
+                    put(tr[1], true);
                     put(tr[2], false);
                 }}, t++),
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
