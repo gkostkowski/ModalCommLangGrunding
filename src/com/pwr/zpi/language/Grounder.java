@@ -52,7 +52,6 @@ public class Grounder {
     }
 
 
-
     static ModalOperator determineFulfillment(Agent agent, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         ModalOperator res;
         for (Formula mentalModel : dk.getComplementaryFormulas()) {
@@ -70,7 +69,7 @@ public class Grounder {
      * epistemic fulfillment relationship's conditions.
      * Timestamp is taken from given distribution of knowledge.
      *
-     * @param dk    Distributed knowledge for respective grounding sets related with certain formula.
+     * @param dk Distributed knowledge for respective grounding sets related with certain formula.
      * @return Type of operator which can be applied to formula given through distribution of knowledge.
      * @see DistributedKnowledge
      */
@@ -93,7 +92,7 @@ public class Grounder {
      */
     @Nullable
     public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk,
-                                                          int timestamp) throws NotApplicableException {
+                                                         int timestamp) throws NotApplicableException {
         boolean amongNoClearStateObjects = true;
         boolean amongClearStateObjects = true;
 
@@ -138,7 +137,7 @@ public class Grounder {
      * @return Given modal operator if it is applicable or null in other way.
      */
     private static ModalOperator checkEpistemicCondition(boolean amongNoClearStateObjects, boolean isPresentInWM,
-                                                          double relativeCard, ModalOperator inspectedOperator) {
+                                                         double relativeCard, ModalOperator inspectedOperator) {
         double minRange, maxRange;
         switch (inspectedOperator) {
             case POS:
@@ -367,16 +366,16 @@ public class Grounder {
      * epistemic fulfillment relationship's conditions.
      * Timestamp is taken from given distribution of knowledge.
      *
-     * @param dk    Distributed knowledge for respective grounding sets related with certain formula.
+     * @param dk Distributed knowledge for respective grounding sets related with certain formula.
      * @return Double value of Type of operator which can be applied to formula given through distribution of knowledge.
      * @see DistributedKnowledge
      */
     static double determineFulfillmentDouble(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
+
         if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
                 || dk.isDkComplex() && !new ArrayList(dk.getComplementaryFormulas()).contains(formula))
             throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
-
-        return checkEpistemicConditionsDouble(formula, dk,dk.getTimestamp());
+        return checkEpistemicConditionsDouble(formula, dk, dk.getTimestamp());
     }
 
 
@@ -390,7 +389,7 @@ public class Grounder {
      */
     @Nullable
     public static Double checkEpistemicConditionsDouble(Formula formula, DistributedKnowledge dk,
-                                                         int timestamp) throws NotApplicableException {
+                                                        int timestamp) throws NotApplicableException {
         boolean amongNoClearStateObjects = true;
         boolean amongClearStateObjects = true;
 
@@ -406,8 +405,51 @@ public class Grounder {
 
         if (amongNoClearStateObjects) {
             return relativeCard(dk.getGroundingSets(), timestamp, formula);
-        } else if (amongClearStateObjects)
-            return 1.0;
+        } else if (amongClearStateObjects) {
+            if (formula.getType() == Formula.Type.SIMPLE_MODALITY) {
+                return simpleFormulaFinalGrounder(formula, dk);
+            } else {
+                return complexFormulaFinalGrounder(formula, dk);
+            }
+        }
+        return 0.0;
+    }
+
+    public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) {
+
+        double sum = 0;
+        for (BaseProfile bp : dk.getGroundingSet(formula)) {
+            if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && !((SimpleFormula) formula).isNegated()) {
+                sum++;
+            } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT)&& ((SimpleFormula) formula).isNegated()) {
+                sum++;
+            } else if(bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.MAYHAPS)){
+            }
+        }
+
+        if (sum != 0) {
+            return sum / (dk.getGroundingSet(dk.getComplementaryFormulas().get(0)).size() + dk.getGroundingSet(dk.getComplementaryFormulas().get(1)).size());
+        }
+        return 0.0;
+    }
+
+    public static Double complexFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) {
+
+        double sum = 0;
+        for (BaseProfile bp : dk.getGroundingSet(formula)) {
+            if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && bp.checkIfObserved(formula.getModel(), formula.getTraits().get(1), State.IS) && ((ComplexFormula) formula).getFormulaCase() == NonBinaryHolon.FormulaCase.PQ) {
+                sum++;
+            } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT) && bp.checkIfObserved(formula.getModel(), formula.getTraits().get(1), State.IS) && ((ComplexFormula) formula).getFormulaCase() == NonBinaryHolon.FormulaCase.NPQ) {
+                sum++;
+            } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && bp.checkIfObserved(formula.getModel(), formula.getTraits().get(1), State.IS_NOT) && ((ComplexFormula) formula).getFormulaCase() == NonBinaryHolon.FormulaCase.PNQ) {
+                sum++;
+            } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT) && bp.checkIfObserved(formula.getModel(), formula.getTraits().get(1), State.IS_NOT) && ((ComplexFormula) formula).getFormulaCase() == NonBinaryHolon.FormulaCase.NPNQ) {
+                sum++;
+            }
+        }
+        if (sum != 0) {
+            return sum / (dk.getGroundingSet(dk.getComplementaryFormulas().get(0)).size() + dk.getGroundingSet(dk.getComplementaryFormulas().get(1)).size());
+        }
         return 0.0;
     }
 

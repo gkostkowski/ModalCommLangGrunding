@@ -33,20 +33,20 @@ public class BinaryHolon extends Holon {
     //Pamięć świadoma
 
     public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+        System.out.println("//      HOLON       //");
         if (dk.getFormula().getType() != Formula.Type.SIMPLE_MODALITY) {
             throw new InvalidFormulaException();
         } else {
             double sumPositive = 0;
             double sumNegative = 0;
-
             if (((SimpleFormula) dk.getComplementaryFormulas().get(0)).isNegated()) {
-                sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getComplementaryFormulas().get(1));
-                sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0));
+                sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getComplementaryFormulas().get(0));
+                sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1));
             } else {
-                sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0));
-                sumPositive += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1));
+                sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1));
+                sumPositive += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0));
             }
-            System.out.println(sumNegative + " " + sumPositive +" " +  dk.getGroundingSet(dk.getFormula()).size());
+            System.out.println(sumNegative + " " + sumPositive + " "  +  dk.getGroundingSet(dk.getFormula()).size());
             if (sumPositive != 0 && dk.getGroundingSet(dk.getFormula()).size() > 0) {
                 sumPositive = sumPositive / dk.getGroundingSet(dk.getFormula()).size();
             }

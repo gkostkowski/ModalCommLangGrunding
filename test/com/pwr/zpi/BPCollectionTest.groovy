@@ -1,3 +1,5 @@
+package com.pwr.zpi
+
 import com.pwr.zpi.BPCollection
 import com.pwr.zpi.BaseProfile
 import com.pwr.zpi.IndividualModel

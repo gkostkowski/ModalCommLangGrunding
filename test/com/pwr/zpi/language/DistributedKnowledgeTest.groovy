@@ -1,4 +1,4 @@
-package language
+package com.pwr.zpi.language
 
 import com.pwr.zpi.Agent
 import com.pwr.zpi.BPCollection

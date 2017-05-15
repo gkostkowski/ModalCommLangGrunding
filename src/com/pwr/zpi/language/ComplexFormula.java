@@ -127,6 +127,7 @@ public class ComplexFormula extends Formula {
      *
      * @return
      */
+
     @Override
     public List<Formula> getComplementaryFormulas() throws InvalidFormulaException {
         List<Formula> res = new ArrayList<>();
@@ -141,6 +142,12 @@ public class ComplexFormula extends Formula {
             res.add(new ComplexFormula(individualModel, traits, Arrays.asList(newStates[i]), operator));
         return res;
     }
+
+
+
+
+
+
 
     /**
      * evaluates the formula, for now only for the AND and OR operators

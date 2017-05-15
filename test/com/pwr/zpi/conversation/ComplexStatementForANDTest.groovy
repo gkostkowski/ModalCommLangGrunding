@@ -6,9 +6,10 @@ import com.pwr.zpi.ObjectType
 import com.pwr.zpi.QRCode
 import com.pwr.zpi.Trait
 import com.pwr.zpi.language.ComplexFormula
-import org.junit.Test
+
 
 /**
+
  * Created by Weronika on 14.05.2017.
  */
 class ComplexStatementForANDTest extends GroovyTestCase {

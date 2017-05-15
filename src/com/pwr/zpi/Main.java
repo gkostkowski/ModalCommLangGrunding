@@ -33,22 +33,22 @@ class Main {
         int t = 0;
         Observation[] obsTill3 /*inclusively*/ = new Observation[]{
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
+                    put(tr[0], null);
                     put(tr[1], false);
                     put(tr[2], false);
                 }}, t++),
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
+                    put(tr[0], null);
                     put(tr[1], false);
                     put(tr[2], false);
                 }}, t++),
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
+                    put(tr[0], null);
                     put(tr[1], false);
                     put(tr[2], true);
                 }}, t++),
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
+                    put(tr[0], null);
                     put(tr[1], false);
                     put(tr[2], null);
                 }}, t++)
@@ -98,7 +98,7 @@ class Main {
         c1.addQuestion("Is Hyzio blinking");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: i dont know what to say)");
-
+        //
         c1.addQuestion("Is Hyzio white");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: i know it is not)");
