@@ -80,6 +80,7 @@ public class Agent {
         return holons;
     }
 
+    @Deprecated //uzywamy updateMemory()
     public DatabaseAO getDatabase() {
         return database;
     }
@@ -147,7 +148,6 @@ public class Agent {
 
     public void registerObservation(Observation newObservation) {
         IndividualModel relatedIM = models.captureNewIM(newObservation);
-
         knowledgeBase.includeNewObservation(newObservation, relatedIM);
     }
 
@@ -155,6 +155,10 @@ public class Agent {
         models.captureNewIM(newBp.getAffectedIMs());
         knowledgeBase.addToMemory(newBp);
 
+    }
+
+    public void updateMemory(){
+        database.updateAgentMemory();
     }
 
     public void addObservationToDatabase(Observation ... observations) {

@@ -2,7 +2,6 @@ package com.pwr.zpi;
 
 import com.pwr.zpi.conversation.Conversation;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 class Main {
@@ -20,9 +19,11 @@ class Main {
      */
     static public void main(String... args) throws InterruptedException {
 
+        testyM();
+
         // G ============
         /*CASE 1*/
-
+/*
         QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
         Trait[] tr = new Trait[]{
                 new Trait("Red"),
@@ -31,7 +32,7 @@ class Main {
                 new Trait("Blue"), //[4]
                 new Trait("Soft")};
         int t = 0;
-        Observation[] obsTill3 /*inclusively*/ = new Observation[]{
+        Observation[] obsTill3  = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
                     put(tr[1], false);
@@ -123,8 +124,56 @@ class Main {
 
         c1.addQuestion("Is Hyzio white");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: pos is bel not)");
+        System.out.println("(EXPECTED: pos is bel not)");*/
+    }
 
+    static public void testyM(){
+        QRCode[] qrCodes2 = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
+        Trait[] tr2 = new Trait[]{
+                new Trait("Red"),
+                new Trait("White"),
+                new Trait("Blinking"),
+                new Trait("blinking"),
+                new Trait("Blue"), //[4]
+                new Trait("Soft")};
+        int t2 = 0;
+        Observation[] obs2 = new Observation[]{
+                new Observation(qrCodes2[0], new HashMap<Trait, Boolean>() {{
+                    put(tr2[0], true);
+                    put(tr2[1], true);
+                }}, t2++),
+                new Observation(qrCodes2[1], new HashMap<Trait, Boolean>() {{
+                    put(tr2[2], true);
+                }}, t2),
+                new Observation(qrCodes2[2], new HashMap<Trait, Boolean>() {{
+                    put(tr2[2], true);
+                }}, t2++),
+                new Observation(qrCodes2[2], new HashMap<Trait, Boolean>() {{
+                    put(tr2[0], false);
+                }}, t2++),
+                new Observation(qrCodes2[0], new HashMap<Trait, Boolean>() {{
+                    put(tr2[2], false);
+                }}, t2)};
 
+        Agent agent3 = new Agent();
+        @SuppressWarnings("deprecation")
+        DatabaseAO database = agent3.getDatabase();
+        database.addNewObservation(obs2[0]);
+        database.addNewObservation(obs2[1]);
+//        database.addNewObservation(obs2[2]);
+//        database.addNewObservation(obs2[3]);
+//        database.addNewObservation(obs2[4]);
+
+        try {
+            //noinspection InfiniteLoopStatement
+            while(true) {
+                System.out.println("<agent> zasypiam");
+                Thread.sleep(10000); // 10 seconds
+                System.out.println("<agent> wstaje");
+                agent3.updateMemory();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
