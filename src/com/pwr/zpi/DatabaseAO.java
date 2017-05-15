@@ -79,7 +79,7 @@ public class DatabaseAO {
                 nameIndexMap.put(tableName, 0);
 
                 for (Trait trait: objectType.getTraits()) {
-                    SQLCommandText.append(trait.getName()).append(" integer,");
+                    SQLCommandText.append(trait.getName()).append(" integer CHECK (").append(trait.getName()).append(" IN (0,1)),");
                 }
                 SQLCommandText.deleteCharAt(SQLCommandText.length()-1); // removes last comma
                 SQLCommandText.append(");");
