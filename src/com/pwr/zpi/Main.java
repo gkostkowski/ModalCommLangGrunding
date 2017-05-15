@@ -19,11 +19,9 @@ class Main {
      */
     static public void main(String... args) throws InterruptedException {
 
-        testyM();
-
-        // G ============
-        /*CASE 1*/
+        //testyM();
 /*
+        *//*CASE 1*/
         QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
         Trait[] tr = new Trait[]{
                 new Trait("Red"),
@@ -51,14 +49,15 @@ class Main {
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
                     put(tr[1], false);
-                    put(tr[2], null);
                 }}, t++)
         };
 
         Agent agent1 = new Agent();
         agent1.getModels().addNameToModel(qrCodes[0], "Hyzio");
         agent1.addObservationToDatabase(obsTill3);
-        agent1.getDatabase().updateAgentMemory();
+        agent1.updateMemory();
+        agent1.updateBeliefs();
+//        agent1.getDatabase().updateAgentMemory();
 //        agent1.discoverObservations();
 //        for (Observation observation: observations)
 //            agent1.registerObservation(observation);
@@ -69,19 +68,23 @@ class Main {
         c1.start();
 
         System.out.println("asking...");
+        Thread.sleep(10000);
         c1.addQuestion("Is Hyzio red");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: I know)");
 
         Observation[] obsTill4 = new Observation[]{
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], null);
                     put(tr[1], false);
                     put(tr[2], false);
                 }}, t++)};
         agent1.addObservationToDatabase(obsTill4);
-        agent1.getDatabase().updateAgentMemory();
+        agent1.updateMemory();
+        agent1.updateBeliefs();
 
+//        agent1.getDatabase().updateAgentMemory();
+
+        Thread.sleep(10000);
         c1.addQuestion("Is Hyzio red");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: bel p pos ~p)");
@@ -89,13 +92,15 @@ class Main {
 
         Observation[] obsTill5 = new Observation[]{
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], null);
                     put(tr[1], false);
                     put(tr[2], null);
                 }}, t++)};
         agent1.addObservationToDatabase(obsTill5);
-        agent1.getDatabase().updateAgentMemory();
+        agent1.updateMemory();
+        agent1.updateBeliefs();
 
+//        agent1.getDatabase().updateAgentMemory();
+        Thread.sleep(10000);
         c1.addQuestion("Is Hyzio blinking");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: i dont know what to say)");
@@ -106,25 +111,25 @@ class Main {
 
         Observation[] obsTill7 = new Observation[]{
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], null);
                     put(tr[1], true);
                     put(tr[2], true);
                 }}, t++),
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], false);
                     put(tr[1], true);
-                    put(tr[2], null);
                 }}, t++)};
         agent1.addObservationToDatabase(obsTill7);
-        agent1.getDatabase().updateAgentMemory();
+        agent1.updateMemory();
+        agent1.updateBeliefs();
 
-        c1.addQuestion("Is Hyzio red");
-        Thread.sleep(1000);
-        System.out.println("(EXPECTED: pos is pos not is)");
+        //agent1.getDatabase().updateAgentMemory();
+            c1.addQuestion("Is Hyzio red");
+            Thread.sleep(10000);
+            System.out.println("(EXPECTED: pos is pos not is)");
 
-        c1.addQuestion("Is Hyzio white");
-        Thread.sleep(1000);
-        System.out.println("(EXPECTED: pos is bel not)");*/
+            c1.addQuestion("Is Hyzio white");
+            Thread.sleep(1000);
+            System.out.println("(EXPECTED: pos is bel not)");
     }
 
     static public void testyM(){
@@ -153,16 +158,21 @@ class Main {
                 }}, t2++),
                 new Observation(qrCodes2[0], new HashMap<Trait, Boolean>() {{
                     put(tr2[2], false);
-                }}, t2)};
+                }}, t2++),
+                new Observation(qrCodes2[2], new HashMap<Trait, Boolean>() {{
+                    put(tr2[0], false);
+                }}, t2++)};
 
         Agent agent3 = new Agent();
-        @SuppressWarnings("deprecation")
-        DatabaseAO database = agent3.getDatabase();
+        //@SuppressWarnings("deprecation")
+        /*DatabaseAO database = agent3.getDatabase();
         database.addNewObservation(obs2[0]);
         database.addNewObservation(obs2[1]);
-//        database.addNewObservation(obs2[2]);
-//        database.addNewObservation(obs2[3]);
-//        database.addNewObservation(obs2[4]);
+        database.addNewObservation(obs2[2]);
+        database.addNewObservation(obs2[3]);
+        database.addNewObservation(obs2[4]);
+        database.addNewObservation(obs2[5]);*/
+        agent3.addObservationToDatabase(obs2);
 
         try {
             //noinspection InfiniteLoopStatement

@@ -1,6 +1,8 @@
 package com.pwr.zpi;
 
 import com.pwr.zpi.exceptions.InvalidFormulaException;
+import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.language.Holon;
 
 import java.util.Collection;
@@ -157,8 +159,19 @@ public class Agent {
 
     }
 
+    /**
+     * Updates episodic memory.
+     */
     public void updateMemory(){
         database.updateAgentMemory();
+    }
+
+    public void updateBeliefs(){
+        try {
+            holons.updateBeliefs(null, this, 0); //todo
+        } catch (InvalidFormulaException | NotConsistentDKException | NotApplicableException e) {
+            System.out.println("Agent was not able to update holons.");
+        }
     }
 
     public void addObservationToDatabase(Observation ... observations) {

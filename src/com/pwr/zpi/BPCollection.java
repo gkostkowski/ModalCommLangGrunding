@@ -19,7 +19,7 @@ public class BPCollection {
      * then old base profile will be overridden.
      */
     private static final boolean DEFAULT_OVERRIDE_IF_EXISTS = true;
-    private static final int MAX_WM_CAPACITY = 10;
+    private static final int MAX_WM_CAPACITY = 4;
 
     /**
      * By default, inserts to bp located in wm
