@@ -9,10 +9,10 @@ import java.util.*;
 public class NonBinaryHolon extends Holon{
 
 	protected Quadrilateral Tao;
-	protected ComplexFormula formula;
+	protected List<Formula> formula;
 
 	public NonBinaryHolon (DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
-        formula = (ComplexFormula) dk.getFormula();
+        formula = dk.getComplementaryFormulas();
         //Wywalić TaoList, ogarnąć BP
         //Enumik przeszedł tutaj,poprawić. Najlepiej jednak go wyjąć bo Weronika chce się nim bawić.
 
@@ -34,39 +34,59 @@ public class NonBinaryHolon extends Holon{
 		npnq = Grounder.determineFulfillmentDouble(dk,temp.get(3));
         Tao = new Quadrilateral(pq,npq,pnq,npnq);}
 	}
-
+	/**
+	 *
+	 * @return Returns Pair of strongest value in Tao,first part of pair is true when IS side is stronger,otherwise false
+	 */
 	@Override
 	public Pair<FormulaCase,Double> getStrongest() {
 		return Tao.getStrongest();
 	}
-
+	/**
+	 *
+	 * @return Returns Pair of weakest value in Tao,first part of pair is true when IS side is stronger,otherwise false
+	 */
 	@Override
 	public Pair<FormulaCase,Double> getWeakest() {
 		return Tao.getWeakest();
 	}
-
+	/**
+	 *
+	 * @return HolonKind,Non_Binary in this situation.
+	 */
 	@Override
 	public HolonKind getKind() {
 		return Holon.HolonKind.Non_Binary;
 	}
-
-	public Formula getFormula(){
+	/**
+	 *
+	 * @return Complementary Formula regarding this specific Holon
+	 */
+	public List<Formula> getFormula(){
 		return formula;
 	}
-
+	/**
+	 *  Checks if given formula is one of complementary formulas of this Holon.
+	 * @param f
+	 * @return
+	 * @throws InvalidFormulaException
+	 */
 	@Override
 	public boolean isApplicable(Formula f) throws InvalidFormulaException {
-		if(f.getType() != Formula.Type.MODAL_CONJUNCTION){
-			return false;
-		}
-		if(getComplementaryFormulasv2(formula).contains(f)){return true;}
-		return false;
+		return formula.contains(f);
 	}
 
+	/**
+	 *
+	 * @return Quadrilateral containing all cases.
+	 */
 	public Quadrilateral getTao() {
 		return Tao;
 	}
 
+	/**
+	 * Inner class containing Tao for four variables.
+	 */
 	public static class Quadrilateral {
 
 	    private Double PQ;

@@ -380,10 +380,10 @@ public class Grounder {
 
 
     /**
-     * Returns value of fullfilment of epistemic condition. If none of possible, then null is returned.
+     * Returns value of fullfilment of epistemic condition. If none of possible, then 0.0 is returned.
      *
-     * @param formula
-     * @param dk
+     * @param formula Considered Formula
+     * @param dk Distributed knowledge for respective grounding sets related with certain formula.
      * @return
      */
     @Nullable
@@ -403,7 +403,13 @@ public class Grounder {
     }
 
 
-
+    /**
+     * Returns number of occurrences in grounded formulas for given formula.Case of simple formulas.
+     *
+     * @param formula Considered Formula
+     * @param dk Distributed knowledge for respective grounding sets related with certain formula.
+     * @return
+     */
     public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) {
 
         double sum = 0;
@@ -422,7 +428,13 @@ public class Grounder {
         }
         return 0.0;
     }
-
+    /**
+     * Returns number of occurrences in grounded formulas for given formula.Case of Complex formulas.
+     *
+     * @param formula Considered Formula
+     * @param dk Distributed knowledge for respective grounding sets related with certain formula.
+     * @return
+     */
     public static Double complexFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) {
 
         double sum = 0;

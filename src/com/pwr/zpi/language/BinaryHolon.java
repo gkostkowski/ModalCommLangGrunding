@@ -5,13 +5,21 @@ import com.pwr.zpi.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 
-public class BinaryHolon extends Holon {
+import java.util.List;
 
+/**
+ * Represents belief on simple formula.
+ *
+ */
+public class BinaryHolon extends Holon {
+    /**
+     * Represents ratio of IS,Is_Not and Mayhaps observations
+     */
     protected Pair<Double, Double> Tao;
-    protected Formula formula;
+    protected List<Formula> formula;
 
     public BinaryHolon(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
-        this.formula = dk.getFormula();
+        this.formula = dk.getComplementaryFormulas();
         update(dk);
     }
 
@@ -32,6 +40,13 @@ public class BinaryHolon extends Holon {
     //Pamięć przedświadoma
     //Pamięć świadoma
 
+
+    /**
+     * Updates holon's tao including observations taken until Distributed knowledge's timestamp
+     * @param dk Distributed knowledge for respective grounding sets related with certain formula.
+     * @throws InvalidFormulaException
+     * @throws NotApplicableException
+     */
     public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         System.out.println("//      HOLON       //");
         if (dk.getFormula().getType() != Formula.Type.SIMPLE_MODALITY) {
@@ -52,28 +67,37 @@ public class BinaryHolon extends Holon {
     }
 
 
-    public double getCard(double first, double sec) {
-        return first / (sec + first);
-    }
-
-    public Formula getFormula() {
+    /**
+     *
+     * @return Complementary Formula regarding this specific Holon
+     */
+    public List<Formula> getFormula() {
         return formula;
     }
 
+    /**
+     *  Checks if given formula is one of complementary formulas of this Holon.
+     * @param f
+     * @return
+     * @throws InvalidFormulaException
+     */
     @Override
     public boolean isApplicable(Formula f) throws InvalidFormulaException {
-        if(f.getType() != Formula.Type.SIMPLE_MODALITY){
-            return false;
-        }
-        if(formula.getComplementaryFormulas().contains(formula)){return true;}
-        return false;
+        return formula.contains(f);
     }
 
+    /**
+     *
+     * @return Returns IS side of Tao
+     */
     public double getP() {
         return Tao.getK();
     }
 
-
+    /**
+     *
+     * @return Returns IS_NOT side of Tao
+     */
     public double getnot_P() {
         return Tao.getV();
     }
@@ -81,16 +105,27 @@ public class BinaryHolon extends Holon {
 	return Tao.getP() > Tao.getnot_P() ? com.pwr.zpi.language.Operators.Type.KNOW :com.pwr.zpi.language.Operators.Type.NOT ;
 	}*/
 
+    /**
+     *
+     * @return Returns Pair of strongest value in Tao,first part of pair is true when IS side is stronger,otherwise false
+     */
     @Override
     public com.pwr.zpi.language.Pair<Boolean, Double> getStrongest() {
         return Tao.getK() >= Tao.getV() ? (new Pair<Boolean, Double>(true, Tao.getK())) : (new Pair<Boolean, Double>(false, Tao.getV()));
     }
-
+    /**
+     *
+     * @return Returns Pair of weakest value in Tao,first part of pair is true when IS side is stronger,otherwise false
+     */
     @Override
     public com.pwr.zpi.language.Pair<Boolean, Double> getWeakest() {
         return Tao.getK() < Tao.getV() ? (new Pair<Boolean, Double>(true, Tao.getK())) : (new Pair<Boolean, Double>(false, Tao.getV()));
     }
 
+    /**
+     *
+     * @return HolonKind,Binary in this situation.
+     */
     @Override
     public HolonKind getKind() {
         return Holon.HolonKind.Binary;
