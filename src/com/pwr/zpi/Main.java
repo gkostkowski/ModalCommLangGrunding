@@ -23,14 +23,14 @@ class Main {
                 new Trait("Blue"),
                 new Trait("Soft")};
 
-        simplyModalitiesScenario(agent, qrCodes, tr);
+        // simplyModalitiesScenario(agent, qrCodes, tr);
         //or
         //simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
         // is present in db after launching one of them, so they can't be used together.
 
-        //modalConjunctionsScenario(agent, qrCodes, tr);
+        modalConjunctionsScenario(agent, qrCodes, tr);
     }
 
     /**

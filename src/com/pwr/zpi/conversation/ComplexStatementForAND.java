@@ -165,11 +165,11 @@ public class ComplexStatementForAND extends Statement {
                + valP + formula.getTraits().get(0).getName() + " and " + valQ + formula.getTraits().get(1).getName();
        if(withinBel(pq))
            return answer + ", but I rather believe " + getSentenceForPQ();
-       else if(withinPos(npq))
+       else if(withinBel(npq))
            return answer + ", but I rather believe " + getSentenceForNPQ();
-       else if(withinPos(pnq))
+       else if(withinBel(pnq))
            return answer + ", but I rather believe " + getSentenceForPNQ();
-       else if(withinPos(npnq))
+       else if(withinBel(npnq))
            return answer + ", but I rather believe " + getSentenceForNPNQ();
        return answer;
    }
