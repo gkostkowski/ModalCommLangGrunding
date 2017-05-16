@@ -103,7 +103,7 @@ public class Conversation implements Runnable {
         {
             if(!queue.isEmpty())
             {
-
+                timestamp = agent.getKnowledgeBase().getTimestamp();
                 System.out.println(askQuestion(queue.remove()));
             }
             try

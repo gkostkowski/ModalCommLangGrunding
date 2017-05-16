@@ -173,6 +173,11 @@ public class ComplexFormula extends Formula {
         return false;
     }
 
+    /**
+     * Checks if given formula regards the same object and same traits
+     * @param other
+     * @return
+     */
     public boolean isFormulaSimilar(Formula other)
     {
         if (other instanceof ComplexFormula)
@@ -188,9 +193,9 @@ public class ComplexFormula extends Formula {
             if (traits.get(1).equals(formula.getTraits().get(1)))
                 return true;
             else return false;
-        else if (traits.get(0).equals(formula.getTraits().get(1)))
+      /*  else if (traits.get(0).equals(formula.getTraits().get(1)))  // na przyszłość być może
             if (traits.get(1).equals(formula.getTraits().get(0)))
-                return true;
+                return true;*/
         return false;
     }
 
