@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Weronika on 24.04.2017.
+ * Class letting generate formula out of text
  */
 
 public class Question {
@@ -30,6 +30,11 @@ public class Question {
         length = parts.length;
     }
 
+    /**
+     * @return formula from string with question
+     * @throws InvalidQuestionException
+     * @throws InvalidFormulaException
+     */
     public Formula getFormula() throws InvalidQuestionException, InvalidFormulaException
     {
         if(length<2)
@@ -69,6 +74,10 @@ public class Question {
         return name;
     }
 
+    /**
+     * method looks for a model represented by name given in question
+     * @throws InvalidQuestionException if no match was found
+     */
     private void findIndividualModel() throws InvalidQuestionException
     {
         String name = parts[1];
@@ -85,6 +94,12 @@ public class Question {
             throw new InvalidQuestionException(InvalidQuestionException.NO_OBJECT);
     }
 
+    /**
+     * method looks for a trait represented by name given in question
+     * @param which indicates which trait (first or second in sentence)
+     * @return found Trait
+     * @throws InvalidQuestionException if no trait was found
+     */
     private Trait findTraits(int which) throws InvalidQuestionException
     {
         String name = parts[index];

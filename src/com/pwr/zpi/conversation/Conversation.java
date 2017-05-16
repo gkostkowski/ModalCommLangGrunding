@@ -12,17 +12,29 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * Class starting a thread which listens to questions to agent and lets it answer
+ */
 public class Conversation implements Runnable {
 
     private final Agent agent;
     public String name;
     private int timestamp;
 
+    /**
+     * Queue of questions to process
+     */
     private Queue<String> queue;
 
     private Thread thread;
     private boolean running = false;
 
+    /**
+     * Construction of Conversation
+     * @param agent
+     * @param name used only in case of handling multiple conversations, indicates to whom we refer
+     * @param timestamp
+     */
     public Conversation(Agent agent, String name, int timestamp)
     {
         this.agent = agent;
@@ -41,6 +53,12 @@ public class Conversation implements Runnable {
         queue.add(question);
     }
 
+
+    /**
+     * Method used to set answer for given question
+     * @param question
+     * @return String with answer or reason why can't it be given (in case of exception)
+     */
     private String askQuestion(String question)
     {
         Question question1 = new Question(question, agent);
@@ -53,9 +71,16 @@ public class Conversation implements Runnable {
         } catch (InvalidFormulaException e) {
             return "I couldn't create proper answer, I am really sorry";
         } catch (Exception e) {
+            e.printStackTrace();
             return  "Something terrible happened!";}
     }
 
+    /**
+     * Method which receives proper answer from specific Statement class
+     * @param formula
+     * @param name
+     * @return
+     */
     private String getAnswer(Formula formula, String name)
     {
         if(formula instanceof SimpleFormula)

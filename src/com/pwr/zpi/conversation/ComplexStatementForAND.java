@@ -31,7 +31,7 @@ public class ComplexStatementForAND extends Statement {
        getTaoRatio();
    }
 
-  /* public ComplexStatementForAND(ComplexFormula complexFormula, String name, double pq, double npq, double pnq, double npnq)
+   public ComplexStatementForAND(ComplexFormula complexFormula, String name, double pq, double npq, double pnq, double npnq)
    {
        this.formula = complexFormula;
        formulaCase = formula.getFormulaCase();
@@ -40,7 +40,7 @@ public class ComplexStatementForAND extends Statement {
        this.npq = npq;
        this.pnq = pnq;
        this.npnq = npnq;
-   }*/
+   }
 
    private void getTaoRatio()
    {

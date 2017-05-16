@@ -19,13 +19,20 @@ public class SimpleStatement extends Statement{
     double p;
     double notP;
 
-
+    /**
+     * Constructor of SimpleStatement
+     * @param formula
+     * @param agent
+     * @param time
+     * @param name given to the object from question (to not look up for it again)
+     */
     public SimpleStatement(SimpleFormula formula, Agent agent, int time, String name)
     {
         simpleFormula = formula;
         holon = (BinaryHolon)agent.getHolons().getHolon(formula, agent, time);
         p = holon.getP();
         notP = holon.getnot_P();
+        System.out.println("p " + p + " notP " + notP + " " + holon);
         this.name = name;
     }
 
@@ -37,6 +44,10 @@ public class SimpleStatement extends Statement{
         this.notP = q;
     }*/
 
+
+    /**
+     * @return string with answer for the question asked
+     */
     @Override
     public String generateStatement() {
         String answer;
@@ -47,6 +58,13 @@ public class SimpleStatement extends Statement{
         return answer;
     }
 
+    /**
+     * generates proper answer based on knowledge in holon
+     * @param first which part of holon is being processed
+     * @param alternative second part of holon
+     * @param state
+     * @return
+     */
     private String getSentence(double first, double alternative, State state)
     {
         String sf, sa;

@@ -29,6 +29,13 @@ public class HolonCollection {
     }
 
 
+    /**
+     * Method looks for specific holon in holons and if none is found creates a new one
+     * @param formula
+     * @param agent
+     * @param timeStamp
+     * @return desired holon
+     */
     public Holon getHolon(Formula formula, Agent agent, int timeStamp){
         for(Holon h:holonCollection){
             if(h.getFormula().get(0).isFormulaSimilar(formula)){
@@ -38,10 +45,12 @@ public class HolonCollection {
         return addHolon(formula, agent, timeStamp);
     }
 
-   /**
-     * Method adds holon based on Formula
+    /**
+     * Method adds a new holon to holons based on givn formula, agent and timestamp
      * @param formula
-     * @return
+     * @param agent
+     * @param timestamp
+     * @return created holon
      */
     public Holon addHolon(Formula formula, Agent agent, int timestamp)
     {
@@ -63,6 +72,7 @@ public class HolonCollection {
 
     public void updateBeliefs(Agent agent, int timestamp) throws InvalidFormulaException, NotConsistentDKException, NotApplicableException {
         for(Holon h : holonCollection){
+            System.out.println(h);
             h.update(new DistributedKnowledge(agent, h.getFormula().get(0), timestamp, true));
         }
     }
