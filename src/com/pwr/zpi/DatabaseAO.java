@@ -9,42 +9,31 @@ import java.util.*;
 import static com.pwr.zpi.Agent.objectTypeCollection;
 
 /**
- *
+ * This class acts as data access layer for SQLite database that is used to gather observations
+ * and return new observations to agent in order to update its memory.
  */
 public class DatabaseAO {
 
     //todo testy
-    //todo dokumentacja
-    public static final String DEF_DATABASE = "baza1.db";
+    public static final String DEF_DATABASE_FILENAME = "baza1.db";
     private Connection dbConnection;
     private Map<String, Integer> nameIndexMap;
     private Agent agent;
 
     public DatabaseAO(Agent agent) {
         this.agent = agent;
-        String dbFilePath = Paths.get("db/" + DEF_DATABASE).toString();
-        init(dbFilePath);
+        init();
     }
 
-    /*public DatabaseAO(Agent agent, String databaseFilename) {
-        this.agent = agent;
-        String dbFilePath = Paths.get("db/" + databaseFilename).toString();
-        init(dbFilePath);
-    }*/
-
-    @Deprecated
-    private void deleteDatabase(){
-        try {
-            if(Files.exists(Paths.get("db/" + DEF_DATABASE)))
-                Files.delete(Paths.get("db/" + DEF_DATABASE));
-        } catch (IOException e) {
-            System.out.println("Probable solution: disconnect from database.");
-            e.printStackTrace();
-        }
-    }
-
-    private void init(String dbFilePath){
+    /**
+     * Performs initials actions for database, such as: ensuring that 'db' directory is present,
+     * establishing connection to database, building instances of class' fields.
+     * It is also creating database schema appropriate to config file and performs agent's first memory update
+     * in case that existing database is not empty.
+     */
+    private void init(){
         nameIndexMap = new HashMap<>();
+        String dbFilePath = Paths.get("db/" + DEF_DATABASE_FILENAME).toString();
         try {
             if(Files.notExists(Paths.get("db")))
                 Files.createDirectories(Paths.get("db"));
@@ -57,6 +46,28 @@ public class DatabaseAO {
         updateAgentMemory();
     }
 
+    /**
+     * Deletes default database file, erasing all collected data.
+     * This method is only for simplifying tests and is set to be removed.
+     */
+    @Deprecated
+    private void deleteDatabase(){
+        try {
+            if(Files.exists(Paths.get("db/" + DEF_DATABASE_FILENAME)))
+                Files.delete(Paths.get("db/" + DEF_DATABASE_FILENAME));
+        } catch (IOException e) {
+            System.out.println("Probable solution: disconnect from database in your IDE.");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Creates database schema by adding (if not already present) tables for each ObjectType
+     * derived from config file and a table (InsertFlag) for monitoring whether any record has been added
+     * since last data fetch via triggers defined for each ObjectType table (also in this method).
+     * Additionally all tables are created with adequate constraints.
+     * This method also fills nameIndexMap with names of tables and index of last fetched record in each table.
+     */
     private void addTablesForAllObjectTypes() {
         StringBuilder SQLCommandText = new StringBuilder();
         String tableName;
@@ -101,6 +112,11 @@ public class DatabaseAO {
         }
     }
 
+    /**
+     * Adds observation to proper table on database. It also launches a SQL trigger that changes value of flag
+     * in InsertFlag table so now it implies that there are new observations.
+     * @param observation Observation that is being added to database.
+     */
     public void addNewObservation(Observation observation) {
         StringBuilder columns = new StringBuilder();
         StringBuilder values = new StringBuilder();
@@ -131,6 +147,12 @@ public class DatabaseAO {
         }
     }
 
+    /**
+     * This method is used to obtain observations that haven't been fetched yet.
+     * It also resets the InsertFlag (to imply that there are no new observations now)
+     * and updates indexes of last fetched records in nameIndexMap.
+     * @return Collection of new observations from database.
+     */
     private Collection<Observation> fetchNewObservations() {
         Collection<Observation> newObservations = new HashSet<>();
         String SQLCommandText, tableName, traitValue; int lastIndex, obsTimestamp;
@@ -178,6 +200,11 @@ public class DatabaseAO {
         return newObservations;
     }
 
+    /**
+     * Used to get index of last record from given table.
+     * @param tableName Name of table in database.
+     * @return Index if last record.
+     */
     private int getMaxIndex(String tableName){
         int index = 0;
         String SQLCommandText = "SELECT MAX(rowid) FROM \"" + tableName + "\"";
@@ -192,9 +219,13 @@ public class DatabaseAO {
         return index;
     }
 
+    /**
+     * Used to determine whether any observations has been added to database since last fetch
+     * via checking value of flag in InsertFlag table.
+     * @return true when there are new records, false when aren't
+     */
     private boolean isInsertFlagPositive(){
         int flagValue = 0;
-
         try {
             String SQLCommandText = "SELECT * FROM InsertFlag;";
             Statement SQLStatement = dbConnection.createStatement();
@@ -204,13 +235,12 @@ public class DatabaseAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        if(flagValue == 1)
-            return true;
-        else
-            return false;
+        return flagValue == 1;
     }
 
+    /**
+     * Resets value of flag in InsertFlag so it implies that there are no new observations at the moment.
+     */
     private void resetFlag(){
         try {
             String SQLCommandText = "UPDATE InsertFlag SET flag = 0;";
@@ -223,7 +253,7 @@ public class DatabaseAO {
     }
 
     /**
-     * This method will be called when new observation(s) will appear.
+     * This method is used to update agent's memory with new observations.
      */
     public void updateAgentMemory() {
         if(isInsertFlagPositive())

@@ -3,13 +3,12 @@ package com.pwr.zpi;
 import java.util.Map;
 
 /**
- * Describes object's observation with it's timestamp, id and set of valuedTraits.
+ * Describes object's observation with its timestamp, id and set of valuedTraits.
  * Represents observations placed in real world, witnessed by agent.
  */
 public class Observation {
     private Identifier identifier;
     private int timestamp;
-    //private Set<Trait> valuedTraits;
     private Map<Trait, Boolean> valuedTraits;
 
 

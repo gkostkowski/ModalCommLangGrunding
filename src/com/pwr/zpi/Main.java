@@ -160,14 +160,6 @@ class Main {
                 }}, t2++)};
 
         Agent agent3 = new Agent();
-        //@SuppressWarnings("deprecation")
-        /*DatabaseAO database = agent3.getDatabase();
-        database.addNewObservation(obs2[0]);
-        database.addNewObservation(obs2[1]);
-        database.addNewObservation(obs2[2]);
-        database.addNewObservation(obs2[3]);
-        database.addNewObservation(obs2[4]);
-        database.addNewObservation(obs2[5]);*/
         agent3.addObservationToDatabase(obs2);
 
         try {
