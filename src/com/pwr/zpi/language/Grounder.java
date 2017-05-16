@@ -413,6 +413,7 @@ public class Grounder {
     public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) {
 
         double sum = 0;
+        System.out.println(formula.getTraits().get(0) + " " + dk.getTimestamp());
         for (BaseProfile bp : dk.getGroundingSet(formula)) {
             if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && !((SimpleFormula) formula).isNegated()) {
                 sum++;

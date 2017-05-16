@@ -61,8 +61,9 @@ public class BinaryHolon extends Holon {
                 sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1));
                 sumPositive += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0));
             }
-                //System.out.println(sumNegative + " " + sumPositive + " " + dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp()));
-                Tao = new Pair<Double, Double>(sumPositive,sumNegative);
+            System.out.println("");
+            System.out.println(sumNegative + " " + sumPositive + " " + dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp()));
+            Tao = new Pair<Double, Double>(sumPositive,sumNegative);
         }
     }
 
