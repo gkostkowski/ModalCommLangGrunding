@@ -32,7 +32,6 @@ public class SimpleStatement extends Statement{
         holon = (BinaryHolon)agent.getHolons().getHolon(formula, agent, time);
         p = holon.getP();
         notP = holon.getnot_P();
-        System.out.println("p " + p + " notP " + notP + " " + holon);
         this.name = name;
     }
 

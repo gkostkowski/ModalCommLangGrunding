@@ -23,9 +23,9 @@ class Main {
                 new Trait("Blue"),
                 new Trait("Soft")};
 
-        // simplyModalitiesScenario(agent, qrCodes, tr);
+         //simplyModalitiesScenario(agent, qrCodes, tr);
         //or
-        //simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
+        simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
         // is present in db after launching one of them, so they can't be used together.
@@ -120,7 +120,7 @@ class Main {
         agent.addAndUpdate(obsTill7);
         c1.setTimestamp(t);
         c1.addQuestion("Is Hyzio red");
-        System.out.println("(EXPECTED: pos is pos not is)");
+        System.out.println("(EXPECTED: pos is)");
 
         c1.addQuestion("Is Hyzio white");
         Thread.sleep(1000);
@@ -238,7 +238,7 @@ class Main {
         agent.addAndUpdate(obsTill7);
 
         c1.addQuestion("Is Hyzio red");
-        System.out.println("(EXPECTED: pos is pos not is)");
+        System.out.println("(EXPECTED: pos is)");
 
         c1.addQuestion("Is Hyzio white");
         Thread.sleep(1000);
