@@ -383,7 +383,6 @@ public class BPCollection {
     }
 
     public double getCompleteSize(int endTimestamp) {
-        Set<BaseProfile> out = new HashSet<>();
         Set<BaseProfile> observations = getBaseProfiles(endTimestamp, MemoryType.LM);
         Set<BaseProfile> observations2 = getBaseProfiles(endTimestamp, MemoryType.WM);
         observations.addAll(observations2);

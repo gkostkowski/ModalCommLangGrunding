@@ -438,16 +438,10 @@ public class Grounder {
     public static Double complexFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) {
 
         double sum = 0;
+        if(dk.getGroundingSet(formula).size()==0){return 0.0;}
+
         for (BaseProfile bp : dk.getGroundingSet(formula)) {
-            if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && bp.checkIfObserved(formula.getModel(), formula.getTraits().get(1), State.IS) && ((ComplexFormula) formula).getFormulaCase() == NonBinaryHolon.FormulaCase.PQ) {
-                sum++;
-            } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT) && bp.checkIfObserved(formula.getModel(), formula.getTraits().get(1), State.IS) && ((ComplexFormula) formula).getFormulaCase() == NonBinaryHolon.FormulaCase.NPQ) {
-                sum++;
-            } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && bp.checkIfObserved(formula.getModel(), formula.getTraits().get(1), State.IS_NOT) && ((ComplexFormula) formula).getFormulaCase() == NonBinaryHolon.FormulaCase.PNQ) {
-                sum++;
-            } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT) && bp.checkIfObserved(formula.getModel(), formula.getTraits().get(1), State.IS_NOT) && ((ComplexFormula) formula).getFormulaCase() == NonBinaryHolon.FormulaCase.NPNQ) {
-                sum++;
-            }
+            sum++;
         }
         if (sum != 0) {
             return sum / dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp());

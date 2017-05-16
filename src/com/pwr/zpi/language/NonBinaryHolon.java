@@ -15,9 +15,10 @@ public class NonBinaryHolon extends Holon{
         formula = dk.getComplementaryFormulas();
         //Wywalić TaoList, ogarnąć BP
         //Enumik przeszedł tutaj,poprawić. Najlepiej jednak go wyjąć bo Weronika chce się nim bawić.
-
+        update(dk);
     }
 	public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
+		System.out.println("//      NONBINARY_HOLON       //");
 		if (dk.getFormula().getType() != Formula.Type.MODAL_CONJUNCTION) {
 			throw new InvalidFormulaException();
 		}else{
@@ -32,6 +33,8 @@ public class NonBinaryHolon extends Holon{
 		npq = Grounder.determineFulfillmentDouble(dk,temp.get(1));
 		pnq = Grounder.determineFulfillmentDouble(dk,temp.get(2));
 		npnq = Grounder.determineFulfillmentDouble(dk,temp.get(3));
+
+		System.out.println("NON " +pq + " " + npq + " " + pnq + " "+ npnq + " " + dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp()));
         Tao = new Quadrilateral(pq,npq,pnq,npnq);}
 	}
 	/**
