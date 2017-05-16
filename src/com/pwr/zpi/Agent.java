@@ -181,4 +181,15 @@ public class Agent {
         for (Observation obs : observations)
             database.addNewObservation(obs);
     }
+
+    /**
+     * Methods for testing purposes: adds given observation to database,
+     * then updates episodic memory (fetches new observations) and updates holons.
+     * Semantic memory is also updated (if required) during updating episodic memory.
+     */
+    public void addAndUpdate(Observation[] observations) {
+        addObservationToDatabase(observations);
+        updateMemory();
+        updateBeliefs();
+    }
 }

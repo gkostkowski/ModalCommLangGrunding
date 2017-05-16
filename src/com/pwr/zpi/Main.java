@@ -7,29 +7,43 @@ import java.util.HashMap;
 class Main {
 
     /**
-     * Realizacja przykładowych przebiegow - opis rozpatrywanych przypadkow:
-     * case 1:
-     * budowanie agenta od zera - bez bazy wiedzy czy kolekcji modeli indywiduowych - tak jak W RZECZYWISTOŚCI
-     * będzie to miało miejsce.
-     * case 2:
-     * budowanie agenta z określoną bazą wiedzy oraz związanymi modelami indywiduowymi.
-     * Uwaga: żeby zadziałalo trzeba dostarczyć identifiers z bazy danych, wyciągniętych z rekordów w bd
-     *
+     * Realizacja przykładowych przebiegow
      * @param args
      */
     static public void main(String... args) throws InterruptedException {
 
         //testyM();
-/*
-        *//*CASE 1*/
+
+        Agent agent = new Agent();
         QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
         Trait[] tr = new Trait[]{
                 new Trait("Red"),
                 new Trait("White"),
                 new Trait("Blinking"),
-                new Trait("Blue"), //[4]
+                new Trait("Blue"),
                 new Trait("Soft")};
+
+        //simplyModalitiesScenario(agent, qrCodes, tr);
+        //or
+        simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
+
+        //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
+        // is present in db after launching one of them, so they can't be used together.
+
+        modalConjunctionsScenario(agent, qrCodes, tr);
+    }
+
+    /**
+     * Conversation using simply modalities about Hyzio
+     */
+    private static void simplyModalitiesScenario(Agent agent, QRCode[] qrCodes, Trait[] tr) throws InterruptedException {
+        if (agent.getModels().getRepresentationByName("Hyzio") != null)
+            throw new IllegalStateException("You already asked about Hyzio");
         int t = 0;
+
+        agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
+        Conversation c1 = new Conversation(agent, "SimpleModalConv", t);
+
         Observation[] obsTill3  = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
@@ -49,22 +63,12 @@ class Main {
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
                     put(tr[1], false);
+                    put(tr[2], false);
                 }}, t++)
         };
 
-        Agent agent1 = new Agent();
-        agent1.getModels().addNameToModel(qrCodes[0], "Hyzio");
-        agent1.addObservationToDatabase(obsTill3);
-        agent1.updateMemory();
-       // agent1.updateBeliefs();
-//        agent1.getDatabase().updateAgentMemory();
-//        agent1.discoverObservations();
-//        for (Observation observation: observations)
-//            agent1.registerObservation(observation);
+        agent.addAndUpdate(obsTill3);
 
-
-        int tt1 = 3;
-        Conversation c1 = new Conversation(agent1, "conv1", tt1);
         c1.start();
 
         System.out.println("asking...");
@@ -77,11 +81,8 @@ class Main {
                     put(tr[1], false);
                     put(tr[2], false);
                 }}, t++)};
-        agent1.addObservationToDatabase(obsTill4);
-        agent1.updateMemory();
-        agent1.updateBeliefs();
 
-//        agent1.getDatabase().updateAgentMemory();
+        agent.addAndUpdate(obsTill4);
 
         c1.addQuestion("Is Hyzio red");
         Thread.sleep(1000);
@@ -93,15 +94,13 @@ class Main {
                     put(tr[1], false);
                     put(tr[2], null);
                 }}, t++)};
-        agent1.addObservationToDatabase(obsTill5);
-        agent1.updateMemory();
-        agent1.updateBeliefs();
 
-//        agent1.getDatabase().updateAgentMemory();
+        agent.addAndUpdate(obsTill5);
+
         c1.addQuestion("Is Hyzio blinking");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: i dont know what to say)");
-        //
+
         c1.addQuestion("Is Hyzio white");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: i know it is not)");
@@ -115,18 +114,234 @@ class Main {
                     put(tr[0], false);
                     put(tr[1], true);
                 }}, t++)};
-        agent1.addObservationToDatabase(obsTill7);
-        agent1.updateMemory();
-        agent1.updateBeliefs();
 
-        //agent1.getDatabase().updateAgentMemory();
-            c1.addQuestion("Is Hyzio red");
-            System.out.println("(EXPECTED: pos is pos not is)");
+        agent.addAndUpdate(obsTill7);
 
-            c1.addQuestion("Is Hyzio white");
-            Thread.sleep(1000);
-            System.out.println("(EXPECTED: pos is bel not)");
+        c1.addQuestion("Is Hyzio red");
+        System.out.println("(EXPECTED: pos is pos not is)");
+
+        c1.addQuestion("Is Hyzio white");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: pos is bel not)");
     }
+
+    /**
+     * Conversation using simply modalities and modal conjunctions about Hyzio
+     */
+    private static void simplyAndConjunctionModalitiesScenario(Agent agent, QRCode[] qrCodes, Trait[] tr) throws InterruptedException {
+
+        if (agent.getModels().getRepresentationByName("Hyzio") != null)
+            throw new IllegalStateException("You already asked about Hyzio");
+        int t = 0;
+
+        agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
+        Conversation c1 = new Conversation(agent, "SimpleAndConjModalConv", t);
+
+        Observation[] obsTill1  = new Observation[]{ //inclusively
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], false);
+                    put(tr[2], false);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], false);
+                    put(tr[2], false);
+                }}, t++)
+        };
+
+        agent.addAndUpdate(obsTill1);
+
+        c1.start();
+
+        System.out.println("asking...");
+        c1.addQuestion("Is Hyzio blinking");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: I know it is not)");
+
+        Observation[] obsTill2  = new Observation[]{ //inclusively
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], false);
+                    put(tr[2], true);
+                }}, t++)
+        };
+
+        agent.addAndUpdate(obsTill2);
+
+        c1.addQuestion("Is hyzio blinking and not white");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: I think it is possible that it is blinking and not white, but I believe rather that it is not blinking and not white )");
+
+        Observation[] obsTill3  = new Observation[]{ //inclusively
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], false);
+                    put(tr[2], null);
+                }}, t++)
+        };
+
+        agent.addAndUpdate(obsTill3);
+
+        c1.addQuestion("Is Hyzio red");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: I know)");
+        c1.addQuestion("Is hyzio red and white");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: No, but I am sure that it is red and not white)");
+
+        Observation[] obsTill4 = new Observation[]{
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], null);
+                    put(tr[1], false);
+                    put(tr[2], false);
+                }}, t++)};
+
+        agent.addAndUpdate(obsTill4);
+
+        c1.addQuestion("Is Hyzio red");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: bel p pos ~p)");
+
+
+        Observation[] obsTill5 = new Observation[]{
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], null);
+                    put(tr[1], false);
+                    put(tr[2], null);
+                }}, t++)};
+
+        agent.addAndUpdate(obsTill5);
+
+        c1.addQuestion("Is Hyzio blinking");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: i dont know what to say)");
+
+        c1.addQuestion("Is Hyzio white");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: i know it is not)");
+
+        Observation[] obsTill7 = new Observation[]{
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], null);
+                    put(tr[1], true);
+                    put(tr[2], true);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], false);
+                    put(tr[1], true);
+                    put(tr[2], null);
+                }}, t++)};
+
+        agent.addAndUpdate(obsTill7);
+
+        c1.addQuestion("Is Hyzio red");
+        System.out.println("(EXPECTED: pos is pos not is)");
+
+        c1.addQuestion("Is Hyzio white");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: pos is bel not)");
+
+        Observation[] obsTill8 = new Observation[]{
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], null);
+                    put(tr[1], null);
+                    put(tr[2], true);
+                }}, t++)
+        };
+
+        agent.addAndUpdate(obsTill8);
+
+        c1.addQuestion("is hyzio red and blinking");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: I don't know what to say about it)");
+
+        c1.addQuestion("is hyzio not white and not blinking");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: I think it is possible that it is not white and not blinking)");
+    }
+
+
+    /**
+     * Conversation using modal conjunctions about Rysio
+     */
+    private static void modalConjunctionsScenario(Agent agent, QRCode[] qrCodes, Trait[] tr) throws InterruptedException {
+
+        int t = 9;
+
+        agent.getModels().addNameToModel(qrCodes[1], "Rysio");
+        Conversation conversation = new Conversation(agent, "ModalConjConv", t);
+
+        Observation[] obsTill12  = new Observation[]{ //inclusively
+                new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
+                    put(tr[3], true);
+                    put(tr[4], true);
+                    put(tr[2], true);
+                }}, t++),
+                new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
+                    put(tr[3], false);
+                    put(tr[4], true);
+                    put(tr[2], true);
+                }}, t++),
+                new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
+                    put(tr[3], true);
+                    put(tr[4], false);
+                    put(tr[2], false);
+                }}, t++),
+                new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
+                    put(tr[3], false);
+                    put(tr[4], false);
+                    put(tr[2], false);
+                }}, t++)
+        };
+
+        agent.addAndUpdate(obsTill12);
+
+        conversation.start();
+
+        System.out.println("\tMODAL CONJUNCTIONS QUESTIONS:");
+
+        System.out.println("asking...");
+        conversation.addQuestion("Is Rysio blue and soft");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: Yes, I think it is possible that rysio is blue and soft)");
+
+        Observation[] obsTill14  = new Observation[]{ //inclusively
+                new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
+                    put(tr[3], null);
+                    put(tr[4], true);
+                    put(tr[2], true);
+                }}, t++),
+                new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
+                    put(tr[3], null);
+                    put(tr[4], true);
+                    put(tr[2], true);
+                }}, t++)
+        };
+
+        agent.addAndUpdate(obsTill14);
+
+        conversation.addQuestion("is rysio soft and blinking");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: Yes, I believe it is soft and blinkig, but it is also possible it is quite the opposite)");
+
+
+        Observation[] obsTill15  = new Observation[]{ //inclusively
+                new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
+                    put(tr[3], true);
+                    put(tr[4], null);
+                    put(tr[2], true);
+                }}, t++)
+        };
+
+        agent.addAndUpdate(obsTill15);
+
+        conversation.addQuestion("is rysio blue and blinking");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: Yes, it is possible that it is blue and blinking, ???)");
+
+    }
+
 
     static public void testyM(){
         QRCode[] qrCodes2 = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};

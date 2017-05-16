@@ -31,7 +31,7 @@ public class HolonCollection {
 
     public Holon getHolon(Formula formula, Agent agent, int timeStamp){
         for(Holon h:holonCollection){
-            if(h.getFormula().isFormulaSimilar(formula)){
+            if(h.getFormula().get(0).isFormulaSimilar(formula)){
                 return h;
             }
         }
@@ -63,7 +63,7 @@ public class HolonCollection {
 
     public void updateBeliefs(Agent agent, int timestamp) throws InvalidFormulaException, NotConsistentDKException, NotApplicableException {
         for(Holon h : holonCollection){
-            h.update(new DistributedKnowledge(agent, h.getFormula(), timestamp, true));
+            h.update(new DistributedKnowledge(agent, h.getFormula().get(0), timestamp, true));
         }
     }
 
