@@ -48,7 +48,7 @@ public class BinaryHolon extends Holon {
      * @throws NotApplicableException
      */
     public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
-        //System.out.println("//      BINARY_HOLON       //");
+
         if (dk.getFormula().getType() != Formula.Type.SIMPLE_MODALITY) {
             throw new InvalidFormulaException();
         } else {
@@ -61,8 +61,7 @@ public class BinaryHolon extends Holon {
                 sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1));
                 sumPositive += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0));
             }
-            System.out.println("");
-            System.out.println(sumNegative + " " + sumPositive + " " + dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp()));
+            //System.out.println(sumNegative + " " + sumPositive + " " + dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp()));
             Tao = new Pair<Double, Double>(sumPositive,sumNegative);
         }
     }
