@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Represents types of observations existed in world, which observations are processed in system.
+ * Only objects with some of types defined in config file can exist in system.
  * It determines allowed set of valuedTraits for certain object (and its observation).
  */
 public class ObjectType {
@@ -40,6 +41,10 @@ public class ObjectType {
         return null;
     }
 
+    /**
+     * Method realizes loading objects types from config file and returns collection of such types.
+     * @return
+     */
     public static Collection<ObjectType> getObjectTypes() {
         return new XMLDAO<>().loadTypesDefinitions();
     }

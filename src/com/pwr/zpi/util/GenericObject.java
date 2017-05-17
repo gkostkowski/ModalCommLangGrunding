@@ -4,9 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Grzesiek on 2017-03-26.
- */
+
 public class GenericObject<T> {
     private T object;
 

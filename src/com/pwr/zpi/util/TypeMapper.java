@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Mapper for java non-primitive types.
+ * Mapper for java non-primitive types used for loading types definitions from config file.
  */
 public class TypeMapper {
 

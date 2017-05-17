@@ -1,5 +1,0 @@
-1. ExtendedObject nie musi dziedziczyc po Object
-2. Czy BaseProfile powinien dziedziczyc po World?
-3. Czy lepiej wprowadzic interfejs Listy zamiast Collection?
-4. Zamiast NamedCollection można użyć Pair<?, Collection<T>>
-5. Jeden BPCollection dla jednego agenta, który jest bieżąco aktualizowany.

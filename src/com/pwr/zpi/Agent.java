@@ -4,6 +4,8 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.io.DatabaseAO;
+import com.pwr.zpi.language.DistributedKnowledge;
+import com.pwr.zpi.language.Formula;
 
 import java.util.Collection;
 
@@ -91,7 +93,7 @@ public class Agent {
         this.holons = holons;
     }
 
-   /* *//**
+   /**
      * Builds distributed knowledge, which will be used to make respective mental models associated
      * with formulas. It is used to build distribution of different mental models.
      * Built distributed knowledge is related to certain moment in time.
@@ -100,8 +102,7 @@ public class Agent {
      * @param time    Certain moment in time.
      * @return Distribution of knowledge.
      * @throws InvalidFormulaException
-     *//*
-    @Nullable
+     */
     public DistributedKnowledge distributeKnowledge(Formula formula, int time) throws InvalidFormulaException {
         try {
             return new DistributedKnowledge(this, formula, time);
@@ -111,7 +112,21 @@ public class Agent {
         }
     }
 
-    *//**
+
+
+    /**
+     * Builds distributed knowledge, which will be used to make respective mental models associated
+     * with formulas. It is used to build distribution of different mental models.
+     * Built distributed knowledge is related to timestamp of last registered by this agent base profile.
+     *
+     * @return Distribution of knowledge.
+     * @throws InvalidFormulaException
+     */
+    public DistributedKnowledge distributeKnowledge() throws InvalidFormulaException {
+        return distributeKnowledge();
+    }
+
+    /**
      * Builds distributed knowledge, which will be used to make respective mental models associated
      * with formulas. It is used to build distribution of different mental models.
      * Built distributed knowledge is related to timestamp of last registered by this agent base profile.
@@ -119,8 +134,7 @@ public class Agent {
      * @param formula Formula
      * @return Distribution of knowledge.
      * @throws InvalidFormulaException
-     *//*
-    @Nullable
+     */
     public DistributedKnowledge distributeKnowledge(Formula formula) throws InvalidFormulaException {
         try {
             return new DistributedKnowledge(this, formula);
@@ -129,7 +143,7 @@ public class Agent {
             return null;
         }
     }
-*/
+
 
     /**
      * This is method for realising one of fundamental task: registering task. Precisely, this method includes

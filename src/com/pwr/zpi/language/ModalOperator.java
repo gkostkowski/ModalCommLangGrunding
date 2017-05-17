@@ -1,7 +1,7 @@
 package com.pwr.zpi.language;
 
 /**
- * Created by Weronika on 10.05.2017.
+ * Enum representing available modal operators.
  */
 public enum ModalOperator {
     POS, BEL, KNOW

@@ -7,6 +7,9 @@ import com.sun.istack.internal.Nullable;
 
 import java.util.*;
 
+/**
+ * Class contains methods used in process of grounding natural language.
+ */
 public class Grounder {
 
     public static final double MIN_POS = 0.2;
@@ -39,6 +42,13 @@ public class Grounder {
         return getGroundingSets(formula.getComplementaryFormulas(), all);
     }
 
+    /**
+     * Method produces grounding set for certain formula, basing on provided set of base profiles.
+     * @param formula
+     * @param all
+     * @return
+     * @throws InvalidFormulaException
+     */
     public static Set<BaseProfile> getGroundingSet(Formula formula, Set<BaseProfile> all) throws InvalidFormulaException {
         if (formula == null || all == null)
             throw new NullPointerException("One of parameters is null.");
@@ -51,14 +61,6 @@ public class Grounder {
         return res;
     }
 
-
-    static ModalOperator determineFulfillment(Agent agent, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
-        ModalOperator res;
-        for (Formula mentalModel : dk.getComplementaryFormulas()) {
-            res = determineFulfillment(dk, mentalModel);
-        }
-        return null; //todo ?
-    }
 
     /**
      * Realizes verification of epistemic fulfillment relationship's conditions for provided formula.
@@ -163,7 +165,7 @@ public class Grounder {
      *
      * @param o    Object observed by agent
      * @param time Time taken into consideration when looking for expieriences
-     * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
+     * @param all  Set of BaseProfiles gives us set from which we'll evaluate those which contain Positive Traits
      * @return List of BaseProfiles which contain Positive Traits
      */
 
@@ -185,7 +187,7 @@ public class Grounder {
      * @param o    Object observed by agent
      * @param P    Trait of individualModel
      * @param time Time taken into consideration when looking for expieriences
-     * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
+     * @param all  Set of BaseProfiles gives us set from which we'll evaluate those which contain Positive Traits
      * @return Set of BaseProfiles which contain Positive Traits
      */
 
@@ -278,7 +280,7 @@ public class Grounder {
      * @param P    Trait of individualModel
      * @param Q    Trait of individualModel
      * @param time Time taken into consideration when looking for expieriences
-     * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
+     * @param all  Set of BaseProfiles gives us set from which we'll evaluate those which contain Positive Traits
      * @param i    indicator,indicating which case we'd like to use
      * @return
      */
@@ -341,7 +343,7 @@ public class Grounder {
      * @param P    Trait of individualModel
      * @param Q    Trait of individualModel
      * @param time Time taken into consideration when looking for expieriences
-     * @param all  Set<BaseProfile> gives us set from which we'll evaluate those which contain Positive Traits
+     * @param all  Set of BaseProfiles gives us set from which we'll evaluate those which contain Positive Traits
      * @param i    indicator,indicating which case we'd like to use
      * @return
      */

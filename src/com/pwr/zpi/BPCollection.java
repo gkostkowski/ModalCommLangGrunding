@@ -21,7 +21,7 @@ public class BPCollection {
      * then old base profile will be overridden.
      */
     private static final boolean DEFAULT_OVERRIDE_IF_EXISTS = true;
-    private static final int MAX_WM_CAPACITY = 4;
+    private static final int MAX_WM_CAPACITY = 100;
 
     /**
      * By default, inserts to bp located in wm
@@ -255,6 +255,12 @@ public class BPCollection {
         return getBaseProfiles(timestamp);
     }
 
+    /**
+     * Flatten given array of base profiles set to single set with base profiles.
+     * @param bps
+     * @return
+     * @throws IllegalStateException
+     */
     public static Set<BaseProfile> asBaseProfilesSet(Set<BaseProfile>... bps) throws IllegalStateException {
         if (bps == null)
             throw new NullPointerException("Array is null.");
@@ -323,6 +329,11 @@ public class BPCollection {
         return res;
     }
 
+    /**
+     * Returns memory container specified by memory type.
+     * @param type
+     * @return
+     */
     public Set<BaseProfile> getMemoryContainer(MemoryType type) {
         switch (type) {
             case LM:

@@ -1,7 +1,5 @@
 package com.pwr.zpi;
 
-import java.util.HashMap;
-
 /**
  * Describes trait, which can be used to describe object. Instances of this class
  * stands for valuedTraits signatures, so they don't have attached value.

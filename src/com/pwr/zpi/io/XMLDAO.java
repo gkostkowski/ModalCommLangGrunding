@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import java.util.Collection;
 
 /**
- * Created by Grzegorz Kostkowski on 2017-03-11.
+ * Class provides Data Access Object which is used to read configuration from config.xml file.
  */
 public class XMLDAO<T extends ObjectType> {
     protected XStream xstream = new XStream(new DomDriver());

@@ -17,16 +17,8 @@ public class IMCollection {
     public IMCollection() {
         individualModelSet = new HashSet<>();
         lexicon = new HashMap<>();
-        //buildIMs();
     }
 
-    private void buildIMs() { //not needed anymore
-        individualModelSet = new HashSet<>();
-        Collection<Identifier> identifiers = Identifier.readIdentifiers();
-        for (Identifier id: identifiers) {
-            individualModelSet.add(new IndividualModel(id, id.getType()));
-        }
-    }
 
     public IMCollection(Set<IndividualModel> individualModelSet) {
         this.individualModelSet = individualModelSet;
@@ -97,6 +89,10 @@ public class IMCollection {
         return res;
     }
 
+    /**
+     * Method checks if there is unregistered IM in given IM set and adds such IM.
+     * @param allIMs Set of all IMs.
+     */
     public <T> void captureNewIM(Set<IndividualModel> allIMs) {
         for (IndividualModel im : allIMs)
             if (!new ArrayList(individualModelSet).contains(im))
