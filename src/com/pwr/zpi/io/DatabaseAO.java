@@ -1,4 +1,6 @@
-package com.pwr.zpi;
+package com.pwr.zpi.io;
+
+import com.pwr.zpi.*;
 
 import java.io.IOException;
 import java.nio.file.Files;

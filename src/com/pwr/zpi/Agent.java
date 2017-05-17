@@ -3,7 +3,7 @@ package com.pwr.zpi;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
-import com.pwr.zpi.language.Holon;
+import com.pwr.zpi.io.DatabaseAO;
 
 import java.util.Collection;
 

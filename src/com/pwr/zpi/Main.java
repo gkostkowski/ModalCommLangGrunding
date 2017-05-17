@@ -12,7 +12,7 @@ class Main {
      */
     static public void main(String... args) throws InterruptedException {
 
-        //testyM();
+        //dbLoopTest();
 
         Agent agent = new Agent();
         QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
@@ -345,7 +345,7 @@ class Main {
     }
 
 
-    static public void testyM(){
+    static public void dbLoopTest(){
         QRCode[] qrCodes2 = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
         Trait[] tr2 = new Trait[]{
                 new Trait("Red"),
