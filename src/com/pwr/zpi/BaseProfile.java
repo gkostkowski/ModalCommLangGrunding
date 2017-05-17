@@ -235,20 +235,6 @@ public class BaseProfile {
         }
     }
 
-    public boolean DetermineIfSetHasTrait(Trait P, int time) {  //todo do wyrzucenia jesli nie uzywane przez Jareme
-        return describedByTraits.containsKey(P);
-    }
-
-    /**
-     * //todo co to robi
-     * @param P
-     * @param time
-     * @return
-     */
-    public boolean DetermineIfSetHasNotTrait(@SuppressWarnings("rawtypes") Trait P, int time) { //todo do wyrzucenia jesli nie uzywane przez Jareme
-        return notDescribedByTraits.containsKey(P);
-    }
-
     public void addDescribedObservations(Set<IndividualModel> individualModels, Trait relatedTrait/*, int timestamp*/) {
         //if (timestamp == this.timestamp)
         if (individualModels == null || relatedTrait == null)
@@ -325,9 +311,7 @@ public class BaseProfile {
             throw new IllegalStateException("Array not specified or empty.");
         if (baseProfiles.length>1) {
             BaseProfile toModify = baseProfiles[0];
-            //todo
-            throw new NotImplementedException();
-            //
+            throw new NotImplementedException(); //todo implement if required
         }
     }
 }

@@ -111,8 +111,8 @@ public class BPCollection {
             Set<BaseProfile> affectedMemory = getMemoryContainer(type);
             BaseProfile alreadyExisted = getBaseProfile(newBP.getTimestamp());
             if (alreadyExisted != null) {
-                if (!overrideIfExisting)
-                    BaseProfile.joinBaseProfiles(newBP, alreadyExisted);
+                /*if (!overrideIfExisting)
+                    BaseProfile.joinBaseProfiles(newBP, alreadyExisted);*/
                 affectedMemory.remove(alreadyExisted);
             }
             if (workingMemory.size() == MAX_WM_CAPACITY)
