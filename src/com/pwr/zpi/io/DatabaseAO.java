@@ -16,7 +16,6 @@ import static com.pwr.zpi.Agent.objectTypeCollection;
  */
 public class DatabaseAO {
 
-    //todo testy
     public static final String DEF_DATABASE_FILENAME = "baza1.db";
     private Connection dbConnection;
     private Map<String, Integer> nameIndexMap;

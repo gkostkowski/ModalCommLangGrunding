@@ -38,16 +38,4 @@ public abstract class Identifier {
         return otherIdentifier.getClass() == this.getClass()
                 && this.getIdNumber().equals(((Identifier)otherIdentifier).getIdNumber());
     }
-
-    /**
-     * This method reads identifiers of objects which was observed in the world. Every unique identifier existence
-     * points every single object (with specified type) existed in world, which is represented in system through
-     * IndividualModel instances.
-     * @return Collection of unique identifiers.
-     */
-    public static Collection<Identifier> readIdentifiers() {
-        Collection<Identifier> res = new ArrayList<>();
-        //todo
-        return res;
-    }
 }
