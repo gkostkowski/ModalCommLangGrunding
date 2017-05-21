@@ -256,11 +256,12 @@ class Main {
 
         c1.addQuestion("is hyzio red and blinking");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: I don't know what to say about it)");
+        System.out.println("(EXPECTED: I think it is possible that it is red and blinking, but it is also possible that is )");
 
         c1.addQuestion("is hyzio not white and not blinking");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: I think it is possible that it is not white and not blinking)");
+        System.out.println("(EXPECTED: I think it is possible that it is not white and not blinking, but it is also " +
+                "possible that it is white and not blinking and it is possible that it is white and blinking)");
     }
 
 

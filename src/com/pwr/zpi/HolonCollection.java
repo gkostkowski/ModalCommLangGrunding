@@ -152,7 +152,7 @@ public class HolonCollection {
      */
     public Holon getHolon(Formula formula, int timeStamp) {
         for (Holon h : holonCollection) {
-            if (h.getFormula().get(0).isFormulaSimilar(formula)) {
+            if (h.getAffectedFormulas().get(0).isFormulaSimilar(formula)) {
                 return h;
             }
         }

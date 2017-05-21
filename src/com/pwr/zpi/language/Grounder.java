@@ -111,7 +111,7 @@ public class Grounder {
         int timestamp = dk.getTimestamp();
 
         for (Formula currFormula : complementaryFormulas)
-            if ((currOperator = checkEpistemicConditions(formula, dk, agent.getHolons().getHolon(formula, timestamp))) != null)
+            if ((currOperator = checkEpistemicConditions(currFormula, dk, agent.getHolons().getHolon(currFormula, timestamp))) != null)
                 res.put(currFormula, currOperator);
 
         return res;
@@ -136,7 +136,7 @@ public class Grounder {
         boolean amongNoClearStateObjects = true;
         boolean amongClearStateObjects = true;
 
-        for (int i = 0; i < formula.getTraits().size(); i++) {  //supports complex formulas
+        /*for (int i = 0; i < formula.getTraits().size(); i++) {  //supports complex formulas
             Set<IndividualModel> clearStatesObjects = dk.getRelatedObservationsBase()
                     .getIMsByTraitStates(formula.getTraits().get(i), new State[]{State.IS, State.IS_NOT}, timestamp);
             amongNoClearStateObjects = amongNoClearStateObjects && !new ArrayList<>(clearStatesObjects).contains(formula.getModel());
@@ -144,7 +144,7 @@ public class Grounder {
             Set<IndividualModel> selectedStatesObjects = dk.getRelatedObservationsBase()
                     .getIMsByTraitState(formula.getTraits().get(i), formula.getStates().get(i), timestamp);
             amongClearStateObjects = amongClearStateObjects && new ArrayList<>(selectedStatesObjects).contains(formula.getModel());
-        }
+        }*/
 
         boolean isPresentInWM = !dk.getDkClassByDesc(formula, BPCollection.MemoryType.WM).isEmpty();
         ModalOperator res = null;
@@ -500,7 +500,7 @@ public class Grounder {
         sum = dk.getGroundingSet(formula).size();
 
         if (sum != 0) {
-            System.out.println("sumsum" +sum + " " + formula);
+            //System.out.println("sumsum" +sum + " " + formula);
             return sum / dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp());
         }
         return 0.0;
