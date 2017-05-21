@@ -500,6 +500,7 @@ public class Grounder {
         sum = dk.getGroundingSet(formula).size();
 
         if (sum != 0) {
+            System.out.println("sumsum" +sum + " " + formula);
             return sum / dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp());
         }
         return 0.0;
