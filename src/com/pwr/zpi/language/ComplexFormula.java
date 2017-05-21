@@ -64,7 +64,8 @@ public class ComplexFormula extends Formula {
     }
 
     /**
-     * Constructor just the same as above, only with the assumption that all states equal IS
+     * Constructor just the same as above, only with the assumption that all states equal IS.
+     * This constructor builds formula in standard version.
      *
      * @param model  Object which is considered in a formula
      * @param traits list of two traits, respectively for the left part and for the right part of the formula
@@ -255,5 +256,17 @@ public class ComplexFormula extends Formula {
     }
     public ComplexFormula copy() throws InvalidFormulaException{
         return new ComplexFormula(individualModel,traits,states,operator);
+    }
+
+    /**
+     * Method returns standard version of this formula. Standard formula is known as formula without any negations.
+     *
+     * @return new formula which is standard formula.
+     */
+    @Override
+    public Formula getStandardFormula() throws InvalidFormulaException {
+        if (!getStates().contains(State.IS_NOT) && !getStates().contains(State.MAYHAPS))
+            return this;
+        else return new ComplexFormula(individualModel, traits, operator);
     }
 }

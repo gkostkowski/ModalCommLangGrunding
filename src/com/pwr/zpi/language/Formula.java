@@ -29,6 +29,12 @@ public abstract class Formula {
     public abstract List<Formula> getComplementaryFormulas() throws InvalidFormulaException;
 
     /**
+     * Method returns standard version of this formula. Standard formula is known as formula without any negations.
+     * @return new formula which is standard formula.
+     */
+    public abstract Formula getStandardFormula() throws InvalidFormulaException;
+
+    /**
      * Gives list of successive states. Classic case will contains states which describe whether parts of formula[traits]
      * (in case of complex formula - simple formula is special case and contains one part) occur with or without negation.
      * The order of returned states is respective to order of traits returned by getValuedTraits().
@@ -37,7 +43,7 @@ public abstract class Formula {
 
     public enum Type {
         SIMPLE_MODALITY,
-        MODAL_CONJUNCTION
+        MODAL_DISJUNCTION, MODAL_CONJUNCTION
     }
 
     abstract boolean equals(Formula other);

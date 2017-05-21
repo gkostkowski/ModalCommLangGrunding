@@ -224,4 +224,8 @@ public class DistributedKnowledge {
     public BPCollection getRelatedObservationsBase() {
         return relatedObservationsBase;
     }
+
+    public boolean isRelated(Formula formula) {
+        return formula.equals(this.formula) || complementaryFormulas.contains(formula);
+    }
 }

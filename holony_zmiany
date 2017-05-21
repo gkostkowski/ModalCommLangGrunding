@@ -1,0 +1,2 @@
+1. HolonCollection - zważywszy iż holonCollection jest budowana dla konkretnego agenta, to można zachować informację
+o przynależności do agenta w HolonCollection i tym samym zwolnić wołającego metodę z konieczności dostarczania agenta

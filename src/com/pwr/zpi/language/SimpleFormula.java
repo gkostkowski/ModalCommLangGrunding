@@ -179,4 +179,16 @@ public class SimpleFormula extends Formula {
                     return true;
         return false;
     }
+
+    /**
+     * Method returns standard version of this formula. Standard formula is known as formula without any negations.
+     *
+     * @return new formula which is standard formula.
+     */
+    @Override
+    public Formula getStandardFormula() throws InvalidFormulaException {
+        if (!getStates().contains(State.IS_NOT))
+            return this;
+        else return new SimpleFormula(individualModel, trait, false);
+    }
 }

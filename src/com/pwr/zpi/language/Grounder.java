@@ -3,6 +3,7 @@ package com.pwr.zpi.language;
 import com.pwr.zpi.*;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.sun.istack.internal.Nullable;
 
 import java.util.*;
@@ -12,12 +13,31 @@ import java.util.*;
  */
 public class Grounder {
 
+    /**
+     * Thresholds for simple modalities.
+     */
     public static final double MIN_POS = 0.2;
     public static final double MAX_POS = 0.6;
     public static final double MIN_BEL = 0.7;
     public static final double MAX_BEL = 0.9;
     public static final double KNOW = 1.0;
 
+    /**
+     * Thresholds for modal conjunctions.
+     */
+    private static final double CONJ_MIN_POS = 0.1;
+    private static final double CONJ_MAX_POS = 0.6;
+    private static final double CONJ_MIN_BEL = 0.65;
+    private static final double CONJ_MAX_BEL = 0.9;
+    public static final double CONJ_KNOW = 1.0;
+
+    /**
+     * Arrays of thresholds for certain formula types. Order of elements in arrays is strictly defined and can't be other:
+     * [MIN_POS, MAX_POS, MIN_BEL, MAX_BEL, KNOW].
+     */
+    private final static double[] simpleThresholds = new double[]{MIN_POS, MAX_POS, MIN_BEL, MAX_BEL, KNOW};
+    private final static double[] conjThresholds = new double[]{CONJ_MIN_POS, CONJ_MAX_POS, CONJ_MIN_BEL, CONJ_MAX_BEL, CONJ_KNOW};
+    private final static double[] disjThresholds = new double[]{}; //todo
 
     /**
      * Gives complete collection of grounding sets for certain formulas (in this context may be known as mental model).
@@ -44,6 +64,7 @@ public class Grounder {
 
     /**
      * Method produces grounding set for certain formula, basing on provided set of base profiles.
+     *
      * @param formula
      * @param all
      * @return
@@ -63,29 +84,46 @@ public class Grounder {
 
 
     /**
-     * Realizes verification of epistemic fulfillment relationship's conditions for provided formula.
-     * The given formula should be associated with given knowledge distribution.
-     * Checks what type of extension of formula can occur. The following assumption was made: For any extended formula
-     * (modal formula) there are only one modal operator which can be applied to this formula at once.
-     * According to that, this method returns type of operator which can be used in formula without breaking
+     * Method realises complete grounding of given formula. Formula is treated as standard formula (in non-negated form),
+     * so according to complementarity of mental models, grounding is performed for all complementary formulas to this one.
+     * The following assumption was made: For any extended formula (modal formula) there are only one modal operator
+     * which can be applied to this formula at once. In the other hand, for given formula, formulas complementary to this
+     * one can also be grounded.
+     * So, according to above, for simple formula, there is at most two possible grounded forms of this formula,
+     * for modal conjunction - four.
+     * This method returns modal operators which can be used in certain complementary formulas without breaking
      * epistemic fulfillment relationship's conditions.
      * Timestamp is taken from given distribution of knowledge.
      *
-     * @param dk Distributed knowledge for respective grounding sets related with certain formula.
-     * @return Type of operator which can be applied to formula given through distribution of knowledge.
+     * @param agent
+     * @param formula Formula which will be grounded.
+     * @return Map of Formula and ModalOperator, where each entry (Formula, ModalOperator) is understood as form
+     * of grounded formula with given modal operator.
      * @see DistributedKnowledge
      */
-    public static ModalOperator determineFulfillment(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
-        if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
-                || dk.isDkComplex() && !new ArrayList(dk.getComplementaryFormulas()).contains(formula))
-            throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
+    public static Map<Formula, ModalOperator> performFormulaGrounding(Agent agent, Formula formula)
+            throws InvalidFormulaException, NotApplicableException, NotConsistentDKException {
 
-        return checkEpistemicConditions(formula, dk);
+        DistributedKnowledge dk = agent.distributeKnowledge(formula, true);
+        List<Formula> complementaryFormulas = formula.getStandardFormula().getComplementaryFormulas();
+        Map<Formula, ModalOperator> res = new HashMap<>();
+        ModalOperator currOperator = null;
+        int timestamp = dk.getTimestamp();
+
+        for (Formula currFormula : complementaryFormulas)
+            if ((currOperator = checkEpistemicConditions(formula, dk, agent.getNewHolons().getHolon(formula, timestamp))) != null)
+                res.put(currFormula, currOperator);
+
+        return res;
     }
 
 
     /**
-     * Decides which modal operator can occur for given formula. If none of possible, then null is returned.
+     * Realizes verification of epistemic fulfillment relationship's conditions for provided formula.
+     * The given formula should be associated with given knowledge distribution and it's treated as "exact" formula
+     * (namely, processed as it was given).
+     * Method decides which modal operator can occur for given formula. If none of possible, then null is returned.
+     * This is an exact part of grounding process.
      *
      * @param formula
      * @param dk
@@ -93,7 +131,7 @@ public class Grounder {
      * @return
      */
     @Nullable
-    public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk,
+    public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk, NewHolon holon,
                                                          int timestamp) throws NotApplicableException {
         boolean amongNoClearStateObjects = true;
         boolean amongClearStateObjects = true;
@@ -112,23 +150,46 @@ public class Grounder {
         ModalOperator res = null;
 
         if (amongNoClearStateObjects) {
-            double currRelCard = relativeCard(dk.getGroundingSets(), timestamp, formula);
+//            double currRelCard = relativeCard(dk.getGroundingSets(), timestamp, formula);
+            double currRelCard = holon.getSummary(formula);
             ModalOperator[] checkedOps = {ModalOperator.POS, ModalOperator.BEL, ModalOperator.KNOW};
+            double[] appropriateTresholds = getThresholds(formula);
             for (int i = 0; i < checkedOps.length && res == null; i++)
-                res = checkEpistemicCondition(true, isPresentInWM, currRelCard, checkedOps[i]);
+                res = checkEpistemicCondition(true, isPresentInWM, currRelCard,
+                        checkedOps[i], appropriateTresholds);
         } else if (amongClearStateObjects)
             res = ModalOperator.KNOW;
 
         return res;
     }
 
-    public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk)
+    /**
+     * Returns array of appropriate thresholds for formula with specified type.
+     * @param formula
+     * @return
+     */
+    private static double[] getThresholds(Formula formula) {
+        switch (formula.getType()) {
+            case SIMPLE_MODALITY:
+                return simpleThresholds;
+            case MODAL_CONJUNCTION:
+                return conjThresholds;
+            case MODAL_DISJUNCTION:
+                return disjThresholds;
+            default:
+                return null;
+        }
+    }
+
+    public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk, NewHolon holon)
             throws NotApplicableException {
-        return checkEpistemicConditions(formula, dk, dk.getTimestamp());
+        return checkEpistemicConditions(formula, dk, holon, dk.getTimestamp());
     }
 
     /**
-     * Performs checking for single epistemic condition.
+     * Performs checking for single epistemic condition according to provided thresholds. Thresholds determine way of grounding
+     * modal operators - simple modalities or modal conjunctions/alternatives thresholds can be provided.
+     * Note: this metod determines modal operator in uncertainity conditions, so it won't work for know when amongNoClearStateObjects ==false.
      *
      * @param amongNoClearStateObjects Flag determining if related individual model is among other individual models
      *                                 neither described as having trait(s) (listed in formula) nor not having mentioned trait(s).
@@ -136,22 +197,25 @@ public class Grounder {
      *                                 in one of distributed knowledge classes related with working memory.
      * @param relativeCard             Relative cardinality for given formula.
      * @param inspectedOperator        Modal operator which possibility of occurrence is examined.
+     * @param thresholds               Array of doubles which should contains thresholds in following order: [MIN_POS, MAX_POS, MIN_BEL, MAX_BEL, KNOW].
      * @return Given modal operator if it is applicable or null in other way.
      */
-    private static ModalOperator checkEpistemicCondition(boolean amongNoClearStateObjects, boolean isPresentInWM,
-                                                         double relativeCard, ModalOperator inspectedOperator) {
+    public static ModalOperator checkEpistemicCondition(boolean amongNoClearStateObjects, boolean isPresentInWM,
+                                                         double relativeCard, ModalOperator inspectedOperator, double[] thresholds) {
+        if (thresholds.length != 5)
+            throw new IllegalStateException("Invalid thresholds.");
         double minRange, maxRange;
         switch (inspectedOperator) {
             case POS:
-                minRange = MIN_POS;
-                maxRange = MAX_POS;
+                minRange = thresholds[0];
+                maxRange = thresholds[1];
                 break;
             case BEL:
-                minRange = MIN_BEL;
-                maxRange = MAX_BEL;
+                minRange = thresholds[2];
+                maxRange = thresholds[3];
                 break;
             default:
-                minRange = maxRange = KNOW;
+                minRange = maxRange = thresholds[4];
         }
         return amongNoClearStateObjects && isPresentInWM && relativeCard >= minRange && relativeCard <= maxRange ?
                 inspectedOperator : null;
@@ -385,7 +449,7 @@ public class Grounder {
      * Returns value of fullfilment of epistemic condition. If none of possible, then 0.0 is returned.
      *
      * @param formula Considered Formula
-     * @param dk Distributed knowledge for respective grounding sets related with certain formula.
+     * @param dk      Distributed knowledge for respective grounding sets related with certain formula.
      * @return
      */
     @Nullable
@@ -409,7 +473,7 @@ public class Grounder {
      * Returns number of occurrences in grounded formulas for given formula.Case of simple formulas.
      *
      * @param formula Considered Formula
-     * @param dk Distributed knowledge for respective grounding sets related with certain formula.
+     * @param dk      Distributed knowledge for respective grounding sets related with certain formula.
      * @return
      */
     public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) {
@@ -431,17 +495,20 @@ public class Grounder {
         }
         return 0.0;
     }
+
     /**
      * Returns number of occurrences in grounded formulas for given formula.Case of Complex formulas.
      *
      * @param formula Considered Formula
-     * @param dk Distributed knowledge for respective grounding sets related with certain formula.
+     * @param dk      Distributed knowledge for respective grounding sets related with certain formula.
      * @return
      */
     public static Double complexFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) {
 
         double sum = 0;
-        if(dk.getGroundingSet(formula).size()==0){return 0.0;}
+        if (dk.getGroundingSet(formula).size() == 0) {
+            return 0.0;
+        }
 
         for (BaseProfile bp : dk.getGroundingSet(formula)) {
             sum++;

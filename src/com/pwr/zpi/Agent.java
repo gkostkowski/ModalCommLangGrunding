@@ -17,6 +17,7 @@ public class Agent {
     private BPCollection knowledgeBase;
     private IMCollection models;
     private HolonCollection holons;
+    private NewHolonCollection newHolons=new NewHolonCollection();
     private DatabaseAO database;
     public static Collection<ObjectType> objectTypeCollection;
 
@@ -84,6 +85,10 @@ public class Agent {
         return holons;
     }
 
+    public NewHolonCollection getNewHolons() {
+        return newHolons;
+    }
+
     @Deprecated //uzywamy updateMemory()
     public DatabaseAO getDatabase() {
         return database;
@@ -114,20 +119,20 @@ public class Agent {
 
 
 
-    /**
-     * Builds distributed knowledge, which will be used to make respective mental models associated
+/*    *//**
+     * Builds complete (with all classes) distributed knowledge, which will be used to make respective mental models associated
      * with formulas. It is used to build distribution of different mental models.
      * Built distributed knowledge is related to timestamp of last registered by this agent base profile.
      *
      * @return Distribution of knowledge.
      * @throws InvalidFormulaException
-     */
-    public DistributedKnowledge distributeKnowledge() throws InvalidFormulaException {
+     *//*
+    public DistributedKnowledge distributeCompleteKnowledge() throws InvalidFormulaException {
         return distributeKnowledge();
-    }
+    }*/
 
     /**
-     * Builds distributed knowledge, which will be used to make respective mental models associated
+     * Builds distributed knowledge with default complexity, which will be used to make respective mental models associated
      * with formulas. It is used to build distribution of different mental models.
      * Built distributed knowledge is related to timestamp of last registered by this agent base profile.
      *
@@ -144,11 +149,37 @@ public class Agent {
         }
     }
 
-
     /**
-     * This is method for realising one of fundamental task: registering task. Precisely, this method includes
-     * observation saved in agent database in program for processing.
+     * Builds distributed knowledge with specified complexity, which will be used to make respective mental models associated
+     * with formulas. It is used to build distribution of different mental models.
+     * Built distributed knowledge is related to given timestamp.
+     *
+     * @param formula Formula
+     * @param timestamp timestamp
+     * @param buildComplexDK According to additional operations overhead, parameter can determine if complete distribution
+     *                      (with all classes) should be build (if true) or simple (only classes related to exact formula) - false.
+     * @return Distribution of knowledge.
+     * @throws InvalidFormulaException
      */
+    public DistributedKnowledge distributeKnowledge(Formula formula, int timestamp, boolean buildComplexDK) throws InvalidFormulaException {
+        try {
+            return new DistributedKnowledge(this, formula);
+        } catch (NotConsistentDKException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public DistributedKnowledge distributeKnowledge(Formula formula, boolean buildComplexDK) throws InvalidFormulaException, NotConsistentDKException {
+        return new DistributedKnowledge(this, formula, true);
+    }
+
+
+
+        /**
+         * This is method for realising one of fundamental task: registering task. Precisely, this method includes
+         * observation saved in agent database in program for processing.
+         */
     public void discoverObservations(Collection<Observation> newObservations) {
         System.out.println("Discovering new observations ...");
 
