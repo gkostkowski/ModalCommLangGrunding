@@ -6,7 +6,7 @@ import com.pwr.zpi.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import java.util.*;
-public class NonBinaryHolon extends Holon{
+public class NonBinaryHolon implements Holon{
 
 	protected Quadrilateral Tao;
 	protected List<Formula> formula;
@@ -149,5 +149,28 @@ public class NonBinaryHolon extends Holon{
 		res.add(npq);
 		res.add(npnq);
 		return res;
+	}
+
+	@Override
+	public void update() throws InvalidFormulaException, NotApplicableException {
+
+	}
+
+	@Override
+	public Double getSummary(Formula formula) {
+		return null;
+	}
+
+	@Override
+	public Map<Formula, Double> getSummaries() {
+		return null;
+	}
+
+	/**
+	 * Returns list of complementary formulas which were used when building this holon.
+	 */
+	@Override
+	public List<Formula> getAffectedFormulas() {
+		return null;
 	}
 }

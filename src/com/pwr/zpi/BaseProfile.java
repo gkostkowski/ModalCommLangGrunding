@@ -314,4 +314,18 @@ public class BaseProfile {
             throw new NotImplementedException(); //todo implement if required
         }
     }
+
+    public boolean DetermineIfSetHasTrait(Trait P, int time) {
+        return describedByTraits.containsKey(P);
+    }
+
+    /**
+     * //todo co to robi
+     * @param P
+     * @param time
+     * @return
+     */
+    public boolean DetermineIfSetHasNotTrait(@SuppressWarnings("rawtypes") Trait P, int time) {
+        return notDescribedByTraits.containsKey(P);
+    }
 }

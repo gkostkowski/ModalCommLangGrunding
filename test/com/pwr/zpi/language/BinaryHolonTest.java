@@ -1,3 +1,4 @@
+/*
 package com.pwr.zpi.language;
 
 import com.pwr.zpi.*;
@@ -13,9 +14,11 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+*/
 /**
  * Created by Jarema on 5/20/2017.
- */
+ *//*
+
 class BinaryHolonTest {
 
 
@@ -129,4 +132,4 @@ class BinaryHolonTest {
 
     }
 
-}
+}*/

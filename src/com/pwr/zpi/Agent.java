@@ -25,7 +25,7 @@ public class Agent {
     public Agent() {
         init();
         knowledgeBase = new BPCollection();
-        holons = new HolonCollection();
+        holons = new HolonCollection(this);
         database = new DatabaseAO(this);
     }
 
@@ -39,14 +39,14 @@ public class Agent {
     public Agent(BPCollection knowledgeBase) {
         init();
         this.knowledgeBase = knowledgeBase;
-        holons = new HolonCollection();
+        holons = new HolonCollection(this);
     }
 
     public Agent(BPCollection knowledgeBase, IMCollection models) {
         init();
         this.models = models;
         this.knowledgeBase = knowledgeBase;
-        holons = new HolonCollection();
+        holons = new HolonCollection(this);
     }
 
     public Agent(BPCollection knowledgeBase, IMCollection models, HolonCollection holons) {
@@ -214,7 +214,7 @@ public class Agent {
     public void updateBeliefs(){
         try {
             System.out.print("Updating beliefs for t="+knowledgeBase.getTimestamp()+"...");
-            holons.updateBeliefs( this, knowledgeBase.getTimestamp());
+            holons.updateBeliefs(knowledgeBase.getTimestamp());
             System.out.println("Done.");
         } catch (InvalidFormulaException | NotConsistentDKException | NotApplicableException e) {
             System.out.println("Agent was not able to update holons.");

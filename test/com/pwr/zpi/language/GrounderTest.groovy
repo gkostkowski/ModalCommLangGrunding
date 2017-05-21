@@ -11,12 +11,12 @@ class GrounderTest extends GroovyTestCase {
 
     Map<Trait, Set<IndividualModel>> describedByTraits, notDescribedByTraits,
                                      indefiniteByTraits;
-    BaseProfile bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp2_2;
-    int t0, t1, t2, t3, t4, t5, t6, t7, t8
+    BaseProfile bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9,  bp2_2;
+    int t0, t1, t2, t3, t4, t5, t6, t7, t8, t9
     BPCollection bpCollection1
     Agent agent
     SimpleFormula sformula1, sformula2, sformula3
-    ComplexFormula cformula1, cformula2
+    ComplexFormula cformula1, cformula2,cformula3,cformula4
     DistributedKnowledge testDk, testDk1, testDk2, testDk3, testDk4, testDk5, testDk6,
                          testCDk1, testCDk2
 
@@ -104,7 +104,7 @@ class GrounderTest extends GroovyTestCase {
     }
 
 
-    void buildRelatedScenario() {
+    void buildRelatedScenario(int phaseNbr) {
 
         def tr1, tr2, tr3, tr4, tr5
         def im1, model2, model3, model4, model5, model6, model7
@@ -117,26 +117,9 @@ class GrounderTest extends GroovyTestCase {
         //tr4 = new Trait("Soft")
         //tr5 = new Trait("Warm")
         def oType1 = new ObjectType("01", [tr1, tr2, tr3])
-        /*def oType2 = new ObjectType("Type2", [tr1, tr4])
-        def oType3 = new ObjectType("Type3", [tr2, tr3])
-        def oType4 = new ObjectType("Type4", [tr2, tr4])
-        def oType5 = new ObjectType("Type5", [tr3, tr4])
-        def oType6 = new ObjectType("Type6", [tr2, tr4, tr1])
-        def oType7 = new ObjectType("Type7", [tr2, tr4, tr1, tr3])*/
-        im1 = new IndividualModel(new QRCode("0124"), oType1)
-        /*model2 = new IndividualModel(new QRCode("ID2"), oType2)
-        model3 = new IndividualModel(new QRCode("ID3"), oType3)
-        model4 = new IndividualModel(new QRCode("ID4"), oType4)
-        model5 = new IndividualModel(new QRCode("ID5"), oType5)
-        model6 = new IndividualModel(new QRCode("ID6"), oType6)
-        model7 = new IndividualModel(new QRCode("ID7"), oType7)*/
 
-        describedByTraits = [(tr1): [model2] as Set<IndividualModel>,
-                             (tr2): [im1, model3, model4] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>;
-        notDescribedByTraits = [(tr1): [im1, model6] as Set,
-                                (tr4): [model6] as Set]
-        indefiniteByTraits = [(tr1): [model5] as Set,
-                              (tr2): [model5] as Set]
+        im1 = new IndividualModel(new QRCode("0124"), oType1)
+
 
         t0 = 0; t1 = 1; t2 = 2; t3 = 3; t4 = 4; t5 = 5; t6 = 6; t7 = 7;
 
@@ -175,22 +158,39 @@ class GrounderTest extends GroovyTestCase {
                                [(tr1): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
                                [(tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>
         ] as List, t8)
+        bp9 = new BaseProfile([[(tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                               new HashMap<Trait, Set<IndividualModel>>(),
+                               [(tr1): [im1] as Set<IndividualModel>, (tr2): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>
+        ] as List, t9)
 
 
+        switch (phaseNbr) {
+            case 0:
+                bpCollection1 = new BPCollection([bp1, bp2, bp3] as Set, [] as Set)
+                break
+            case 1:
+                bpCollection1 = new BPCollection([bp1, bp2, bp3, bp4] as Set, [] as Set)
+                break
+            case 2:
+                bpCollection1 = new BPCollection([bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9] as Set, [] as Set)
+                break
+        }
 
-        bpCollection1 = new BPCollection([bp1, bp2, bp3, bp4, bp6, bp7, bp8] as Set, [] as Set)
 
         agent = new Agent(bpCollection1)
 
         def formulaIM = im1
 
-        sformula1 = new SimpleFormula(formulaIM, tr3, false); // blinking(individualModel:id1)
-        sformula2 = new SimpleFormula(formulaIM, tr1, false); // red(individualModel:id1)
 
+        cformula1 = new ComplexFormula(formulaIM, [tr3, tr2],
+                [State.IS, State.IS_NOT], LogicOperator.AND)
 
-        def currTime = agent.knowledgeBase.getTimestamp()
-        testDk1 = new DistributedKnowledge(agent, sformula1)
-        testDk2 = new DistributedKnowledge(agent, sformula2)
+        cformula2 = new ComplexFormula(formulaIM, [tr1, tr2],
+                [State.IS, State.IS], LogicOperator.AND)
+        cformula3 = new ComplexFormula(formulaIM, [tr1, tr3],
+                [State.IS, State.IS], LogicOperator.AND)
+        cformula4 = new ComplexFormula(formulaIM, [tr2, tr3],
+                [State.IS_NOT, State.IS_NOT], LogicOperator.AND)
 
     }
 
@@ -215,8 +215,17 @@ class GrounderTest extends GroovyTestCase {
     @Test
     void testCheckEpistemicConditions() {
 
-        buildRelatedScenario()
-        print Grounder.performFormulaGrounding(agent, sformula2)
+        buildRelatedScenario(0)
+        def res = Grounder.performFormulaGrounding(agent, cformula1)
+        println res
+        buildRelatedScenario(1)
+        res = Grounder.performFormulaGrounding(agent, cformula2)
+        println res
+        buildRelatedScenario(2)
+        res = Grounder.performFormulaGrounding(agent, cformula3)
+        println res
+        res = Grounder.performFormulaGrounding(agent, cformula4)
+        println res
 
     }
 

@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by Grzesiek on 2017-05-19.
  */
-public class NewNonBinaryHolon implements NewHolon{
+public class NewNonBinaryHolon implements Holon{
     /**
      * Note: formula is given in standard form, namely: without any negations.
      */
@@ -23,6 +23,7 @@ public class NewNonBinaryHolon implements NewHolon{
         if (formula != null && !dk.isRelated(formula))
             throw new IllegalStateException("Given formula is not related to specified knowledge distribution.");
         relatedFormula = formula != null ? formula : dk.getFormula();
+        this.dk = dk;
         summaries = new HashMap<>();
         update();
     }
@@ -33,7 +34,7 @@ public class NewNonBinaryHolon implements NewHolon{
      * @param dk
      * @throws InvalidFormulaException
      */
-    NewNonBinaryHolon(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+    public NewNonBinaryHolon(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         this(null, dk);
     }
 
@@ -94,5 +95,25 @@ public class NewNonBinaryHolon implements NewHolon{
         return "NewNonBinaryHolon{" +
                 "summaries=" + summaries +
                 '}';
+    }
+
+    @Override
+    public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+
+    }
+
+    @Override
+    public Pair getStrongest() {
+        return null;
+    }
+
+    @Override
+    public Pair getWeakest() {
+        return null;
+    }
+
+    @Override
+    public List<Formula> getFormula() {
+        return null;
     }
 }

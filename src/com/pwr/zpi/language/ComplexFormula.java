@@ -269,4 +269,12 @@ public class ComplexFormula extends Formula {
             return this;
         else return new ComplexFormula(individualModel, traits, operator);
     }
+
+    @Override
+    public String toString() {
+        return "ComplexFormula{" + individualModel.getIdentifier()+": "+
+                states.get(0).name()+" "+traits.get(0) + " "+operator+" "+
+                states.get(1).name()+" "+traits.get(1) +
+                '}';
+    }
 }

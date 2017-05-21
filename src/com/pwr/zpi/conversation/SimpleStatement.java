@@ -29,7 +29,7 @@ public class SimpleStatement extends Statement{
     public SimpleStatement(SimpleFormula formula, Agent agent, int time, String name)
     {
         simpleFormula = formula;
-        holon = (BinaryHolon)agent.getHolons().getHolon(formula, agent, time);
+        holon = (BinaryHolon)agent.getHolons().getHolon(formula, time);
         p = holon.getP();
         notP = holon.getnot_P();
         this.name = name;

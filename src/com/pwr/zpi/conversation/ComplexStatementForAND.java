@@ -25,7 +25,7 @@ public class ComplexStatementForAND extends Statement {
    {
        this.formula = formula;
        this.agent = agent;
-       holon = (NonBinaryHolon)agent.getHolons().getHolon(formula, agent, timestamp);
+       holon = (NonBinaryHolon)agent.getHolons().getHolon(formula, timestamp);
        this.name = name;
        formulaCase = formula.getFormulaCase();
        getTaoRatio();

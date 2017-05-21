@@ -85,14 +85,12 @@ public class NewHolonCollection {
         }
     }
 
-    /*
-    public Holon findHolon(Formula formula, Agent agent, int timestamp)
-    {
-        for(Holon holon : holonCollection)
-            if(holon.getFormula().equals(formula))
-                return holon;
-        return addHolon(formula, agent, timestamp);
-    }*/
 
+    public Holon findHolon(Formula formula, Agent agent, int timestamp) {
+        for (Holon holon : holonCollection)
+            if (holon.getFormula().equals(formula))
+                return holon;
+        return addHolon(formula, timestamp);
+    }
 
 }

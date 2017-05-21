@@ -6,12 +6,13 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents belief on simple formula.
  *
  */
-public class BinaryHolon extends Holon {
+public class BinaryHolon implements Holon {
     /**
      * Represents ratio of IS,Is_Not and Mayhaps observations
      */
@@ -129,5 +130,28 @@ public class BinaryHolon extends Holon {
     @Override
     public HolonKind getKind() {
         return Holon.HolonKind.Binary;
+    }
+
+    @Override
+    public void update() throws InvalidFormulaException, NotApplicableException {
+
+    }
+
+    @Override
+    public Double getSummary(Formula formula) {
+        return null;
+    }
+
+    @Override
+    public Map<Formula, Double> getSummaries() {
+        return null;
+    }
+
+    /**
+     * Returns list of complementary formulas which were used when building this holon.
+     */
+    @Override
+    public List<Formula> getAffectedFormulas() {
+        return null;
     }
 }

@@ -111,7 +111,7 @@ public class Grounder {
         int timestamp = dk.getTimestamp();
 
         for (Formula currFormula : complementaryFormulas)
-            if ((currOperator = checkEpistemicConditions(formula, dk, agent.getNewHolons().getHolon(formula, timestamp))) != null)
+            if ((currOperator = checkEpistemicConditions(formula, dk, agent.getHolons().getHolon(formula, timestamp))) != null)
                 res.put(currFormula, currOperator);
 
         return res;
@@ -131,7 +131,7 @@ public class Grounder {
      * @return
      */
     @Nullable
-    public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk, NewHolon holon,
+    public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk, Holon holon,
                                                          int timestamp) throws NotApplicableException {
         boolean amongNoClearStateObjects = true;
         boolean amongClearStateObjects = true;
@@ -181,7 +181,7 @@ public class Grounder {
         }
     }
 
-    public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk, NewHolon holon)
+    public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk, Holon holon)
             throws NotApplicableException {
         return checkEpistemicConditions(formula, dk, holon, dk.getTimestamp());
     }
@@ -352,7 +352,7 @@ public class Grounder {
 
     static Set<BaseProfile> getGroundingSetsConjunction(Trait P, Trait Q, int time, Set<BaseProfile> all,
                                                         int i) {
-        /*Set<BaseProfile> out = new HashSet<BaseProfile>();
+        Set<BaseProfile> out = new HashSet<BaseProfile>();
         switch (i) {
             case 1:
                 for (BaseProfile bp : all) {
@@ -380,8 +380,8 @@ public class Grounder {
                         out.add(bp);
                 }
                 break;
-        }*/
-        return null;
+        }
+        return out;
     }
 
     /**
