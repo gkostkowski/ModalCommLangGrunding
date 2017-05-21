@@ -46,7 +46,7 @@ public class NewNonBinaryHolon implements Holon{
         List<Formula> complFormulas = relatedFormula.getComplementaryFormulas();
         for (Formula f : complFormulas) {
             summaries.put(f,
-                    Grounder.relativeCard(dk.getGroundingSets(), dk.getTimestamp(), f));
+                    Grounder.relativeCard(dk, f));
         }
 
     }
