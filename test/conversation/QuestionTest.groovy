@@ -1,4 +1,4 @@
-package com.pwr.zpi.conversation
+package conversation
 
 import com.pwr.zpi.Agent
 import com.pwr.zpi.IMCollection

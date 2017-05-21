@@ -27,7 +27,6 @@ public class NonBinaryHolon implements Holon{
         double npnq = 0;
 
 		List<Formula> temp = getComplementaryFormulasv2((ComplexFormula) dk.getFormula());
-
 		pq = Grounder.determineFulfillmentDouble(dk,temp.get(0));
 		npq = Grounder.determineFulfillmentDouble(dk,temp.get(1));
 		pnq = Grounder.determineFulfillmentDouble(dk,temp.get(2));

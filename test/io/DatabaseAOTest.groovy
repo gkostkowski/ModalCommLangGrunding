@@ -1,4 +1,4 @@
-package com.pwr.zpi.io
+package io
 
 import com.pwr.zpi.Agent
 import com.pwr.zpi.Observation

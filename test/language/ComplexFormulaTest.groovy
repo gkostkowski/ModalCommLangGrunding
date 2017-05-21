@@ -1,4 +1,4 @@
-package com.pwr.zpi.language
+package language
 
 import com.pwr.zpi.IndividualModel
 import com.pwr.zpi.ObjectType

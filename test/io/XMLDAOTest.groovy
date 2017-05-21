@@ -1,4 +1,4 @@
-package com.pwr.zpi.io
+package io
 
 import com.pwr.zpi.ObjectType
 import com.pwr.zpi.util.GenericObject
