@@ -511,7 +511,8 @@ public class Grounder {
             return 0.0;
         }
 
-        for (BaseProfile bp : dk.getGroundingSet(formula)) {
+        Set<BaseProfile> groundedSet = dk.getGroundingSet(formula);
+        for (BaseProfile bp : groundedSet) {
             sum++;
         }
         if (sum != 0) {

@@ -11,9 +11,9 @@ import java.util.*;
 
 /**
  * Class represents distribution of knowledge as  a set of "classes" established for given moment in time,
- * for certain simple or complex formula and associated individualModel. Number of classes depends on kind of grounded formula
+ * for certain simple or complex relatedFormula and associated individualModel. Number of classes depends on kind of grounded relatedFormula
  * (which induces mental models).
- * Note: By default, each instance of this class contains knowledge distribution for ONE formula (and therefore ONE mental model).
+ * Note: By default, each instance of this class contains knowledge distribution for ONE relatedFormula (and therefore ONE mental model).
  * This behaviour can be extended thorough passing appropriate flag to constructor.
  * Regardless mentioned flag, each knowledge distribution contains complete collection of grounding sets.
  * RA1 - Represents set of all base profiles, which are included in working memory and presents individualModel as described by
@@ -25,7 +25,7 @@ import java.util.*;
 public class DistributedKnowledge {
     /**
      * Describes possible versions of distributed knowledge: Simple if false (building only dk classes associated
-     * with given formula) or complex if true (building all dk classes - also for mental models related to
+     * with given relatedFormula) or complex if true (building all dk classes - also for mental models related to
      * complementary formulas)
      */
     private static final boolean DEFAULT_DK_IS_COMPLEX = false;
@@ -36,7 +36,7 @@ public class DistributedKnowledge {
      */
     private boolean dkIsComplex;
     private int timestamp;
-    private final Formula formula;
+    private final Formula relatedFormula;
     private final List<Trait> traits;
     private final IndividualModel individualModel;
     private Set<BaseProfile> inLM;
@@ -45,17 +45,14 @@ public class DistributedKnowledge {
     private BPCollection relatedObservationsBase;
 
     /**
-     * Complementary formulas for this.formula. For convenience, complementary formulas contains also this.formula.
+     * Complementary formulas for this.relatedFormula. For convenience, complementary formulas contains also this.relatedFormula.
      */
     private List<Formula> complementaryFormulas = new ArrayList<>();
-    /**
-     * Formula represents mental model.
-     */
+
     private Map<Formula, Set<BaseProfile>> groundingSets;
-    //private List<Set<BaseProfile>> dkClasses = new ArrayList<>();
     /**
      * Map of classes for this knowledge distribution. Exact class is certain value in map
-     * and associated key is pair which represent mental model (formula) and memory type which are used
+     * and associated key is pair which represent mental model (relatedFormula) and memory type which are used
      * to build such class.
      */
     private Map<Pair<Formula, BPCollection.MemoryType>, Set<BaseProfile>> dkClasses;
@@ -69,7 +66,7 @@ public class DistributedKnowledge {
             throw new IllegalStateException("Not valid timestamp.");
 
         this.timestamp = timestamp;
-        this.formula = formula;
+        this.relatedFormula = formula;
         this.traits = formula.getTraits();
         this.individualModel = formula.getModel();
         dkClasses = new HashMap<>();
@@ -85,8 +82,8 @@ public class DistributedKnowledge {
         groundingSets = Grounder.getGroundingSets(complementaryFormulas, BPCollection.asBaseProfilesSet(inWM, inLM));
         /*else {
             groundingSets = new HashMap<>();
-            groundingSets.put(formula,
-                    Grounder.getGroundingSet(formula, BPCollection.asBaseProfilesSet(inWM, inLM)));
+            groundingSets.put(relatedFormula,
+                    Grounder.getGroundingSet(relatedFormula, BPCollection.asBaseProfilesSet(inWM, inLM)));
         }*/
 
         if (makeCompleteDistribution)
@@ -123,7 +120,7 @@ public class DistributedKnowledge {
      */
     private void checkIfConsistent() throws NotConsistentDKException {
         if (!dkIsComplex)
-            makeChecking(formula);
+            makeChecking(relatedFormula);
         else for (Formula currFormula : complementaryFormulas)
             makeChecking(currFormula);
     }
@@ -194,7 +191,7 @@ public class DistributedKnowledge {
     }
 
     public Formula getFormula() {
-        return formula;
+        return relatedFormula;
     }
 
     public List<Formula> getComplementaryFormulas() {
@@ -205,7 +202,7 @@ public class DistributedKnowledge {
     }
 
     /**
-     * Gives class according to given formula (mental model) and memory type.
+     * Gives class according to given relatedFormula (mental model) and memory type.
      *
      * @return
      */
@@ -214,7 +211,9 @@ public class DistributedKnowledge {
     }
 
     public Set<BaseProfile> getGroundingSet(Formula formula) {
-        return groundingSets.get(formula);
+        TreeMap <Formula, Set<BaseProfile>> res = new TreeMap<>();
+        res.putAll(groundingSets);
+        return res.get(formula);
     }
 
     public boolean isDkComplex() {
@@ -226,6 +225,6 @@ public class DistributedKnowledge {
     }
 
     public boolean isRelated(Formula formula) {
-        return formula.equals(this.formula) || complementaryFormulas.contains(formula);
+        return formula.equals(this.relatedFormula) || complementaryFormulas.contains(formula);
     }
 }

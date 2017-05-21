@@ -14,7 +14,7 @@ import com.pwr.zpi.language.NonBinaryHolon.FormulaCase;
 /**
  *
  */
-public class ComplexFormula extends Formula {
+public class ComplexFormula extends Formula implements Comparable<ComplexFormula> {
 
     private static final int COMPLEMENTARY_FORMULAS_NUMBER = 4;
     private LogicOperator operator;
@@ -276,5 +276,13 @@ public class ComplexFormula extends Formula {
                 states.get(0).name()+" "+traits.get(0) + " "+operator+" "+
                 states.get(1).name()+" "+traits.get(1) +
                 '}';
+    }
+
+
+    @Override
+    public int compareTo(ComplexFormula o) {
+        int val1 = states.hashCode() + traits.hashCode() + individualModel.hashCode();
+        int val2 = o.states.hashCode() + o.traits.hashCode() + o.individualModel.hashCode();
+        return val1 > val2 ? 1 : ( val1 < val2 ? -1 : 0);
     }
 }

@@ -108,14 +108,14 @@ class DistributedKnowledgeTest extends GroovyTestCase {
     void buildTestObject() {
         build()
         def currTime = agent.knowledgeBase.getTimestamp()
-        testDk1 = new DistributedKnowledge(agent, sformula1) //with simple formula - at least one matching base profile
-        testDk2 = new DistributedKnowledge(agent, cformula1) //with complex formula - at least one matching base profile
-        testDk3 = new DistributedKnowledge(agent, sformula2) //with other simple formula - at least one matching base profile
+        testDk1 = new DistributedKnowledge(agent, sformula1) //with simple relatedFormula - at least one matching base profile
+        testDk2 = new DistributedKnowledge(agent, cformula1) //with complex relatedFormula - at least one matching base profile
+        testDk3 = new DistributedKnowledge(agent, sformula2) //with other simple relatedFormula - at least one matching base profile
         testDk4 = new DistributedKnowledge(agent, sformula1, t3) // till given timestamp
         testDk5 = new DistributedKnowledge(agent, sformula3) //only one matching base profile
         testDk6 = new DistributedKnowledge(agent, cformula2) // empty results
-        testCDk1 = new DistributedKnowledge(agent, sformula1, true) //with simple formula - complex distribution
-        testCDk2 = new DistributedKnowledge(agent, cformula1, true) //with complex formula - complex distribution
+        testCDk1 = new DistributedKnowledge(agent, sformula1, true) //with simple relatedFormula - complex distribution
+        testCDk2 = new DistributedKnowledge(agent, cformula1, true) //with complex relatedFormula - complex distribution
     }
 
     @Test
