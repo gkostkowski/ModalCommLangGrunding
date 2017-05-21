@@ -309,20 +309,7 @@ public class Grounder {
 
             switch (((ComplexFormula) formula).getOperator()) {
                 case AND:
-                    List<Formula> temp = NonBinaryHolon.getComplementaryFormulasv2((ComplexFormula) formula);
-                    if ( !((ComplexFormula) formula).getLeftPart().isNegated() && !((ComplexFormula) formula).getRightPart().isNegated()) {
-                        return complexFormulaFinalGrounder(temp.get(1),dk);
-                    }
-                    if (((ComplexFormula) formula).getLeftPart().isNegated() && !((ComplexFormula) formula).getRightPart().isNegated()) {
-                        return complexFormulaFinalGrounder(temp.get(2),dk);
-                    }
-                    if ( !((ComplexFormula) formula).getLeftPart().isNegated() && ((ComplexFormula) formula).getRightPart().isNegated()) {
-                        return  complexFormulaFinalGrounder(temp.get(3),dk);
-                    }
-                    if (((ComplexFormula) formula).getLeftPart().isNegated() &&((ComplexFormula) formula).getRightPart().isNegated()) {
-                        return  complexFormulaFinalGrounder(temp.get(4),dk);
-                    }
-                    break;
+                    return complexFormulaFinalGrounder(formula,dk);
                 case OR:
                     break;
                 default:
@@ -510,10 +497,8 @@ public class Grounder {
         if (dk.getGroundingSet(formula).size() == 0) {
             return 0.0;
         }
+        sum = dk.getGroundingSet(formula).size();
 
-        for (BaseProfile bp : dk.getGroundingSet(formula)) {
-            sum++;
-        }
         if (sum != 0) {
             return sum / dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp());
         }
