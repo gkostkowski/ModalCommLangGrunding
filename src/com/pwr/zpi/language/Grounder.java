@@ -304,22 +304,23 @@ public class Grounder {
         return getCard(groundingSetPositive, time) / (getCard(groundingSetNegative, time) + getCard(groundingSetPositive, time));
     }
 
-    public static double relativeCard(Map<Formula, Set<BaseProfile>> groundingSets, int time, Formula formula) throws NotApplicableException {
-        if (!formula.getType().equals(Formula.Type.SIMPLE_MODALITY)) {
+    public static double relativeCard(DistributedKnowledge dk) throws NotApplicableException, InvalidFormulaException {
+        if (!dk.getFormula().getType().equals(Formula.Type.SIMPLE_MODALITY)) {
 
-            switch (((ComplexFormula) formula).getOperator()) {
+            switch (((ComplexFormula) dk.getFormula()).getOperator()) {
                 case AND:
-                    if ((boolean) ((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) ((ComplexFormula) formula).getRightPart().isNegated()) {
-                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(), ((ComplexFormula) formula).getRightPart().getTrait(), time, groundingSets.get(formula), 4);
+                    List<Formula> temp = NonBinaryHolon.getComplementaryFormulasv2((ComplexFormula) dk.getFormula());
+                    if ( !((ComplexFormula) dk.getFormula()).getLeftPart().isNegated() && !((ComplexFormula) dk.getFormula()).getRightPart().isNegated()) {
+                        return complexFormulaFinalGrounder(temp.get(1),dk);
                     }
-                    if ((boolean) !((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) ((ComplexFormula) formula).getRightPart().isNegated()) {
-                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(), ((ComplexFormula) formula).getRightPart().getTrait(), time, groundingSets.get(formula), 3);
+                    if (((ComplexFormula) dk.getFormula()).getLeftPart().isNegated() && !((ComplexFormula) dk.getFormula()).getRightPart().isNegated()) {
+                        return complexFormulaFinalGrounder(temp.get(2),dk);
                     }
-                    if ((boolean) ((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) !((ComplexFormula) formula).getRightPart().isNegated()) {
-                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(), ((ComplexFormula) formula).getRightPart().getTrait(), time, groundingSets.get(formula), 2);
+                    if ( !((ComplexFormula) dk.getFormula()).getLeftPart().isNegated() && ((ComplexFormula) dk.getFormula()).getRightPart().isNegated()) {
+                        return  complexFormulaFinalGrounder(temp.get(3),dk);
                     }
-                    if ((boolean) ((ComplexFormula) formula).getLeftPart().isNegated() && (boolean) ((ComplexFormula) formula).getRightPart().isNegated()) {
-                        return relativeCardConunction(((ComplexFormula) formula).getLeftPart().getTrait(), ((ComplexFormula) formula).getRightPart().getTrait(), time, groundingSets.get(formula), 1);
+                    if (((ComplexFormula) dk.getFormula()).getLeftPart().isNegated() &&((ComplexFormula) dk.getFormula()).getRightPart().isNegated()) {
+                        return  complexFormulaFinalGrounder(temp.get(4),dk);
                     }
                     break;
                 case OR:
@@ -328,7 +329,7 @@ public class Grounder {
                     break;
             }
         } else {
-            return getCard(groundingSets.get(formula), time);
+            return dk.getGroundingSet(dk.getFormula()).size();
         }
         return 0.0;
     }
