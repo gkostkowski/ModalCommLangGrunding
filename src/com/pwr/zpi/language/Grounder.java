@@ -304,22 +304,22 @@ public class Grounder {
         return getCard(groundingSetPositive, time) / (getCard(groundingSetNegative, time) + getCard(groundingSetPositive, time));
     }
 
-    public static double relativeCard(DistributedKnowledge dk) throws NotApplicableException, InvalidFormulaException {
-        if (!dk.getFormula().getType().equals(Formula.Type.SIMPLE_MODALITY)) {
+    public static double relativeCard(DistributedKnowledge dk, Formula formula) throws NotApplicableException, InvalidFormulaException {
+        if (!formula.getType().equals(Formula.Type.SIMPLE_MODALITY)) {
 
-            switch (((ComplexFormula) dk.getFormula()).getOperator()) {
+            switch (((ComplexFormula) formula).getOperator()) {
                 case AND:
-                    List<Formula> temp = NonBinaryHolon.getComplementaryFormulasv2((ComplexFormula) dk.getFormula());
-                    if ( !((ComplexFormula) dk.getFormula()).getLeftPart().isNegated() && !((ComplexFormula) dk.getFormula()).getRightPart().isNegated()) {
+                    List<Formula> temp = NonBinaryHolon.getComplementaryFormulasv2((ComplexFormula) formula);
+                    if ( !((ComplexFormula) formula).getLeftPart().isNegated() && !((ComplexFormula) formula).getRightPart().isNegated()) {
                         return complexFormulaFinalGrounder(temp.get(1),dk);
                     }
-                    if (((ComplexFormula) dk.getFormula()).getLeftPart().isNegated() && !((ComplexFormula) dk.getFormula()).getRightPart().isNegated()) {
+                    if (((ComplexFormula) formula).getLeftPart().isNegated() && !((ComplexFormula) formula).getRightPart().isNegated()) {
                         return complexFormulaFinalGrounder(temp.get(2),dk);
                     }
-                    if ( !((ComplexFormula) dk.getFormula()).getLeftPart().isNegated() && ((ComplexFormula) dk.getFormula()).getRightPart().isNegated()) {
+                    if ( !((ComplexFormula) formula).getLeftPart().isNegated() && ((ComplexFormula) formula).getRightPart().isNegated()) {
                         return  complexFormulaFinalGrounder(temp.get(3),dk);
                     }
-                    if (((ComplexFormula) dk.getFormula()).getLeftPart().isNegated() &&((ComplexFormula) dk.getFormula()).getRightPart().isNegated()) {
+                    if (((ComplexFormula) formula).getLeftPart().isNegated() &&((ComplexFormula) formula).getRightPart().isNegated()) {
                         return  complexFormulaFinalGrounder(temp.get(4),dk);
                     }
                     break;
@@ -329,7 +329,7 @@ public class Grounder {
                     break;
             }
         } else {
-            return dk.getGroundingSet(dk.getFormula()).size();
+            return dk.getGroundingSet(formula).size();
         }
         return 0.0;
     }

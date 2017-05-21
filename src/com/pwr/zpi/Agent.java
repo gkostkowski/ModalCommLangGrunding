@@ -163,7 +163,7 @@ public class Agent {
      */
     public DistributedKnowledge distributeKnowledge(Formula formula, int timestamp, boolean buildComplexDK) throws InvalidFormulaException {
         try {
-            return new DistributedKnowledge(this, formula);
+            return new DistributedKnowledge(this, formula, buildComplexDK);
         } catch (NotConsistentDKException e) {
             e.printStackTrace();
             return null;

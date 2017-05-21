@@ -45,8 +45,8 @@ public class NewNonBinaryHolon implements Holon{
     public void update() throws InvalidFormulaException, NotApplicableException {
         List<Formula> complFormulas = relatedFormula.getComplementaryFormulas();
         for (Formula f : complFormulas) {
-            //summaries.put(f,
-                    //Grounder.relativeCard(dk.getGroundingSets(), dk.getTimestamp(), f));
+            summaries.put(f,
+                    Grounder.relativeCard(dk, f));
         }
 
     }
