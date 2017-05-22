@@ -1,9 +1,7 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.BaseProfile;
-import com.pwr.zpi.IndividualModel;
-import com.pwr.zpi.State;
-import com.pwr.zpi.Trait;
+import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.semantic.IndividualModel;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 
 import java.util.List;

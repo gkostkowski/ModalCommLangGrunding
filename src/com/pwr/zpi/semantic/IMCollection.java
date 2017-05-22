@@ -1,4 +1,6 @@
-package com.pwr.zpi;
+package com.pwr.zpi.semantic;
+
+import com.pwr.zpi.episodic.Observation;
 
 import java.util.*;
 

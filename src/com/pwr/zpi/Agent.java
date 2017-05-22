@@ -1,11 +1,20 @@
 package com.pwr.zpi;
 
+import com.pwr.zpi.episodic.BPCollection;
+import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
+import com.pwr.zpi.holons.HolonCollection;
+import com.pwr.zpi.holons.NewHolonCollection;
+import com.pwr.zpi.holons.context.Context;
 import com.pwr.zpi.io.DatabaseAO;
 import com.pwr.zpi.language.DistributedKnowledge;
 import com.pwr.zpi.language.Formula;
+import com.pwr.zpi.semantic.IMCollection;
+import com.pwr.zpi.semantic.IndividualModel;
+import com.pwr.zpi.semantic.ObjectType;
 
 import java.util.Collection;
 
@@ -25,7 +34,8 @@ public class Agent {
     public Agent() {
         init();
         knowledgeBase = new BPCollection();
-        holons = new HolonCollection(this);
+        Context context= null;//new DistanceContext(); FuzzyContext(); ClusterisationContext();
+        holons = new HolonCollection(this, context);
         database = new DatabaseAO(this);
     }
 
@@ -39,14 +49,14 @@ public class Agent {
     public Agent(BPCollection knowledgeBase) {
         init();
         this.knowledgeBase = knowledgeBase;
-        holons = new HolonCollection(this);
+        holons = new HolonCollection(this, context);
     }
 
     public Agent(BPCollection knowledgeBase, IMCollection models) {
         init();
         this.models = models;
         this.knowledgeBase = knowledgeBase;
-        holons = new HolonCollection(this);
+        holons = new HolonCollection(this, context);
     }
 
     public Agent(BPCollection knowledgeBase, IMCollection models, HolonCollection holons) {

@@ -1,12 +1,8 @@
 package com.pwr.zpi.language
 
-import com.pwr.zpi.IndividualModel
-import com.pwr.zpi.ObjectType
-import com.pwr.zpi.QRCode
-import com.pwr.zpi.State
-import com.pwr.zpi.Trait
-import com.pwr.zpi.language.ComplexFormula
-import com.pwr.zpi.language.SimpleFormula
+import com.pwr.zpi.semantic.IndividualModel
+import com.pwr.zpi.semantic.ObjectType
+import com.pwr.zpi.semantic.QRCode
 import org.junit.Test
 
 /**

@@ -1,9 +1,10 @@
-package com.pwr.zpi.language;
+package com.pwr.zpi.holons;
 
 
-import com.pwr.zpi.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.holons.context.Context;
+import com.pwr.zpi.language.*;
 
 import java.util.List;
 import java.util.Map;
@@ -19,9 +20,10 @@ public class BinaryHolon implements Holon {
     protected Pair<Double, Double> Tao;
     protected List<Formula> formula;
 
-    public BinaryHolon(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+    public BinaryHolon(DistributedKnowledge dk, Context context) throws InvalidFormulaException, NotApplicableException {
         this.formula = dk.getComplementaryFormulas();
-        update(dk);
+        contextualisedGroundedSets=context.performContextualisation(dk.mapOfGroundingSets());
+        update(contextualisedGroundedSets);
     }
 
     // Odświeżenie Holonu odbywa się w pewnym momencie czasu (Nocy).

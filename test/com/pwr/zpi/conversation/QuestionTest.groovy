@@ -1,12 +1,11 @@
 package com.pwr.zpi.conversation
 
 import com.pwr.zpi.Agent
-import com.pwr.zpi.IMCollection
-import com.pwr.zpi.IndividualModel
-import com.pwr.zpi.ObjectType
-import com.pwr.zpi.QRCode
-import com.pwr.zpi.State
-import com.pwr.zpi.Trait
+import com.pwr.zpi.semantic.IndividualModel
+import com.pwr.zpi.semantic.ObjectType
+import com.pwr.zpi.semantic.QRCode
+import com.pwr.zpi.language.State
+import com.pwr.zpi.language.Trait
 import com.pwr.zpi.language.ComplexFormula
 import com.pwr.zpi.language.LogicOperator
 import com.pwr.zpi.language.SimpleFormula

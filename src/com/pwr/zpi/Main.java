@@ -1,6 +1,9 @@
 package com.pwr.zpi;
 
 import com.pwr.zpi.conversation.Conversation;
+import com.pwr.zpi.episodic.Observation;
+import com.pwr.zpi.language.Trait;
+import com.pwr.zpi.semantic.QRCode;
 
 import java.util.HashMap;
 

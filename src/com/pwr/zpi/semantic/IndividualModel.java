@@ -1,5 +1,7 @@
-package com.pwr.zpi;
+package com.pwr.zpi.semantic;
 
+
+import com.pwr.zpi.language.Trait;
 
 import java.util.List;
 

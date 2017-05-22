@@ -1,10 +1,12 @@
 package com.pwr.zpi.language
 
 import com.pwr.zpi.*
-import com.pwr.zpi.language.*
+import com.pwr.zpi.episodic.BPCollection
+import com.pwr.zpi.episodic.BaseProfile
+import com.pwr.zpi.semantic.IndividualModel
+import com.pwr.zpi.semantic.ObjectType
+import com.pwr.zpi.semantic.QRCode
 import org.testng.annotations.Test
-
-import java.lang.reflect.Method
 
 class GrounderTest extends GroovyTestCase {
 

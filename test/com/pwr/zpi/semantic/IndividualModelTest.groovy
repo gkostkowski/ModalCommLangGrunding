@@ -1,5 +1,7 @@
-package com.pwr.zpi
-
+import com.pwr.zpi.semantic.QRCode
+import com.pwr.zpi.language.Trait
+import com.pwr.zpi.semantic.IndividualModel
+import com.pwr.zpi.semantic.ObjectType
 import org.junit.Test
 
 /**

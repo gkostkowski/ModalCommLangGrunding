@@ -1,4 +1,8 @@
-package com.pwr.zpi;
+package com.pwr.zpi.episodic;
+
+import com.pwr.zpi.semantic.Identifier;
+import com.pwr.zpi.semantic.ObjectType;
+import com.pwr.zpi.language.Trait;
 
 import java.util.Map;
 

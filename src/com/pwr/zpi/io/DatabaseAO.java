@@ -1,6 +1,11 @@
 package com.pwr.zpi.io;
 
 import com.pwr.zpi.*;
+import com.pwr.zpi.episodic.Observation;
+import com.pwr.zpi.language.Trait;
+import com.pwr.zpi.semantic.Identifier;
+import com.pwr.zpi.semantic.ObjectType;
+import com.pwr.zpi.semantic.QRCode;
 
 import java.io.IOException;
 import java.nio.file.Files;

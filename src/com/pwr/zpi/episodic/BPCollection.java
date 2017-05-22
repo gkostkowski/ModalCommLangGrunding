@@ -1,5 +1,8 @@
-package com.pwr.zpi;
+package com.pwr.zpi.episodic;
 
+import com.pwr.zpi.semantic.IndividualModel;
+import com.pwr.zpi.language.State;
+import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.language.Formula;
 
 import java.util.*;

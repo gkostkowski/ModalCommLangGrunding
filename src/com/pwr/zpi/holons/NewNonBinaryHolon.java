@@ -1,7 +1,12 @@
-package com.pwr.zpi.language;
+package com.pwr.zpi.holons;
 
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.holons.context.Context;
+import com.pwr.zpi.language.DistributedKnowledge;
+import com.pwr.zpi.language.Formula;
+import com.pwr.zpi.language.Grounder;
+import com.pwr.zpi.language.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +24,7 @@ public class NewNonBinaryHolon implements Holon{
     Map<Formula, Double> summaries;
     DistributedKnowledge dk;
 
-    NewNonBinaryHolon(Formula formula, DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+    NewNonBinaryHolon(DistributedKnowledge formula, Context dk) throws InvalidFormulaException, NotApplicableException {
         if (formula != null && !dk.isRelated(formula))
             throw new IllegalStateException("Given formula is not related to specified knowledge distribution.");
         relatedFormula = formula != null ? formula : dk.getFormula();

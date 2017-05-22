@@ -1,5 +1,8 @@
-package com.pwr.zpi;
+package com.pwr.zpi.episodic;
 
+import com.pwr.zpi.semantic.IndividualModel;
+import com.pwr.zpi.language.State;
+import com.pwr.zpi.language.Trait;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
@@ -104,7 +107,7 @@ public class BaseProfile {
         return res;
     }
 
-    public Set<IndividualModel> getAffectedIMs(State ... selectedStates) {
+    public Set<IndividualModel> getAffectedIMs(State... selectedStates) {
         if (selectedStates == null)
             throw new NullPointerException("Specified array is null.");
         Set<IndividualModel> res = new HashSet<IndividualModel>();

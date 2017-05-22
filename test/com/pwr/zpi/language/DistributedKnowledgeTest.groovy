@@ -1,18 +1,11 @@
 package com.pwr.zpi.language
 
 import com.pwr.zpi.Agent
-import com.pwr.zpi.BPCollection
-import com.pwr.zpi.BaseProfile
-import com.pwr.zpi.IndividualModel
-import com.pwr.zpi.ObjectType
-import com.pwr.zpi.QRCode
-import com.pwr.zpi.State
-import com.pwr.zpi.Trait
-import com.pwr.zpi.language.ComplexFormula
-import com.pwr.zpi.language.DistributedKnowledge
-import com.pwr.zpi.language.Formula
-import com.pwr.zpi.language.LogicOperator
-import com.pwr.zpi.language.SimpleFormula
+import com.pwr.zpi.episodic.BPCollection
+import com.pwr.zpi.episodic.BaseProfile
+import com.pwr.zpi.semantic.IndividualModel
+import com.pwr.zpi.semantic.ObjectType
+import com.pwr.zpi.semantic.QRCode
 import javafx.util.Pair
 import org.junit.Test
 
