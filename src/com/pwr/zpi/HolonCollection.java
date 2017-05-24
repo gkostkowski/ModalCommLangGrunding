@@ -116,6 +116,7 @@ import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.language.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -124,6 +125,7 @@ import java.util.Set;
 public class HolonCollection {
 
     private Set<Holon> holonCollection;
+    private List<ContectverJar> contextList;
     Agent owner;
 
     /**
