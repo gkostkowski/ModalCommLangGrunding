@@ -220,7 +220,7 @@ public class Grounder {
             default:
                 minRange = maxRange = thresholds[4];
         }
-        return amongNoClearStateObjects && isPresentInWM && relativeCard >= minRange && relativeCard <= maxRange ?
+        return amongNoClearStateObjects && isPresentInWM && relativeCard >= minRange && relativeCard < maxRange ?
                 inspectedOperator : null;
     }
 

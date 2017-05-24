@@ -1,6 +1,7 @@
 package com.pwr.zpi.holons.context.measures;
 
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.holons.context.LatestFilteringContext;
 
 /**
  * Class implements distance measure between two given base profiles. If distance is equal 0, then it means that given
