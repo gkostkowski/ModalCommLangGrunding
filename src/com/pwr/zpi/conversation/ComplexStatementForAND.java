@@ -1,6 +1,7 @@
 package com.pwr.zpi.conversation;
 
 import com.pwr.zpi.Agent;
+import com.pwr.zpi.holons.NonBinaryHolon;
 import com.pwr.zpi.language.*;
 
 

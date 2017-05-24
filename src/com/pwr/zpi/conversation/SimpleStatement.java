@@ -1,8 +1,8 @@
 package com.pwr.zpi.conversation;
 
 import com.pwr.zpi.Agent;
-import com.pwr.zpi.State;
-import com.pwr.zpi.language.BinaryHolon;
+import com.pwr.zpi.language.State;
+import com.pwr.zpi.holons.BinaryHolon;
 import com.pwr.zpi.language.SimpleFormula;
 
 

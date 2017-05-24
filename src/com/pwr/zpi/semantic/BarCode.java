@@ -1,9 +1,11 @@
-package com.pwr.zpi;
+package com.pwr.zpi.semantic;
+
+import com.pwr.zpi.semantic.Identifier;
 
 /**
  * Example of identifier.
  */
-public class BarCode extends Identifier{
+public class BarCode extends Identifier {
 
     String id;
 

@@ -1,10 +1,12 @@
 package com.pwr.zpi.language
 
 import com.pwr.zpi.*
-import com.pwr.zpi.language.*
+import com.pwr.zpi.episodic.BPCollection
+import com.pwr.zpi.episodic.BaseProfile
+import com.pwr.zpi.semantic.IndividualModel
+import com.pwr.zpi.semantic.ObjectType
+import com.pwr.zpi.semantic.QRCode
 import org.testng.annotations.Test
-
-import java.lang.reflect.Method
 
 class GrounderTest extends GroovyTestCase {
 
@@ -19,6 +21,11 @@ class GrounderTest extends GroovyTestCase {
     ComplexFormula cformula1, cformula2,cformula3,cformula4
     DistributedKnowledge testDk, testDk1, testDk2, testDk3, testDk4, testDk5, testDk6,
                          testCDk1, testCDk2
+
+    def im1, model2, model3, model4, model5, model6, model7
+    def tr1, tr2, tr3, tr4, tr5
+
+
 
     /**
      * Builds all required dependencies.
@@ -106,8 +113,6 @@ class GrounderTest extends GroovyTestCase {
 
     void buildRelatedScenario(int phaseNbr) {
 
-        def tr1, tr2, tr3, tr4, tr5
-        def im1, model2, model3, model4, model5, model6, model7
         def usedIMs
         int defTime = 1
 
@@ -217,15 +222,23 @@ class GrounderTest extends GroovyTestCase {
 
         buildRelatedScenario(0)
         def res = Grounder.performFormulaGrounding(agent, cformula1)
-        println res
+        assertEquals([(new ComplexFormula(im1, [tr3, tr2], [State.IS, State.IS_NOT], LogicOperator.AND)):ModalOperator.POS,
+                      (new ComplexFormula(im1, [tr3, tr2], [State.IS_NOT, State.IS_NOT], LogicOperator.AND)):ModalOperator.BEL]as Map<Formula, ModalOperator>,
+                res)
         buildRelatedScenario(1)
         res = Grounder.performFormulaGrounding(agent, cformula2)
-        println res
+        assertEquals([(new ComplexFormula(im1, [tr1, tr2], [State.IS, State.IS_NOT], LogicOperator.AND)):ModalOperator.KNOW]as Map<Formula, ModalOperator>,
+                res)
         buildRelatedScenario(2)
         res = Grounder.performFormulaGrounding(agent, cformula3)
-        println res
+        assertEquals([(new ComplexFormula(im1, [tr1, tr3], [State.IS, State.IS], LogicOperator.AND)):ModalOperator.POS,
+                      (new ComplexFormula(im1, [tr1, tr3], [State.IS, State.IS_NOT], LogicOperator.AND)):ModalOperator.POS]as Map<Formula, ModalOperator>,
+                res)
         res = Grounder.performFormulaGrounding(agent, cformula4)
-        println res
+        assertEquals([(new ComplexFormula(im1, [tr2, tr3], [State.IS_NOT, State.IS_NOT], LogicOperator.AND)):ModalOperator.POS,
+                      (new ComplexFormula(im1, [tr2, tr3], [State.IS, State.IS], LogicOperator.AND)):ModalOperator.POS,
+                      (new ComplexFormula(im1, [tr2, tr3], [State.IS_NOT, State.IS], LogicOperator.AND)):ModalOperator.POS]as Map<Formula, ModalOperator>,
+                res)
 
     }
 

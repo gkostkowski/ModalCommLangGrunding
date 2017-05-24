@@ -1,12 +1,12 @@
-package com.pwr.zpi
+package episodic
 
-import com.pwr.zpi.BPCollection
-import com.pwr.zpi.BaseProfile
-import com.pwr.zpi.IndividualModel
-import com.pwr.zpi.ObjectType
-import com.pwr.zpi.QRCode
-import com.pwr.zpi.State
-import com.pwr.zpi.Trait
+import com.pwr.zpi.semantic.IndividualModel
+import com.pwr.zpi.semantic.ObjectType
+import com.pwr.zpi.semantic.QRCode
+import com.pwr.zpi.language.State
+import com.pwr.zpi.language.Trait
+import com.pwr.zpi.episodic.BPCollection
+import com.pwr.zpi.episodic.BaseProfile
 import org.junit.Test
 
 /**
@@ -116,16 +116,16 @@ class BPCollectionTest extends GroovyTestCase {
     void testAddToMemory() {
         buildTestObject()
         def msg = shouldFail {
-            testBpc.addToMemory(null, BPCollection.MemoryType.WM)
+            testBpc.addToMemory(BPCollection.MemoryType.WM, null)
         }
         assertEquals(testBpc.getTimestamp(), t4)
-        testBpc.addToMemory(bp5, BPCollection.MemoryType.WM)
+        testBpc.addToMemory(BPCollection.MemoryType.WM, bp5)
         assertEquals(bp5, testBpc.getBaseProfile(t5, BPCollection.MemoryType.WM))
         assertEquals(t5, testBpc.getTimestamp())   //checking if updateTimestamp works
 
 
         def oldBP2 = testBpc.getBaseProfile(t2, BPCollection.MemoryType.WM)
-        testBpc.addToMemory(bp2_2, BPCollection.MemoryType.WM)
+        testBpc.addToMemory(BPCollection.MemoryType.WM, bp2_2)
         assert (!testBpc.getWorkingMemory().contains(oldBP2))
         assertEquals(bp2_2, testBpc.getBaseProfile(t2, BPCollection.MemoryType.WM))
 
@@ -199,7 +199,7 @@ class BPCollectionTest extends GroovyTestCase {
         assertEquals(testBpc.getLongTermMemory(), testBpc.getBaseProfiles(t5, BPCollection.MemoryType.LM))
         def allBPs = [bp1, bp2, bp3, bp4] as Set
         assertEquals(allBPs, testBpc.getBaseProfiles(t5))
-        testBpc.addToMemory(bp5, BPCollection.MemoryType.WM)
+        testBpc.addToMemory(BPCollection.MemoryType.WM, bp5)
         assertEquals([bp1, bp2, bp3, bp4, bp5] as Set, testBpc.getBaseProfiles(t5))
 
     }

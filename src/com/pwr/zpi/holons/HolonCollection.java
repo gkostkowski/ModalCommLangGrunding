@@ -108,16 +108,21 @@ public class HolonCollection {
  * agenta ktory i tak nie moze byc inny niz wlasciciel tej holonCollection
  * - jakieś kosmetyczne poprawki
  */
-package com.pwr.zpi;
+package com.pwr.zpi.holons;
 
+import com.pwr.zpi.Agent;
+import com.pwr.zpi.exceptions.InvalidContextException;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
+import com.pwr.zpi.holons.context.Context;
 import com.pwr.zpi.language.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Class stores collection of all holons in agent's memory.
@@ -127,6 +132,11 @@ public class HolonCollection {
     private Set<Holon> holonCollection;
     private List<ContectverJar> contextList;
     Agent owner;
+    /**
+     * Object of Context concrete class providing "contextualisation service".
+     */
+    Context holonsContext;
+
 
     /**
      * Complex constructor.
@@ -135,13 +145,31 @@ public class HolonCollection {
      */
     public HolonCollection(Set<Holon> holonCollection, Agent owner) {
         if (owner == null)
-            throw new NullPointerException("Agent not specified.");
-        this.holonCollection = holonCollection != null ? holonCollection : new HashSet<>();
+            throw new NullPointerException("Some parameter was not specified.");
+
+        this.holonCollection = holonCollection != null ? holonCollection : new TreeSet<>();
+        try {
+            checkHolonsConsistency(holonCollection);
+        } catch (InvalidContextException e) {
+            this.holonCollection = new TreeSet<>();
+        }
         this.owner = owner;
     }
 
-    public HolonCollection(Agent owner) {
-        this(null, owner);
+    private void checkHolonsConsistency(Set<Holon> holonCollection) throws InvalidContextException {
+        Context examined = new ArrayList<>(holonCollection).get(0).getContext();
+        for (Holon holon : holonCollection)
+            if (!holon.getContext().equals(examined))
+                throw new InvalidContextException("Set contains holons with different context.");
+    }
+
+    public HolonCollection(Agent owner, Context context) {
+            if (owner == null || context == null)
+                throw new NullPointerException("Some parameter was not specified.");
+
+            this.holonCollection = new TreeSet<>();
+            this.holonsContext = context;
+            this.owner = owner;
     }
 
 
@@ -154,7 +182,7 @@ public class HolonCollection {
      */
     public Holon getHolon(Formula formula, int timeStamp) {
         for (Holon h : holonCollection) {
-            if (h.getFormula().get(0).isFormulaSimilar(formula)) {
+            if (h.getAffectedFormulas().get(0).isFormulaSimilar(formula)) {
                 return h;
             }
         }
@@ -172,8 +200,8 @@ public class HolonCollection {
         Holon holon = null;
         try {
             if (formula instanceof SimpleFormula)
-                holon = new BinaryHolon(new DistributedKnowledge(owner, formula, timestamp, true));
-            else holon = new NewNonBinaryHolon(owner.distributeKnowledge(formula, timestamp, true));
+                holon = new BinaryHolon(new DistributedKnowledge(owner, formula, timestamp, true), holonsContext);
+            else holon = new NewNonBinaryHolon(owner.distributeKnowledge(formula, timestamp, true), holonsContext);
 
             holonCollection.add(holon);
         } catch (InvalidFormulaException e) {

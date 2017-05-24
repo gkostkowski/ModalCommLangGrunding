@@ -1,9 +1,12 @@
 package com.pwr.zpi.language;
 
 import com.pwr.zpi.*;
+import com.pwr.zpi.episodic.BPCollection;
+import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
+import com.pwr.zpi.holons.Holon;
 import com.sun.istack.internal.Nullable;
 
 import java.util.*;
@@ -111,7 +114,7 @@ public class Grounder {
         int timestamp = dk.getTimestamp();
 
         for (Formula currFormula : complementaryFormulas)
-            if ((currOperator = checkEpistemicConditions(formula, dk, agent.getHolons().getHolon(formula, timestamp))) != null)
+            if ((currOperator = checkEpistemicConditions(currFormula, dk, agent.getHolons().getHolon(currFormula, timestamp))) != null)
                 res.put(currFormula, currOperator);
 
         return res;
@@ -136,7 +139,7 @@ public class Grounder {
         boolean amongNoClearStateObjects = true;
         boolean amongClearStateObjects = true;
 
-        for (int i = 0; i < formula.getTraits().size(); i++) {  //supports complex formulas
+        /*for (int i = 0; i < formula.getTraits().size(); i++) {  //supports complex formulas
             Set<IndividualModel> clearStatesObjects = dk.getRelatedObservationsBase()
                     .getIMsByTraitStates(formula.getTraits().get(i), new State[]{State.IS, State.IS_NOT}, timestamp);
             amongNoClearStateObjects = amongNoClearStateObjects && !new ArrayList<>(clearStatesObjects).contains(formula.getModel());
@@ -144,7 +147,7 @@ public class Grounder {
             Set<IndividualModel> selectedStatesObjects = dk.getRelatedObservationsBase()
                     .getIMsByTraitState(formula.getTraits().get(i), formula.getStates().get(i), timestamp);
             amongClearStateObjects = amongClearStateObjects && new ArrayList<>(selectedStatesObjects).contains(formula.getModel());
-        }
+        }*/
 
         boolean isPresentInWM = !dk.getDkClassByDesc(formula, BPCollection.MemoryType.WM).isEmpty();
         ModalOperator res = null;
@@ -424,7 +427,7 @@ public class Grounder {
      * @return Double value of Type of operator which can be applied to formula given through distribution of knowledge.
      * @see DistributedKnowledge
      */
-    static double determineFulfillmentDouble(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
+    public static double determineFulfillmentDouble(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
 
         if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
                 || dk.isDkComplex() && !new ArrayList(dk.getComplementaryFormulas()).contains(formula))
@@ -500,7 +503,7 @@ public class Grounder {
         sum = dk.getGroundingSet(formula).size();
 
         if (sum != 0) {
-            System.out.println("sumsum" +sum + " " + formula);
+            //System.out.println("sumsum" +sum + " " + formula);
             return sum / dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp());
         }
         return 0.0;

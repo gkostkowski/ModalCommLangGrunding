@@ -1,8 +1,8 @@
 package com.pwr.zpi.io;
 
 
-import com.pwr.zpi.ObjectType;
-import com.pwr.zpi.Trait;
+import com.pwr.zpi.semantic.ObjectType;
+import com.pwr.zpi.language.Trait;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 

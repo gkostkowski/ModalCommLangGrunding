@@ -1,5 +1,11 @@
-package com.pwr.zpi
+package episodic
 
+import com.pwr.zpi.semantic.IndividualModel
+import com.pwr.zpi.semantic.ObjectType
+import com.pwr.zpi.semantic.QRCode
+import com.pwr.zpi.language.State
+import com.pwr.zpi.language.Trait
+import com.pwr.zpi.episodic.BaseProfile
 import org.junit.Test
 
 

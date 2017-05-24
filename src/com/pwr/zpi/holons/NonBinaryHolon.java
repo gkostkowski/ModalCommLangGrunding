@@ -1,10 +1,10 @@
-package com.pwr.zpi.language;
+package com.pwr.zpi.holons;
 
 
-import com.pwr.zpi.Agent;
-import com.pwr.zpi.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.language.*;
+
 import java.util.*;
 public class NonBinaryHolon implements Holon{
 

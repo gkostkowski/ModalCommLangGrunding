@@ -2,8 +2,11 @@ package com.pwr.zpi.language;
 
 import com.pwr.zpi.*;
 
+import com.pwr.zpi.episodic.BPCollection;
+import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
+import com.pwr.zpi.semantic.IndividualModel;
 import com.sun.istack.internal.NotNull;
 import javafx.util.Pair;
 

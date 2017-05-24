@@ -1,13 +1,11 @@
 package com.pwr.zpi.conversation
 
 import com.pwr.zpi.Agent
-import com.pwr.zpi.IndividualModel
-import com.pwr.zpi.ObjectType
-import com.pwr.zpi.QRCode
-import com.pwr.zpi.Trait
-import com.pwr.zpi.language.Formula
+import com.pwr.zpi.semantic.IndividualModel
+import com.pwr.zpi.semantic.ObjectType
+import com.pwr.zpi.semantic.QRCode
+import com.pwr.zpi.language.Trait
 import com.pwr.zpi.language.SimpleFormula
-import junit.framework.Test
 
 /**
  * Created by Weronika on 13.05.2017.

@@ -1,5 +1,6 @@
-package com.pwr.zpi;
+package com.pwr.zpi.holons;
 
+import com.pwr.zpi.Agent;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
@@ -64,7 +65,7 @@ public class NewHolonCollection {
         Holon holon = null;
         try {
             if (formula instanceof SimpleFormula)
-                holon = new BinaryHolon(new DistributedKnowledge(owner, formula, timestamp, true));
+                holon = new BinaryHolon(new DistributedKnowledge(owner, formula, timestamp, true), context);
             else holon = new NonBinaryHolon(owner.distributeKnowledge(formula, timestamp, true));
 
             holonCollection.add(holon);

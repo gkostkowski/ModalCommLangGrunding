@@ -1,5 +1,6 @@
-package com.pwr.zpi;
+package com.pwr.zpi.semantic;
 
+import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.io.XMLDAO;
 
 import java.util.Collection;

@@ -1,7 +1,4 @@
-package com.pwr.zpi;
-
-import java.util.ArrayList;
-import java.util.Collection;
+package com.pwr.zpi.semantic;
 
 import static com.pwr.zpi.Agent.objectTypeCollection;
 

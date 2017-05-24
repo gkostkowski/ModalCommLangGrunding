@@ -1,15 +1,11 @@
 package com.pwr.zpi.io
 
-import com.pwr.zpi.ObjectType
+import com.pwr.zpi.semantic.ObjectType
 import com.pwr.zpi.util.GenericObject
 
 //package io
 
 import org.junit.Test
-
-import java.lang.reflect.Constructor
-import java.nio.file.Path
-import java.nio.file.Paths
 
 /**
  * Created by Grzesiek on 2017-04-08.

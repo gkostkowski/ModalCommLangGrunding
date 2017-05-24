@@ -5,6 +5,7 @@ import com.pwr.zpi.*;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
 import com.pwr.zpi.language.*;
+import com.pwr.zpi.semantic.IndividualModel;
 
 import java.util.ArrayList;
 import java.util.List;
