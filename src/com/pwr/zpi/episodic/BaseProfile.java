@@ -333,4 +333,15 @@ public class BaseProfile {
         return new ArrayList(getIMsByTraitState(selectedTrait, State.IS)).contains(model)
                 || new ArrayList(getIMsByTraitState(selectedTrait, State.IS_NOT)).contains(model);
     }
+
+    /**
+     * @return set of all traits described in this base profile.
+     */
+    public Set<Trait> getAllTraits() {
+        Set<Trait> res = new HashSet<>();
+        res.addAll(describedByTraits.keySet());
+        res.addAll(notDescribedByTraits.keySet());
+        res.addAll(indefiniteByTraits.keySet());
+        return res;
+    }
 }

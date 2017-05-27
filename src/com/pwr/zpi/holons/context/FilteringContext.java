@@ -3,6 +3,7 @@ package com.pwr.zpi.holons.context;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.holons.context.measures.Measure;
 import com.pwr.zpi.language.Formula;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.Map;
 import java.util.Set;
@@ -28,6 +29,8 @@ public abstract class FilteringContext implements Context {
     Set<BaseProfile> representativeBPs;
 
     public FilteringContext(Measure measure, double maxValue) {
+        if (measure == null)
+            throw new NullPointerException("Measure wasn't specified.");
         this.measure = measure;
         this.maxValue =maxValue;
     }

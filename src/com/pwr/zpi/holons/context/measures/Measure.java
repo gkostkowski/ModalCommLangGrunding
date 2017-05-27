@@ -8,6 +8,7 @@ import com.pwr.zpi.episodic.BaseProfile;
  *
  */
 public interface Measure {
+
     /**
      * Method counts value of implemented measure for given two base profiles.
      * @param first

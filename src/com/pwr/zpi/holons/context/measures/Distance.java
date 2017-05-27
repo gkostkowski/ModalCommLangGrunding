@@ -2,6 +2,10 @@ package com.pwr.zpi.holons.context.measures;
 
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.holons.context.LatestFilteringContext;
+import com.pwr.zpi.language.Trait;
+import com.pwr.zpi.semantic.IndividualModel;
+
+import java.util.*;
 
 /**
  * Class implements distance measure between two given base profiles. If distance is equal 0, then it means that given
@@ -20,9 +24,46 @@ public class Distance implements Measure {
         this.maxThreshold = DEF_MAX_THRESHOLD;
     }
 
+    /**
+     * Method counts distance between given two base profiles. Distance is a number of all differences in particular
+     * maps of traits and IMs.
+     * @param first
+     * @param second
+     * @return value of distance. 0 mean that two base profiles are identical.
+     */
     @Override
     public double count(BaseProfile first, BaseProfile second) {
-        return 0; //todo
+        int differentIMs=0;
+
+            List<Map<Trait, Set<IndividualModel>>> mapsToProcess = new ArrayList<Map<Trait, Set<IndividualModel>>>(){{
+                add(first.getDescribedByTraits());
+                add(first.getNotDescribedByTraits());
+                add(first.getIndefiniteByTraits());
+            }};
+            List<Map<Trait, Set<IndividualModel>>> mapsToCompare = new ArrayList<Map<Trait, Set<IndividualModel>>>(){{
+                add(second.getDescribedByTraits());
+                add(second.getNotDescribedByTraits());
+                add(second.getIndefiniteByTraits());
+            }};
+
+            for (int i=0; i< mapsToProcess.size(); i++) {
+                Map<Trait, Set<IndividualModel>> currMap = mapsToProcess.get(i);
+                Map<Trait, Set<IndividualModel>> comparedMap = mapsToCompare.get(i);
+                for (Trait trait : currMap.keySet()) {
+                    if (comparedMap.get(trait) == null)
+                        differentIMs += currMap.get(trait).size();
+                    else {
+
+                        Set<IndividualModel> minus=new HashSet<>(currMap.get(trait));
+                        minus.removeAll(comparedMap.get(trait));
+                        differentIMs+=minus.size();
+                        minus=new HashSet<>(comparedMap.get(trait));
+                        minus.removeAll(currMap.get(trait));
+                        differentIMs+=minus.size();
+                    }
+                }
+            }
+        return differentIMs;
     }
 
     /**
