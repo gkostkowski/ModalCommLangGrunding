@@ -162,7 +162,7 @@ public class HolonCollection {
     }
 
     public HolonCollection(Agent owner, Context context) {
-            if (owner == null || context == null)
+            if (owner == null /*|| context == null*/)
                 throw new NullPointerException("Some parameter was not specified.");
 
             this.holonCollection = new TreeSet<>();
@@ -220,7 +220,7 @@ public class HolonCollection {
     }
 
 
-    public Holon findHolon(Formula formula, Agent agent, int timestamp) {
+    public Holon findHolon(Formula formula, int timestamp) {
         for (Holon holon : holonCollection)
             if (holon.getFormula().equals(formula))
                 return holon;

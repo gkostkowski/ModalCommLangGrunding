@@ -324,21 +324,27 @@ public class Grounder {
         return 0.0;
     }
 
-    /**
-     * Defines grounded set Ai(t) responsible for induction of mental model mi connected to baseProfile which
-     * involves connotations with both observations P,and Q.Depending on i
-     * i=1 - Returns BaseProfiles where Object o has Trait P and has Trait Q
-     * i=2 - Returns BaseProfiles where Object o has Trait P and does not have Trait Q
-     * i=3 - Returns BaseProfiles where Object o does not have Trait P and has Trait Q
-     * i=4 - Returns BaseProfiles where Object o does not have Trait P and does not have Trait Q
-     *
-     * @param P    Trait of individualModel
-     * @param Q    Trait of individualModel
-     * @param time Time taken into consideration when looking for expieriences
-     * @param all  Set of BaseProfiles gives us set from which we'll evaluate those which contain Positive Traits
-     * @param i    indicator,indicating which case we'd like to use
-     * @return
-     */
+
+    public static double relativeCard(Map<Formula, Set<BaseProfile>> groundingSets, Formula formula)
+            throws NotApplicableException, InvalidFormulaException {
+        return 0.0;//relativeCard() todo Jarema
+    }
+
+        /**
+         * Defines grounded set Ai(t) responsible for induction of mental model mi connected to baseProfile which
+         * involves connotations with both observations P,and Q.Depending on i
+         * i=1 - Returns BaseProfiles where Object o has Trait P and has Trait Q
+         * i=2 - Returns BaseProfiles where Object o has Trait P and does not have Trait Q
+         * i=3 - Returns BaseProfiles where Object o does not have Trait P and has Trait Q
+         * i=4 - Returns BaseProfiles where Object o does not have Trait P and does not have Trait Q
+         *
+         * @param P    Trait of individualModel
+         * @param Q    Trait of individualModel
+         * @param time Time taken into consideration when looking for expieriences
+         * @param all  Set of BaseProfiles gives us set from which we'll evaluate those which contain Positive Traits
+         * @param i    indicator,indicating which case we'd like to use
+         * @return
+         */
 
 
     static Set<BaseProfile> getGroundingSetsConjunction(Trait P, Trait Q, int time, Set<BaseProfile> all,

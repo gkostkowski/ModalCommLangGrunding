@@ -1,6 +1,7 @@
 package com.pwr.zpi.holons;
 
 
+import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.holons.context.Context;
@@ -8,6 +9,7 @@ import com.pwr.zpi.language.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents belief on simple formula.
@@ -22,8 +24,8 @@ public class BinaryHolon implements Holon {
 
     public BinaryHolon(DistributedKnowledge dk, Context context) throws InvalidFormulaException, NotApplicableException {
         this.formula = dk.getComplementaryFormulas();
-        contextualisedGroundedSets=context.performContextualisation(dk.mapOfGroundingSets());
-        update(contextualisedGroundedSets);
+        Map<Formula, Set<BaseProfile>> contextualisedGroundedSets = context.performContextualisation(dk.mapOfGroundingSets());
+        //update(contextualisedGroundedSets); //todo
     }
 
     // Odświeżenie Holonu odbywa się w pewnym momencie czasu (Nocy).
@@ -155,5 +157,13 @@ public class BinaryHolon implements Holon {
     @Override
     public List<Formula> getAffectedFormulas() {
         return null;
+    }
+
+    /**
+     * Returns context which was used to build grounding sets for this holon.
+     */
+    @Override
+    public Context getContext() {
+        return null; //todo
     }
 }
