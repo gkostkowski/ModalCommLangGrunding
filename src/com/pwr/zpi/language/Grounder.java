@@ -7,6 +7,7 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.Holon;
+import com.pwr.zpi.semantic.IndividualModel;
 import com.sun.istack.internal.Nullable;
 
 import java.util.*;
@@ -127,6 +128,8 @@ public class Grounder {
      * (namely, processed as it was given).
      * Method decides which modal operator can occur for given formula. If none of possible, then null is returned.
      * This is an exact part of grounding process.
+     * Note: Modal operators such BEL or KNOW may only occur if last related observation didn't provide sufficient
+     * information about state of given trait in object (namely, state was MAYHAPS).
      *
      * @param formula
      * @param dk
@@ -136,13 +139,19 @@ public class Grounder {
     @Nullable
     public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk, Holon holon,
                                                          int timestamp) throws NotApplicableException {
-        boolean amongNoClearStateObjects = true;
+        boolean hasLastClearState = true;
         boolean amongClearStateObjects = true;
 
+        BaseProfile lastBP = dk.getRelatedObservationsBase()
+                .getBaseProfile(timestamp, BPCollection.MemoryType.WM);
+        for (Trait selectedTrait :formula.getTraits()) {  //supports complex formulas
+            hasLastClearState = hasLastClearState &&
+                    lastBP.isContainingClearDescriptionFor(formula.getModel(), selectedTrait);
+        }
         /*for (int i = 0; i < formula.getTraits().size(); i++) {  //supports complex formulas
             Set<IndividualModel> clearStatesObjects = dk.getRelatedObservationsBase()
                     .getIMsByTraitStates(formula.getTraits().get(i), new State[]{State.IS, State.IS_NOT}, timestamp);
-            amongNoClearStateObjects = amongNoClearStateObjects && !new ArrayList<>(clearStatesObjects).contains(formula.getModel());
+            hasLastClearState = hasLastClearState && !new ArrayList<>(clearStatesObjects).contains(formula.getModel());
 
             Set<IndividualModel> selectedStatesObjects = dk.getRelatedObservationsBase()
                     .getIMsByTraitState(formula.getTraits().get(i), formula.getStates().get(i), timestamp);
@@ -152,7 +161,7 @@ public class Grounder {
         boolean isPresentInWM = !dk.getDkClassByDesc(formula, BPCollection.MemoryType.WM).isEmpty();
         ModalOperator res = null;
 
-        if (amongNoClearStateObjects) {
+        if (!hasLastClearState) {
 //            double currRelCard = relativeCard(dk.getGroundingSets(), timestamp, formula);
             double currRelCard = holon.getSummary(formula);
             ModalOperator[] checkedOps = {ModalOperator.POS, ModalOperator.BEL, ModalOperator.KNOW};
@@ -160,8 +169,8 @@ public class Grounder {
             for (int i = 0; i < checkedOps.length && res == null; i++)
                 res = checkEpistemicCondition(true, isPresentInWM, currRelCard,
                         checkedOps[i], appropriateTresholds);
-        } else if (amongClearStateObjects)
-            res = ModalOperator.KNOW;
+        } else
+            res = formula.isFormulaFulfilled(lastBP) ? ModalOperator.KNOW : null;
 
         return res;
     }

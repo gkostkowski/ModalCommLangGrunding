@@ -107,16 +107,6 @@ public class BaseProfile {
         return res;
     }
 
-    public Set<IndividualModel> getAffectedIMs(State... selectedStates) {
-        if (selectedStates == null)
-            throw new NullPointerException("Specified array is null.");
-        Set<IndividualModel> res = new HashSet<IndividualModel>();
-        getAffectedIMs(describedByTraits, res);
-        getAffectedIMs(notDescribedByTraits, res);
-        getAffectedIMs(indefiniteByTraits, res);
-        return res;
-    }
-
     /**
      * Returns set of individual models related to given map in this base profile.
      *
@@ -330,5 +320,17 @@ public class BaseProfile {
      */
     public boolean DetermineIfSetHasNotTrait(@SuppressWarnings("rawtypes") Trait P, int time) {
         return notDescribedByTraits.containsKey(P);
+    }
+
+    /**
+     * This methods determines if given IM is described in this base profile (according to given trait) and if this
+     * description is unambiguous - namely, state for such trait is IS or IS_NOT.
+     * @param model
+     * @param selectedTrait
+     * @return
+     */
+    public boolean isContainingClearDescriptionFor(IndividualModel model, Trait selectedTrait) {
+        return new ArrayList(getIMsByTraitState(selectedTrait, State.IS)).contains(model)
+                || new ArrayList(getIMsByTraitState(selectedTrait, State.IS_NOT)).contains(model);
     }
 }
