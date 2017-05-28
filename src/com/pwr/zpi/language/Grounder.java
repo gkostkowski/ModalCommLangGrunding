@@ -7,6 +7,7 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.Holon;
+import com.pwr.zpi.holons.NonBinaryHolon;
 import com.pwr.zpi.semantic.IndividualModel;
 import com.sun.istack.internal.Nullable;
 
@@ -460,7 +461,7 @@ public class Grounder {
      */
     @Nullable
     public static Double checkEpistemicConditionsDouble(Formula formula, DistributedKnowledge dk
-            , int timestamp) throws NotApplicableException {
+            , int timestamp) throws NotApplicableException, InvalidFormulaException {
        /* double mayhapsD = 0;
         for (int i = 0; i < formula.getTraits().size(); i++) {  //supports complex formulas
             mayhapsD = dk.getRelatedObservationsBase().getMayhapsBP(timestamp,formula,i);
@@ -482,7 +483,7 @@ public class Grounder {
      * @param dk      Distributed knowledge for respective grounding sets related with certain formula.
      * @return
      */
-    public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) {
+    public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) throws InvalidFormulaException {
 
         double sum = 0;
         System.out.println(formula.getTraits().get(0) + " " + dk.getTimestamp());
@@ -497,7 +498,7 @@ public class Grounder {
         }
 
         if (sum != 0) {
-            return sum / dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp());
+            return sum /getGroundingSetsForComplementaryFormula(dk,formula);
         }
         return 0.0;
     }
@@ -509,7 +510,7 @@ public class Grounder {
      * @param dk      Distributed knowledge for respective grounding sets related with certain formula.
      * @return
      */
-    public static Double complexFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) {
+    public static Double complexFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) throws InvalidFormulaException {
 
         double sum = 0;
         if (dk.getGroundingSet(formula).size() == 0) {
@@ -519,9 +520,23 @@ public class Grounder {
 
         if (sum != 0) {
             //System.out.println("sumsum" +sum + " " + formula);
-            return sum / dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp());
+
+            return sum /getGroundingSetsForComplementaryFormula(dk,formula);
         }
         return 0.0;
     }
 
+    public static int getGroundingSetsForComplementaryFormula(DistributedKnowledge dk,Formula f) throws InvalidFormulaException {
+        int size = 0;
+        if(f.getType() == Formula.Type.SIMPLE_MODALITY){
+            for(Formula fi :((SimpleFormula) f).getComplementaryFormulas()){
+                size += dk.getGroundingSet(fi).size();
+            }
+        }else {
+            for(Formula fi : NonBinaryHolon.getComplementaryFormulasv2((ComplexFormula) f)){
+                size += dk.getGroundingSet(fi).size();
+            }
+        }
+        return size;
+    }
 }

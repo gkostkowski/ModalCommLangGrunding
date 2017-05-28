@@ -10,7 +10,7 @@ import java.util.*;
 public class NonBinaryHolon implements Holon{
 
 	protected Quadrilateral Tao;
-	protected List<Formula> formula;
+	protected static List<Formula> formula;
 
 	public NonBinaryHolon (DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         formula = dk.getComplementaryFormulas();
@@ -65,6 +65,12 @@ public class NonBinaryHolon implements Holon{
 	public List<Formula> getFormula(){
 		return formula;
 	}
+
+	@Override
+	public Context getContext() {
+		return null;
+	}
+
 	/**
 	 *  Checks if given formula is one of complementary formulas of this Holon.
 	 * @param f
