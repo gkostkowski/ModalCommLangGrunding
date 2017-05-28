@@ -91,9 +91,9 @@ public class Conversation implements Runnable {
         }
         else
         {
-            ComplexStatement statement = new ComplexStatement((ComplexFormula) formula, agent, timestamp, name);
+   /*         ComplexStatement statement = new ComplexStatement((ComplexFormula) formula, agent, timestamp, name);
             return statement.generateStatement();
-        }
+   */     }
         return null;
     }
 

@@ -81,7 +81,7 @@ public class SimpleStatement extends Statement {
         if (groundedFormulas.containsValue(ModalOperator.BEL)) {
             if (questionKey!=null &&
                     groundedFormulas.get(questionKey).equals(ModalOperator.BEL)) {
-                if (groundedFormulas.containsKey(complementaryFormula))
+                if (complementaryFormula!=null)
                     return "Yes, I believe " + getRestOfSentece((SimpleFormula)questionKey)
                             + ", but it possible that it is"
                             + ((complementaryFormula.isNegated()) ? " not" : "");
@@ -90,7 +90,7 @@ public class SimpleStatement extends Statement {
                 if (questionKey!=null && groundedFormulas.get(questionKey).equals(ModalOperator.POS))
                     return "I think it is possible, that " + getRestOfSentece((SimpleFormula)questionKey)
                             + ", however I rather believe " + getRestOfSentece(complementaryFormula);
-                else return "Well, I believe " + getRestOfSentece((SimpleFormula)questionKey)
+                else return "Well, I believe " + getRestOfSentece(complementaryFormula)
                         + ", I do not know enough about the asked state";
             }
         }
@@ -107,10 +107,10 @@ public class SimpleStatement extends Statement {
     private String getAnswerIfPos() {
         if (questionKey!=null)
             if (complementaryFormula!=null)
-                return "It is possible that" + getRestOfSentece((SimpleFormula)questionKey)
+                return "It is possible that " + getRestOfSentece((SimpleFormula)questionKey)
                         + ", but it is also possible that it is"
                         + ((complementaryFormula.isNegated()) ? " not" : "");
-            else return "It is possible that" + getRestOfSentece((SimpleFormula)questionKey);
+            else return "It is possible that " + getRestOfSentece((SimpleFormula)questionKey);
         else if (groundedFormulas.containsKey(complementaryFormula))
             return "I do not know enough about asked state, I only think it is possible that "
                     + getRestOfSentece(complementaryFormula);
@@ -133,7 +133,7 @@ public class SimpleStatement extends Statement {
     private SimpleFormula getFormula(boolean isQuestion)
     {
         for (Map.Entry<Formula, ModalOperator> entry : groundedFormulas.entrySet())
-            if (entry.equals(simpleFormula)==isQuestion)
+            if (entry.getKey().equals(simpleFormula)==isQuestion)
                 return (SimpleFormula)entry.getKey();
         return null;
     }

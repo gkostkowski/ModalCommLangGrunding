@@ -97,6 +97,7 @@ public class ComplexStatement extends Statement {
     private String checkForBel() {
         if (groundedFormulaCases.containsValue(ModalOperator.BEL)) {
             if (groundedFormulaCases.containsKey(questionCase))
+            {
                 if (groundedFormulaCases.get(questionCase).equals(ModalOperator.BEL)) {
                     String answer = "Yes, I believe that " + generateRestOfSentence(questionCase, true);
                     if (groundedFormulaCases.size() == 4)
@@ -133,15 +134,17 @@ public class ComplexStatement extends Statement {
                         else answer += " and it is possible that " + generateRestOfSentence(keys.get(0), false);
                     }
                     return answer;
-                } else {
-                    String answer = "I do not know what to say about those states, however I believe that"
-                            + generateRestOfSentence(getKey(ModalOperator.BEL), true);
-                    if (groundedFormulaCases.size() == 3)
-                        answer += " and it is possible that other states are true";
-                    else if (groundedFormulaCases.size() == 2)
-                        answer += ", and it is possible that " + generateRestOfSentence(getKey(ModalOperator.POS), false);
-                    return answer;
                 }
+            }
+            else {
+                String answer = "I do not know what to say about those states, however I believe that "
+                        + generateRestOfSentence(getKey(ModalOperator.BEL), true);
+                if (groundedFormulaCases.size() == 3)
+                    answer += " and it is possible that other states are true";
+                else if (groundedFormulaCases.size() == 2)
+                    answer += ", and it is possible that " + generateRestOfSentence(getKey(ModalOperator.POS), false);
+                return answer;
+            }
         }
         return null;
     }
@@ -288,7 +291,7 @@ public class ComplexStatement extends Statement {
                 if (entry.getKey().getStates().get(1) == State.IS)
                     groundedFormulaCases.put(FormulaCase.PQ, entry.getValue());
                 else groundedFormulaCases.put(FormulaCase.PNQ, entry.getValue());
-            else if (entry.getKey().getStates().get(1) == State.IS_NOT)
+            else if (entry.getKey().getStates().get(1) == State.IS)
                 groundedFormulaCases.put(FormulaCase.NPQ, entry.getValue());
             else groundedFormulaCases.put(FormulaCase.NPNQ, entry.getValue());
         }
