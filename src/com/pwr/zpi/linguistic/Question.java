@@ -1,5 +1,5 @@
 
-package com.pwr.zpi.conversation;
+package com.pwr.zpi.linguistic;
 
 import com.pwr.zpi.*;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
@@ -11,19 +11,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class letting generate formula out of text
+ * Class allowing to generate formula out of string of text
  */
 
 public class Question {
 
+    /**
+     * Instance of agent which memory will be searched through in order to build proper answer
+     */
     private Agent agent;
+    /**
+     * parts of question, divided in order to process them
+     */
     private String[] parts;
+    /**
+     * length of parts
+     */
     private int length;
+    /**
+     * current index of parts
+     */
     private int index;
 
+    /**
+     * IndividualModel which will be the subject of formula
+     */
     private IndividualModel individualModel;
+    /**
+     * Name of the model which was used to describe it
+     */
     private String name;
 
+    /**
+     * Constructor of Question
+     *
+     * @param question string representation of question in form of
+     *                 "Is [name of model] [not - if state is negated] [trait]" for simpleFormula
+     *                 or "Is [name of model] [not - if first state is negated] [trait] [operator]
+     *                 [not - if second state is negated] [trait]" for ComplexFormula
+     *
+     * @param agent agent to which question was asked
+     */
     public Question(String question, Agent agent)
     {
         this.agent = agent;
@@ -32,9 +60,9 @@ public class Question {
     }
 
     /**
-     * @return formula from string with question
-     * @throws InvalidQuestionException
-     * @throws InvalidFormulaException
+     * @return Formula from question
+     * @throws InvalidQuestionException with proper number when there was something wrong with question
+     * @throws InvalidFormulaException when a formula cannot be built
      */
     public Formula getFormula() throws InvalidQuestionException, InvalidFormulaException
     {
@@ -77,7 +105,7 @@ public class Question {
 
     /**
      * method looks for a model represented by name given in question
-     * @throws InvalidQuestionException if no match was found
+     * @throws InvalidQuestionException if no match in memory of agent was found
      */
     private void findIndividualModel() throws InvalidQuestionException
     {
@@ -99,7 +127,7 @@ public class Question {
      * method looks for a trait represented by name given in question
      * @param which indicates which trait (first or second in sentence)
      * @return found Trait
-     * @throws InvalidQuestionException if no trait was found
+     * @throws InvalidQuestionException if no matching trait was found
      */
     private Trait findTraits(int which) throws InvalidQuestionException
     {

@@ -6,9 +6,9 @@ import com.pwr.zpi.exceptions.InvalidQuestionException;
 import com.pwr.zpi.language.ComplexFormula;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.SimpleFormula;
+import com.pwr.zpi.linguistic.ComplexStatement;
+import com.pwr.zpi.linguistic.Question;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -61,6 +61,7 @@ public class Conversation implements Runnable {
      */
     private String askQuestion(String question)
     {
+        System.out.println("Question: " + question);
         Question question1 = new Question(question, agent);
         try {
             Formula formula = question1.getFormula();
@@ -85,15 +86,15 @@ public class Conversation implements Runnable {
     {
         if(formula instanceof SimpleFormula)
         {
-            SimpleStatement statement = new SimpleStatement((SimpleFormula)formula, agent, timestamp, name);
-            return statement.generateStatement();
+   //         SimpleStatement statement = new SimpleStatement((SimpleFormula)formula, agent, timestamp, name);
+     //       return statement.generateStatement();
         }
         else
         {
-            ComplexStatementForAND statement = new ComplexStatementForAND((ComplexFormula) formula, agent, timestamp, name);
+            ComplexStatement statement = new ComplexStatement((ComplexFormula) formula, agent, timestamp, name);
             return statement.generateStatement();
         }
-
+        return null;
     }
 
     @Override
@@ -103,8 +104,9 @@ public class Conversation implements Runnable {
         {
             if(!queue.isEmpty())
             {
-                timestamp = agent.getKnowledgeBase().getTimestamp();
+          //      timestamp = agent.getEpisodicKnowledgeBase().getTimestamp();
                 System.out.println(askQuestion(queue.remove()));
+                System.out.println();
             }
             try
             {
