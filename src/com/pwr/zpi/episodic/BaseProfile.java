@@ -344,4 +344,26 @@ public class BaseProfile {
         res.addAll(indefiniteByTraits.keySet());
         return res;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BaseProfile that = (BaseProfile) o;
+
+        if (getTimestamp() != that.getTimestamp()) return false;
+        if (!getDescribedByTraits().equals(that.getDescribedByTraits())) return false;
+        if (!getNotDescribedByTraits().equals(that.getNotDescribedByTraits())) return false;
+        return getIndefiniteByTraits().equals(that.getIndefiniteByTraits());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getDescribedByTraits().hashCode();
+        result = 31 * result + getNotDescribedByTraits().hashCode();
+        result = 31 * result + getIndefiniteByTraits().hashCode();
+        result = 31 * result + getTimestamp();
+        return result;
+    }
 }

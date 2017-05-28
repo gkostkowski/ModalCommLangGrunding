@@ -19,4 +19,6 @@ public interface Context {
      * @return Map of grounding sets filtered in certain manner.
      */
     Map<Formula, Set<BaseProfile>> performContextualisation(Map<Formula, Set<BaseProfile>> namedGroundingSets);
+
+    void setMaxThreshold(double threshold);
 }

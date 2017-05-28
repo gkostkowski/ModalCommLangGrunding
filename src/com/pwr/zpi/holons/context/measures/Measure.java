@@ -23,4 +23,5 @@ public interface Measure {
      * Note: this threshold
      */
     double getMaxThreshold();
+    void setMaxThreshold(double maxThreshold);
 }
