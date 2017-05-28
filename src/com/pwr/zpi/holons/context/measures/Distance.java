@@ -75,4 +75,10 @@ public class Distance implements Measure {
     public double getMaxThreshold() {
         return maxThreshold;
     }
+
+    @Override
+    public void setMaxThreshold(double maxThreshold) {
+        this.maxThreshold = maxThreshold;
+    }
+
 }

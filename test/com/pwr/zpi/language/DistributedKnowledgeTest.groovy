@@ -50,6 +50,7 @@ class DistributedKnowledgeTest extends GroovyTestCase {
         def oType6 = new ObjectType("Type6", [tr2, tr4, tr1])
         def oType7 = new ObjectType("Type7", [tr2, tr4, tr1, tr3])
         model1 = new IndividualModel(new QRCode("ID1"), oType1)
+
         model2 = new IndividualModel(new QRCode("ID2"), oType2)
         model3 = new IndividualModel(new QRCode("ID3"), oType3)
         model4 = new IndividualModel(new QRCode("ID4"), oType4)

@@ -1,13 +1,15 @@
 package com.pwr.zpi.holons.context;
 
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.exceptions.ContextException;
 import com.pwr.zpi.holons.context.measures.Measure;
 import com.pwr.zpi.language.Formula;
-import com.thoughtworks.xstream.mapper.Mapper;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -53,15 +55,21 @@ public abstract class FilteringContext implements Context {
     @Override
     public Map<Formula, Set<BaseProfile>> performContextualisation(Map<Formula, Set<BaseProfile>> namedGroundingSets) {
         Map<Formula, Set<BaseProfile>> res = new TreeMap<>();
-        representativeBPs = selectRepresentativeBPs(namedGroundingSets);
-        for (Map.Entry<Formula, Set<BaseProfile>> entry: namedGroundingSets.entrySet()) {
-            Set<BaseProfile> groundingSet = entry.getValue();
-            res.put(entry.getKey(),
-                    groundingSet
-                            .stream()
-                            .filter(bp -> isMeetingCondition(bp))
-                            .collect(Collectors.toSet()));
+        try {
+            selectRepresentativeBPs(namedGroundingSets);
+            for (Map.Entry<Formula, Set<BaseProfile>> entry: namedGroundingSets.entrySet()) {
+                Set<BaseProfile> groundingSet = entry.getValue();
+                res.put(entry.getKey(),
+                        groundingSet
+                                .stream()
+                                .filter(bp -> isMeetingCondition(bp))
+                                .collect(Collectors.toSet()));
+            }
+        } catch (ContextException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Context was not built.", e);
+            res = namedGroundingSets;
         }
+
         return res;
     }
 
@@ -72,9 +80,11 @@ public abstract class FilteringContext implements Context {
      * @return
      */
     public boolean isMeetingCondition(BaseProfile examined) {
+        if (representativeBPs == null)
+            throw new NullPointerException("Set of representatives base profiles was not initialized.");
         return representativeBPs
                 .stream()
-                .filter(bp -> determineFulfillment(bp, examined))
+                .filter(bp -> !determineFulfillment(bp, examined))
                 .collect(Collectors.toList())
                 .isEmpty();
     }
@@ -90,7 +100,14 @@ public abstract class FilteringContext implements Context {
         return measure.count(representative, examined) <= maxValue;
     }
 
-    public abstract Set<BaseProfile> selectRepresentativeBPs(Map<Formula, Set<BaseProfile>> namedGroundingSets);
+    /**
+     * Method provides set of base profiles (or only one base profile in particular case) which are known as representative.
+     * Namely, this mean that contextualisation will build context from base profiles which are quite similar
+     * to base profiles in this set.
+     * @param namedGroundingSets
+     * @return
+     */
+    public abstract Set<BaseProfile> selectRepresentativeBPs(Map<Formula, Set<BaseProfile>> namedGroundingSets) throws ContextException;
 
 
 }

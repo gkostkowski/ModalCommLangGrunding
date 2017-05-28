@@ -1,11 +1,11 @@
 package com.pwr.zpi.holons.context;
 
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.exceptions.ContextException;
 import com.pwr.zpi.holons.context.measures.Measure;
 import com.pwr.zpi.language.Formula;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class provides realisation of FilteringContext strategy with assumption that set of representative BPs contains
@@ -17,8 +17,24 @@ public class LatestFilteringContext extends FilteringContext {
         super(measure, maxValue);
     }
 
+    public LatestFilteringContext(Measure measure) {
+        super(measure);
+    }
+
     @Override
-    public Set<BaseProfile> selectRepresentativeBPs(Map<Formula, Set<BaseProfile>> namedGroundingSets) {
-        return null; //todo
+    public Set<BaseProfile> selectRepresentativeBPs(Map<Formula, Set<BaseProfile>> namedGroundingSets) throws ContextException {
+        if (namedGroundingSets == null || namedGroundingSets.isEmpty())
+            throw new ContextException("Representative base profiles cannot be resolved.");
+        Set<BaseProfile> all = new HashSet<>();
+        namedGroundingSets.values().forEach(all::addAll);
+        BaseProfile res = all.stream().max(Comparator.comparing(BaseProfile::getTimestamp)).get();
+        this.representativeBPs = new HashSet<>();
+        representativeBPs.add(res);
+        return representativeBPs;
+    }
+
+    @Override
+    public void setMaxThreshold(double threshold) {
+        this.maxValue = threshold;
     }
 }
