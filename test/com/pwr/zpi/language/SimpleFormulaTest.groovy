@@ -83,7 +83,7 @@ class SimpleFormulaTest extends GroovyTestCase
         def trait1 = new Trait("Red")
         def trait2 = new Trait("Soft")
         def a1 = "Number of traits or states is not equal to 1"
-        def a2 = "Trait doesn't describe type of the model1"
+        def a2 = "Trait doesn't describe type of the model"
         def a3 = "One of the parameters is null"
 
         def msg = shouldFail {

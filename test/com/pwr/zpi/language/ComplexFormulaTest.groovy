@@ -3,6 +3,7 @@ package com.pwr.zpi.language
 import com.pwr.zpi.semantic.IndividualModel
 import com.pwr.zpi.semantic.ObjectType
 import com.pwr.zpi.semantic.QRCode
+import com.pwr.zpi.language.Trait
 import org.junit.Test
 
 /**
@@ -13,7 +14,7 @@ class ComplexFormulaTest extends GroovyTestCase
 {
     def oType, model, tr1, tr2, tr3, tr4
 
-    void build()
+    void setUp()
     {
         tr1 = new Trait("Red")
         tr2 = new Trait("Black")
@@ -29,7 +30,6 @@ class ComplexFormulaTest extends GroovyTestCase
     @Test
     void testConstructors()
     {
-        build()
         def cf = new ComplexFormula(model, [tr1, tr2], [State.IS_NOT, State.IS], LogicOperator.AND)
         assertEquals(model, cf.getModel())
         assertEquals([tr1, tr2], cf.getTraits())
@@ -49,13 +49,12 @@ class ComplexFormulaTest extends GroovyTestCase
     @Test
     void testExceptionsInConstructors()
     {
-        build();
         def a1 = "One or more parameteres are null"
         def a2 = "Either size of traits or states is not 2 or operator is not valid"
         def a3 = "Given traits don't describe type of the object"
 
         def msg = shouldFail {
-            new ComplexFormula(null, [tr1, tr3], LogicOperator.And)
+            new ComplexFormula(null, [tr1, tr3], LogicOperator.AND)
         }
         assert msg==a1
         msg = shouldFail {
@@ -74,10 +73,9 @@ class ComplexFormulaTest extends GroovyTestCase
             new ComplexFormula(model, [tr1, tr2], [State.IS], LogicOperator.AND)
         }
         assert msg == a2
-        msg = shouldFail {
+        shouldFail {
             new ComplexFormula(model, [tr1, tr2], ModalOperator.BEL)
         }
-        assert msg == a2
         msg = shouldFail {
             new ComplexFormula(model, [tr1, tr4], LogicOperator.AND)
         }
@@ -95,7 +93,6 @@ class ComplexFormulaTest extends GroovyTestCase
     @Test
     void testEqual()
     {
-        build()
         def f1 = new ComplexFormula(model, [tr1, tr2], [State.IS, State.IS_NOT], LogicOperator.AND)
         def f2 = new ComplexFormula(model, [new Trait("Red"),
                                             new Trait("Black")], [State.IS, State.IS_NOT], LogicOperator.AND)
@@ -107,11 +104,11 @@ class ComplexFormulaTest extends GroovyTestCase
                                                      new Trait("Black")], [State.IS_NOT, State.IS_NOT], LogicOperator.AND));
 
         assert !f1.equals(new ComplexFormula(model, [new Trait("Red"),
-                                                     new Trait("White")], [State.IS_NOT, State.IS_NOT], LogicOperator.Or));
+                                                     new Trait("White")], [State.IS_NOT, State.IS_NOT], LogicOperator.OR));
 
         def model2 = new IndividualModel(new QRCode("POL"), oType)
         assert !f1.equals(new ComplexFormula(model2, [new Trait("Red"),
-                                                      new Trait("White")], [State.IS_NOT, State.IS_NOT], LogicOperator.Or));
+                                                      new Trait("White")], [State.IS_NOT, State.IS_NOT], LogicOperator.OR));
 
         assert !f1.equals(new SimpleFormula(model, tr1, false));
     }
@@ -122,7 +119,6 @@ class ComplexFormulaTest extends GroovyTestCase
     @Test
     void testParts()
     {
-        build()
         def cf = new ComplexFormula(model, [tr1, tr2], [State.IS_NOT, State.IS], LogicOperator.AND);
         def lp = new SimpleFormula(model, tr1, true)
         def rp = new SimpleFormula(model, tr2, false)

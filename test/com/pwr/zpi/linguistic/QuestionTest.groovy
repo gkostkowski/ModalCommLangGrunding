@@ -1,4 +1,4 @@
-package com.pwr.zpi.conversation
+package com.pwr.zpi.linguistic
 
 import com.pwr.zpi.Agent
 import com.pwr.zpi.semantic.IndividualModel
@@ -35,7 +35,6 @@ class QuestionTest extends GroovyTestCase {
         model1 = new IndividualModel(id, objectType)
         model2 = new IndividualModel(id2, objectType)
         agent = new Agent()
-        agent.getDatabase().updateAgentMemory();
         agent.getModels().add(model1)
         agent.getModels().add(model2)
         agent.getModels().addNameToModel(id, "Zenek")
