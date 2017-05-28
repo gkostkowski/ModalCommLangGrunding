@@ -145,7 +145,7 @@ public class Grounder {
 
         BaseProfile lastBP = dk.getRelatedObservationsBase()
                 .getBaseProfile(timestamp, BPCollection.MemoryType.WM);
-        for (Trait selectedTrait :formula.getTraits()) {  //supports complex formulas
+        for (Trait selectedTrait : formula.getTraits()) {  //supports complex formulas
             hasLastClearState = hasLastClearState &&
                     lastBP.isContainingClearDescriptionFor(formula.getModel(), selectedTrait);
         }
@@ -178,6 +178,7 @@ public class Grounder {
 
     /**
      * Returns array of appropriate thresholds for formula with specified type.
+     *
      * @param formula
      * @return
      */
@@ -214,7 +215,7 @@ public class Grounder {
      * @return Given modal operator if it is applicable or null in other way.
      */
     public static ModalOperator checkEpistemicCondition(boolean amongNoClearStateObjects, boolean isPresentInWM,
-                                                         double relativeCard, ModalOperator inspectedOperator, double[] thresholds) {
+                                                        double relativeCard, ModalOperator inspectedOperator, double[] thresholds) {
         if (thresholds.length != 5)
             throw new IllegalStateException("Invalid thresholds.");
         double minRange, maxRange;
@@ -322,7 +323,7 @@ public class Grounder {
 
             switch (((ComplexFormula) formula).getOperator()) {
                 case AND:
-                    return complexFormulaFinalGrounder(formula,dk);
+                    return complexFormulaFinalGrounder(formula, dk);
                 case OR:
                     break;
                 default:
@@ -334,27 +335,59 @@ public class Grounder {
         return 0.0;
     }
 
-
+    /**
+     * Returns relative cardinality of given map of sets.If last observation connected to given formula had state MAYHAPS , method deletes last observation from groundingSets and counts
+     * cardinality only for those left.
+     * @param groundingSets Map containing Formulas as keys and Sets of BaseProfiles as variables
+     * @param formula   Given formula for which we count cardinalit
+     * @return Cardinality of formula in all given groundingSets
+     * @throws NotApplicableException
+     * @throws InvalidFormulaException
+     */
     public static double relativeCard(Map<Formula, Set<BaseProfile>> groundingSets, Formula formula)
             throws NotApplicableException, InvalidFormulaException {
-        return 0.0;//relativeCard() todo Jarema
+        if (formula.getType() == Formula.Type.SIMPLE_MODALITY && !groundingSets.get(formula).toArray
+                (new BaseProfile[groundingSets.get(formula).size()])[groundingSets.get(formula).size() - 1].isContainingClearDescriptionFor(formula.getModel(), formula.getTraits().get(0))) {
+            groundingSets.get(formula).remove(groundingSets.get(formula).toArray()[groundingSets.get(formula).size()]);
+
+            double out = 0;
+            for(BaseProfile bp:groundingSets.get(formula)){
+                out += bp.getDescribedByTraits().size();
+                //out += bp.getIndefiniteByTraits().size();
+                out += bp.getNotDescribedByTraits().size();
+            }
+            return out;
+        } else if (formula.getType() == Formula.Type.MODAL_CONJUNCTION && (!groundingSets.get(formula).toArray
+                (new BaseProfile[groundingSets.get(formula).size()])[groundingSets.get(formula).size() - 1].isContainingClearDescriptionFor(formula.getModel(), formula.getTraits().get(0)) ||
+                !groundingSets.get(formula).toArray
+                        (new BaseProfile[groundingSets.get(formula).size()])[groundingSets.get(formula).size() - 1].isContainingClearDescriptionFor(formula.getModel(), formula.getTraits().get(1)))) {
+            groundingSets.get(formula).remove(groundingSets.get(formula).toArray()[groundingSets.get(formula).size()]);
+            double out = 0;
+            for(BaseProfile bp:groundingSets.get(formula)){
+                out += bp.getDescribedByTraits().size();
+                //out += bp.getIndefiniteByTraits().size();
+                out += bp.getNotDescribedByTraits().size();
+            }
+            return out;
+        }
+        return 0.0;
     }
 
-        /**
-         * Defines grounded set Ai(t) responsible for induction of mental model mi connected to baseProfile which
-         * involves connotations with both observations P,and Q.Depending on i
-         * i=1 - Returns BaseProfiles where Object o has Trait P and has Trait Q
-         * i=2 - Returns BaseProfiles where Object o has Trait P and does not have Trait Q
-         * i=3 - Returns BaseProfiles where Object o does not have Trait P and has Trait Q
-         * i=4 - Returns BaseProfiles where Object o does not have Trait P and does not have Trait Q
-         *
-         * @param P    Trait of individualModel
-         * @param Q    Trait of individualModel
-         * @param time Time taken into consideration when looking for expieriences
-         * @param all  Set of BaseProfiles gives us set from which we'll evaluate those which contain Positive Traits
-         * @param i    indicator,indicating which case we'd like to use
-         * @return
-         */
+    /**
+     * Defines grounded set Ai(t) responsible for induction of mental model mi connected to baseProfile which
+     * involves connotations with both observations P,and Q.Depending on i
+     * i=1 - Returns BaseProfiles where Object o has Trait P and has Trait Q
+     * i=2 - Returns BaseProfiles where Object o has Trait P and does not have Trait Q
+     * i=3 - Returns BaseProfiles where Object o does not have Trait P and has Trait Q
+     * i=4 - Returns BaseProfiles where Object o does not have Trait P and does not have Trait Q
+     *
+     * @param P    Trait of individualModel
+     * @param Q    Trait of individualModel
+     * @param time Time taken into consideration when looking for expieriences
+     * @param all  Set of BaseProfiles gives us set from which we'll evaluate those which contain Positive Traits
+     * @param i    indicator,indicating which case we'd like to use
+     * @return
+     */
 
 
     static Set<BaseProfile> getGroundingSetsConjunction(Trait P, Trait Q, int time, Set<BaseProfile> all,
@@ -498,7 +531,7 @@ public class Grounder {
         }
 
         if (sum != 0) {
-            return sum /getGroundingSetsForComplementaryFormula(dk,formula);
+            return sum / getGroundingSetsForComplementaryFormula(dk, formula);
         }
         return 0.0;
     }
@@ -521,19 +554,19 @@ public class Grounder {
         if (sum != 0) {
             //System.out.println("sumsum" +sum + " " + formula);
 
-            return sum /getGroundingSetsForComplementaryFormula(dk,formula);
+            return sum / getGroundingSetsForComplementaryFormula(dk, formula);
         }
         return 0.0;
     }
 
-    public static int getGroundingSetsForComplementaryFormula(DistributedKnowledge dk,Formula f) throws InvalidFormulaException {
+    public static int getGroundingSetsForComplementaryFormula(DistributedKnowledge dk, Formula f) throws InvalidFormulaException {
         int size = 0;
-        if(f.getType() == Formula.Type.SIMPLE_MODALITY){
-            for(Formula fi :((SimpleFormula) f).getComplementaryFormulas()){
+        if (f.getType() == Formula.Type.SIMPLE_MODALITY) {
+            for (Formula fi : ((SimpleFormula) f).getComplementaryFormulas()) {
                 size += dk.getGroundingSet(fi).size();
             }
-        }else {
-            for(Formula fi : NonBinaryHolon.getComplementaryFormulasv2((ComplexFormula) f)){
+        } else {
+            for (Formula fi : NonBinaryHolon.getComplementaryFormulasv2((ComplexFormula) f)) {
                 size += dk.getGroundingSet(fi).size();
             }
         }

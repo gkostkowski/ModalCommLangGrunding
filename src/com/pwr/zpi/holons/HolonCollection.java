@@ -200,8 +200,7 @@ public class HolonCollection {
         Holon holon = null;
         try {
             if (formula instanceof SimpleFormula)
-                //holon = new BinaryHolon(new DistributedKnowledge(owner, formula, timestamp, true), holonsContext);
-                holon = new BinaryHolon(new DistributedKnowledge(owner, formula, timestamp, true));
+                holon = new BinaryHolon(new DistributedKnowledge(owner, formula, timestamp, true), holonsContext);
             else holon = new NewNonBinaryHolon(owner.distributeKnowledge(formula, timestamp, true), holonsContext);
 
             holonCollection.add(holon);

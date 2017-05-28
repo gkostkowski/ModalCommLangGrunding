@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * Represents state of world from agent perspective. It's established for certain moment in time.
  */
-public class BaseProfile {
+public class  BaseProfile {
     /**
      * Map of valuedTraits and related collections of individual models. If some collection is related with certain trait, then
      * it mean that all observations in that collections HAVE this trait.

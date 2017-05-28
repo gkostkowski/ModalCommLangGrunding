@@ -66,10 +66,6 @@ public class NonBinaryHolon implements Holon{
 		return formula;
 	}
 
-	@Override
-	public Context getContext() {
-		return null;
-	}
 
 	/**
 	 *  Checks if given formula is one of complementary formulas of this Holon.
