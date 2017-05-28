@@ -130,7 +130,7 @@ import java.util.TreeSet;
 public class HolonCollection {
 
     private Set<Holon> holonCollection;
-    private List<ContectverJar> contextList;
+    //private List<ContectverJar> contextList;
     Agent owner;
     /**
      * Object of Context concrete class providing "contextualisation service".
@@ -200,7 +200,8 @@ public class HolonCollection {
         Holon holon = null;
         try {
             if (formula instanceof SimpleFormula)
-                holon = new BinaryHolon(new DistributedKnowledge(owner, formula, timestamp, true), holonsContext);
+                //holon = new BinaryHolon(new DistributedKnowledge(owner, formula, timestamp, true), holonsContext);
+                holon = new BinaryHolon(new DistributedKnowledge(owner, formula, timestamp, true));
             else holon = new NewNonBinaryHolon(owner.distributeKnowledge(formula, timestamp, true), holonsContext);
 
             holonCollection.add(holon);
