@@ -57,6 +57,11 @@ public class ContextJar implements Context{
         return out;
     }
 
+    @Override
+    public void setMaxThreshold(double threshold) {
+        dMax=threshold;
+    }
+
     /*
     public class getContext{
 

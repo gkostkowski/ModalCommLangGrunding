@@ -244,7 +244,8 @@ class GrounderTest extends GroovyTestCase {
 
     @Test
     void testCheckEpistemicCondition() {
-        final double[] simpleThresholds = [0.2, 0.6, 0.7, 0.9, 1.0];
+        final double[] simpleThresholds = Grounder.simpleThresholds;
+                //[0.2, 0.6, 0.7, 0.9, 1.0];
 
         assertNull(Grounder.checkEpistemicCondition(true, true,
                 0.0, ModalOperator.POS, simpleThresholds))
@@ -253,13 +254,15 @@ class GrounderTest extends GroovyTestCase {
         assertEquals(ModalOperator.POS, Grounder.checkEpistemicCondition(true, true,
                 0.2, ModalOperator.POS, simpleThresholds))
         assertEquals(ModalOperator.POS, Grounder.checkEpistemicCondition(true, true,
-                0.6, ModalOperator.POS, simpleThresholds))
+                0.59, ModalOperator.POS, simpleThresholds))
         assertEquals(null, Grounder.checkEpistemicCondition(true, true,
                 0.61, ModalOperator.BEL, simpleThresholds))
         assertEquals(ModalOperator.BEL, Grounder.checkEpistemicCondition(true, true,
                 0.7, ModalOperator.BEL, simpleThresholds))
-        assertEquals(ModalOperator.BEL, Grounder.checkEpistemicCondition(true, true,
+        assertEquals(null, Grounder.checkEpistemicCondition(true, true,
                 0.9, ModalOperator.BEL, simpleThresholds))
+        assertEquals(ModalOperator.BEL, Grounder.checkEpistemicCondition(true, true,
+                0.89, ModalOperator.BEL, simpleThresholds))
         assertNull(Grounder.checkEpistemicCondition(true, true,
                 0.95, ModalOperator.KNOW, simpleThresholds))
         assertEquals(ModalOperator.KNOW, Grounder.checkEpistemicCondition(true, true,

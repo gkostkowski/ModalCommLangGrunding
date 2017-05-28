@@ -40,9 +40,9 @@ public class Grounder {
      * Arrays of thresholds for certain formula types. Order of elements in arrays is strictly defined and can't be other:
      * [MIN_POS, MAX_POS, MIN_BEL, MAX_BEL, KNOW].
      */
-    private final static double[] simpleThresholds = new double[]{MIN_POS, MAX_POS, MIN_BEL, MAX_BEL, KNOW};
-    private final static double[] conjThresholds = new double[]{CONJ_MIN_POS, CONJ_MAX_POS, CONJ_MIN_BEL, CONJ_MAX_BEL, CONJ_KNOW};
-    private final static double[] disjThresholds = new double[]{}; //todo
+    public final static double[] simpleThresholds = new double[]{MIN_POS, MAX_POS, MIN_BEL, MAX_BEL, KNOW};
+    public final static double[] conjThresholds = new double[]{CONJ_MIN_POS, CONJ_MAX_POS, CONJ_MIN_BEL, CONJ_MAX_BEL, CONJ_KNOW};
+    public final static double[] disjThresholds = new double[]{}; //todo
 
     /**
      * Gives complete collection of grounding sets for certain formulas (in this context may be known as mental model).
@@ -231,7 +231,7 @@ public class Grounder {
             default:
                 minRange = maxRange = thresholds[4];
         }
-        return amongNoClearStateObjects && isPresentInWM && relativeCard >= minRange && relativeCard < maxRange ?
+        return amongNoClearStateObjects && isPresentInWM && relativeCard >= minRange && (relativeCard < maxRange || maxRange == minRange) ?
                 inspectedOperator : null;
     }
 
@@ -338,8 +338,9 @@ public class Grounder {
     /**
      * Returns relative cardinality of given map of sets.If last observation connected to given formula had state MAYHAPS , method deletes last observation from groundingSets and counts
      * cardinality only for those left.
+     *
      * @param groundingSets Map containing Formulas as keys and Sets of BaseProfiles as variables
-     * @param formula   Given formula for which we count cardinalit
+     * @param formula       Given formula for which we count cardinalit
      * @return Cardinality of formula in all given groundingSets
      * @throws NotApplicableException
      * @throws InvalidFormulaException
@@ -347,23 +348,26 @@ public class Grounder {
     public static double relativeCard(Map<Formula, Set<BaseProfile>> groundingSets, Formula formula)
             throws NotApplicableException, InvalidFormulaException {
         if (formula.getType() == Formula.Type.SIMPLE_MODALITY && !groundingSets.get(formula).toArray
-                (new BaseProfile[groundingSets.get(formula).size()])[groundingSets.get(formula).size() - 1].isContainingClearDescriptionFor(formula.getModel(), formula.getTraits().get(0))) {
+                (new BaseProfile[groundingSets.get(formula).size()])[groundingSets.get(formula).size() - 1]
+                .isContainingClearDescriptionFor(formula.getModel(), formula.getTraits().get(0))) {
             groundingSets.get(formula).remove(groundingSets.get(formula).toArray()[groundingSets.get(formula).size()]);
 
             double out = 0;
-            for(BaseProfile bp:groundingSets.get(formula)){
+            for (BaseProfile bp : groundingSets.get(formula)) {
                 out += bp.getDescribedByTraits().size();
                 //out += bp.getIndefiniteByTraits().size();
                 out += bp.getNotDescribedByTraits().size();
             }
             return out;
         } else if (formula.getType() == Formula.Type.MODAL_CONJUNCTION && (!groundingSets.get(formula).toArray
-                (new BaseProfile[groundingSets.get(formula).size()])[groundingSets.get(formula).size() - 1].isContainingClearDescriptionFor(formula.getModel(), formula.getTraits().get(0)) ||
+                (new BaseProfile[groundingSets.get(formula).size()])[groundingSets.get(formula).size() - 1]
+                .isContainingClearDescriptionFor(formula.getModel(), formula.getTraits().get(0)) ||
                 !groundingSets.get(formula).toArray
-                        (new BaseProfile[groundingSets.get(formula).size()])[groundingSets.get(formula).size() - 1].isContainingClearDescriptionFor(formula.getModel(), formula.getTraits().get(1)))) {
+                        (new BaseProfile[groundingSets.get(formula).size()])[groundingSets.get(formula).size() - 1]
+                        .isContainingClearDescriptionFor(formula.getModel(), formula.getTraits().get(1)))) {
             groundingSets.get(formula).remove(groundingSets.get(formula).toArray()[groundingSets.get(formula).size()]);
             double out = 0;
-            for(BaseProfile bp:groundingSets.get(formula)){
+            for (BaseProfile bp : groundingSets.get(formula)) {
                 out += bp.getDescribedByTraits().size();
                 //out += bp.getIndefiniteByTraits().size();
                 out += bp.getNotDescribedByTraits().size();

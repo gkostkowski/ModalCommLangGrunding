@@ -330,8 +330,13 @@ public class  BaseProfile {
      * @return
      */
     public boolean isContainingClearDescriptionFor(IndividualModel model, Trait selectedTrait) {
-        return new ArrayList(getIMsByTraitState(selectedTrait, State.IS)).contains(model)
-                || new ArrayList(getIMsByTraitState(selectedTrait, State.IS_NOT)).contains(model);
+        Set<IndividualModel> objects = getIMsByTraitState(selectedTrait, State.IS);
+        boolean res = objects != null && new ArrayList(objects).contains(model);
+        if (!res) {
+            objects = getIMsByTraitState(selectedTrait, State.IS_NOT);
+            res = objects != null && new ArrayList(objects).contains(model);
+        }
+        return res;
     }
 
     /**
