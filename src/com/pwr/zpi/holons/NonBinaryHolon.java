@@ -179,4 +179,12 @@ public class NonBinaryHolon implements Holon{
 	public List<Formula> getAffectedFormulas() {
 		return null;
 	}
+
+	/**
+	 * Returns context which was used to build grounding sets for this holon.
+	 */
+	@Override
+	public Context getContext() {
+		return null;
+	}
 }

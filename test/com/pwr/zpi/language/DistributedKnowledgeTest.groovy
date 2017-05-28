@@ -8,6 +8,7 @@ import com.pwr.zpi.semantic.ObjectType
 import com.pwr.zpi.semantic.QRCode
 import javafx.util.Pair
 import org.junit.Test
+import org.testng.annotations.Test
 
 class DistributedKnowledgeTest extends GroovyTestCase {
 

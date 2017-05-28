@@ -52,7 +52,7 @@ public class DistributedKnowledge {
      */
     private List<Formula> complementaryFormulas = new ArrayList<>();
 
-    private Map<Formula, Set<BaseProfile>> groundingSets;
+    private Map<Formula, Set<BaseProfile>> groundingSetsMap;
     /**
      * Map of classes for this knowledge distribution. Exact class is certain value in map
      * and associated key is pair which represent mental model (relatedFormula) and memory type which are used
@@ -82,10 +82,10 @@ public class DistributedKnowledge {
 
 //        if (makeCompleteDistribution)
         complementaryFormulas = formula.getComplementaryFormulas();
-        groundingSets = Grounder.getGroundingSets(complementaryFormulas, BPCollection.asBaseProfilesSet(inWM, inLM));
+        groundingSetsMap = Grounder.getGroundingSets(complementaryFormulas, BPCollection.asBaseProfilesSet(inWM, inLM));
         /*else {
-            groundingSets = new HashMap<>();
-            groundingSets.put(relatedFormula,
+            groundingSetsMap = new HashMap<>();
+            groundingSetsMap.put(relatedFormula,
                     Grounder.getGroundingSet(relatedFormula, BPCollection.asBaseProfilesSet(inWM, inLM)));
         }*/
 
@@ -137,7 +137,7 @@ public class DistributedKnowledge {
     private void makeChecking(Formula formula) throws NotConsistentDKException {
         Set<BaseProfile> ra = getDkClassByDesc(formula, BPCollection.MemoryType.WM),
                 ta = getDkClassByDesc(formula, BPCollection.MemoryType.LM);
-        Set<BaseProfile> groundingSet = groundingSets.get(formula);
+        Set<BaseProfile> groundingSet = groundingSetsMap.get(formula);
 
         Set<BaseProfile> intersection1 = new HashSet<BaseProfile>(inWM);
         intersection1.retainAll(groundingSet);
@@ -162,7 +162,7 @@ public class DistributedKnowledge {
         Set<BaseProfile> currClass = new HashSet<>();
         dkClasses.put(new Pair<>(formula, memType), currClass);
         currClass.addAll(affectedMemory);
-        currClass.retainAll(groundingSets.get(formula));
+        currClass.retainAll(groundingSetsMap.get(formula));
     }
 
 
@@ -175,10 +175,6 @@ public class DistributedKnowledge {
     @NotNull
     public Map<Pair<Formula, BPCollection.MemoryType>, Set<BaseProfile>> getDistributionClasses() {
         return dkClasses;
-    }
-
-    public Map<Formula, Set<BaseProfile>> getGroundingSets() {
-        return groundingSets;
     }
 
     public int getTimestamp() {
@@ -215,7 +211,7 @@ public class DistributedKnowledge {
 
     public Set<BaseProfile> getGroundingSet(Formula formula) {
         TreeMap <Formula, Set<BaseProfile>> res = new TreeMap<>();
-        res.putAll(groundingSets);
+        res.putAll(groundingSetsMap);
         return res.get(formula);
     }
 
@@ -229,5 +225,9 @@ public class DistributedKnowledge {
 
     public boolean isRelated(Formula formula) {
         return formula.equals(this.relatedFormula) || complementaryFormulas.contains(formula);
+    }
+
+    public Map<Formula, Set<BaseProfile>> mapOfGroundingSets() {
+        return groundingSetsMap;
     }
 }

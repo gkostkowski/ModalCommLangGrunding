@@ -7,7 +7,6 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.HolonCollection;
-import com.pwr.zpi.holons.NewHolonCollection;
 import com.pwr.zpi.holons.context.Context;
 import com.pwr.zpi.io.DatabaseAO;
 import com.pwr.zpi.language.DistributedKnowledge;
@@ -26,7 +25,6 @@ public class Agent {
     private BPCollection knowledgeBase;
     private IMCollection models;
     private HolonCollection holons;
-    private NewHolonCollection newHolons=new NewHolonCollection();
     private DatabaseAO database;
     public static Collection<ObjectType> objectTypeCollection;
 
@@ -49,6 +47,7 @@ public class Agent {
     public Agent(BPCollection knowledgeBase) {
         init();
         this.knowledgeBase = knowledgeBase;
+        Context context = null; //todo podawanie odpowiedniego typu kontekstu
         holons = new HolonCollection(this, context);
     }
 
@@ -56,6 +55,7 @@ public class Agent {
         init();
         this.models = models;
         this.knowledgeBase = knowledgeBase;
+        Context context = null; //todo podawanie odpowiedniego typu kontekstu
         holons = new HolonCollection(this, context);
     }
 
@@ -93,10 +93,6 @@ public class Agent {
 
     public HolonCollection getHolons() {
         return holons;
-    }
-
-    public NewHolonCollection getNewHolons() {
-        return newHolons;
     }
 
     @Deprecated //uzywamy updateMemory()

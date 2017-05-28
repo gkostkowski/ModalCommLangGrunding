@@ -66,7 +66,7 @@ class Main {
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
                     put(tr[1], false);
-                    put(tr[2], false);
+                    put(tr[2], null);
                 }}, t++)
         };
 
@@ -81,6 +81,7 @@ class Main {
 
         Observation[] obsTill4 = new Observation[]{
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], null);
                     put(tr[1], false);
                     put(tr[2], false);
                 }}, t++)};
@@ -89,11 +90,12 @@ class Main {
 
         c1.addQuestion("Is Hyzio red");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: bel p)");
+        System.out.println("(EXPECTED: I know)");
 
 
         Observation[] obsTill5 = new Observation[]{
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], null);
                     put(tr[1], false);
                     put(tr[2], null);
                 }}, t++)};
@@ -102,8 +104,7 @@ class Main {
         c1.setTimestamp(t);
         c1.addQuestion("Is Hyzio blinking");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: i dont know what to say)");
-
+        System.out.println("(EXPECTED: It is possible it is blinking, but I believe it is not)");
 
 
         c1.addQuestion("Is Hyzio white");
@@ -112,22 +113,41 @@ class Main {
 
         Observation[] obsTill7 = new Observation[]{
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], null);
                     put(tr[1], true);
                     put(tr[2], true);
                 }}, t++),
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], false);
                     put(tr[1], true);
+                    put(tr[2], null);
                 }}, t++)};
 
         agent.addAndUpdate(obsTill7);
         c1.setTimestamp(t);
         c1.addQuestion("Is Hyzio red");
-        System.out.println("(EXPECTED: pos is)");
+        System.out.println("(EXPECTED: Know not)");
 
         c1.addQuestion("Is Hyzio white");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: pos is bel not)");
+        System.out.println("(EXPECTED: know is)");
+
+        Observation[] obsTill9 = new Observation[]{
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], null);
+                    put(tr[1], null);
+                    put(tr[2], true);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], null);
+                    put(tr[2], true);
+                }}, t++)};
+
+        agent.addAndUpdate(obsTill9);
+        c1.setTimestamp(t);
+        c1.addQuestion("Is Hyzio white");
+        System.out.println("(EXPECTED: bel not pos is)");
     }
 
     /**
@@ -162,7 +182,7 @@ class Main {
         System.out.println("asking...");
         c1.addQuestion("Is Hyzio blinking");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: I know it is not)");
+        System.out.println("(EXPECTED: No, but I know that he is not)");
 
         Observation[] obsTill2  = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
@@ -176,7 +196,7 @@ class Main {
 
         c1.addQuestion("Is hyzio blinking and not white");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: I think it is possible that it is blinking and not white, but I believe rather that it is not blinking and not white )");
+        System.out.println("(EXPECTED: Yes, I am sure it is blinking and not white )");
 
         Observation[] obsTill3  = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
@@ -191,9 +211,9 @@ class Main {
         c1.addQuestion("Is Hyzio red");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: I know)");
-        c1.addQuestion("Is hyzio red and white");
+        c1.addQuestion("Is hyzio red and blinking");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: No, but I am sure that it is red and not white)");
+        System.out.println("(EXPECTED: It is possible, that it is red and blinking, but I believe it is red and not blinking)");
 
         Observation[] obsTill4 = new Observation[]{
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
@@ -206,7 +226,7 @@ class Main {
 
         c1.addQuestion("Is Hyzio red");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: bel p pos ~p)");
+        System.out.println("(EXPECTED: know p)");
 
 
         Observation[] obsTill5 = new Observation[]{
@@ -220,7 +240,7 @@ class Main {
 
         c1.addQuestion("Is Hyzio blinking");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: i dont know what to say)");
+        System.out.println("(EXPECTED: It is possible it is blinking, but I believe it is not)");
 
         c1.addQuestion("Is Hyzio white");
         Thread.sleep(1000);
@@ -241,11 +261,11 @@ class Main {
         agent.addAndUpdate(obsTill7);
 
         c1.addQuestion("Is Hyzio red");
-        System.out.println("(EXPECTED: pos is)");
+        System.out.println("(EXPECTED: know not)");
 
         c1.addQuestion("Is Hyzio white");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: pos is bel not)");
+        System.out.println("(EXPECTED: know is)");
 
         Observation[] obsTill8 = new Observation[]{
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
@@ -259,12 +279,11 @@ class Main {
 
         c1.addQuestion("is hyzio red and blinking");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: I think it is possible that it is red and blinking, but it is also possible that is )");
+        System.out.println("(EXPECTED: It is possible, that it is red and blinking, but I believe it is red and not blinking )");
 
         c1.addQuestion("is hyzio not white and not blinking");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: I think it is possible that it is not white and not blinking, but it is also " +
-                "possible that it is white and not blinking and it is possible that it is white and blinking)");
+        System.out.println("(EXPECTED: I think it is possible that it is not white and not blinking)");
     }
 
 
@@ -310,9 +329,9 @@ class Main {
         System.out.println("asking...");
         conversation.addQuestion("Is Rysio blue and soft");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: Yes, I think it is possible that rysio is blue and soft)");
+        System.out.println("(EXPECTED: No, he is not blue and soft)");
 
-        Observation[] obsTill14  = new Observation[]{ //inclusively
+        Observation[] obsTill15  = new Observation[]{ //inclusively
                 new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
                     put(tr[3], null);
                     put(tr[4], true);
@@ -322,17 +341,7 @@ class Main {
                     put(tr[3], null);
                     put(tr[4], true);
                     put(tr[2], true);
-                }}, t++)
-        };
-
-        agent.addAndUpdate(obsTill14);
-
-        conversation.addQuestion("is rysio soft and blinking");
-        Thread.sleep(1000);
-        System.out.println("(EXPECTED: Yes, I believe it is soft and blinkig, but it is also possible it is quite the opposite)");
-
-
-        Observation[] obsTill15  = new Observation[]{ //inclusively
+                }}, t++),
                 new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
                     put(tr[3], true);
                     put(tr[4], null);
@@ -342,9 +351,24 @@ class Main {
 
         agent.addAndUpdate(obsTill15);
 
+        conversation.addQuestion("is rysio soft and blinking");
+        Thread.sleep(1000);
+        System.out.println("(EXPECTED: I believe it is sof and blinking, but it is possible it is opposite)");
+
+
+        Observation[] obsTill16  = new Observation[]{ //inclusively
+                new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
+                    put(tr[3], null);
+                    put(tr[4], null);
+                    put(tr[2], null);
+                }}, t++)
+        };
+
+        agent.addAndUpdate(obsTill16);
+
         conversation.addQuestion("is rysio blue and blinking");
         Thread.sleep(1000);
-        System.out.println("(EXPECTED: Yes, it is possible that it is blue and blinking, ???)");
+        System.out.println("(EXPECTED: Yes, it is possible that it is blue and blinking)");
 
     }
 
