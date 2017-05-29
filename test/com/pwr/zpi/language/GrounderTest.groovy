@@ -1,6 +1,6 @@
 package com.pwr.zpi.language
 
-import com.pwr.zpi.*
+import com.pwr.zpi.Agent
 import com.pwr.zpi.episodic.BPCollection
 import com.pwr.zpi.episodic.BaseProfile
 import com.pwr.zpi.semantic.IndividualModel
@@ -27,10 +27,7 @@ class GrounderTest extends GroovyTestCase {
 
 
 
-    /**
-     * Builds all required dependencies.
-     */
-    void build() {
+    void setUp() {
 
         def tr1, tr2, tr3, tr4, tr5
         def model1, model2, model3, model4, model5, model6, model7
@@ -202,7 +199,6 @@ class GrounderTest extends GroovyTestCase {
 
     @Test
     void testGetGroundingSets() {
-        build()
         def groundingSets = Grounder.getGroundingSets(sformula1, agent.knowledgeBase.getBaseProfiles())
         def sfGrSetsNumber = 2;
         assertEquals(sfGrSetsNumber, groundingSets.size())
@@ -221,6 +217,7 @@ class GrounderTest extends GroovyTestCase {
     void testCheckEpistemicConditions() {
 
         buildRelatedScenario(0)
+
         def res = Grounder.performFormulaGrounding(agent, cformula1)
         assertEquals([(new ComplexFormula(im1, [tr3, tr2], [State.IS, State.IS_NOT], LogicOperator.AND)):ModalOperator.POS,
                       (new ComplexFormula(im1, [tr3, tr2], [State.IS_NOT, State.IS_NOT], LogicOperator.AND)):ModalOperator.BEL]as Map<Formula, ModalOperator>,
@@ -228,7 +225,7 @@ class GrounderTest extends GroovyTestCase {
         buildRelatedScenario(1)
         res = Grounder.performFormulaGrounding(agent, cformula2)
         assertEquals([(new ComplexFormula(im1, [tr1, tr2], [State.IS, State.IS_NOT], LogicOperator.AND)):ModalOperator.KNOW]as Map<Formula, ModalOperator>,
-                res)
+                is(res))
         buildRelatedScenario(2)
         res = Grounder.performFormulaGrounding(agent, cformula3)
         assertEquals([(new ComplexFormula(im1, [tr1, tr3], [State.IS, State.IS], LogicOperator.AND)):ModalOperator.POS,

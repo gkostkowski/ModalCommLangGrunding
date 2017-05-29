@@ -196,5 +196,10 @@ class LatestFilteringContextTest extends GroovyTestCase {
         assertTrue(res.get(complFormulas.get(2)).containsAll([bp4] as Set<BaseProfile>))
         assertTrue(res.get(complFormulas.get(3)).isEmpty())
 
+        //CASE EMPTY
+        distance = new Distance(2);
+        testObj = new LatestFilteringContext(distance)
+        res = testObj.performContextualisation([] as Map<Formula, Set<BaseProfile>>) //with warning
+        assertTrue(res.isEmpty())
     }
 }

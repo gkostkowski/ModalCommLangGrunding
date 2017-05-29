@@ -8,6 +8,7 @@ import com.pwr.zpi.language.DistributedKnowledge;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Grounder;
 import com.pwr.zpi.language.Pair;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
@@ -102,22 +103,22 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
 
     @Override
     public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public Pair getStrongest() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public Pair getWeakest() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Formula> getFormula() {
-        return null;
+        throw new NotImplementedException();
     }
 
     /**
