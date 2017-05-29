@@ -123,7 +123,11 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
     /**
      * Produces set of formulas which are complementary to this one. Amount and form of this formulas depends on
      * formula type. For convenience of use, given formula is also included in resulted collection.
-     *
+     * For standard formula, produces list of formulas in following order:
+     *      IS, IS
+     *      IS_NOT, IS
+     *      IS, IS_NOT
+     *      IS_NOT, IS_NOT
      * @return
      */
 
