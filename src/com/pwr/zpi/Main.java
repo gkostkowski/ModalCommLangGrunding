@@ -1,6 +1,7 @@
 package com.pwr.zpi;
 
 import com.pwr.zpi.conversation.Conversation;
+import com.pwr.zpi.conversation.VoiceConversation;
 import com.pwr.zpi.episodic.Observation;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.semantic.QRCode;
@@ -28,12 +29,19 @@ class Main {
 
          //simplyModalitiesScenario(agent, qrCodes, tr);
         //or
-        simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
+       // simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
+        testVoice();
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
         // is present in db after launching one of them, so they can't be used together.
 
         //modalConjunctionsScenario(agent, qrCodes, tr);
+    }
+
+    private static void testVoice(){
+        VoiceConversation voiceConversation = new VoiceConversation();
+        voiceConversation.start();
+        voiceConversation.setCurrentAnswer("I do not know what say about it");
     }
 
     /**

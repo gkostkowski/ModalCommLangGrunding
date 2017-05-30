@@ -55,10 +55,10 @@ public class VoiceConversation implements Runnable {
     public void run() {
         try {
             ServerSocket serverSocket = new ServerSocket(6666);
-            System.out.print("Serwer postawiony");
+            System.out.println("Serwer postawiony");
             new ProcessBuilder("voice/Voice_Test.exe", "6666", "voice/Grammar.xml").start();
             Socket clientSocket = serverSocket.accept();
-            System.out.print("Klient pozyskany");
+            System.out.println("Klient pozyskany");
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             while (running) {
