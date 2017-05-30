@@ -3,11 +3,15 @@ package com.pwr.zpi.conversation;
 import com.pwr.zpi.Agent;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
+import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.language.ComplexFormula;
 import com.pwr.zpi.language.Formula;
+import com.pwr.zpi.language.Grounder;
 import com.pwr.zpi.language.SimpleFormula;
 import com.pwr.zpi.linguistic.ComplexStatement;
 import com.pwr.zpi.linguistic.Question;
+import com.pwr.zpi.linguistic.SimpleStatement;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -86,15 +90,32 @@ public class Conversation implements Runnable {
     {
         if(formula instanceof SimpleFormula)
         {
-   //         SimpleStatement statement = new SimpleStatement((SimpleFormula)formula, agent, timestamp, name);
-     //       return statement.generateStatement();
+            SimpleStatement statement = null;
+            try {
+                statement = new SimpleStatement((SimpleFormula)formula, Grounder.performFormulaGrounding(agent, formula), name);
+            } catch (InvalidFormulaException e) {
+                e.printStackTrace();
+            } catch (NotApplicableException e) {
+                e.printStackTrace();
+            } catch (NotConsistentDKException e) {
+                e.printStackTrace();
+            }
+            return statement.generateStatement();
         }
         else
         {
-   /*         ComplexStatement statement = new ComplexStatement((ComplexFormula) formula, agent, timestamp, name);
+            ComplexStatement statement = null;
+            try {
+                statement = new ComplexStatement((ComplexFormula)formula, Grounder.performFormulaGrounding(agent, formula), name);
+            } catch (InvalidFormulaException e) {
+                e.printStackTrace();
+            } catch (NotApplicableException e) {
+                e.printStackTrace();
+            } catch (NotConsistentDKException e) {
+                e.printStackTrace();
+            }
             return statement.generateStatement();
-   */     }
-        return null;
+        }
     }
 
     @Override

@@ -18,6 +18,21 @@
         </one-of>
       </item>
     </item>
+    <item repeat="0-1">
+      <item> "when it is" </item>
+      <item repeat="1-2">
+        <item repeat="0-1">
+          <item> not </item>
+        </item>
+        <ruleref uri="#traits"/>
+        <item repeat="0-1">
+          <one-of>
+            <item> and </item>
+            <item> or </item>
+          </one-of>
+        </item>
+      </item>
+    </item>
   </rule>
 
 
