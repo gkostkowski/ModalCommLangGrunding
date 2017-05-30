@@ -344,6 +344,19 @@ public class Grounder {
         return 0.0;
     }
 
+    public static Map<Formula, Double> relativeCard_(Map<Formula, Set<BaseProfile>> groundingSets) {
+        Map<Formula, Double> res = new HashMap<>();
+        int totalSize = groundingSets.entrySet().stream()
+                .map(x -> x.getValue().size())
+                .reduce(0, (s1, s2) -> s1+s2);
+        for (Formula f : groundingSets.keySet()) {
+            Double relativeCard = (double)groundingSets.get(f).size()/(double) totalSize;
+            res.put(f,relativeCard);
+        }
+        return res;
+    }
+
+
     /**
      * Returns relative cardinality of given map of sets.If last observation connected to given formula had state MAYHAPS , method deletes last observation from groundingSets and counts
      * cardinality only for those left.

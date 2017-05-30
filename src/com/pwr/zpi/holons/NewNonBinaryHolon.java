@@ -48,11 +48,13 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
     @Override
     public void update() throws InvalidFormulaException, NotApplicableException {
         //List<Formula> complFormulas = relatedFormula.getComplementaryFormulas();
+        summaries = Grounder.relativeCard_(contextualisedGroundedSets);
+        /*
         for (Formula formula : contextualisedGroundedSets.keySet())
             //for (Formula f : complFormulas) {
             summaries.put(formula,
                     Grounder.relativeCard(contextualisedGroundedSets, formula));
-
+*/
     }
 
     public Formula getRelatedFormula() {
