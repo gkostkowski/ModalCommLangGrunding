@@ -16,6 +16,7 @@ import java.util.List;
 
 public class Question {
 
+    public static final String DEFAULT_FAILURE_ANSWER = "Something terrible happened";
     /**
      * Instance of agent which memory will be searched through in order to build proper answer
      */

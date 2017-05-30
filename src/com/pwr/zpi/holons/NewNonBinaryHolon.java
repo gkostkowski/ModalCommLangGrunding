@@ -36,11 +36,10 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
         relatedFormula = dk.getFormula();
         this.dk = dk;
         summaries = new HashMap<>();
-        if (context != null)
-            this.contextualisedGroundedSets = context.performContextualisation(dk.mapOfGroundingSets());
-        else this.contextualisedGroundedSets = dk.mapOfGroundingSets();
+        loadContextualisedGroundingSets(dk);
         update();
     }
+
 
     /**
      * Builds holon for specified formula.
@@ -96,6 +95,12 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
         return getAffectedFormulas().contains(formula);
     }
 
+    private void loadContextualisedGroundingSets(DistributedKnowledge dk) {
+        if (context != null)
+            this.contextualisedGroundedSets = context.performContextualisation(dk.mapOfGroundingSets());
+        else this.contextualisedGroundedSets = dk.mapOfGroundingSets();
+    }
+
     @Override
     public String toString() {
         return "NewNonBinaryHolon{" +
@@ -105,7 +110,8 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
 
     @Override
     public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
-        throw new NotImplementedException();
+        loadContextualisedGroundingSets(dk);
+        update();
     }
 
     @Override

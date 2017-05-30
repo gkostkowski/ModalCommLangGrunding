@@ -49,4 +49,9 @@ public class LatestFilteringContext extends FilteringContext {
     public static String getContextName() {
         return NATURAL_LANG_NAME;
     }
+
+    @Override
+    public String toString() {
+        return NATURAL_LANG_NAME;
+    }
 }

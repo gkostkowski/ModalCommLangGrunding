@@ -14,6 +14,8 @@ import com.pwr.zpi.linguistic.SimpleStatement;
 import com.pwr.zpi.semantic.QRCode;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class Main {
 
@@ -34,7 +36,7 @@ class Main {
                 new Trait("Blue"),
                 new Trait("Soft")};
 
-         simplyModalitiesScenario(agent, qrCodes, tr);
+         //simplyModalitiesScenario(agent, qrCodes, tr);
         //or
        // simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
@@ -42,7 +44,7 @@ class Main {
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
         // is present in db after launching one of them, so they can't be used together.
 
-        //modalConjunctionsScenario(agent, qrCodes, tr);
+        modalConjunctionsScenario(agent, qrCodes, tr);
     }
 
     private static void testVoice(Agent agent, QRCode[] qrCodes, Trait[] tr){
@@ -74,6 +76,7 @@ class Main {
         };
         agent.addAndUpdate(obsTill3);
 
+        ///to powinno być w kontrolerze
         VoiceConversation voiceConversation = new VoiceConversation();
         voiceConversation.start();
         while(voiceConversation.getCurentQuestion()==null)
@@ -86,22 +89,12 @@ class Main {
         try {
             Formula formula = question.getFormula();
             System.out.print(formula.getModel().getIdentifier().getIdNumber() + " " + formula.getTraits().get(0).getName());
-            ComplexStatement ss = new ComplexStatement((ComplexFormula) formula,
-                    Grounder.performFormulaGrounding(agent, formula), question.getName());
-            voiceConversation.setCurrentAnswer(ss.generateStatement());
-        } catch (InvalidQuestionException e) {
-            e.printStackTrace();
-        } catch (InvalidFormulaException e) {
-            e.printStackTrace();
-        } catch (NotConsistentDKException e) {
-            e.printStackTrace();
-        } catch (NotApplicableException e) {
-            e.printStackTrace();
-            voiceConversation.setCurrentAnswer("Something terrible happened");
+            agent.processQuestion(formula, question, voiceConversation);
+        } catch (InvalidFormulaException | InvalidQuestionException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Question or formula is malformed.", e);
         }
 
-
-
+        /////
     }
 
     /**

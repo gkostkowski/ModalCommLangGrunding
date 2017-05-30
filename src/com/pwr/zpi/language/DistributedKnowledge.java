@@ -31,7 +31,7 @@ public class DistributedKnowledge {
      * with given relatedFormula) or complex if true (building all dk classes - also for mental models related to
      * complementary formulas)
      */
-    private static final boolean DEFAULT_DK_IS_COMPLEX = false;
+    private static final boolean DEFAULT_DK_IS_COMPLEX = true;
 
 
     /**

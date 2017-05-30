@@ -15,6 +15,7 @@ import java.util.*;
 public class FocusedDistance implements FocusedMeasure {
 
     private static final double DEF_MAX_THRESHOLD = 5;
+    private static final String NATURAL_LANG_NAME = "focused distance";
     double maxThreshold;
 
     public FocusedDistance(double maxThreshold) {
@@ -95,5 +96,9 @@ public class FocusedDistance implements FocusedMeasure {
     @Override
     public double count(BaseProfile first, BaseProfile second) {
         throw new NotImplementedException();  //method not appropriate
+    }
+
+    public static String getContextName() {
+        return NATURAL_LANG_NAME;
     }
 }

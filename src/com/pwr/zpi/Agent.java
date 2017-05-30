@@ -1,5 +1,6 @@
 package com.pwr.zpi;
 
+import com.pwr.zpi.conversation.VoiceConversation;
 import com.pwr.zpi.episodic.BPCollection;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.episodic.Observation;
@@ -11,13 +12,19 @@ import com.pwr.zpi.holons.context.Context;
 import com.pwr.zpi.holons.context.LatestFilteringContext;
 import com.pwr.zpi.holons.context.measures.Distance;
 import com.pwr.zpi.io.DatabaseAO;
+import com.pwr.zpi.language.ComplexFormula;
 import com.pwr.zpi.language.DistributedKnowledge;
 import com.pwr.zpi.language.Formula;
+import com.pwr.zpi.language.Grounder;
+import com.pwr.zpi.linguistic.ComplexStatement;
+import com.pwr.zpi.linguistic.Question;
 import com.pwr.zpi.semantic.IMCollection;
 import com.pwr.zpi.semantic.IndividualModel;
 import com.pwr.zpi.semantic.ObjectType;
 
-import java.util.Collection;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Agent is crucial class for project - it has members of collections
@@ -26,7 +33,10 @@ import java.util.Collection;
 public class Agent {
     private BPCollection knowledgeBase;
     private IMCollection models;
-    private HolonCollection holons;
+    /**
+     * Contains map of collections of holons built according to different contexts
+     */
+    private Map<String, HolonCollection> contextualisedHolons;
     private DatabaseAO database;
     public static Collection<ObjectType> objectTypeCollection;
 
@@ -35,36 +45,41 @@ public class Agent {
         init();
         knowledgeBase = new BPCollection();
         Context context = new LatestFilteringContext(new Distance(2));
-        holons = new HolonCollection(this, context);
+        contextualisedHolons = new HashMap<>();
         database = new DatabaseAO(this);
     }
 
     /*public Agent(String databaseFilename) {
         init();
         knowledgeBase = new BPCollection();
-        holons = new HolonCollection();
+        contextualisedHolons = new HolonCollection();
         database = new DatabaseAO(this, databaseFilename);
     }*/
 
     public Agent(BPCollection knowledgeBase) {
         init();
         this.knowledgeBase = knowledgeBase;
-        Context context = null; //todo podawanie odpowiedniego typu kontekstu
-        holons = new HolonCollection(this, context);
+//        Context context = null; //todo podawanie odpowiedniego typu kontekstu
+        Context context = new LatestFilteringContext(new Distance(2));
+        contextualisedHolons = new HashMap<>();
+
+        //contextualisedHolons = new HolonCollection(this, context);
     }
 
     public Agent(BPCollection knowledgeBase, IMCollection models) {
         init();
         this.models = models;
         this.knowledgeBase = knowledgeBase;
-        Context context = null; //todo podawanie odpowiedniego typu kontekstu
-        holons = new HolonCollection(this, context);
+//        Context context = null; //todo podawanie odpowiedniego typu kontekstu
+        Context context = new LatestFilteringContext(new Distance(2));
+        contextualisedHolons = new HashMap<>();
     }
 
     public Agent(BPCollection knowledgeBase, IMCollection models, HolonCollection holons) {
         this.knowledgeBase = knowledgeBase;
         this.models = models;
-        this.holons = holons;
+        contextualisedHolons = new HashMap<>();
+        this.contextualisedHolons.put(holons.getHolonsContext().toString(), holons);
     }
 
     /**
@@ -93,8 +108,8 @@ public class Agent {
         this.models = models;
     }
 
-    public HolonCollection getHolons() {
-        return holons;
+    public HolonCollection getContextualisedHolons(Context context) {
+        return contextualisedHolons.get(context);
     }
 
     @Deprecated //uzywamy updateMemory()
@@ -102,11 +117,11 @@ public class Agent {
         return database;
     }
 
-    public void setHolons(HolonCollection holons) {
-        this.holons = holons;
+    public void addContextualisedHolons(HolonCollection contextualisedHolons) {
+        this.contextualisedHolons.put(contextualisedHolons.getHolonsContext().toString(), contextualisedHolons);
     }
 
-   /**
+    /**
      * Builds distributed knowledge, which will be used to make respective mental models associated
      * with formulas. It is used to build distribution of different mental models.
      * Built distributed knowledge is related to certain moment in time.
@@ -162,10 +177,10 @@ public class Agent {
      * with formulas. It is used to build distribution of different mental models.
      * Built distributed knowledge is related to given timestamp.
      *
-     * @param formula Formula
-     * @param timestamp timestamp
+     * @param formula        Formula
+     * @param timestamp      timestamp
      * @param buildComplexDK According to additional operations overhead, parameter can determine if complete distribution
-     *                      (with all classes) should be build (if true) or simple (only classes related to exact formula) - false.
+     *                       (with all classes) should be build (if true) or simple (only classes related to exact formula) - false.
      * @return Distribution of knowledge.
      * @throws InvalidFormulaException
      */
@@ -183,18 +198,17 @@ public class Agent {
     }
 
 
-
-        /**
-         * This is method for realising one of fundamental task: registering task. Precisely, this method includes
-         * observation saved in agent database in program for processing.
-         */
+    /**
+     * This is method for realising one of fundamental task: registering task. Precisely, this method includes
+     * observation saved in agent database in program for processing.
+     */
     public void discoverObservations(Collection<Observation> newObservations) {
         System.out.println("Discovering new observations ...");
 
         if (newObservations != null && !newObservations.isEmpty()) {
             System.out.println("Processing " + newObservations.size() + " new observation(s):");
             for (Observation obs : newObservations) {
-                System.out.println("\t"+obs);
+                System.out.println("\t" + obs);
                 registerObservation(obs);
             }
         }
@@ -215,34 +229,57 @@ public class Agent {
     /**
      * Updates agent's episodic memory by fetching new observations from database.
      */
-    public void updateMemory(){
+    public void updateMemory() {
         database.updateAgentMemory();
     }
 
-    public void updateBeliefs(){
+    public void updateBeliefs(Context context) {
         try {
-            System.out.print("Updating beliefs for t="+knowledgeBase.getTimestamp()+"...");
-            holons.updateBeliefs(knowledgeBase.getTimestamp());
+            System.out.print("Updating beliefs for t=" + knowledgeBase.getTimestamp() + "...");
+            contextualisedHolons.get(context).updateBeliefs(knowledgeBase.getTimestamp());
             System.out.println("Done.");
         } catch (InvalidFormulaException | NotConsistentDKException | NotApplicableException e) {
-            System.out.println("Agent was not able to update holons.");
+            System.out.println("Agent was not able to update contextualisedHolons.");
         }
     }
 
 
-    public void addObservationToDatabase(Observation ... observations) {
+    public void addObservationToDatabase(Observation... observations) {
         for (Observation obs : observations)
             database.addNewObservation(obs);
     }
 
     /**
      * Methods for testing purposes: adds given observation to database,
-     * then updates episodic memory (fetches new observations) and updates holons.
+     * then updates episodic memory (fetches new observations) and updates contextualisedHolons.
      * Semantic memory is also updated (if required) during updating episodic memory.
      */
     public void addAndUpdate(Observation[] observations) {
         addObservationToDatabase(observations);
         updateMemory();
-        updateBeliefs();
+        updateBeliefs(null); //todo
+    }
+
+    /**
+     * Methods performs question processing and the expected result is the answer.
+     * This method should be run by controller.
+     *
+     * @param formula
+     * @param question
+     * @param voiceConversation
+     */
+    public void processQuestion(Formula formula, Question question, VoiceConversation voiceConversation) {
+        ComplexStatement ss = null;
+        Context context = null;
+        if (contextualisedHolons.containsKey(context))
+            contextualisedHolons.put(context.toString(), new HolonCollection(new HashSet<>(), this));
+        try {
+            ss = new ComplexStatement((ComplexFormula) formula,
+                    Grounder.performFormulaGrounding(this, formula, context), question.getName());
+        } catch (InvalidFormulaException | NotApplicableException | NotConsistentDKException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Question can't be processed.", e);
+            voiceConversation.setCurrentAnswer(Question.DEFAULT_FAILURE_ANSWER);
+        }
+        voiceConversation.setCurrentAnswer(ss.generateStatement());
     }
 }

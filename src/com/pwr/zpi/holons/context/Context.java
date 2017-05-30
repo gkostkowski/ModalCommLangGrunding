@@ -13,6 +13,8 @@ import java.util.Set;
  * answer more accurate.
  */
 public interface Context {
+    String DEFAULT_CONTEXT = "default context";
+
     /**
      * This is exact method for performing contextualisation. Imposes exact Contextualisation instances to receive map of
      * grounding sets (with respective formulas) as keys, and to produce map with same form as result.
@@ -30,6 +32,7 @@ public interface Context {
      */
     static Map<String, Class> getNaturalLanguageNames() {
         return new HashMap<String, Class>(){{
+            put(DEFAULT_CONTEXT, null);
             put(LatestFilteringContext.getContextName(), LatestFilteringContext.class);
             put(LatestFocusedFilteringContext.getContextName(), LatestFocusedFilteringContext.class);
             put(LatestGroupFilteringContext.getContextName(), LatestGroupFilteringContext.class);

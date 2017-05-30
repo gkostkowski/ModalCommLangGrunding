@@ -8,7 +8,7 @@ import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.Holon;
 import com.pwr.zpi.holons.NonBinaryHolon;
-import com.pwr.zpi.semantic.IndividualModel;
+import com.pwr.zpi.holons.context.Context;
 import com.sun.istack.internal.Nullable;
 
 import java.util.*;
@@ -115,7 +115,7 @@ public class Grounder {
      * of grounded formula with given modal operator.
      * @see DistributedKnowledge
      */
-    public static Map<Formula, ModalOperator> performFormulaGrounding(Agent agent, Formula formula)
+    public static Map<Formula, ModalOperator> performFormulaGrounding(Agent agent, Formula formula, Context context)
             throws InvalidFormulaException, NotApplicableException, NotConsistentDKException {
 
         DistributedKnowledge dk = agent.distributeKnowledge(formula, true);
@@ -125,7 +125,8 @@ public class Grounder {
         int timestamp = dk.getTimestamp();
 
         for (Formula currFormula : complementaryFormulas)
-            if ((currOperator = checkEpistemicConditions(currFormula, dk, agent.getHolons().getHolon(currFormula, timestamp))) != null)
+            if ((currOperator = checkEpistemicConditions(currFormula, dk,
+                    agent.getContextualisedHolons(context).getHolon(currFormula, timestamp))) != null)
                 res.put(currFormula, currOperator);
 
         return res;
@@ -158,6 +159,7 @@ public class Grounder {
             hasLastClearState = hasLastClearState &&
                     lastBP.isContainingClearDescriptionFor(formula.getModel(), selectedTrait);
         }
+
         /*for (int i = 0; i < formula.getTraits().size(); i++) {  //supports complex formulas
             Set<IndividualModel> clearStatesObjects = dk.getRelatedObservationsBase()
                     .getIMsByTraitStates(formula.getTraits().get(i), new State[]{State.IS, State.IS_NOT}, timestamp);
