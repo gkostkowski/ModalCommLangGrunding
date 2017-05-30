@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<grammar xml:lang="en-US" xmlns="http://www.w3.org/2001/06/grammar"
+          version="1.0" root="question">
+  <rule id="question">
+    <item>
+      is
+    </item>
+    <ruleref uri="#names"/>
+    <item repeat="1-2">
+      <item repeat="0-1">
+        <item> not </item>
+      </item>
+      <ruleref uri="#traits"/>
+      <item repeat="0-1">
+        <one-of>
+          <item> and </item>
+          <item> or </item>
+        </one-of>
+      </item>
+    </item>
+  </rule>
+
+
+  <rule id="names" scope="public">
+    <one-of>
+      <item> Bobby </item>
+      <item> Jimmy </item>
+      <item> Terry </item>
+    </one-of>
+  </rule>
+
+  <rule id="traits" scope="public">
+    <one-of>
+      <item> blue </item>
+      <item> white </item>
+      <item> soft </item>
+      <item> lovely </item>
+    </one-of>
+  </rule>
+</grammar>
+
