@@ -13,6 +13,8 @@ import java.util.*;
  */
 public class LatestFilteringContext extends FilteringContext {
 
+    private static final String NATURAL_LANG_NAME = "Latest Filtering Context";
+
     public LatestFilteringContext(Measure measure, double maxValue) {
         super(measure, maxValue);
     }
@@ -36,5 +38,15 @@ public class LatestFilteringContext extends FilteringContext {
     @Override
     public void setMaxThreshold(double threshold) {
         this.maxValue = threshold;
+    }
+
+
+    /**
+     * This method must be defined to enable accessing this kind of contextualisation via voice commands.
+     * Note: In addition, this method must be invoked in Context.getNaturalLanguageNames() method.
+     * @return Name of contextualisation.
+     */
+    public static String getContextName() {
+        return NATURAL_LANG_NAME;
     }
 }

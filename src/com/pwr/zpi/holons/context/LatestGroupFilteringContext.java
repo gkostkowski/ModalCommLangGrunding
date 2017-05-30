@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class LatestGroupFilteringContext extends FilteringContext {
 
     private static final int DEF_GROUP_SIZE = 5;
+    private static final String NATURAL_LANG_NAME = "Latest Group Filtering Context";
 
     private int groupSize;
 
@@ -57,5 +58,14 @@ public class LatestGroupFilteringContext extends FilteringContext {
     @Override
     public void setMaxThreshold(double threshold) {
         this.maxValue = threshold;
+    }
+
+    /**
+     * This method must be defined to enable accessing this kind of contextualisation via voice commands.
+     * Note: In addition, this method must be invoked in Context.getNaturalLanguageNames() method.
+     * @return Name of contextualisation.
+     */
+    public static String getContextName() {
+        return NATURAL_LANG_NAME;
     }
 }

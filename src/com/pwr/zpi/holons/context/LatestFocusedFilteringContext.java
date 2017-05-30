@@ -16,13 +16,14 @@ import java.util.*;
  */
 public class LatestFocusedFilteringContext extends LatestFilteringContext {
 
+    private static final String NATURAL_LANG_NAME = "Latest Focused Filtering Context";
     private List<Trait> traits;
 
     public LatestFocusedFilteringContext(Collection<Trait> focusedTraits, FocusedMeasure measure, double maxValue) {
         super(measure, maxValue);
     }
 
-    public LatestFocusedFilteringContext(FocusedMeasure measure) {
+    public LatestFocusedFilteringContext(Collection<Trait> focusedTraits, FocusedMeasure measure) {
         super(measure);
     }
 
@@ -38,5 +39,14 @@ public class LatestFocusedFilteringContext extends LatestFilteringContext {
     @Override
     public boolean determineFulfillment(BaseProfile representative, BaseProfile examined) {
         return ((FocusedMeasure)measure).count(representative, examined, traits) <= maxValue;
+    }
+
+    /**
+     * This method must be defined to enable accessing this kind of contextualisation via voice commands.
+     * Note: In addition, this method must be invoked in Context.getNaturalLanguageNames() method.
+     * @return Name of contextualisation.
+     */
+    public static String getContextName() {
+        return NATURAL_LANG_NAME;
     }
 }

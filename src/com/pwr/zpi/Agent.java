@@ -8,6 +8,8 @@ import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.HolonCollection;
 import com.pwr.zpi.holons.context.Context;
+import com.pwr.zpi.holons.context.LatestFilteringContext;
+import com.pwr.zpi.holons.context.measures.Distance;
 import com.pwr.zpi.io.DatabaseAO;
 import com.pwr.zpi.language.DistributedKnowledge;
 import com.pwr.zpi.language.Formula;
@@ -32,7 +34,7 @@ public class Agent {
     public Agent() {
         init();
         knowledgeBase = new BPCollection();
-        Context context= null;//new DistanceContext(); FuzzyContext(); ClusterisationContext();
+        Context context = new LatestFilteringContext(new Distance(2));
         holons = new HolonCollection(this, context);
         database = new DatabaseAO(this);
     }

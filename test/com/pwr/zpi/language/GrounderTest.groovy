@@ -169,15 +169,18 @@ class GrounderTest extends GroovyTestCase {
         NR  RED WHI BLI
         1   1   0   0
         2   1   0   0
-        3   1   0   1
+        3   1   0   1   (blinking, white): {(is, is not):KNOW}
         -------------
-        4   1   0   N
+        4   1   0   N   (blinking, white): {(is, is not):POS, (si not, is not):BEL}
+                        (red, white): {(is, is not): know}
+                        (red, blinking): {(is, is): pos, (is, is not): bel}
         -------------
         5   N   0   0
         6   N   0   N
         7   N   1   1
         8   0   1   N
-        9   N   N   1
+        9   N   N   1   (red, blinking): {(is, is): pos, (is, is not): bel}
+                        (white, blinking): {(is, is): pos, (is not, is): pos}
          */
 
         switch (phaseNbr) {

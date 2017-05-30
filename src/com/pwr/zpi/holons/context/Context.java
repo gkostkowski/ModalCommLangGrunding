@@ -3,6 +3,7 @@ package com.pwr.zpi.holons.context;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.language.Formula;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,4 +22,17 @@ public interface Context {
     Map<Formula, Set<BaseProfile>> performContextualisation(Map<Formula, Set<BaseProfile>> namedGroundingSets);
 
     void setMaxThreshold(double threshold);
+
+    /**
+     * This method provides names of all concrete implementations of this interface spoken in natural language.
+     * Every contextualisation method which should be accessed via voice command must be included in resulted map.
+     * @return Map of string representing natural language name and respective class.
+     */
+    static Map<String, Class> getNaturalLanguageNames() {
+        return new HashMap<String, Class>(){{
+            put(LatestFilteringContext.getContextName(), LatestFilteringContext.class);
+            put(LatestFocusedFilteringContext.getContextName(), LatestFocusedFilteringContext.class);
+            put(LatestGroupFilteringContext.getContextName(), LatestGroupFilteringContext.class);
+        }};
+    }
 }

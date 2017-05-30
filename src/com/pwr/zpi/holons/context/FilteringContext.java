@@ -109,5 +109,4 @@ public abstract class FilteringContext implements Context {
      */
     public abstract Set<BaseProfile> selectRepresentativeBPs(Map<Formula, Set<BaseProfile>> namedGroundingSets) throws ContextException;
 
-
 }
