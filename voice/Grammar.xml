@@ -34,7 +34,8 @@
       <item> blue </item>
       <item> white </item>
       <item> soft </item>
-      <item> lovely </item>
+      <item> blinking </item>
+      <item> red </item>
     </one-of>
   </rule>
 </grammar>
