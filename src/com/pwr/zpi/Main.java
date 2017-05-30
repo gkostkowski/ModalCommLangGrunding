@@ -3,7 +3,14 @@ package com.pwr.zpi;
 import com.pwr.zpi.conversation.Conversation;
 import com.pwr.zpi.conversation.VoiceConversation;
 import com.pwr.zpi.episodic.Observation;
-import com.pwr.zpi.language.Trait;
+import com.pwr.zpi.exceptions.InvalidFormulaException;
+import com.pwr.zpi.exceptions.InvalidQuestionException;
+import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.exceptions.NotConsistentDKException;
+import com.pwr.zpi.language.*;
+import com.pwr.zpi.linguistic.ComplexStatement;
+import com.pwr.zpi.linguistic.Question;
+import com.pwr.zpi.linguistic.SimpleStatement;
 import com.pwr.zpi.semantic.QRCode;
 
 import java.util.HashMap;
@@ -27,21 +34,74 @@ class Main {
                 new Trait("Blue"),
                 new Trait("Soft")};
 
-         //simplyModalitiesScenario(agent, qrCodes, tr);
+         simplyModalitiesScenario(agent, qrCodes, tr);
         //or
        // simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        testVoice();
+        // testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
         // is present in db after launching one of them, so they can't be used together.
 
         //modalConjunctionsScenario(agent, qrCodes, tr);
     }
 
-    private static void testVoice(){
+    private static void testVoice(Agent agent, QRCode[] qrCodes, Trait[] tr){
+
+        agent.getModels().addNameToModel(qrCodes[0], "Bobby");
+        int t = 0;
+
+        Observation[] obsTill3  = new Observation[]{ //inclusively
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], false);
+                    put(tr[2], false);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], false);
+                    put(tr[1], false);
+                    put(tr[2], false);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], true);
+                    put(tr[2], true);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], null);
+                    put(tr[2], null);
+                }}, t++)
+        };
+        agent.addAndUpdate(obsTill3);
+
         VoiceConversation voiceConversation = new VoiceConversation();
         voiceConversation.start();
-        voiceConversation.setCurrentAnswer("I do not know what say about it");
+        while(voiceConversation.getCurentQuestion()==null)
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        Question question = new Question(voiceConversation.getCurentQuestion(), agent);
+        try {
+            Formula formula = question.getFormula();
+            System.out.print(formula.getModel().getIdentifier().getIdNumber() + " " + formula.getTraits().get(0).getName());
+            ComplexStatement ss = new ComplexStatement((ComplexFormula) formula,
+                    Grounder.performFormulaGrounding(agent, formula), question.getName());
+            voiceConversation.setCurrentAnswer(ss.generateStatement());
+        } catch (InvalidQuestionException e) {
+            e.printStackTrace();
+        } catch (InvalidFormulaException e) {
+            e.printStackTrace();
+        } catch (NotConsistentDKException e) {
+            e.printStackTrace();
+        } catch (NotApplicableException e) {
+            e.printStackTrace();
+            voiceConversation.setCurrentAnswer("Something terrible happened");
+        }
+
+
+
     }
 
     /**
@@ -51,6 +111,7 @@ class Main {
         if (agent.getModels().getRepresentationByName("Hyzio") != null)
             throw new IllegalStateException("You already asked about Hyzio");
         int t = 0;
+
 
         agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
         Conversation c1 = new Conversation(agent, "SimpleModalConv", t);
