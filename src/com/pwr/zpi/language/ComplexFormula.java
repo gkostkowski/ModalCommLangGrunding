@@ -87,7 +87,8 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
      * @return the type of formula
      */
     public Formula.Type getType() {
-        return Type.MODAL_CONJUNCTION;
+        return operator.equals(LogicOperator.AND) ? Type.MODAL_CONJUNCTION :
+                (operator.equals(LogicOperator.OR) ? Type.MODAL_DISJUNCTION:null);
     }
 
     /**

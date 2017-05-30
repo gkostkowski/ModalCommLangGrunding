@@ -24,7 +24,7 @@ class NewNonBinaryHolonTest extends GroovyTestCase {
     int t0, t1, t2, t3, t4, t5, t6, t7, t8, t9
     BPCollection bpCollection1
     Agent agent
-    ComplexFormula cformula1, cformula2, cformula3, cformula4
+    ComplexFormula cformula1, cformula2, cformula3, cformula4, cformula5, cformula6
     DistributedKnowledge testDk1, testDk2, testDk3, testDk4, testDk5, testDk6,
                          testCDk1, testCDk2
 
@@ -133,13 +133,18 @@ class NewNonBinaryHolonTest extends GroovyTestCase {
                 [State.IS, State.IS], LogicOperator.AND) //is hyzio white and blinking
         cformula4 = new ComplexFormula(formulaIM, [tr1, tr2],
                 [State.IS_NOT, State.IS_NOT], LogicOperator.AND) //is hyzio not red and not white
-
+        cformula5 = new ComplexFormula(formulaIM, [tr1, tr2],
+                [State.IS_NOT, State.IS_NOT], LogicOperator.OR) //is hyzio not red OR not white
+        cformula6 = new ComplexFormula(formulaIM, [tr2, tr3],
+                [State.IS, State.IS_NOT], LogicOperator.OR) //is hyzio white OR not blinking
 
         def currTime = agent.knowledgeBase.getTimestamp()
         testDk1 = new DistributedKnowledge(agent, cformula1)
         testDk2 = new DistributedKnowledge(agent, cformula2)
         testDk3 = new DistributedKnowledge(agent, cformula3)
         testDk4 = new DistributedKnowledge(agent, cformula4)
+        testDk5 = new DistributedKnowledge(agent, cformula5)
+        testDk6 = new DistributedKnowledge(agent, cformula6)
         testCDk1 = new DistributedKnowledge(agent, cformula1, true) //with complex formula - complex distribution
 
         measure = new Distance(2)
@@ -195,6 +200,17 @@ class NewNonBinaryHolonTest extends GroovyTestCase {
         assertEquals(1/5, testObj.getSummary(complFormulas.get(1))) // IS_NOT, IS
         assertEquals(4/5, testObj.getSummary(complFormulas.get(2))) // IS, IS_NOT
         assertEquals(0, testObj.getSummary(complFormulas.get(3))) // IS_NOT, IS_NOT
+
+        testObj = new NewNonBinaryHolon(testDk5, context)
+        testObj.update()
+        complFormulas = testDk5.getFormula().getStandardFormula().getComplementaryFormulas()
+
+        assertTrue(testObj.getAffectedFormulas().containsAll(complFormulas))
+
+        assertEquals(6/8, testObj.getSummary(complFormulas.get(0))) // IS, IS
+        assertEquals(2/8, testObj.getSummary(complFormulas.get(1))) // IS_NOT, IS
+        assertEquals(6/8, testObj.getSummary(complFormulas.get(2))) // IS, IS_NOT
+        assertEquals(7/8, testObj.getSummary(complFormulas.get(3))) // IS_NOT, IS_NOT
     }
 
 }

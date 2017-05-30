@@ -13,18 +13,17 @@ class GrounderTest extends GroovyTestCase {
 
     Map<Trait, Set<IndividualModel>> describedByTraits, notDescribedByTraits,
                                      indefiniteByTraits;
-    BaseProfile bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9,  bp2_2;
+    BaseProfile bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9, bp2_2;
     int t0, t1, t2, t3, t4, t5, t6, t7, t8, t9
     BPCollection bpCollection1
     Agent agent
     SimpleFormula sformula1, sformula2, sformula3
-    ComplexFormula cformula1, cformula2,cformula3,cformula4
+    ComplexFormula cformula1, cformula2, cformula3, cformula4, cformula5, cformula6
     DistributedKnowledge testDk, testDk1, testDk2, testDk3, testDk4, testDk5, testDk6,
                          testCDk1, testCDk2
 
     def im1, model2, model3, model4, model5, model6, model7
     def tr1, tr2, tr3, tr4, tr5
-
 
 
     void setUp() {
@@ -193,6 +192,10 @@ class GrounderTest extends GroovyTestCase {
                 [State.IS, State.IS], LogicOperator.AND)
         cformula4 = new ComplexFormula(formulaIM, [tr2, tr3],
                 [State.IS_NOT, State.IS_NOT], LogicOperator.AND)
+        cformula5 = new ComplexFormula(formulaIM, [tr2, tr3],
+                [State.IS_NOT, State.IS_NOT], LogicOperator.OR)
+        cformula6 = new ComplexFormula(formulaIM, [tr2, tr3],
+                [State.IS, State.IS_NOT], LogicOperator.OR)
 
     }
 
@@ -205,13 +208,24 @@ class GrounderTest extends GroovyTestCase {
         groundingSets = Grounder.getGroundingSets(cformula1, agent.knowledgeBase.getBaseProfiles())
         def cfGrSetsNumber = 4;
         assertEquals(cfGrSetsNumber, groundingSets.size())
+
+        buildRelatedScenario(0)
+        groundingSets = Grounder.getGroundingSets(cformula4, agent.knowledgeBase.getBaseProfiles())
+        assertEquals([bp1, bp2] as Set<BaseProfile>, groundingSets.get(cformula4))
+
+        buildRelatedScenario(1)
+        groundingSets = Grounder.getGroundingSets(cformula5, agent.knowledgeBase.getBaseProfiles())
+        assertEquals([bp1, bp2, bp3, bp4] as Set<BaseProfile>, groundingSets.get(cformula5))
+
+        buildRelatedScenario(1)
+        groundingSets = Grounder.getGroundingSets(cformula6, agent.knowledgeBase.getBaseProfiles())
+        assertEquals([bp1, bp2] as Set<BaseProfile>, groundingSets.get(cformula6))
+
+        buildRelatedScenario(2)
+        groundingSets = Grounder.getGroundingSets(cformula5, agent.knowledgeBase.getBaseProfiles())
+        assertEquals([bp1, bp2, bp3, bp4, bp5, bp6] as Set<BaseProfile>, groundingSets.get(cformula5))
     }
 
-
-    @Test
-    void testDetermineFulfillment() {
-
-    }
 
     @Test
     void testCheckEpistemicConditions() {
@@ -219,22 +233,31 @@ class GrounderTest extends GroovyTestCase {
         buildRelatedScenario(0)
 
         def res = Grounder.performFormulaGrounding(agent, cformula1)
-        assertEquals([(new ComplexFormula(im1, [tr3, tr2], [State.IS, State.IS_NOT], LogicOperator.AND)):ModalOperator.POS,
-                      (new ComplexFormula(im1, [tr3, tr2], [State.IS_NOT, State.IS_NOT], LogicOperator.AND)):ModalOperator.BEL]as Map<Formula, ModalOperator>,
+        assertEquals([(new ComplexFormula(im1, [tr3, tr2], [State.IS, State.IS_NOT], LogicOperator.AND))    : ModalOperator.POS,
+                      (new ComplexFormula(im1, [tr3, tr2], [State.IS_NOT, State.IS_NOT], LogicOperator.AND)): ModalOperator.BEL] as Map<Formula, ModalOperator>,
                 res)
         buildRelatedScenario(1)
         res = Grounder.performFormulaGrounding(agent, cformula2)
-        assertEquals([(new ComplexFormula(im1, [tr1, tr2], [State.IS, State.IS_NOT], LogicOperator.AND)):ModalOperator.KNOW]as Map<Formula, ModalOperator>,
+        assertEquals([(new ComplexFormula(im1, [tr1, tr2], [State.IS, State.IS_NOT], LogicOperator.AND)): ModalOperator.KNOW] as Map<Formula, ModalOperator>,
                 is(res))
         buildRelatedScenario(2)
         res = Grounder.performFormulaGrounding(agent, cformula3)
-        assertEquals([(new ComplexFormula(im1, [tr1, tr3], [State.IS, State.IS], LogicOperator.AND)):ModalOperator.POS,
-                      (new ComplexFormula(im1, [tr1, tr3], [State.IS, State.IS_NOT], LogicOperator.AND)):ModalOperator.POS]as Map<Formula, ModalOperator>,
+        assertEquals([(new ComplexFormula(im1, [tr1, tr3], [State.IS, State.IS], LogicOperator.AND))    : ModalOperator.POS,
+                      (new ComplexFormula(im1, [tr1, tr3], [State.IS, State.IS_NOT], LogicOperator.AND)): ModalOperator.POS] as Map<Formula, ModalOperator>,
                 res)
         res = Grounder.performFormulaGrounding(agent, cformula4)
-        assertEquals([(new ComplexFormula(im1, [tr2, tr3], [State.IS_NOT, State.IS_NOT], LogicOperator.AND)):ModalOperator.POS,
-                      (new ComplexFormula(im1, [tr2, tr3], [State.IS, State.IS], LogicOperator.AND)):ModalOperator.POS,
-                      (new ComplexFormula(im1, [tr2, tr3], [State.IS_NOT, State.IS], LogicOperator.AND)):ModalOperator.POS]as Map<Formula, ModalOperator>,
+        assertEquals([(new ComplexFormula(im1, [tr2, tr3], [State.IS_NOT, State.IS_NOT], LogicOperator.AND)): ModalOperator.POS,
+                      (new ComplexFormula(im1, [tr2, tr3], [State.IS, State.IS], LogicOperator.AND))        : ModalOperator.POS,
+                      (new ComplexFormula(im1, [tr2, tr3], [State.IS_NOT, State.IS], LogicOperator.AND))    : ModalOperator.POS] as Map<Formula, ModalOperator>,
+                res)
+        res = Grounder.performFormulaGrounding(agent, cformula5)
+
+        //according to [0.1, 0.6, 0.65, 0.9, 1.0] thresholds
+        assertEquals([(new ComplexFormula(im1, [tr2, tr3], [State.IS_NOT, State.IS_NOT], LogicOperator.OR)): ModalOperator.BEL,
+                      (new ComplexFormula(im1, [tr2, tr3], [State.IS, State.IS], LogicOperator.OR))        : ModalOperator.BEL,
+                      (new ComplexFormula(im1, [tr2, tr3], [State.IS_NOT, State.IS], LogicOperator.OR))    : ModalOperator.POS,
+                      (new ComplexFormula(im1, [tr2, tr3], [State.IS, State.IS_NOT], LogicOperator.OR))        : ModalOperator.BEL,
+        ] as Map<Formula, ModalOperator>,
                 res)
 
     }
@@ -242,7 +265,7 @@ class GrounderTest extends GroovyTestCase {
     @Test
     void testCheckEpistemicCondition() {
         final double[] simpleThresholds = Grounder.simpleThresholds;
-                //[0.2, 0.6, 0.7, 0.9, 1.0];
+        //[0.2, 0.6, 0.7, 0.9, 1.0];
 
         assertNull(Grounder.checkEpistemicCondition(true, true,
                 0.0, ModalOperator.POS, simpleThresholds))

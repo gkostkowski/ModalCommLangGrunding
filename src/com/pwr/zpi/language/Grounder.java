@@ -37,12 +37,21 @@ public class Grounder {
     public static final double CONJ_KNOW = 1.0;
 
     /**
+     * Thresholds for modal disjunctions. //TODO rozwazyc inne wartosci
+     */
+    private static final double DISJ_MIN_POS = 0.1;
+    private static final double DISJ_MAX_POS = 0.6;
+    private static final double DISJ_MIN_BEL = 0.65;
+    private static final double DISJ_MAX_BEL = 0.9;
+    public static final double  DISJ_KNOW = 1.0;
+
+    /**
      * Arrays of thresholds for certain formula types. Order of elements in arrays is strictly defined and can't be other:
      * [MIN_POS, MAX_POS, MIN_BEL, MAX_BEL, KNOW].
      */
     public final static double[] simpleThresholds = new double[]{MIN_POS, MAX_POS, MIN_BEL, MAX_BEL, KNOW};
     public final static double[] conjThresholds = new double[]{CONJ_MIN_POS, CONJ_MAX_POS, CONJ_MIN_BEL, CONJ_MAX_BEL, CONJ_KNOW};
-    public final static double[] disjThresholds = new double[]{}; //todo
+    public final static double[] disjThresholds = new double[]{DISJ_MIN_POS, DISJ_MAX_POS, DISJ_MIN_BEL, DISJ_MAX_BEL, DISJ_KNOW};
 
     /**
      * Gives complete collection of grounding sets for certain formulas (in this context may be known as mental model).
