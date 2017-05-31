@@ -5,6 +5,7 @@ import com.pwr.zpi.episodic.BPCollection;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
+import com.pwr.zpi.exceptions.InvalidQuestionException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.HolonCollection;
@@ -109,7 +110,9 @@ public class Agent {
     }
 
     public HolonCollection getContextualisedHolons(Context context) {
-        return contextualisedHolons.get(context);
+        if (contextualisedHolons.get(context) == null)
+            contextualisedHolons.put(context.toString(), new HolonCollection(this, context));
+        return contextualisedHolons.get(context.toString());
     }
 
     @Deprecated //uzywamy updateMemory()
@@ -236,7 +239,7 @@ public class Agent {
     public void updateBeliefs(Context context) {
         try {
             System.out.print("Updating beliefs for t=" + knowledgeBase.getTimestamp() + "...");
-            contextualisedHolons.get(context).updateBeliefs(knowledgeBase.getTimestamp());
+            contextualisedHolons.get(context.toString()).updateBeliefs(knowledgeBase.getTimestamp());
             System.out.println("Done.");
         } catch (InvalidFormulaException | NotConsistentDKException | NotApplicableException e) {
             System.out.println("Agent was not able to update contextualisedHolons.");
@@ -257,26 +260,28 @@ public class Agent {
     public void addAndUpdate(Observation[] observations) {
         addObservationToDatabase(observations);
         updateMemory();
-        updateBeliefs(null); //todo
+        for (HolonCollection hCOllection : contextualisedHolons.values())
+            updateBeliefs(hCOllection.getHolonsContext());
     }
 
     /**
      * Methods performs question processing and the expected result is the answer.
      * This method should be run by controller.
      *
-     * @param formula
      * @param question
      * @param voiceConversation
      */
-    public void processQuestion(Formula formula, Question question, VoiceConversation voiceConversation) {
+    public void processQuestion(Question question, VoiceConversation voiceConversation) {
         ComplexStatement ss = null;
-        Context context = null;
-        if (contextualisedHolons.containsKey(context))
+        Context context = question.getContext();
+        if (contextualisedHolons.containsKey(context)) {
             contextualisedHolons.put(context.toString(), new HolonCollection(new HashSet<>(), this));
+        }
         try {
+            Formula formula = question.getFormula();
             ss = new ComplexStatement((ComplexFormula) formula,
                     Grounder.performFormulaGrounding(this, formula, context), question.getName());
-        } catch (InvalidFormulaException | NotApplicableException | NotConsistentDKException e) {
+        } catch (InvalidFormulaException | NotApplicableException | NotConsistentDKException | InvalidQuestionException e) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Question can't be processed.", e);
             voiceConversation.setCurrentAnswer(Question.DEFAULT_FAILURE_ANSWER);
         }

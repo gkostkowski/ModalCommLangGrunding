@@ -4,6 +4,7 @@ package com.pwr.zpi.linguistic;
 import com.pwr.zpi.*;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
+import com.pwr.zpi.holons.context.Context;
 import com.pwr.zpi.language.*;
 import com.pwr.zpi.semantic.IndividualModel;
 
@@ -147,5 +148,11 @@ public class Question {
             else throw new InvalidQuestionException(InvalidQuestionException.NO_SECOND_TRAIT);
         return trait;
     }
+
+    public Context getContext() {
+        return null;
+    }
+
+
 }
 

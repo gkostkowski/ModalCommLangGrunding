@@ -5,6 +5,7 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
+import com.pwr.zpi.holons.context.Context;
 import com.pwr.zpi.language.ComplexFormula;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Grounder;
@@ -22,6 +23,7 @@ import java.util.Queue;
 public class Conversation implements Runnable {
 
     private final Agent agent;
+    private Context context;
     public String name;
     private int timestamp;
 
@@ -39,12 +41,13 @@ public class Conversation implements Runnable {
      * @param name used only in case of handling multiple conversations, indicates to whom we refer
      * @param timestamp
      */
-    public Conversation(Agent agent, String name, int timestamp)
+    public Conversation(Agent agent, String name, int timestamp, Context context)
     {
         this.agent = agent;
         this.name = name;
         this.timestamp = timestamp;
         queue = new LinkedList<>();
+        this.context = context;
     }
 
     public void setTimestamp(int time)
@@ -69,7 +72,7 @@ public class Conversation implements Runnable {
         Question question1 = new Question(question, agent);
         try {
             Formula formula = question1.getFormula();
-            return getAnswer(formula, question1.getName());
+            return getAnswer(formula, context, question1.getName());
         } catch (InvalidQuestionException e) {
             if(e.getMistake()==InvalidQuestionException.NO_QUESTION) return e.getStringWithInfo();
             else return "I didn't understand the question, sorry. It was because there is " + e.getStringWithInfo();
@@ -86,13 +89,13 @@ public class Conversation implements Runnable {
      * @param name
      * @return
      */
-    private String getAnswer(Formula formula, String name)
+    private String getAnswer(Formula formula, Context context, String name)
     {
         if(formula instanceof SimpleFormula)
         {
             SimpleStatement statement = null;
             try {
-                statement = new SimpleStatement((SimpleFormula)formula, Grounder.performFormulaGrounding(agent, formula), name);
+                statement = new SimpleStatement((SimpleFormula)formula, Grounder.performFormulaGrounding(agent, formula, context), name);
             } catch (InvalidFormulaException e) {
                 e.printStackTrace();
             } catch (NotApplicableException e) {
@@ -106,7 +109,7 @@ public class Conversation implements Runnable {
         {
             ComplexStatement statement = null;
             try {
-                statement = new ComplexStatement((ComplexFormula)formula, Grounder.performFormulaGrounding(agent, formula), name);
+                statement = new ComplexStatement((ComplexFormula)formula, Grounder.performFormulaGrounding(agent, formula, context), name);
             } catch (InvalidFormulaException e) {
                 e.printStackTrace();
             } catch (NotApplicableException e) {

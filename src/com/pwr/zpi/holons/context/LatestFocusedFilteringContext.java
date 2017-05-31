@@ -18,6 +18,7 @@ public class LatestFocusedFilteringContext extends LatestFilteringContext {
 
     private static final String NATURAL_LANG_NAME = "Latest Focused Filtering Context";
     private List<Trait> traits;
+    private Formula formula;
 
     public LatestFocusedFilteringContext(Collection<Trait> focusedTraits, FocusedMeasure measure, double maxValue) {
         super(measure, maxValue);

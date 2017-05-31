@@ -7,6 +7,9 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
+import com.pwr.zpi.holons.context.Context;
+import com.pwr.zpi.holons.context.LatestFilteringContext;
+import com.pwr.zpi.holons.context.measures.Distance;
 import com.pwr.zpi.language.*;
 import com.pwr.zpi.linguistic.ComplexStatement;
 import com.pwr.zpi.linguistic.Question;
@@ -89,7 +92,7 @@ class Main {
         try {
             Formula formula = question.getFormula();
             System.out.print(formula.getModel().getIdentifier().getIdNumber() + " " + formula.getTraits().get(0).getName());
-            agent.processQuestion(formula, question, voiceConversation);
+            agent.processQuestion(question, voiceConversation);
         } catch (InvalidFormulaException | InvalidQuestionException e) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Question or formula is malformed.", e);
         }
@@ -105,9 +108,10 @@ class Main {
             throw new IllegalStateException("You already asked about Hyzio");
         int t = 0;
 
+        Context context = new LatestFilteringContext(new Distance(2));
 
         agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
-        Conversation c1 = new Conversation(agent, "SimpleModalConv", t);
+        Conversation c1 = new Conversation(agent, "SimpleModalConv", t, context);
 
         Observation[] obsTill3  = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
@@ -221,8 +225,10 @@ class Main {
             throw new IllegalStateException("You already asked about Hyzio");
         int t = 0;
 
+        Context context = new LatestFilteringContext(new Distance(2));
+
         agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
-        Conversation c1 = new Conversation(agent, "SimpleAndConjModalConv", t);
+        Conversation c1 = new Conversation(agent, "SimpleAndConjModalConv", t, context);
 
         Observation[] obsTill1  = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
@@ -357,7 +363,9 @@ class Main {
         int t = 9;
 
         agent.getModels().addNameToModel(qrCodes[1], "Rysio");
-        Conversation conversation = new Conversation(agent, "ModalConjConv", t);
+        Context context = new LatestFilteringContext(new Distance(2));
+
+        Conversation conversation = new Conversation(agent, "ModalConjConv", t, context);
 
         Observation[] obsTill12  = new Observation[]{ //inclusively
                 new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{

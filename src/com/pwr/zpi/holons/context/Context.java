@@ -37,5 +37,6 @@ public interface Context {
             put(LatestFocusedFilteringContext.getContextName(), LatestFocusedFilteringContext.class);
             put(LatestGroupFilteringContext.getContextName(), LatestGroupFilteringContext.class);
         }};
+
     }
 }
