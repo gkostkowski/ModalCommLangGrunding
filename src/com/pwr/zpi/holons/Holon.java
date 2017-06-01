@@ -3,7 +3,7 @@ package com.pwr.zpi.holons;
 
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
-import com.pwr.zpi.holons.context.Context;
+import com.pwr.zpi.holons.context.Contextualisation;
 import com.pwr.zpi.language.DistributedKnowledge;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Pair;
@@ -77,7 +77,7 @@ public interface Holon {
     public abstract List<Formula> getFormula();
 
     /** Returns context which was used to build grounding sets for this holon.*/
-    Context getContext();
+    Contextualisation getContextualisation();
 
     enum HolonKind{
         Binary,

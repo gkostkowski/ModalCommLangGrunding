@@ -371,4 +371,12 @@ public class  BaseProfile {
         result = 31 * result + getTimestamp();
         return result;
     }
+
+    /**
+     * Method provides all information gathered in this base profile which is relevant to given individual model.
+     * @param relatedObject
+     */
+    public Map<State, List<Trait>> getIMDescription(IndividualModel relatedObject) {
+        Map<String, List<Trait>> res = new HashMap<>();
+    }
 }

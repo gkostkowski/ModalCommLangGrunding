@@ -1,8 +1,8 @@
 package context
 
 import com.pwr.zpi.episodic.BaseProfile
-import com.pwr.zpi.holons.context.FilteringContext
-import com.pwr.zpi.holons.context.LatestFilteringContext
+import com.pwr.zpi.holons.context.FilteringContextualisation
+import com.pwr.zpi.holons.context.LatestFilteringContextualisation
 import com.pwr.zpi.holons.context.measures.Distance
 import com.pwr.zpi.holons.context.measures.Measure
 import com.pwr.zpi.language.*
@@ -13,8 +13,8 @@ import com.pwr.zpi.semantic.QRCode
 /**
  * Created by Grzesiek on 2017-05-27.
  */
-class LatestFilteringContextTest extends GroovyTestCase {
-    FilteringContext testObj;
+class LatestFilteringContextualisationTest extends GroovyTestCase {
+    FilteringContextualisation testObj;
     Measure distance;
     Map<Formula, Set<BaseProfile>> namedGroundingSets;
 
@@ -28,7 +28,7 @@ class LatestFilteringContextTest extends GroovyTestCase {
 
     void setUp() {
         distance = new Distance(2);
-        testObj = new LatestFilteringContext(distance)
+        testObj = new LatestFilteringContextualisation(distance)
 
         tr1 = new Trait("Red")
         tr2 = new Trait("White")
@@ -118,7 +118,7 @@ class LatestFilteringContextTest extends GroovyTestCase {
 
     void testPerformContextualisation() {
         distance = new Distance(2);
-        testObj = new LatestFilteringContext(distance)
+        testObj = new LatestFilteringContextualisation(distance)
         /*
         INPUT:
         [ComplexFormula{QRCode{id='0124'}: IS Red and  IS_NOT White}:
@@ -153,7 +153,7 @@ class LatestFilteringContextTest extends GroovyTestCase {
 
         //CASE II
         distance = new Distance(1);
-        testObj = new LatestFilteringContext(distance)
+        testObj = new LatestFilteringContextualisation(distance)
         def complFormulas = formula.standardFormula.getComplementaryFormulas()
         res = testObj.performContextualisation(namedGroundingSets)
         /*
@@ -188,7 +188,7 @@ class LatestFilteringContextTest extends GroovyTestCase {
             [],
         */
         distance = new Distance(0);
-        testObj = new LatestFilteringContext(distance)
+        testObj = new LatestFilteringContextualisation(distance)
         res = testObj.performContextualisation(namedGroundingSets)
 
         assertTrue(res.get(complFormulas.get(0)).isEmpty())
@@ -198,7 +198,7 @@ class LatestFilteringContextTest extends GroovyTestCase {
 
         //CASE EMPTY
         distance = new Distance(2);
-        testObj = new LatestFilteringContext(distance)
+        testObj = new LatestFilteringContextualisation(distance)
         res = testObj.performContextualisation([] as Map<Formula, Set<BaseProfile>>) //with warning
         assertTrue(res.isEmpty())
     }

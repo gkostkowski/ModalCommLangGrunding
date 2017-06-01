@@ -1,22 +1,20 @@
 package com.pwr.zpi.holons.ContextJar;
 
 import com.pwr.zpi.episodic.BaseProfile;
-import com.pwr.zpi.holons.context.Context;
-import com.pwr.zpi.language.DistributedKnowledge;
+import com.pwr.zpi.holons.context.Contextualisation;
 import com.pwr.zpi.language.Formula;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
  * Created by Jarema on 5/24/2017.
  */
-public class ContextJar implements Context{
+public class ContextualisationJar implements Contextualisation {
     DistanceFunction df;
     double dMax = 3.0;
     BaseProfile first;
     int mode;
-    public ContextJar(DistanceFunction df,int mode){
+    public ContextualisationJar(DistanceFunction df, int mode){
         this.df = df;
         this.mode = mode;
     }
@@ -63,11 +61,11 @@ public class ContextJar implements Context{
     }
 
     /*
-    public class getContext{
+    public class getContextualisation{
 
 
 
-        public Context StrategyA(DistributedKnowledge dk, BaseProfile current){
+        public Contextualisation StrategyA(DistributedKnowledge dk, BaseProfile current){
             this.current = current;
             currentval = distanceFun(current);
             this.dk = dk;

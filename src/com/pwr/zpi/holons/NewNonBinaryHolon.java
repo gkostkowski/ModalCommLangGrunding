@@ -3,7 +3,7 @@ package com.pwr.zpi.holons;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
-import com.pwr.zpi.holons.context.Context;
+import com.pwr.zpi.holons.context.Contextualisation;
 import com.pwr.zpi.language.DistributedKnowledge;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Grounder;
@@ -23,16 +23,16 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
     Map<Formula, Double> summaries;
     Map<Formula, Set<BaseProfile>> contextualisedGroundedSets;
     DistributedKnowledge dk;
-    private Context context; // context used to prepare grounding sets for holon - todo sprawdz czy potrzeba przechowywac?
+    private Contextualisation contextualisation; // contextualisation used to prepare grounding sets for holon - todo sprawdz czy potrzeba przechowywac?
 
     /**
-     * Standard constructor. If Context wont't be provided, then holon will be built without any contextualisation.
+     * Standard constructor. If Contextualisation wont't be provided, then holon will be built without any contextualisation.
      * @param dk
-     * @param context
+     * @param contextualisation
      * @throws InvalidFormulaException
      * @throws NotApplicableException
      */
-    NewNonBinaryHolon(DistributedKnowledge dk, Context context) throws InvalidFormulaException, NotApplicableException {
+    NewNonBinaryHolon(DistributedKnowledge dk, Contextualisation contextualisation) throws InvalidFormulaException, NotApplicableException {
         relatedFormula = dk.getFormula();
         this.dk = dk;
         summaries = new HashMap<>();
@@ -96,8 +96,8 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
     }
 
     private void loadContextualisedGroundingSets(DistributedKnowledge dk) {
-        if (context != null)
-            this.contextualisedGroundedSets = context.performContextualisation(dk.mapOfGroundingSets());
+        if (contextualisation != null)
+            this.contextualisedGroundedSets = contextualisation.performContextualisation(dk.mapOfGroundingSets());
         else this.contextualisedGroundedSets = dk.mapOfGroundingSets();
     }
 
@@ -130,11 +130,11 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
     }
 
     /**
-     * Returns context which was used to build grounding sets for this holon.
+     * Returns contextualisation which was used to build grounding sets for this holon.
      */
     @Override
-    public Context getContext() {
-        return context;
+    public Contextualisation getContextualisation() {
+        return contextualisation;
     }
 
     /**

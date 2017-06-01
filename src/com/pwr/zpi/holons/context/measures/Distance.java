@@ -1,7 +1,6 @@
 package com.pwr.zpi.holons.context.measures;
 
 import com.pwr.zpi.episodic.BaseProfile;
-import com.pwr.zpi.holons.context.LatestFilteringContext;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.semantic.IndividualModel;
 

@@ -19,9 +19,10 @@ import java.util.stream.Collectors;
  * This class is realisation of Strategy A from paper: "Soft Computing Approach to Contextual Determination
  * of Grounding Sets for Simple Modalities".
  */
-public abstract class FilteringContext implements Context {
+public abstract class FilteringContextualisation implements Contextualisation {
 
     protected Measure measure;
+    protected Context context;
     protected double maxValue;
 
     /**
@@ -30,7 +31,7 @@ public abstract class FilteringContext implements Context {
      */
     Set<BaseProfile> representativeBPs;
 
-    public FilteringContext(Measure measure, double maxValue) {
+    public FilteringContextualisation(Measure measure, double maxValue) {
         if (measure == null)
             throw new NullPointerException("Measure wasn't specified.");
         this.measure = measure;
@@ -40,7 +41,7 @@ public abstract class FilteringContext implements Context {
     /**
      * If max allowable value won't be provided then this value is fetched from measure object.
      */
-    public FilteringContext(Measure measure) {
+    public FilteringContextualisation(Measure measure) {
         this.measure = measure;
         this.maxValue =measure.getMaxThreshold();
     }
@@ -66,7 +67,7 @@ public abstract class FilteringContext implements Context {
                                 .collect(Collectors.toSet()));
             }
         } catch (ContextException e) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Context was not built.", e);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Contextualisation was not built.", e);
             res = namedGroundingSets;
         }
 
@@ -80,8 +81,8 @@ public abstract class FilteringContext implements Context {
      * @return
      */
     public boolean isMeetingCondition(BaseProfile examined) {
-        if (representativeBPs == null)
-            throw new NullPointerException("Set of representatives base profiles was not initialized.");
+        if (context == null)
+            throw new NullPointerException("Context was not initialized.");
         return representativeBPs
                 .stream()
                 .filter(bp -> !determineFulfillment(bp, examined))

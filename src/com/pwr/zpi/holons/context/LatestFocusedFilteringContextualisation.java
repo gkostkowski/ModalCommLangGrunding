@@ -1,30 +1,28 @@
 package com.pwr.zpi.holons.context;
 
 import com.pwr.zpi.episodic.BaseProfile;
-import com.pwr.zpi.exceptions.ContextException;
 import com.pwr.zpi.holons.context.measures.FocusedMeasure;
-import com.pwr.zpi.holons.context.measures.Measure;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Trait;
 
 import java.util.*;
 
 /**
- * Class provides realisation of FilteringContext strategy with assumption that set of representative BPs contains
+ * Class provides realisation of FilteringContextualisation strategy with assumption that set of representative BPs contains
  * one BP which is the latest one. The latest observation is treated as most representative, but only when focusing on
  * particular traits, defined in constructor.
  */
-public class LatestFocusedFilteringContext extends LatestFilteringContext {
+public class LatestFocusedFilteringContextualisation extends LatestFilteringContextualisation {
 
-    private static final String NATURAL_LANG_NAME = "Latest Focused Filtering Context";
+    private static final String NATURAL_LANG_NAME = "Latest Focused Filtering Contextualisation";
     private List<Trait> traits;
     private Formula formula;
 
-    public LatestFocusedFilteringContext(Collection<Trait> focusedTraits, FocusedMeasure measure, double maxValue) {
+    public LatestFocusedFilteringContextualisation(Collection<Trait> focusedTraits, FocusedMeasure measure, double maxValue) {
         super(measure, maxValue);
     }
 
-    public LatestFocusedFilteringContext(Collection<Trait> focusedTraits, FocusedMeasure measure) {
+    public LatestFocusedFilteringContextualisation(Collection<Trait> focusedTraits, FocusedMeasure measure) {
         super(measure);
     }
 
@@ -44,7 +42,7 @@ public class LatestFocusedFilteringContext extends LatestFilteringContext {
 
     /**
      * This method must be defined to enable accessing this kind of contextualisation via voice commands.
-     * Note: In addition, this method must be invoked in Context.getNaturalLanguageNames() method.
+     * Note: In addition, this method must be invoked in Contextualisation.getNaturalLanguageNames() method.
      * @return Name of contextualisation.
      */
     public static String getContextName() {

@@ -2,8 +2,8 @@ import com.pwr.zpi.Agent
 import com.pwr.zpi.episodic.BPCollection
 import com.pwr.zpi.episodic.BaseProfile
 import com.pwr.zpi.holons.NewNonBinaryHolon
-import com.pwr.zpi.holons.context.Context
-import com.pwr.zpi.holons.context.LatestFilteringContext
+import com.pwr.zpi.holons.context.Contextualisation
+import com.pwr.zpi.holons.context.LatestFilteringContextualisation
 import com.pwr.zpi.holons.context.measures.Distance
 import com.pwr.zpi.holons.context.measures.Measure
 import com.pwr.zpi.language.*
@@ -19,7 +19,7 @@ import java.text.DecimalFormat
 class NewNonBinaryHolonTest extends GroovyTestCase {
 
     NewNonBinaryHolon testObj
-    Context context
+    Contextualisation context
     Measure measure
 
     BaseProfile bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9, bp2_2;
@@ -105,7 +105,7 @@ class NewNonBinaryHolonTest extends GroovyTestCase {
         9   N   N   1
          */
 
-        context = new LatestFilteringContext(new Distance(), 3)
+        context = new LatestFilteringContextualisation(new Distance(), 3)
     }
 
     void buildRelatedScenario(int phaseNbr) {
@@ -205,7 +205,7 @@ class NewNonBinaryHolonTest extends GroovyTestCase {
         assertEquals(formatter.format(4/5), formatter.format(testObj.getSummary(complFormulas.get(2)))) // IS, IS_NOT
         assertEquals(0, testObj.getSummary(complFormulas.get(3))) // IS_NOT, IS_NOT
 /*
-        testObj = new NewNonBinaryHolon(testDk5, context)
+        testObj = new NewNonBinaryHolon(testDk5, contextualisation)
         testObj.update()
         complFormulas = testDk5.getFormula().getStandardFormula().getComplementaryFormulas()
 

@@ -4,7 +4,7 @@ package com.pwr.zpi.holons;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
-import com.pwr.zpi.holons.context.Context;
+import com.pwr.zpi.holons.context.Contextualisation;
 import com.pwr.zpi.language.*;
 
 import java.util.List;
@@ -22,9 +22,9 @@ public class BinaryHolon implements Holon {
     protected Pair<Double, Double> Tao;
     protected List<Formula> formula;
 
-    public BinaryHolon(DistributedKnowledge dk, Context context) throws InvalidFormulaException, NotApplicableException {
+    public BinaryHolon(DistributedKnowledge dk, Contextualisation contextualisation) throws InvalidFormulaException, NotApplicableException {
         this.formula = dk.getComplementaryFormulas();
-        Map<Formula, Set<BaseProfile>> contextualisedGroundedSets = context.performContextualisation(dk.mapOfGroundingSets());
+        Map<Formula, Set<BaseProfile>> contextualisedGroundedSets = contextualisation.performContextualisation(dk.mapOfGroundingSets());
         //update(contextualisedGroundedSets); //todo
     }
 
@@ -163,7 +163,7 @@ public class BinaryHolon implements Holon {
      * Returns context which was used to build grounding sets for this holon.
      */
     @Override
-    public Context getContext() {
+    public Contextualisation getContextualisation() {
         return null; //todo
     }
 }

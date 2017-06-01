@@ -9,21 +9,21 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Class provides realisation of FilteringContext strategy with assumption that set of representative BPs contains
+ * Class provides realisation of FilteringContextualisation strategy with assumption that set of representative BPs contains
  * group of BPs which are one of the latest ones. The latest observations are treated as most representative.
  */
-public class LatestGroupFilteringContext extends FilteringContext {
+public class LatestGroupFilteringContextualisation extends FilteringContextualisation {
 
     private static final int DEF_GROUP_SIZE = 5;
-    private static final String NATURAL_LANG_NAME = "Latest Group Filtering Context";
+    private static final String NATURAL_LANG_NAME = "Latest Group Filtering Contextualisation";
 
     private int groupSize;
 
-    public LatestGroupFilteringContext(Measure measure, double maxValue) {
+    public LatestGroupFilteringContextualisation(Measure measure, double maxValue) {
         super(measure, maxValue);
     }
 
-    public LatestGroupFilteringContext(Measure measure) {
+    public LatestGroupFilteringContextualisation(Measure measure) {
         super(measure);
     }
 
@@ -34,7 +34,7 @@ public class LatestGroupFilteringContext extends FilteringContext {
      * @param maxValue
      * @param groupSize
      */
-    public LatestGroupFilteringContext(Measure measure, double maxValue, int groupSize) {
+    public LatestGroupFilteringContextualisation(Measure measure, double maxValue, int groupSize) {
         super(measure, maxValue);
         this.groupSize = groupSize;
     }
@@ -62,7 +62,7 @@ public class LatestGroupFilteringContext extends FilteringContext {
 
     /**
      * This method must be defined to enable accessing this kind of contextualisation via voice commands.
-     * Note: In addition, this method must be invoked in Context.getNaturalLanguageNames() method.
+     * Note: In addition, this method must be invoked in Contextualisation.getNaturalLanguageNames() method.
      * @return Name of contextualisation.
      */
     public static String getContextName() {

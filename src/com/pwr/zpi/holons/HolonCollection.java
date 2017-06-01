@@ -114,12 +114,10 @@ import com.pwr.zpi.exceptions.InvalidContextException;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
-import com.pwr.zpi.holons.context.Context;
+import com.pwr.zpi.holons.context.Contextualisation;
 import com.pwr.zpi.language.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -132,9 +130,9 @@ public class HolonCollection {
     //private List<ContectverJar> contextList;
     Agent owner;
     /**
-     * Object of Context concrete class providing "contextualisation service".
+     * Object of Contextualisation concrete class providing "contextualisation service".
      */
-    Context holonsContext;
+    Contextualisation holonsContextualisation;
 
 
     /**
@@ -156,18 +154,18 @@ public class HolonCollection {
     }
 
     private void checkHolonsConsistency(Set<Holon> holonCollection) throws InvalidContextException {
-        Context examined = new ArrayList<>(holonCollection).get(0).getContext();
+        Contextualisation examined = new ArrayList<>(holonCollection).get(0).getContextualisation();
         for (Holon holon : holonCollection)
-            if (!holon.getContext().equals(examined))
+            if (!holon.getContextualisation().equals(examined))
                 throw new InvalidContextException("Set contains holons with different context.");
     }
 
-    public HolonCollection(Agent owner, Context context) {
-            if (owner == null /*|| context == null*/)
+    public HolonCollection(Agent owner, Contextualisation contextualisation) {
+            if (owner == null /*|| contextualisation == null*/)
                 throw new NullPointerException("Some parameter was not specified.");
 
             this.holonCollection = new TreeSet<>();
-            this.holonsContext = context;
+            this.holonsContextualisation = contextualisation;
             this.owner = owner;
     }
 
@@ -199,8 +197,8 @@ public class HolonCollection {
         Holon holon = null;
         try {
             if (formula instanceof SimpleFormula)
-                holon = new BinaryHolon(new DistributedKnowledge(owner, formula, timestamp, true), holonsContext);
-            else holon = new NewNonBinaryHolon(owner.distributeKnowledge(formula, timestamp, true), holonsContext);
+                holon = new BinaryHolon(new DistributedKnowledge(owner, formula, timestamp, true), holonsContextualisation);
+            else holon = new NewNonBinaryHolon(owner.distributeKnowledge(formula, timestamp, true), holonsContextualisation);
 
             holonCollection.add(holon);
         } catch (InvalidFormulaException e) {
@@ -228,7 +226,7 @@ public class HolonCollection {
         return addHolon(formula, timestamp);
     }
 
-    public Context getHolonsContext() {
-        return holonsContext;
+    public Contextualisation getHolonsContextualisation() {
+        return holonsContextualisation;
     }
 }

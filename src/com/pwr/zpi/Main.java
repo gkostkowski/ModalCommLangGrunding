@@ -5,15 +5,11 @@ import com.pwr.zpi.conversation.VoiceConversation;
 import com.pwr.zpi.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
-import com.pwr.zpi.exceptions.NotApplicableException;
-import com.pwr.zpi.exceptions.NotConsistentDKException;
-import com.pwr.zpi.holons.context.Context;
-import com.pwr.zpi.holons.context.LatestFilteringContext;
+import com.pwr.zpi.holons.context.Contextualisation;
+import com.pwr.zpi.holons.context.LatestFilteringContextualisation;
 import com.pwr.zpi.holons.context.measures.Distance;
 import com.pwr.zpi.language.*;
-import com.pwr.zpi.linguistic.ComplexStatement;
 import com.pwr.zpi.linguistic.Question;
-import com.pwr.zpi.linguistic.SimpleStatement;
 import com.pwr.zpi.semantic.QRCode;
 
 import java.util.HashMap;
@@ -108,10 +104,10 @@ class Main {
             throw new IllegalStateException("You already asked about Hyzio");
         int t = 0;
 
-        Context context = new LatestFilteringContext(new Distance(2));
+        Contextualisation contextualisation = new LatestFilteringContextualisation(new Distance(2));
 
         agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
-        Conversation c1 = new Conversation(agent, "SimpleModalConv", t, context);
+        Conversation c1 = new Conversation(agent, "SimpleModalConv", t, contextualisation);
 
         Observation[] obsTill3  = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
@@ -225,10 +221,10 @@ class Main {
             throw new IllegalStateException("You already asked about Hyzio");
         int t = 0;
 
-        Context context = new LatestFilteringContext(new Distance(2));
+        Contextualisation contextualisation = new LatestFilteringContextualisation(new Distance(2));
 
         agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
-        Conversation c1 = new Conversation(agent, "SimpleAndConjModalConv", t, context);
+        Conversation c1 = new Conversation(agent, "SimpleAndConjModalConv", t, contextualisation);
 
         Observation[] obsTill1  = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
@@ -363,9 +359,9 @@ class Main {
         int t = 9;
 
         agent.getModels().addNameToModel(qrCodes[1], "Rysio");
-        Context context = new LatestFilteringContext(new Distance(2));
+        Contextualisation contextualisation = new LatestFilteringContextualisation(new Distance(2));
 
-        Conversation conversation = new Conversation(agent, "ModalConjConv", t, context);
+        Conversation conversation = new Conversation(agent, "ModalConjConv", t, contextualisation);
 
         Observation[] obsTill12  = new Observation[]{ //inclusively
                 new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{

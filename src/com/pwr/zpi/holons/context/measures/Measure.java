@@ -1,9 +1,6 @@
 package com.pwr.zpi.holons.context.measures;
 
 import com.pwr.zpi.episodic.BaseProfile;
-import com.pwr.zpi.holons.context.LatestFilteringContext;
-import com.pwr.zpi.holons.context.LatestFocusedFilteringContext;
-import com.pwr.zpi.holons.context.LatestGroupFilteringContext;
 
 import java.util.HashMap;
 import java.util.Map;

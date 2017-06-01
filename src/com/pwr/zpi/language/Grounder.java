@@ -8,7 +8,7 @@ import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.Holon;
 import com.pwr.zpi.holons.NonBinaryHolon;
-import com.pwr.zpi.holons.context.Context;
+import com.pwr.zpi.holons.context.Contextualisation;
 import com.sun.istack.internal.Nullable;
 
 import java.util.*;
@@ -115,7 +115,7 @@ public class Grounder {
      * of grounded formula with given modal operator.
      * @see DistributedKnowledge
      */
-    public static Map<Formula, ModalOperator> performFormulaGrounding(Agent agent, Formula formula, Context context)
+    public static Map<Formula, ModalOperator> performFormulaGrounding(Agent agent, Formula formula, Contextualisation contextualisation)
             throws InvalidFormulaException, NotApplicableException, NotConsistentDKException {
 
         DistributedKnowledge dk = agent.distributeKnowledge(formula, true);
@@ -126,7 +126,7 @@ public class Grounder {
 
         for (Formula currFormula : complementaryFormulas)
             if ((currOperator = checkEpistemicConditions(currFormula, dk,
-                    agent.getContextualisedHolons(context).getHolon(currFormula, timestamp))) != null)
+                    agent.getHolons().getHolon(currFormula, timestamp))) != null)
                 res.put(currFormula, currOperator);
 
         return res;

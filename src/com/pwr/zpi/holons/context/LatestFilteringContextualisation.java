@@ -8,18 +8,18 @@ import com.pwr.zpi.language.Formula;
 import java.util.*;
 
 /**
- * Class provides realisation of FilteringContext strategy with assumption that set of representative BPs contains
+ * Class provides realisation of FilteringContextualisation strategy with assumption that set of representative BPs contains
  * one BP which is the latest one. The latest observation is treated as most representative.
  */
-public class LatestFilteringContext extends FilteringContext {
+public class LatestFilteringContextualisation extends FilteringContextualisation {
 
-    private static final String NATURAL_LANG_NAME = "Latest Filtering Context";
+    private static final String NATURAL_LANG_NAME = "Latest Filtering Contextualisation";
 
-    public LatestFilteringContext(Measure measure, double maxValue) {
+    public LatestFilteringContextualisation(Measure measure, double maxValue) {
         super(measure, maxValue);
     }
 
-    public LatestFilteringContext(Measure measure) {
+    public LatestFilteringContextualisation(Measure measure) {
         super(measure);
     }
 
@@ -43,7 +43,7 @@ public class LatestFilteringContext extends FilteringContext {
 
     /**
      * This method must be defined to enable accessing this kind of contextualisation via voice commands.
-     * Note: In addition, this method must be invoked in Context.getNaturalLanguageNames() method.
+     * Note: In addition, this method must be invoked in Contextualisation.getNaturalLanguageNames() method.
      * @return Name of contextualisation.
      */
     public static String getContextName() {
