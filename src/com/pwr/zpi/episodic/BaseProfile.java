@@ -1,3 +1,6 @@
+/*
+ * Created by Grzegorz Kostkowski
+ */
 package com.pwr.zpi.episodic;
 
 import com.pwr.zpi.semantic.IndividualModel;
@@ -372,11 +375,35 @@ public class  BaseProfile {
         return result;
     }
 
+
     /**
-     * Method provides all information gathered in this base profile which is relevant to given individual model.
-     * @param relatedObject
+     * Method returns all traits from given map which are related to specified IM in this base profile.
+     * @param selectedMap Could be one of following: describedByTraits/notDescribedByTraits/indefiniteByTraits
+     * @param relatedObject Individual model
+     * @return
      */
-    public Map<State, List<Trait>> getIMDescription(IndividualModel relatedObject) {
-        Map<String, List<Trait>> res = new HashMap<>();
+    public List<Trait> getRelatedTraits(IndividualModel relatedObject, Map<Trait, Set<IndividualModel>> selectedMap) {
+        List<Trait> res = new ArrayList<>();
+        for (Map.Entry<Trait, Set<IndividualModel>> entry: selectedMap.entrySet()) {
+            if (new ArrayList(entry.getValue()).contains(relatedObject))
+                res.add(entry.getKey());
+        }
+        return res;
     }
-}
+
+    public List<Trait> getRelatedTraits(IndividualModel relatedObject, State state) {
+        return getRelatedTraits(relatedObject, getContainer(state));
+    }
+
+    public Map<Trait, Set<IndividualModel>> getContainer(State state) {
+        switch (state) {
+            case IS:
+                return describedByTraits;
+            case IS_NOT:
+                return notDescribedByTraits;
+            default:
+                return indefiniteByTraits;
+        }
+    }
+
+    }

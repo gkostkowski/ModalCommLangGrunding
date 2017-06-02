@@ -279,7 +279,7 @@ class GrounderTest extends GroovyTestCase {
                 res)
         buildRelatedScenario(2)
         res = Grounder.performFormulaGrounding(agent, cformula4)
-        assertEquals([/*(new ComplexFormula(im1, [tr2, tr3], [State.IS_NOT, State.IS_NOT], LogicOperator.AND)): ModalOperator.POS,*/
+        assertEquals([/*(new ComplexFormula(model1, [tr2, tr3], [State.IS_NOT, State.IS_NOT], LogicOperator.AND)): ModalOperator.POS,*/
                       (new ComplexFormula(im1, [tr2, tr3], [State.IS, State.IS], LogicOperator.AND))        : ModalOperator.POS,
                       (new ComplexFormula(im1, [tr2, tr3], [State.IS_NOT, State.IS], LogicOperator.AND))    : ModalOperator.POS] as Map<Formula, ModalOperator>,
                 res)
@@ -288,8 +288,8 @@ class GrounderTest extends GroovyTestCase {
         res = Grounder.performFormulaGrounding(agent, cformula5)
 
         //according to [0.1, 0.6, 0.65, 0.9, 1.0] thresholds
-        assertEquals([(new ComplexFormula(im1, [tr2, tr3], [State.IS, State.IS], LogicOperator.AND))        : ModalOperator.POS,
-                      (new ComplexFormula(im1, [tr2, tr3], [State.IS_NOT, State.IS], LogicOperator.AND))    : ModalOperator.POS
+        assertEquals([(new ComplexFormula(model1, [tr2, tr3], [State.IS, State.IS], LogicOperator.AND))        : ModalOperator.POS,
+                      (new ComplexFormula(model1, [tr2, tr3], [State.IS_NOT, State.IS], LogicOperator.AND))    : ModalOperator.POS
         ] as Map<Formula, ModalOperator>,
                 res)*/
 

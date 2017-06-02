@@ -1,3 +1,6 @@
+/*
+ * Created by Grzegorz Kostkowski
+ */
 package com.pwr.zpi.holons;
 
 import com.pwr.zpi.episodic.BaseProfile;
@@ -12,9 +15,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
-/**
- * Created by Grzesiek on 2017-05-19.
- */
 public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
     /**
      * Note: formula is given in standard form, namely: without any negations.

@@ -56,12 +56,12 @@ class BinaryHolonTest {
             }}, t++)
     };
     ObjectType type1 = new ObjectType("1", Arrays.asList(tr[0],tr[1]));
-    IndividualModel im1 = new IndividualModel(qrCodes[0],type1);
+    IndividualModel model1 = new IndividualModel(qrCodes[0],type1);
     @Test
     void mainTest() throws InvalidFormulaException, NotConsistentDKException, NotApplicableException {
         agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
         agent.addAndUpdate(obsTill3);
-        Formula f1 = new SimpleFormula(im1,tr[0],false);
+        Formula f1 = new SimpleFormula(model1,tr[0],false);
         DistributedKnowledge dk = new DistributedKnowledge(agent,f1);
         Holon h1 = new BinaryHolon(dk);
         //Assertions.assertEquals(h1.getFormula(),f1);

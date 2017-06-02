@@ -1,3 +1,6 @@
+/*
+ * Created by Grzegorz Kostkowski
+ */
 package com.pwr.zpi.episodic;
 
 import com.pwr.zpi.semantic.IndividualModel;

@@ -1,3 +1,6 @@
+/*
+ * Created by Grzegorz Kostkowski
+ */
 package com.pwr.zpi.holons.context;
 
 import com.pwr.zpi.language.Trait;

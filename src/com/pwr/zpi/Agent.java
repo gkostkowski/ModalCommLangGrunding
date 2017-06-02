@@ -114,6 +114,10 @@ public class Agent {
         return holonsCollection;
     }
 
+    public Contextualisation getContextualisationMethod() {
+        return holonsCollection.getHolonsContextualisation();
+    }
+
     @Deprecated //uzywamy updateMemory()
     public DatabaseAO getDatabase() {
         return database;
