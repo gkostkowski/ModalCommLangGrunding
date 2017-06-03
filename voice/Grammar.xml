@@ -6,33 +6,7 @@
       is
     </item>
     <ruleref uri="#names"/>
-    <item repeat="1-2">
-      <item repeat="0-1">
-        <item> not </item>
-      </item>
-      <ruleref uri="#traits"/>
-      <item repeat="0-1">
-        <one-of>
-          <item> and </item>
-          <item> or </item>
-        </one-of>
-      </item>
-    </item>
-    <item repeat="0-1">
-      <item> "when it is" </item>
-      <item repeat="1-2">
-        <item repeat="0-1">
-          <item> not </item>
-        </item>
-        <ruleref uri="#traits"/>
-        <item repeat="0-1">
-          <one-of>
-            <item> and </item>
-            <item> or </item>
-          </one-of>
-        </item>
-      </item>
-    </item>
+    <ruleref uri="#restOfSentence"/>
   </rule>
 
 
@@ -53,5 +27,52 @@
       <item> red </item>
     </one-of>
   </rule>
+
+  <rule id="restOfSentence" scope="public">
+    <item repeat="0-1">
+      <item> not </item>
+    </item>
+    <ruleref uri="#traits"/>
+    <item repeat="0-1">
+      <one-of>
+        <item> and </item>
+        <item> or </item>
+      </one-of>
+      <item repeat="0-1">
+        <item> not </item>
+      </item>
+      <ruleref uri="#traits"/>
+    </item>
+  </rule>
+
+  <rule id="context" scope="public">
+    <item repeat="0-1">
+      <item> if </item>
+      <one-of>
+        <item> Latest Focused Filtering Context </item>
+        <item> Latest Group Filtering Context </item>
+        <item> Latest Filtering Context </item>
+        <item> Default Context </item>
+      </one-of>
+      <item> is used </item>
+      <item repeat="0-1">
+        <item> when it is </item>
+        <ruleref uri="#restOfSentence"/>
+      </item>
+      <item repeat="0-1">
+        <ruleref uri="#measures"/>
+      </item>
+    </item>
+  </rule>
+
+  <rule id="measures" scope="public">
+    <item> with </item>
+    <one-of>
+      <item> distance </item>
+      <item> focused distance </item>
+      <item> default measure </item>
+    </one-of>
+  </rule>
+
 </grammar>
 

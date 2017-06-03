@@ -37,11 +37,11 @@ class Main {
         //or
        // simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        // testVoice(agent, qrCodes, tr);
+         testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
         // is present in db after launching one of them, so they can't be used together.
 
-        modalConjunctionsScenario(agent, qrCodes, tr);
+        //modalConjunctionsScenario(agent, qrCodes, tr);
     }
 
     private static void testVoice(Agent agent, QRCode[] qrCodes, Trait[] tr){
@@ -56,7 +56,7 @@ class Main {
                     put(tr[2], false);
                 }}, t++),
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], false);
+                    put(tr[0], true);
                     put(tr[1], false);
                     put(tr[2], false);
                 }}, t++),
