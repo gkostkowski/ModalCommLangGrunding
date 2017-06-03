@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by Grzesiek on 2017-06-03.
+ * Selector chooses last basing profile, according to timestamp.
  */
 public class LatestSelector implements RepresentativesSelector {
     /**

@@ -33,6 +33,14 @@ public abstract class Formula {
     public abstract Formula getStandardFormula() throws InvalidFormulaException;
 
     /**
+     * Method is used to point out exact formulas which should be used for building grounding set. It has application
+     * in case of disjunction where grounding sets are composed of more than one conjunctive grounding set. In case
+     * of simply modalities and conjunctions method should return formula which is provided as parameter.
+     * @return Array of partial formulas used in exact grounding.
+     */
+    public abstract List<Formula> getPartialFormulas();
+
+    /**
      * Gives list of successive states. Classic case will contains states which describe whether parts of formula[traits]
      * (in case of complex formula - simple formula is special case and contains one part) occur with or without negation.
      * The order of returned states is respective to order of traits returned by getValuedTraits().
@@ -41,7 +49,8 @@ public abstract class Formula {
 
     public enum Type {
         SIMPLE_MODALITY,
-        MODAL_DISJUNCTION, MODAL_CONJUNCTION
+        MODAL_CONJUNCTION,
+        MODAL_DISJUNCTION, MODAL_EXCLUSIVE_DISJUNCTION
     }
 
     abstract boolean equals(Formula other);

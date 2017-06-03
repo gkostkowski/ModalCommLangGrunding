@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.pwr.zpi.holons.NonBinaryHolon.FormulaCase;
 
 /**
@@ -14,7 +17,7 @@ import com.pwr.zpi.holons.NonBinaryHolon.FormulaCase;
  */
 public class ComplexFormula extends Formula implements Comparable<ComplexFormula> {
 
-    private static final int COMPLEMENTARY_FORMULAS_NUMBER = 4;
+    private static final int COMPLEMENTARY_CONJ_FORMULAS_NUMBER = 4;
     private LogicOperator operator;
     private SimpleFormula leftPart, rightPart;
     private List<Trait> traits;
@@ -87,8 +90,16 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
      * @return the type of formula
      */
     public Formula.Type getType() {
-        return operator.equals(LogicOperator.AND) ? Type.MODAL_CONJUNCTION :
-                (operator.equals(LogicOperator.OR) ? Type.MODAL_DISJUNCTION:null);
+        switch (operator) {
+            case AND:
+                return Type.MODAL_CONJUNCTION;
+            case OR:
+                return Type.MODAL_DISJUNCTION;
+            case XOR:
+                return Type.MODAL_EXCLUSIVE_DISJUNCTION;
+            default:
+                return null;
+        }
     }
 
     /**
@@ -125,29 +136,26 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
      * Produces set of formulas which are complementary to this one. Amount and form of this formulas depends on
      * formula type. For convenience of use, given formula is also included in resulted collection.
      * For standard formula, produces list of formulas in following order:
-     *      IS, IS
-     *      IS_NOT, IS
-     *      IS, IS_NOT
-     *      IS_NOT, IS_NOT
+     * IS, IS
+     * IS_NOT, IS
+     * IS, IS_NOT
+     * IS_NOT, IS_NOT
+     *
      * @return
      */
 
     @Override
     public List<Formula> getComplementaryFormulas() throws InvalidFormulaException {
-        List<Formula> res = new ArrayList<>();
-
-        State[][] newStates = new State[][]{
-                {states.get(0), states.get(1)},
-                {states.get(0).not(), states.get(1)},
-                {states.get(0), states.get(1).not()},
-                {states.get(0).not(), states.get(1).not()}
-        };
-        for (int i = 0; i < COMPLEMENTARY_FORMULAS_NUMBER; i++)
-            res.add(new ComplexFormula(individualModel, traits, Arrays.asList(newStates[i]), operator));
-        return res;
+        switch (getType()) {
+            case MODAL_CONJUNCTION:
+                return getConjunctionComplementaryFormulas();
+            case MODAL_DISJUNCTION:
+            case MODAL_EXCLUSIVE_DISJUNCTION:
+                return getDisjunctionComplementaryFormulas();
+            default:
+                return null;
+        }
     }
-
-
 
 
 
@@ -179,11 +187,11 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
 
     /**
      * Checks if given formula regards the same object and same traits
+     *
      * @param other
      * @return
      */
-    public boolean isFormulaSimilar(Formula other)
-    {
+    public boolean isFormulaSimilar(Formula other) {
         if (other instanceof ComplexFormula)
             if (individualModel.getIdentifier().equals(other.getModel().getIdentifier()))
                 if (compareTraits((ComplexFormula) other))
@@ -241,24 +249,29 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
         result = 31 * result + getRightPart().hashCode();
         return result;
     }
-    public void setpq(){
-        if(leftPart.isNegated())leftPart.negate();
-        if(rightPart.isNegated())rightPart.negate();
+
+    public void setpq() {
+        if (leftPart.isNegated()) leftPart.negate();
+        if (rightPart.isNegated()) rightPart.negate();
     }
-    public void setnpq(){
-        if(!leftPart.isNegated())leftPart.negate();
-        if(rightPart.isNegated())rightPart.negate();
+
+    public void setnpq() {
+        if (!leftPart.isNegated()) leftPart.negate();
+        if (rightPart.isNegated()) rightPart.negate();
     }
-    public void setpnq(){
-        if(leftPart.isNegated())leftPart.negate();
-        if(!rightPart.isNegated())rightPart.negate();
+
+    public void setpnq() {
+        if (leftPart.isNegated()) leftPart.negate();
+        if (!rightPart.isNegated()) rightPart.negate();
     }
-    public void setnpnq(){
-        if(!leftPart.isNegated())leftPart.negate();
-        if(!rightPart.isNegated())rightPart.negate();
+
+    public void setnpnq() {
+        if (!leftPart.isNegated()) leftPart.negate();
+        if (!rightPart.isNegated()) rightPart.negate();
     }
-    public ComplexFormula copy() throws InvalidFormulaException{
-        return new ComplexFormula(individualModel,traits,states,operator);
+
+    public ComplexFormula copy() throws InvalidFormulaException {
+        return new ComplexFormula(individualModel, traits, states, operator);
     }
 
     /**
@@ -275,9 +288,9 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
 
     @Override
     public String toString() {
-        return "ComplexFormula{" + individualModel.getIdentifier()+": "+
-                states.get(0).name()+" "+traits.get(0) + " "+operator+" "+
-                states.get(1).name()+" "+traits.get(1) +
+        return "ComplexFormula{" + individualModel.getIdentifier() + ": " +
+                states.get(0).name() + " " + traits.get(0) + " " + operator + " " +
+                states.get(1).name() + " " + traits.get(1) +
                 '}';
     }
 
@@ -286,6 +299,58 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
     public int compareTo(ComplexFormula o) {
         int val1 = states.hashCode() + traits.hashCode() + individualModel.hashCode();
         int val2 = o.states.hashCode() + o.traits.hashCode() + o.individualModel.hashCode();
-        return val1 > val2 ? 1 : ( val1 < val2 ? -1 : 0);
+        return val1 > val2 ? 1 : (val1 < val2 ? -1 : 0);
+    }
+
+    private List<Formula> getConjunctionComplementaryFormulas() throws InvalidFormulaException {
+        List<Formula> res = new ArrayList<>();
+
+        State[][] newStates = new State[][]{
+                {states.get(0), states.get(1)},
+                {states.get(0).not(), states.get(1)},
+                {states.get(0), states.get(1).not()},
+                {states.get(0).not(), states.get(1).not()}
+        };
+        for (int i = 0; i < COMPLEMENTARY_CONJ_FORMULAS_NUMBER; i++)
+            res.add(new ComplexFormula(individualModel, traits, Arrays.asList(newStates[i]), operator));
+        return res;
+    }
+
+
+    private List<Formula> getDisjunctionComplementaryFormulas() throws InvalidFormulaException {
+        return new ArrayList<Formula>(){{
+            add(new ComplexFormula(individualModel, traits, states, LogicOperator.XOR)); //order like in definition
+            add(new ComplexFormula(individualModel, traits, states, LogicOperator.OR));
+        }};
+    }
+
+    /**
+     * Method is used to point out exact formulas which should be used for building grounding set. It has application
+     * in case of disjunction where grounding sets are composed of more than one conjunctive grounding set. In case
+     * of simply modalities and conjunctions method should return formula which is provided as parameter.
+     *
+     * @return Array of partial formulas used in exact grounding.
+     */
+    @Override
+    public List<Formula> getPartialFormulas() {
+
+        if (getType().equals(Type.MODAL_CONJUNCTION))
+            return Arrays.asList(new Formula[]{this});
+
+        List<Formula> res=null;
+        try {
+            res = new ComplexFormula(individualModel, traits, states, LogicOperator.AND)
+                    .getComplementaryFormulas().subList(0, 3);
+        } catch (InvalidFormulaException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "The formula was not built correctly.", e);
+            return null;
+        }
+        if (getType().equals(Type.MODAL_DISJUNCTION))
+            return res;
+        if (getType().equals(Type.MODAL_EXCLUSIVE_DISJUNCTION)) {
+            res.remove(0);
+            return res;
+        }
+        return null;
     }
 }

@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Created by Grzesiek on 2017-06-03.
+ * Selector chooses n last base profiles, according to timestamp.
  */
 public class LatestGroupSelector implements RepresentativesSelector {
 

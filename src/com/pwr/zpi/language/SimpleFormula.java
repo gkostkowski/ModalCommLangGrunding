@@ -192,4 +192,16 @@ public class SimpleFormula extends Formula {
             return this;
         else return new SimpleFormula(individualModel, trait, false);
     }
+
+    /**
+     * Method is used to point out exact formulas which should be used for building grounding set. It has application
+     * in case of disjunction where grounding sets are composed of more than one conjunctive grounding set. In case
+     * of simply modalities and conjunctions method should return formula which is provided as parameter.
+     *
+     * @return Array of partial formulas used in exact grounding.
+     */
+    @Override
+    public List<Formula> getPartialFormulas() {
+        return Arrays.asList(new Formula[]{this});
+    }
 }

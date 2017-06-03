@@ -42,7 +42,7 @@ public class Grounder {
     private static final double DISJ_MAX_POS = 0.6;
     private static final double DISJ_MIN_BEL = 0.65;
     private static final double DISJ_MAX_BEL = 0.9;
-    public static final double  DISJ_KNOW = 1.0;
+    public static final double DISJ_KNOW = 1.0;
 
     /**
      * Arrays of thresholds for certain formula types. Order of elements in arrays is strictly defined and can't be other:
@@ -67,7 +67,38 @@ public class Grounder {
         Map<Formula, Set<BaseProfile>> res = new HashMap<>();
 
         for (Formula f : formulas)
-            res.put(f, getGroundingSet(f, all));
+            res.put(f, composeGroundingSet(f, all));
+        return res;
+    }
+
+    /**
+     * Method intermediates between getGroundingSets() method and getGroundingSet() which provides concrete grounding
+     * set. This method was developed to allow seamless grounding process for conjunctions and disjunctions which base on
+     * particular conjunctive grounding sets.
+     * Note: it also supports simple modalities.
+     *
+     * @param f   Formula which is used to generate appropriate grounding set. Supports simple modalities, modal
+     *            conjunctions and modal disjunctions (regular and exclusive). There are some additional remarks related
+     *            to complex formulas:
+     *            <ul>
+     *            <li>There is one conjunctive grounding set for each conjunctive formula</li>
+     *            <li>There is one disjunctive grounding set for each disjunctive formula, which bases on some conjunctive
+     *            grounding sets:
+     *            <ul>
+     *            <li>disjunctive grounding set for formula <i>P XOR Q</i> uses conjunctive grounding sets for
+     *            <u>P AND NOT Q</u> and <u>NOT P AND Q</u>
+     *            <li>disjunctive grounding set for formula <i>P OR Q</i> uses same conjunctive grounding sets as in
+     *            case of <i>P XOR Q</i> and additionally grounding set for <u>P AND Q</u></li>
+     *            </ul></li>
+     *            </ul>
+     * @param all Set of all available base profiles.
+     * @return Grounding set for given formula: conjunctive or disjunctive.
+     */
+    public static Set<BaseProfile> composeGroundingSet(Formula f, Set<BaseProfile> all) throws InvalidFormulaException {
+        Set<BaseProfile> res = new HashSet<>();
+
+        for (Formula partialFormula : f.getPartialFormulas())
+            res.addAll(getGroundingSet(partialFormula, all));
         return res;
     }
 
@@ -76,14 +107,16 @@ public class Grounder {
     }
 
     /**
-     * Method produces grounding set for certain formula, basing on provided set of base profiles.
+     * Method produces grounding set for certain formula, basing on provided set of base profiles. Method supports
+     * simple modalities and modal conjunctions. In order to build grounding set for disjunction. please use
+     * <em>composeGroundingSet()</em> which uses this method in particular way to build desired grounding sets.
      *
-     * @param formula
-     * @param all
-     * @return
+     * @param formula Simple modality and modal conjunction.
+     * @param all Set of all available base profiles.
+     * @return Grounding set for given formula.
      * @throws InvalidFormulaException
      */
-    public static Set<BaseProfile> getGroundingSet(Formula formula, Set<BaseProfile> all) throws InvalidFormulaException {
+    private static Set<BaseProfile> getGroundingSet(Formula formula, Set<BaseProfile> all) throws InvalidFormulaException {
         if (formula == null || all == null)
             throw new NullPointerException("One of parameters is null.");
 
@@ -349,10 +382,10 @@ public class Grounder {
         Map<Formula, Double> res = new HashMap<>();
         int totalSize = groundingSets.entrySet().stream()
                 .map(x -> x.getValue().size())
-                .reduce(0, (s1, s2) -> s1+s2);
+                .reduce(0, (s1, s2) -> s1 + s2);
         for (Formula f : groundingSets.keySet()) {
-            Double relativeCard = (double)groundingSets.get(f).size()/(double) totalSize;
-            res.put(f,relativeCard);
+            Double relativeCard = (double) groundingSets.get(f).size() / (double) totalSize;
+            res.put(f, relativeCard);
         }
         return res;
     }
@@ -546,7 +579,7 @@ public class Grounder {
     public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) throws InvalidFormulaException {
 
         double sum = 0;
-      //  System.out.println(formula.getTraits().get(0) + " " + dk.getTimestamp());
+        //  System.out.println(formula.getTraits().get(0) + " " + dk.getTimestamp());
         for (BaseProfile bp : dk.getGroundingSet(formula)) {
             if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && !((SimpleFormula) formula).isNegated()) {
                 sum++;

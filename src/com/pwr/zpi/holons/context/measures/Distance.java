@@ -38,7 +38,7 @@ public class Distance implements Measure {
      * Method counts distance measure between base profile and context.
      * Note: Distance is a difference between number of traits present in context and number of traits not presents in
      * base profile <em> plus difference between number of traits present in base profile and number of traits not presents in
-     * context<em/>. Further, result is a sum of above applied for described and not described traits.
+     * context</em>. Further, result is a sum of above applied for described and not described traits.
      *
      * @param bp Examined base profile.
      * @param context Current context.
