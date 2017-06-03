@@ -115,7 +115,7 @@ public class Grounder {
      * of grounded formula with given modal operator.
      * @see DistributedKnowledge
      */
-    public static Map<Formula, ModalOperator> performFormulaGrounding(Agent agent, Formula formula, Contextualisation contextualisation)
+    public static Map<Formula, ModalOperator> performFormulaGrounding(Agent agent, Formula formula)
             throws InvalidFormulaException, NotApplicableException, NotConsistentDKException {
 
         DistributedKnowledge dk = agent.distributeKnowledge(formula, true);

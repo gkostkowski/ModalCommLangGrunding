@@ -99,31 +99,6 @@ public abstract class FilteringContextualisation implements Contextualisation {
     }
 
     /**
-     * Method checks if there is any representative BP, for whom similarity requirement is not fulfilled. If there is any,
-     * then given BP doesn't meet condition. Here specified measure is used.
-     *
-     * @param examined Base profile from input grounding set which will be examined.
-     * @return
-     */
-    @Deprecated
-    public boolean isMeetingCondition(BaseProfile examined) {
-        if (context == null)
-            throw new NullPointerException("Context was not initialized.");
-        return representativeBPs
-                .stream()
-                .filter(bp -> {
-                    try {
-                        return !determineFulfillment(bp);
-                    } catch (InvalidMeasureImplementation e) {
-                        Logger.getAnonymousLogger().log(Level.WARNING, "None .", e);
-                        return false;
-                    }
-                })
-                .collect(Collectors.toList())
-                .isEmpty();
-    }
-
-    /**
      * This is key method in determining which base profiles should be used in holon building process.
      * It uses already provided context to determine condition fulfillment.
      * This method can be override to change way of base profiles selection.

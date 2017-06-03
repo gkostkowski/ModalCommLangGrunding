@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Logger;
 
-import org.json.*;
+//import org.json.*;
 
 /**
  * Thread that connects with application that listens to voice questions and provides with strings with those.
@@ -99,7 +99,7 @@ public class Listening implements Runnable {
      * putting it into the queue
      */
     public void run() {
-        while (RUNNING) {
+        /*while (RUNNING) {
             try {
                 String question = bufferedReader.readLine();
                 JSONObject object = new JSONObject(question);
@@ -109,6 +109,6 @@ public class Listening implements Runnable {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 }

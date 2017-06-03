@@ -33,13 +33,15 @@ public interface Contextualisation {
      * Every contextualisation method which should be accessed via voice command must be included in resulted map.
      * @return Map of string representing natural language name and respective class.
      */
+    @Deprecated
     static Map<String, Class> getNaturalLanguageNames() {
-        return new HashMap<String, Class>(){{
+        return null;
+        /*return new HashMap<String, Class>(){{
             put(DEFAULT_CONTEXT, null);
             put(LatestFilteringContextualisation.getContextName(), LatestFilteringContextualisation.class);
             put(LatestFocusedFilteringContextualisation.getContextName(), LatestFocusedFilteringContextualisation.class);
             put(LatestGroupFilteringContextualisation.getContextName(), LatestGroupFilteringContextualisation.class);
-        }};
+        }};*/
 
     }
 }

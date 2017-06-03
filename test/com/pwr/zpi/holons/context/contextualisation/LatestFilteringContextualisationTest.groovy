@@ -1,4 +1,4 @@
-package context
+package contextualisation
 
 import com.pwr.zpi.episodic.BaseProfile
 import com.pwr.zpi.holons.context.contextualisation.FilteringContextualisation
