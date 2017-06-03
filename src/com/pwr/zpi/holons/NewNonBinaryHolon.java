@@ -6,7 +6,7 @@ package com.pwr.zpi.holons;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
-import com.pwr.zpi.holons.context.Contextualisation;
+import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.DistributedKnowledge;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Grounder;

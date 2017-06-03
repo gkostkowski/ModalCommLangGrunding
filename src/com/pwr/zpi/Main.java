@@ -5,9 +5,7 @@ import com.pwr.zpi.conversation.VoiceConversation;
 import com.pwr.zpi.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
-import com.pwr.zpi.holons.context.Contextualisation;
-import com.pwr.zpi.holons.context.LatestFilteringContextualisation;
-import com.pwr.zpi.holons.context.measures.Distance;
+import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.*;
 import com.pwr.zpi.linguistic.Question;
 import com.pwr.zpi.semantic.QRCode;
@@ -104,7 +102,7 @@ class Main {
             throw new IllegalStateException("You already asked about Hyzio");
         int t = 0;
 
-        Contextualisation contextualisation = new LatestFilteringContextualisation(new Distance(2));
+        Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
 
         agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
         Conversation c1 = new Conversation(agent, "SimpleModalConv", t, contextualisation);
@@ -221,7 +219,7 @@ class Main {
             throw new IllegalStateException("You already asked about Hyzio");
         int t = 0;
 
-        Contextualisation contextualisation = new LatestFilteringContextualisation(new Distance(2));
+        Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
 
         agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
         Conversation c1 = new Conversation(agent, "SimpleAndConjModalConv", t, contextualisation);
@@ -359,7 +357,7 @@ class Main {
         int t = 9;
 
         agent.getModels().addNameToModel(qrCodes[1], "Rysio");
-        Contextualisation contextualisation = new LatestFilteringContextualisation(new Distance(2));
+        Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
 
         Conversation conversation = new Conversation(agent, "ModalConjConv", t, contextualisation);
 

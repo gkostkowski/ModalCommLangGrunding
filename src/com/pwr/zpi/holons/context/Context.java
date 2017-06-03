@@ -4,6 +4,7 @@
 package com.pwr.zpi.holons.context;
 
 import com.pwr.zpi.language.Trait;
+import com.pwr.zpi.semantic.IndividualModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +16,19 @@ import java.util.List;
 final public class Context {
     List<Trait> observedTraits;
     List<Trait> notObservedTraits;
+    IndividualModel relatedObject;
 
 
-    public Context(List<Trait> observedTraits, List<Trait> notObservedTraits) {
+    public Context(List<Trait> observedTraits, List<Trait> notObservedTraits, IndividualModel relatedObject) {
+        if (relatedObject == null)
+            throw new NullPointerException();
         this.observedTraits = observedTraits;
         this.notObservedTraits = notObservedTraits;
+        this.relatedObject =relatedObject;
     }
 
-    public Context() {
-        this(new ArrayList<>(), new ArrayList<>());
+    public Context(IndividualModel relatedObject) {
+        this(new ArrayList<>(), new ArrayList<>(), relatedObject);
     }
 
     public List<Trait> getObservedTraits() {
@@ -32,5 +37,9 @@ final public class Context {
 
     public List<Trait> getNotObservedTraits() {
         return notObservedTraits;
+    }
+
+    public IndividualModel getRelatedObject() {
+        return relatedObject;
     }
 }

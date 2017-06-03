@@ -1,9 +1,10 @@
 /*
  * Created by Grzegorz Kostkowski
  */
-package com.pwr.zpi.holons.context;
+package com.pwr.zpi.holons.context.builders;
 
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.holons.context.Context;
 import com.pwr.zpi.language.State;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.semantic.IndividualModel;
@@ -22,13 +23,13 @@ public class ConcreteContextBuilder implements ContextBuilder {
     public Context build(IndividualModel relatedObject, Collection<BaseProfile> representatives) {
         if (representatives.size() == 1)
             return new Context(representatives.iterator().next().getRelatedTraits(relatedObject, State.IS),
-                    representatives.iterator().next().getRelatedTraits(relatedObject, State.IS_NOT));
+                    representatives.iterator().next().getRelatedTraits(relatedObject, State.IS_NOT), relatedObject);
         return new Context(partialBuild(representatives, relatedObject, State.IS),
-                partialBuild(representatives, relatedObject, State.IS_NOT));
+                partialBuild(representatives, relatedObject, State.IS_NOT), relatedObject);
     }
 
     @Override
-    public Context build(IndividualModel relatedObject, BaseProfile ... representatives) {
+    public Context build(IndividualModel relatedObject, BaseProfile... representatives) {
         return build(relatedObject, Arrays.asList(representatives));
     }
 

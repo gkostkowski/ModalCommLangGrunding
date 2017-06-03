@@ -1,8 +1,8 @@
 package context
 
 import com.pwr.zpi.episodic.BaseProfile
-import com.pwr.zpi.holons.context.FilteringContextualisation
-import com.pwr.zpi.holons.context.LatestFilteringContextualisation
+import com.pwr.zpi.holons.context.contextualisation.FilteringContextualisation
+
 import com.pwr.zpi.holons.context.measures.Distance
 import com.pwr.zpi.holons.context.measures.Measure
 import com.pwr.zpi.language.*

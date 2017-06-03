@@ -4,14 +4,18 @@
 package com.pwr.zpi.holons.context.measures;
 
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.exceptions.InvalidMeasureImplementation;
+import com.pwr.zpi.holons.context.Context;
+import com.pwr.zpi.language.State;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.semantic.IndividualModel;
 
 import java.util.*;
 
 /**
- * Class implements distance measure between two given base profiles. If distance is equal 0, then it means that given
- * two base profiles are identical. The greater value of distance, the smaller similarity between this two base profiles.
+ * Class implements distance measure between base profile and context. If distance is equal 0, then it means that given
+ * base profile perfectly match to context. The greater value of distance, the smaller similarity between of base
+ * profile to the context.
  */
 public class Distance implements Measure {
 
@@ -28,45 +32,35 @@ public class Distance implements Measure {
     }
 
     /**
-     * Method counts distance between given two base profiles. Distance is a number of all differences in particular
-     * maps of traits and IMs.
-     * @param first
-     * @param second
-     * @return value of distance. 0 mean that two base profiles are identical.
+     * Method counts distance measure between base profile and context.
+     * Note: Distance is a difference between number of traits present in context and number of traits not presents in
+     * base profile <em> plus difference between number of traits present in base profile and number of traits not presents in
+     * context<em/>. Further, result is a sum of above applied for described and not described traits.
+     *
+     * @param bp Examined base profile.
+     * @param context Current context.
+     * @return value of distance. 0 means that given base profile perfectly match to context.
      */
     @Override
-    public double count(BaseProfile first, BaseProfile second) {
-        int differentIMs=0;
+    public double count(BaseProfile bp, Context context) throws InvalidMeasureImplementation {
+        IndividualModel object = context.getRelatedObject();
+        return partialDifference(bp.getRelatedTraits(object, State.IS), context.getObservedTraits())
+                + partialDifference(bp.getRelatedTraits(object, State.IS_NOT), context.getNotObservedTraits());
+    }
 
-            List<Map<Trait, Set<IndividualModel>>> mapsToProcess = new ArrayList<Map<Trait, Set<IndividualModel>>>(){{
-                add(first.getDescribedByTraits());
-                add(first.getNotDescribedByTraits());
-                add(first.getIndefiniteByTraits());
-            }};
-            List<Map<Trait, Set<IndividualModel>>> mapsToCompare = new ArrayList<Map<Trait, Set<IndividualModel>>>(){{
-                add(second.getDescribedByTraits());
-                add(second.getNotDescribedByTraits());
-                add(second.getIndefiniteByTraits());
-            }};
-
-            for (int i=0; i< mapsToProcess.size(); i++) {
-                Map<Trait, Set<IndividualModel>> currMap = mapsToProcess.get(i);
-                Map<Trait, Set<IndividualModel>> comparedMap = mapsToCompare.get(i);
-                for (Trait trait : currMap.keySet()) {
-                    if (comparedMap.get(trait) == null)
-                        differentIMs += currMap.get(trait).size();
-                    else {
-
-                        Set<IndividualModel> minus=new HashSet<>(currMap.get(trait));
-                        minus.removeAll(comparedMap.get(trait));
-                        differentIMs+=minus.size();
-                        minus=new HashSet<>(comparedMap.get(trait));
-                        minus.removeAll(currMap.get(trait));
-                        differentIMs+=minus.size();
-                    }
-                }
-            }
-        return differentIMs;
+    /**
+     * Counts difference between two lists.
+     * @param fromBP
+     * @param fromContext
+     * @return number of differences.
+     */
+    private int partialDifference(List<Trait> fromBP, List<Trait> fromContext) {
+        List<Trait> common = new ArrayList<>(fromBP);
+        int fromBPSize = fromBP.size(),
+                fromContextSize = fromContext.size();
+        common.retainAll(fromContext);
+        return fromContextSize - common.size()
+                + fromBPSize - common.size();
     }
 
     /**

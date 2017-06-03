@@ -1,7 +1,7 @@
 /*
  * Created by Grzegorz Kostkowski
  */
-package com.pwr.zpi.holons.context;
+package com.pwr.zpi.holons.context.contextualisation;
 
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.language.Formula;

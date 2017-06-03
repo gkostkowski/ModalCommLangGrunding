@@ -1,6 +1,6 @@
 import com.pwr.zpi.episodic.BaseProfile
-import com.pwr.zpi.holons.context.ConcreteContextBuilder
-import com.pwr.zpi.holons.context.ContextBuilder
+import com.pwr.zpi.holons.context.builders.ConcreteContextBuilder
+import com.pwr.zpi.holons.context.builders.ContextBuilder
 import com.pwr.zpi.language.Trait
 import com.pwr.zpi.semantic.IndividualModel
 import com.pwr.zpi.semantic.ObjectType

@@ -4,13 +4,15 @@
 package com.pwr.zpi.holons.context.measures;
 
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.exceptions.InvalidMeasureImplementation;
+import com.pwr.zpi.holons.context.Context;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * This functional interface specifies measure which will be used in contextualisation process. This measure will be applied to
- * given two base profiles and should represent value of similarity between this two base profiles.
+ * specified context and certain base profile and should represent value of similarity of a base profile to current the context.
  *
  */
 public interface Measure {
@@ -19,11 +21,11 @@ public interface Measure {
 
     /**
      * Method counts value of implemented measure for given two base profiles.
-     * @param first
-     * @param second
+     * @param bp
+     * @param context
      * @return Value for specified measure.
      */
-    double count(BaseProfile first, BaseProfile second);
+    double count(BaseProfile bp, Context context) throws InvalidMeasureImplementation;
 
     /**
      * Returns maximal allowed value for this measure, for whom similarity expressed through this measure can be

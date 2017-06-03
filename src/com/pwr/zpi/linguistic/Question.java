@@ -4,7 +4,7 @@ package com.pwr.zpi.linguistic;
 import com.pwr.zpi.*;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
-import com.pwr.zpi.holons.context.Contextualisation;
+import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.*;
 import com.pwr.zpi.semantic.IndividualModel;
 

@@ -1,19 +1,19 @@
-package measures
-
 import com.pwr.zpi.episodic.BaseProfile
 import com.pwr.zpi.holons.context.builders.ConcreteContextBuilder
 import com.pwr.zpi.holons.context.measures.Distance
+import com.pwr.zpi.holons.context.measures.NormalisedDistance
 import com.pwr.zpi.language.Trait
 import com.pwr.zpi.semantic.IndividualModel
 import com.pwr.zpi.semantic.ObjectType
 import com.pwr.zpi.semantic.QRCode
 import org.junit.Test
 
-/**
- * Created by Grzesiek on 2017-05-27.
- */
-class DistanceTest extends GroovyTestCase {
+import java.text.DecimalFormat
 
+/**
+ * Created by Grzesiek on 2017-06-03.
+ */
+class NormalisedDistanceTest extends GroovyTestCase {
 
     BaseProfile bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9;
     int t0, t1, t2, t3, t4, t5,t6,t7,t8,t9
@@ -57,9 +57,9 @@ class DistanceTest extends GroovyTestCase {
 
         ] as List, t++)
         bp4 = new BaseProfile([[(tr6): [model1] as Set<IndividualModel>, (tr7): [model1] as Set<IndividualModel>,
-                                    (tr5): [model1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
-                                   [(tr4): [model1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
-                                   new HashMap<Trait, Set<IndividualModel>>()
+                                (tr5): [model1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                               [(tr4): [model1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                               new HashMap<Trait, Set<IndividualModel>>()
         ] as List, t++)
 
         bp5 = new BaseProfile([[(tr7): [model1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
@@ -92,14 +92,16 @@ class DistanceTest extends GroovyTestCase {
 
     @Test
     void testCount() {
-        distance = new Distance(10);
+        DecimalFormat formatter = new DecimalFormat("##.00")
+
+        distance = new NormalisedDistance()
         def context = new ConcreteContextBuilder().build(model1, [bp6]) // ([tr2, tr3, tr1, tr6],[tr4])
         assertEquals (0.0, distance.count(bp6, context))
-        assertEquals (1.0, distance.count(bp2, context)) //([tr2, tr3, tr1, tr6], [])
-        assertEquals (3.0, distance.count(bp7, context)) //([tr2, tr3, tr1, tr6], [tr5, tr7])
-        assertEquals (4.0, distance.count(bp1, context)) //([tr6, tr7, tr1, tr5], [tr4])
-        assertEquals (5.0, distance.count(bp4, context)) //([tr2, tr1, tr4, tr6], [tr5, tr7])
-        assertEquals (7.0, distance.count(bp5, context)) //([tr7], [tr5])
-        assertEquals (5.0, distance.count(bp3, context)) //([], [])
+        assertEquals (formatter.format(1/5), formatter.format(distance.count(bp2, context))) //([tr2, tr3, tr1, tr6], [])
+        assertEquals (formatter.format(3/7), formatter.format(distance.count(bp7, context))) //([tr2, tr3, tr1, tr6], [tr5, tr7])
+        assertEquals (formatter.format(4/7), formatter.format(distance.count(bp1, context))) //([tr6, tr7, tr1, tr5], [tr4])
+        assertEquals (formatter.format(5/7), formatter.format(distance.count(bp4, context))) //([tr2, tr1, tr4, tr6], [tr5, tr7])
+        assertEquals (formatter.format(7/7), formatter.format(distance.count(bp5, context))) //([tr7], [tr5])
+        assertEquals (formatter.format(5/5), formatter.format(distance.count(bp3, context))) //([], [])
     }
 }

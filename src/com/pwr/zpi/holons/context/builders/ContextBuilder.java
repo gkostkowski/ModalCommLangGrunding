@@ -1,9 +1,10 @@
 /*
  * Created by Grzegorz Kostkowski
  */
-package com.pwr.zpi.holons.context;
+package com.pwr.zpi.holons.context.builders;
 
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.holons.context.Context;
 import com.pwr.zpi.semantic.IndividualModel;
 
 import java.util.Collection;

@@ -8,7 +8,7 @@ import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.Holon;
 import com.pwr.zpi.holons.NonBinaryHolon;
-import com.pwr.zpi.holons.context.Contextualisation;
+import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.sun.istack.internal.Nullable;
 
 import java.util.*;

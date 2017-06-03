@@ -4,6 +4,7 @@
 package com.pwr.zpi.holons.context.measures;
 
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.holons.context.Context;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.semantic.IndividualModel;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -92,12 +93,12 @@ public class FocusedDistance implements FocusedMeasure {
     /**
      * Method counts value of implemented measure for given two base profiles.
      *
-     * @param first
-     * @param second
+     * @param bp
+     * @param context
      * @return Value for specified measure.
      */
     @Override
-    public double count(BaseProfile first, BaseProfile second) {
+    public double count(BaseProfile bp, Context context) {
         throw new NotImplementedException();  //method not appropriate
     }
 

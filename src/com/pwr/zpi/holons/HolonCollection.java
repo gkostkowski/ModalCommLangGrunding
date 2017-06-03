@@ -114,7 +114,7 @@ import com.pwr.zpi.exceptions.InvalidContextException;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
-import com.pwr.zpi.holons.context.Contextualisation;
+import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.*;
 
 import java.util.ArrayList;

@@ -9,9 +9,7 @@ import com.pwr.zpi.exceptions.InvalidQuestionException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.HolonCollection;
-import com.pwr.zpi.holons.context.Contextualisation;
-import com.pwr.zpi.holons.context.LatestFilteringContextualisation;
-import com.pwr.zpi.holons.context.measures.Distance;
+import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.io.DatabaseAO;
 import com.pwr.zpi.language.ComplexFormula;
 import com.pwr.zpi.language.DistributedKnowledge;
@@ -45,7 +43,7 @@ public class Agent {
     public Agent() {
         init();
         knowledgeBase = new BPCollection();
-        Contextualisation contextualisation = new LatestFilteringContextualisation(new Distance(2));
+        Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
         holonsCollection = new HolonCollection(this, contextualisation);
         database = new DatabaseAO(this);
     }
@@ -61,7 +59,7 @@ public class Agent {
         init();
         this.knowledgeBase = knowledgeBase;
 //        Contextualisation contextualisation = null; //todo podawanie odpowiedniego typu kontekstu
-        Contextualisation contextualisation = new LatestFilteringContextualisation(new Distance(2));
+        Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
         holonsCollection = new HolonCollection(this, contextualisation);
 
         //holonsCollection = new HolonCollection(this, contextualisation);
@@ -72,7 +70,7 @@ public class Agent {
         this.models = models;
         this.knowledgeBase = knowledgeBase;
 //        Contextualisation contextualisation = null; //todo podawanie odpowiedniego typu kontekstu
-        Contextualisation contextualisation = new LatestFilteringContextualisation(new Distance(2));
+        Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
         holonsCollection = new HolonCollection(this, contextualisation);
     }
 
