@@ -1,4 +1,4 @@
-package com.pwr.zpi.LifeCycle;
+package com.pwr.zpi.life_cycle;
 
 import com.pwr.zpi.Agent;
 import com.pwr.zpi.conversation.Talking;
@@ -35,7 +35,7 @@ public class AnswerThread implements Runnable {
      * Constructor of AnswerThread
      * @param talking   reference to Talking thread instance
      * @param question  asked question
-     * @param lifeCycle reference to LifeCycle thread instance
+     * @param lifeCycle reference to life_cycle thread instance
      */
     public AnswerThread(Talking talking, String question, LifeCycle lifeCycle)
     {
