@@ -1,4 +1,4 @@
-package com.pwr.zpi.LifeCycle;
+package com.pwr.zpi.life_cycle;
 
 import com.pwr.zpi.Agent;
 import com.pwr.zpi.conversation.Listening;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * LifeCycle allows for starting new thread with life cycle of an agent, which consists of cyclic behaviours
+ * life_cycle allows for starting new thread with life cycle of an agent, which consists of cyclic behaviours
  * that can trigger one-shot behaviours. It allows for start with a completely new agent or a copy of existing
  * agent. For now it implements periodical checking for new observations and new questions.
  */
@@ -81,7 +81,7 @@ public class LifeCycle implements Runnable {
         talkingThread.start();
         if(thread==null)
         {
-            thread = new Thread(this, "LifeCycle");
+            thread = new Thread(this, "life_cycle");
             RUNNING = true;
             thread.start();
         }
