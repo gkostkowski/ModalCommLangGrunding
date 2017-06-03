@@ -28,7 +28,7 @@ class LatestFilteringContextualisationTest extends GroovyTestCase {
 
     void setUp() {
         distance = new Distance(2);
-        testObj = new LatestFilteringContextualisation(distance)
+        testObj = new FilteringContextualisation(distance)
 
         tr1 = new Trait("Red")
         tr2 = new Trait("White")
@@ -118,7 +118,7 @@ class LatestFilteringContextualisationTest extends GroovyTestCase {
 
     void testPerformContextualisation() {
         distance = new Distance(2);
-        testObj = new LatestFilteringContextualisation(distance)
+        testObj = new FilteringContextualisation(distance)
         /*
         INPUT:
         [ComplexFormula{QRCode{id='0124'}: IS Red and  IS_NOT White}:
@@ -153,7 +153,7 @@ class LatestFilteringContextualisationTest extends GroovyTestCase {
 
         //CASE II
         distance = new Distance(1);
-        testObj = new LatestFilteringContextualisation(distance)
+        testObj = new FilteringContextualisation(distance)
         def complFormulas = formula.standardFormula.getComplementaryFormulas()
         res = testObj.performContextualisation(namedGroundingSets)
         /*
@@ -188,7 +188,7 @@ class LatestFilteringContextualisationTest extends GroovyTestCase {
             [],
         */
         distance = new Distance(0);
-        testObj = new LatestFilteringContextualisation(distance)
+        testObj = new FilteringContextualisation(distance)
         res = testObj.performContextualisation(namedGroundingSets)
 
         assertTrue(res.get(complFormulas.get(0)).isEmpty())
@@ -198,7 +198,7 @@ class LatestFilteringContextualisationTest extends GroovyTestCase {
 
         //CASE EMPTY
         distance = new Distance(2);
-        testObj = new LatestFilteringContextualisation(distance)
+        testObj = new FilteringContextualisation(distance)
         res = testObj.performContextualisation([] as Map<Formula, Set<BaseProfile>>) //with warning
         assertTrue(res.isEmpty())
     }

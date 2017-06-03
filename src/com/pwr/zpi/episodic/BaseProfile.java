@@ -311,7 +311,7 @@ public class  BaseProfile {
         }
     }
 
-    public boolean DetermineIfSetHasTrait(Trait P, int time) {
+    public boolean determineIfSetHasTrait(Trait P, int time) {
         return describedByTraits.containsKey(P);
     }
 
@@ -321,7 +321,7 @@ public class  BaseProfile {
      * @param time
      * @return
      */
-    public boolean DetermineIfSetHasNotTrait(@SuppressWarnings("rawtypes") Trait P, int time) {
+    public boolean determineIfSetHasNotTrait(@SuppressWarnings("rawtypes") Trait P, int time) {
         return notDescribedByTraits.containsKey(P);
     }
 

@@ -70,7 +70,15 @@ public interface Holon {
     boolean isApplicable(Formula formula) throws InvalidFormulaException;
 
     ///+ metody Jaremy
-    public abstract void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException;
+
+    /**
+     * Method performs holon update if content of knowledge distribution contains new observations.
+     * @param dk The newest version of knowledge distribution.
+     * @return True if holon was updated; false if holon had up-to-date information and update was not needed.
+     * @throws InvalidFormulaException
+     * @throws NotApplicableException
+     */
+    public abstract boolean update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException;
     public abstract Pair getStrongest();
     public abstract Pair getWeakest();
     public abstract HolonKind getKind();

@@ -29,42 +29,27 @@ public class BPCollection {
     private static final boolean DEFAULT_OVERRIDE_IF_EXISTS = true;
     private static final int MAX_WM_CAPACITY = 100;
 
-    /**
-     * By default, inserts to bp located in wm
-     * @param newObservation
-     */
-    public void includeNewObservation(Observation newObservation, IndividualModel individualModel) {
-        int newTimestamp = newObservation.getTimestamp();
-        BaseProfile alreadyExisting = null;
-        if ((alreadyExisting=getBaseProfile(newTimestamp, MemoryType.WM)) == null) {
-            alreadyExisting = new BaseProfile(newObservation.getTimestamp());
-             addToMemory(alreadyExisting);
-        }
 
-        for (Trait trait: newObservation.getValuedTraits().keySet())
-            alreadyExisting.addObservationByValue(individualModel, trait, newObservation.getValuedTraits().get(trait));
-    }
 
     /**
      * Describes allowed types of agent's memory. According to the accepted theoretical model, there are two memory
      * levels: Working memory and long-term memory.
      */
     public enum MemoryType {
-        WM, LM
+        WM, LM;
     }
-
     /**
      * Map of BaseProfile representing working memory - each for successive moments in time - from beginning till
      * current timestamp set for this BPCollection.
      */
     protected Set<BaseProfile> workingMemory;
+
     /**
      * Map of BaseProfile representing long-term memory - each for successive moments in time - from beginning till
      * current timestamp set for this BPCollection.
      */
     protected Set<BaseProfile> longTermMemory;
     private int timestamp;
-
     /**
      * Simple constructor to initialize empty BPCollection with initials values. Sets timestamp to default value.
      */
@@ -99,6 +84,22 @@ public class BPCollection {
         if (storedBPs != null && !storedBPs.isEmpty())
             mostRecent = storedBPs.stream().mapToInt(BaseProfile::getTimestamp).max().getAsInt();
         return mostRecent;
+    }
+
+    /**
+     * By default, inserts to bp located in wm
+     * @param newObservation
+     */
+    public void includeNewObservation(Observation newObservation, IndividualModel individualModel) {
+        int newTimestamp = newObservation.getTimestamp();
+        BaseProfile alreadyExisting = null;
+        if ((alreadyExisting=getBaseProfile(newTimestamp, MemoryType.WM)) == null) {
+            alreadyExisting = new BaseProfile(newObservation.getTimestamp());
+            addToMemory(alreadyExisting);
+        }
+
+        for (Trait trait: newObservation.getValuedTraits().keySet())
+            alreadyExisting.addObservationByValue(individualModel, trait, newObservation.getValuedTraits().get(trait));
     }
 
 
@@ -440,4 +441,19 @@ public class BPCollection {
         return longTermMemory;
     }
 
+    /**
+     * Returns number of included base profiles for given memory container.
+     * @return Number of contained base profiles.
+     */
+    public int getEpisodicBaseSize(MemoryType memoryType) {
+        return getMemoryContainer(memoryType).size();
+    }
+
+    /**
+     * Returns number of included base profiles.
+     * @return Number of contained base profiles.
+     */
+    public int getEpisodicBaseSize() {
+        return getEpisodicBaseSize(MemoryType.WM) + getEpisodicBaseSize(MemoryType.LM);
+    }
 }

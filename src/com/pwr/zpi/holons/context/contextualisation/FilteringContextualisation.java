@@ -4,14 +4,15 @@
 package com.pwr.zpi.holons.context.contextualisation;
 
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.exceptions.InvalidContextualisationException;
 import com.pwr.zpi.exceptions.InvalidMeasureImplementation;
 import com.pwr.zpi.holons.context.Context;
 import com.pwr.zpi.holons.context.builders.ContextBuilder;
 import com.pwr.zpi.holons.context.measures.Measure;
+import com.pwr.zpi.holons.context.selectors.RepresentativesSelector;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.semantic.IndividualModel;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -27,21 +28,20 @@ import java.util.stream.Collectors;
  * This class is realisation of Strategy A from paper: "Soft Computing Approach to Contextual Determination
  * of Grounding Sets for Simple Modalities".
  */
-public abstract class FilteringContextualisation implements Contextualisation {
+public class FilteringContextualisation implements Contextualisation {
 
     protected Measure measure;
     protected Context context;
     protected double maxValue;
 
-    /**
-     * In standard verison, it's the single BP built basing on the last observations (according to all observations
-     * with latest timestamp).
-     */
-    Set<BaseProfile> representativeBPs;
 
-    public FilteringContextualisation(Context context, Measure measure, double maxValue) {
+
+    public FilteringContextualisation(Context context, Measure measure, double maxValue) throws InvalidContextualisationException {
         if (measure == null || context == null)
             throw new NullPointerException("One of parameters was not specified.");
+        if (maxValue < 0)
+            throw new InvalidContextualisationException("Not valid value for maximum threshold.");
+        this.context = context;
         this.measure = measure;
         this.maxValue = maxValue;
     }
@@ -49,7 +49,7 @@ public abstract class FilteringContextualisation implements Contextualisation {
     /**
      * If max allowable value won't be provided then this value is fetched from measure object.
      */
-    public FilteringContextualisation(Context context, Measure measure) {
+    public FilteringContextualisation(Context context, Measure measure) throws InvalidContextualisationException {
         this(context, measure, measure.getMaxThreshold());
     }
 
@@ -57,14 +57,18 @@ public abstract class FilteringContextualisation implements Contextualisation {
      * This constructor allows to provide ContextBuilder with required arguments, which will be used to build context
      * instead of providing context, for convenience.
      *
-     * @param contextBuilder
-     * @param measure
+     * @param contextBuilder ContextBuilder used to builde context.
+     * @param measure Measure.
      * @param relatedObject   Individual model.
-     * @param representatives Set of base profiles known as representatives.
+     * @param selector RepresentativesSelector used to gain representative base profiles.
+     * @param namedGroundingSets map of grounding sets.
      */
-    public FilteringContextualisation(ContextBuilder contextBuilder, Measure measure,
-                                      IndividualModel relatedObject, Collection<BaseProfile> representatives) {
-        this(contextBuilder.build(relatedObject, representatives), measure, measure.getMaxThreshold());
+    public FilteringContextualisation(ContextBuilder contextBuilder, Measure measure, IndividualModel relatedObject,
+                                      RepresentativesSelector selector, Map<Formula, Set<BaseProfile>> namedGroundingSets)
+            throws InvalidContextualisationException {
+        this(contextBuilder.build(relatedObject, selector.select(namedGroundingSets)),
+                measure,
+                measure.getMaxThreshold());
     }
 
     /**
@@ -94,7 +98,6 @@ public abstract class FilteringContextualisation implements Contextualisation {
                             })
                             .collect(Collectors.toSet()));
         }
-
         return res;
     }
 
@@ -110,4 +113,8 @@ public abstract class FilteringContextualisation implements Contextualisation {
         return measure.count(examined, context) <= maxValue;
     }
 
+    @Override
+    public void setMaxThreshold(double threshold) {
+        maxValue = threshold;
+    }
 }

@@ -103,5 +103,9 @@ class NormalisedDistanceTest extends GroovyTestCase {
         assertEquals (formatter.format(5/7), formatter.format(distance.count(bp4, context))) //([tr2, tr1, tr4, tr6], [tr5, tr7])
         assertEquals (formatter.format(7/7), formatter.format(distance.count(bp5, context))) //([tr7], [tr5])
         assertEquals (formatter.format(5/5), formatter.format(distance.count(bp3, context))) //([], [])
+
+        shouldFail {
+            new NormalisedDistance(-1)
+        }
     }
 }

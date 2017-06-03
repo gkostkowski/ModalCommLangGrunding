@@ -3,7 +3,7 @@ import com.pwr.zpi.episodic.BPCollection
 import com.pwr.zpi.episodic.BaseProfile
 import com.pwr.zpi.holons.NewNonBinaryHolon
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation
-
+import com.pwr.zpi.holons.context.contextualisation.FilteringContextualisation
 import com.pwr.zpi.holons.context.measures.Distance
 import com.pwr.zpi.holons.context.measures.Measure
 import com.pwr.zpi.language.*
@@ -19,7 +19,7 @@ import java.text.DecimalFormat
 class NewNonBinaryHolonTest extends GroovyTestCase {
 
     NewNonBinaryHolon testObj
-    Contextualisation context
+    Contextualisation contextualisation
     Measure measure
 
     BaseProfile bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9, bp2_2;
@@ -105,7 +105,7 @@ class NewNonBinaryHolonTest extends GroovyTestCase {
         9   N   N   1
          */
 
-        context = new LatestFilteringContextualisation(new Distance(), 3)
+        contextualisation = new FilteringContextualisation(new Distance(), 3)
     }
 
     void buildRelatedScenario(int phaseNbr) {
@@ -157,7 +157,7 @@ class NewNonBinaryHolonTest extends GroovyTestCase {
         DecimalFormat formatter = new DecimalFormat("##.00")
 
         buildRelatedScenario(0)
-        testObj = new NewNonBinaryHolon(testDk1, context)
+        testObj = new NewNonBinaryHolon(testDk1, contextualisation)
         testObj.update()
         def complFormulas = testDk1.getFormula().getStandardFormula().getComplementaryFormulas()
 
@@ -170,7 +170,7 @@ class NewNonBinaryHolonTest extends GroovyTestCase {
 
 
         buildRelatedScenario(1)
-        testObj = new NewNonBinaryHolon(testDk2, context)
+        testObj = new NewNonBinaryHolon(testDk2, contextualisation)
         testObj.update()
         complFormulas = testDk2.getFormula().getStandardFormula().getComplementaryFormulas()
 
@@ -183,7 +183,7 @@ class NewNonBinaryHolonTest extends GroovyTestCase {
 
 
         buildRelatedScenario(2)
-        testObj = new NewNonBinaryHolon(testDk3, context)
+        testObj = new NewNonBinaryHolon(testDk3, contextualisation)
         testObj.update()
         complFormulas = testDk3.getFormula().getStandardFormula().getComplementaryFormulas()
 
@@ -194,7 +194,7 @@ class NewNonBinaryHolonTest extends GroovyTestCase {
         assertEquals(0, testObj.getSummary(complFormulas.get(2))) // IS, IS_NOT
         assertEquals(formatter.format(3/5), formatter.format(testObj.getSummary(complFormulas.get(3)))) // IS_NOT, IS_NOT
 
-        testObj = new NewNonBinaryHolon(testDk4, context)
+        testObj = new NewNonBinaryHolon(testDk4, contextualisation)
         testObj.update()
         complFormulas = testDk4.getFormula().getStandardFormula().getComplementaryFormulas()
 

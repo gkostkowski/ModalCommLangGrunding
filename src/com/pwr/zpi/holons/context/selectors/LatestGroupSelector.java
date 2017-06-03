@@ -2,6 +2,7 @@ package com.pwr.zpi.holons.context.selectors;
 
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.ContextualisationException;
+import com.pwr.zpi.exceptions.InvalidGroupSelectorException;
 import com.pwr.zpi.language.Formula;
 
 import java.util.Comparator;
@@ -18,7 +19,9 @@ public class LatestGroupSelector implements RepresentativesSelector {
     private static final int DEF_GROUP_SIZE = 5;
     private int groupSize;
 
-    public LatestGroupSelector(int groupSize) {
+    public LatestGroupSelector(int groupSize) throws InvalidGroupSelectorException {
+        if (groupSize < 1)
+            throw new InvalidGroupSelectorException("Invalid size of representatives group was passed.");
         this.groupSize = groupSize;
     }
 

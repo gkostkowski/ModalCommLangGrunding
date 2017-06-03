@@ -8,7 +8,6 @@ import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.Holon;
 import com.pwr.zpi.holons.NonBinaryHolon;
-import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.sun.istack.internal.Nullable;
 
 import java.util.*;
@@ -261,7 +260,7 @@ public class Grounder {
     static Set<BaseProfile> getGroundingSetsPositiveTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
         /*for (BaseProfile bp : all) {
-            if (bp.DetermineIfSetHasTrait(P, time)) {
+            if (bp.determineIfSetHasTrait(P, time)) {
                 baseout.add(bp);
             }
         }*/
@@ -284,7 +283,7 @@ public class Grounder {
     static Set<BaseProfile> getGroundingSetsNegativeTrait(Object o, @SuppressWarnings("rawtypes") Trait P, int time, Set<BaseProfile> all) {
         Set<BaseProfile> baseout = new HashSet<BaseProfile>();
       /*  for (BaseProfile bp : all) {
-            if (!bp.DetermineIfSetHasNotTrait(P, time)) {
+            if (!bp.determineIfSetHasNotTrait(P, time)) {
                 baseout.add(bp);
             }
         }*/
@@ -424,27 +423,27 @@ public class Grounder {
         switch (i) {
             case 1:
                 for (BaseProfile bp : all) {
-                    if (bp.DetermineIfSetHasTrait(P, time) && bp.DetermineIfSetHasTrait(Q, time)) out.add(bp);
+                    if (bp.determineIfSetHasTrait(P, time) && bp.determineIfSetHasTrait(Q, time)) out.add(bp);
                 }
                 break;
 
             case 2:
                 for (BaseProfile bp : all) {
-                    if (bp.DetermineIfSetHasTrait(P, time) && !bp.DetermineIfSetHasTrait(Q, time))
+                    if (bp.determineIfSetHasTrait(P, time) && !bp.determineIfSetHasTrait(Q, time))
                         out.add(bp);
                 }
                 break;
 
             case 3:
                 for (BaseProfile bp : all) {
-                    if (!bp.DetermineIfSetHasTrait(P, time) && bp.DetermineIfSetHasTrait(Q, time))
+                    if (!bp.determineIfSetHasTrait(P, time) && bp.determineIfSetHasTrait(Q, time))
                         out.add(bp);
                 }
                 break;
 
             case 4:
                 for (BaseProfile bp : all) {
-                    if (!bp.DetermineIfSetHasTrait(P, time) && !bp.DetermineIfSetHasTrait(Q, time))
+                    if (!bp.determineIfSetHasTrait(P, time) && !bp.determineIfSetHasTrait(Q, time))
                         out.add(bp);
                 }
                 break;

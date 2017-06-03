@@ -1,7 +1,5 @@
 package com.pwr.zpi.conversation;
 
-//import org.json.*;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -9,6 +7,8 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Logger;
+
+import org.json.*;
 
 /**
  * Thread that connects with application that synthesis to voice the given message.
@@ -107,15 +107,15 @@ public class Talking implements Runnable {
             try {
                 while(answers.isEmpty())
                     Thread.sleep(500);
-                //JSONObject object = new JSONObject();
-                //object.put("question", answers.remove());
-                //printWriter.println(object.toString());
+                JSONObject object = new JSONObject();
+                object.put("question", answers.remove());
+                printWriter.println(object.toString());
                 printWriter.flush();
                 Thread.sleep(500);
             } catch(InterruptedException e) {}
-            /*catch (JSONException e) {
+            catch (JSONException e) {
                 e.printStackTrace();
-            }*/
+            }
         }
     }
 

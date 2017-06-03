@@ -4,6 +4,7 @@
 package com.pwr.zpi.holons.context.measures;
 
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.exceptions.InvalidMeasureException;
 import com.pwr.zpi.exceptions.InvalidMeasureImplementation;
 import com.pwr.zpi.holons.context.Context;
 import com.pwr.zpi.language.State;
@@ -23,7 +24,9 @@ public class Distance implements Measure {
     private static final String NATURAL_LANG_NAME = "distance";
     double maxThreshold;
 
-    public Distance(double maxThreshold) {
+    public Distance(double maxThreshold) throws InvalidMeasureException {
+        if (maxThreshold < 0)
+            throw new InvalidMeasureException("Invalid value of maximum threshold was passed.");
         this.maxThreshold = maxThreshold;
     }
 
@@ -43,6 +46,8 @@ public class Distance implements Measure {
      */
     @Override
     public double count(BaseProfile bp, Context context) throws InvalidMeasureImplementation {
+        if (context == null || bp == null)
+            throw new NullPointerException();
         IndividualModel object = context.getRelatedObject();
         return partialDifference(bp.getRelatedTraits(object, State.IS), context.getObservedTraits())
                 + partialDifference(bp.getRelatedTraits(object, State.IS_NOT), context.getNotObservedTraits());

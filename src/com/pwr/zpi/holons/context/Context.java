@@ -42,4 +42,24 @@ final public class Context {
     public IndividualModel getRelatedObject() {
         return relatedObject;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Context context = (Context) o;
+
+        if (!observedTraits.containsAll(context.observedTraits)) return false;
+        if (!notObservedTraits.containsAll(context.notObservedTraits)) return false;
+        return relatedObject.equals(context.relatedObject);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = observedTraits.hashCode();
+        result = 31 * result + notObservedTraits.hashCode();
+        result = 31 * result + relatedObject.hashCode();
+        return result;
+    }
 }

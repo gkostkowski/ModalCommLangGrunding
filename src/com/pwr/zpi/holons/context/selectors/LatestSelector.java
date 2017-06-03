@@ -14,11 +14,14 @@ import java.util.Set;
  */
 public class LatestSelector implements RepresentativesSelector {
     /**
-     * Method provides set of base profiles (or only one base profile in particular case) which are known as representative.
-     * These base profiles can be used in ContextBuilder class to produce context.
+     * Method provides way to determine representative base profile. In this implementation returned set contains
+     * only one grounding set which is the latest one (according to timestamp). In case of more than one base profile
+     * with same latest timestamp, one of them is selected - such selection is non-deterministic.
+     * Resulted set of base profiles can be used in ContextBuilder class to produce context.
+     * Note: selected base profile is returned in form of set of base profiles due to interface's agreement.
      *
      * @param namedGroundingSets
-     * @return
+     * @return Set of BaseProfiles which contains latest one.
      */
     @Override
     public Set<BaseProfile> select(Map<Formula, Set<BaseProfile>> namedGroundingSets) {

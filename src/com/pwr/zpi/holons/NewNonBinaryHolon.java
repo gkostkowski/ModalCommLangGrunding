@@ -35,18 +35,20 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
     NewNonBinaryHolon(DistributedKnowledge dk, Contextualisation contextualisation) throws InvalidFormulaException, NotApplicableException {
         relatedFormula = dk.getFormula();
         this.dk = dk;
+        this.contextualisation = contextualisation;
         summaries = new HashMap<>();
-        loadContextualisedGroundingSets(dk);
         update();
     }
 
 
     /**
-     * Builds holon for specified formula.
+     * Builds holon for specified formula. If holon has defined particular contextualisation, then it will be used
+     * to retrieve needed base profiles from grounding sets.
      */
     @Override
     public void update() throws InvalidFormulaException, NotApplicableException {
         //List<Formula> complFormulas = relatedFormula.getComplementaryFormulas();
+        applyContextualisationIfProvided();
         summaries = Grounder.relativeCard_(contextualisedGroundedSets);
         /*
         for (Formula formula : contextualisedGroundedSets.keySet())
@@ -95,7 +97,10 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
         return getAffectedFormulas().contains(formula);
     }
 
-    private void loadContextualisedGroundingSets(DistributedKnowledge dk) {
+    /**
+     * Method launches contextualistion mechanism, if such was provided
+     */
+    private void applyContextualisationIfProvided() {
         if (contextualisation != null)
             this.contextualisedGroundedSets = contextualisation.performContextualisation(dk.mapOfGroundingSets());
         else this.contextualisedGroundedSets = dk.mapOfGroundingSets();
@@ -109,9 +114,20 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
     }
 
     @Override
-    public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
-        loadContextualisedGroundingSets(dk);
-        update();
+    public boolean update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+        if(updateDistributedKnowledge(dk)) {
+            update();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean updateDistributedKnowledge(DistributedKnowledge dk) {
+        if(dk.isNewerThan(this.dk)) {
+            this.dk = dk;
+            return true;
+        }
+        return false;
     }
 
     @Override

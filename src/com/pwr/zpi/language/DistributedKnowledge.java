@@ -233,4 +233,25 @@ public class DistributedKnowledge {
     public Map<Formula, Set<BaseProfile>> mapOfGroundingSets() {
         return groundingSetsMap;
     }
+
+    /**
+     * Method determines if given distributed knowledge is more recent than this one.
+     * One dk is understood as more recent than other if:
+     * <ul>
+     *     <li>has greater value of timestamp</li>
+     *     <li>Number of included base profiles is greater (when timestamps are the same)</li>
+     *     <li>Number of included base profiles in working memory is greater (when general sizes of episodic base
+     *     are the same)</li>
+     *     <li>If none of above is applied, then given dk is treated as up-to-date.</li>
+     * </ul>
+     * @param dk Examined distributedKnowledge.
+     * @return False if provided dk is newer; true otherwise.
+     */
+    public boolean isNewerThan(DistributedKnowledge dk) {
+        if (timestamp != dk.getTimestamp()) return timestamp > dk.getTimestamp();
+        if (relatedObservationsBase.getEpisodicBaseSize() != dk.relatedObservationsBase.getEpisodicBaseSize())
+            return relatedObservationsBase.getEpisodicBaseSize() > dk.relatedObservationsBase.getEpisodicBaseSize();
+        return relatedObservationsBase.getEpisodicBaseSize(BPCollection.MemoryType.WM)
+                > dk.relatedObservationsBase.getEpisodicBaseSize(BPCollection.MemoryType.WM);
+    }
 }

@@ -95,7 +95,7 @@ public class Conversation implements Runnable {
         {
             SimpleStatement statement = null;
             try {
-                statement = new SimpleStatement((SimpleFormula)formula, Grounder.performFormulaGrounding(agent, formula, contextualisation), name);
+                statement = new SimpleStatement((SimpleFormula)formula, Grounder.performFormulaGrounding(agent, formula), name);
             } catch (InvalidFormulaException e) {
                 e.printStackTrace();
             } catch (NotApplicableException e) {
@@ -109,7 +109,7 @@ public class Conversation implements Runnable {
         {
             ComplexStatement statement = null;
             try {
-                statement = new ComplexStatement((ComplexFormula)formula, Grounder.performFormulaGrounding(agent, formula, contextualisation), name);
+                statement = new ComplexStatement((ComplexFormula)formula, Grounder.performFormulaGrounding(agent, formula), name);
             } catch (InvalidFormulaException e) {
                 e.printStackTrace();
             } catch (NotApplicableException e) {

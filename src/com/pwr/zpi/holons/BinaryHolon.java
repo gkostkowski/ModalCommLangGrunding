@@ -52,7 +52,7 @@ public class BinaryHolon implements Holon {
      * @throws InvalidFormulaException
      * @throws NotApplicableException
      */
-    public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+    public boolean update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
 
         if (dk.getFormula().getType() != Formula.Type.SIMPLE_MODALITY) {
             throw new InvalidFormulaException();
@@ -69,6 +69,7 @@ public class BinaryHolon implements Holon {
             //System.out.println(sumNegative + " " + sumPositive + " " + dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp()));
             Tao = new Pair<Double, Double>(sumPositive,sumNegative);
         }
+        return true;
     }
 
 

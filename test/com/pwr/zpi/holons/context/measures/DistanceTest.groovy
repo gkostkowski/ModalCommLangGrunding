@@ -101,5 +101,9 @@ class DistanceTest extends GroovyTestCase {
         assertEquals (5.0, distance.count(bp4, context)) //([tr2, tr1, tr4, tr6], [tr5, tr7])
         assertEquals (7.0, distance.count(bp5, context)) //([tr7], [tr5])
         assertEquals (5.0, distance.count(bp3, context)) //([], [])
+
+        shouldFail {
+            new Distance(-1)
+        }
     }
 }

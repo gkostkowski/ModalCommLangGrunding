@@ -18,7 +18,7 @@ public class NonBinaryHolon implements Holon{
         //Enumik przeszedł tutaj,poprawić. Najlepiej jednak go wyjąć bo Weronika chce się nim bawić.
         update(dk);
     }
-	public void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
+	public boolean update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
 		if (dk.getFormula().getType() != Formula.Type.MODAL_CONJUNCTION) {
 			throw new InvalidFormulaException();
 		}else{
@@ -33,6 +33,7 @@ public class NonBinaryHolon implements Holon{
 		pnq = Grounder.determineFulfillmentDouble(dk,temp.get(2));
 		npnq = Grounder.determineFulfillmentDouble(dk,temp.get(3));
         Tao = new Quadrilateral(pq,npq,pnq,npnq);}
+		return true;
 	}
 	/**
 	 *

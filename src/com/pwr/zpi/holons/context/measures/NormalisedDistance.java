@@ -4,6 +4,7 @@
 package com.pwr.zpi.holons.context.measures;
 
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.exceptions.InvalidMeasureException;
 import com.pwr.zpi.exceptions.InvalidMeasureImplementation;
 import com.pwr.zpi.holons.context.Context;
 import com.pwr.zpi.language.State;
@@ -23,7 +24,9 @@ public class NormalisedDistance extends Distance implements Measure {
     private static final String NATURAL_LANG_NAME = "normalised distance";
     double maxThreshold;
 
-    public NormalisedDistance(double maxThreshold) {
+    public NormalisedDistance(double maxThreshold) throws InvalidMeasureException {
+        if (maxThreshold < 0)
+            throw new InvalidMeasureException("Invalid value of maximum threshold was passed.");
         this.maxThreshold = maxThreshold;
     }
 
