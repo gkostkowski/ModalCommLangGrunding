@@ -24,18 +24,15 @@ public class DatabaseAO {
     public static final String DEF_DATABASE_FILENAME = "baza1.db";
     private Connection dbConnection;
     private Map<String, Integer> nameIndexMap;
-    private Agent agent;
 
-    public DatabaseAO(Agent agent) {
-        this.agent = agent;
+    public DatabaseAO() {
         init();
     }
 
     /**
      * Performs initials actions for database, such as: ensuring that 'db' directory is present,
      * establishing connection to database, building instances of class' fields.
-     * It is also creating database schema appropriate to config file and performs agent's first memory update
-     * in case that existing database is not empty.
+     * It is also creating database schema appropriate to config file.
      */
     private void init(){
         nameIndexMap = new HashMap<>();
@@ -49,12 +46,11 @@ public class DatabaseAO {
             e.printStackTrace();
         }
         addTablesForAllObjectTypes();
-        updateAgentMemory();
     }
 
     /**
      * Deletes default database file, erasing all collected data.
-     * This method is only for simplifying tests and is set to be removed.
+     * This method is only for simplifying tests and should not be used in real agent.
      */
     @Deprecated
     private void deleteDatabase(){
@@ -159,12 +155,12 @@ public class DatabaseAO {
      * and updates indexes of last fetched records in nameIndexMap.
      * @return Collection of new observations from database.
      */
-    private Collection<Observation> fetchNewObservations() {
+    public Collection<Observation> fetchNewObservations() {
         Collection<Observation> newObservations = new HashSet<>();
         String SQLCommandText, tableName, traitValue; int lastIndex, obsTimestamp;
         Statement SQLStatement; ResultSet queryResultSet; Identifier obsIdentifier;
         List<Trait> typeTraits; Map<Trait, Boolean> obsTraits;
-        resetFlag();
+        setInsertFlag(false);
         try {
             for(Map.Entry<String, Integer> nameIndexEntry: nameIndexMap.entrySet()){
                 tableName = nameIndexEntry.getKey();
@@ -230,7 +226,7 @@ public class DatabaseAO {
      * via checking value of flag in InsertFlag table.
      * @return true when there are new records, false when aren't
      */
-    private boolean isInsertFlagPositive(){
+    public boolean isInsertFlagPositive(){
         int flagValue = 0;
         try {
             String SQLCommandText = "SELECT * FROM InsertFlag;";
@@ -247,22 +243,14 @@ public class DatabaseAO {
     /**
      * Resets value of flag in InsertFlag so it implies that there are no new observations at the moment.
      */
-    private void resetFlag(){
+    private void setInsertFlag(boolean isAnyNew){
         try {
-            String SQLCommandText = "UPDATE InsertFlag SET flag = 0;";
+            String SQLCommandText = "UPDATE InsertFlag SET flag = " + (isAnyNew ? 1 : 0) + ";";
             Statement SQLStatement = dbConnection.createStatement();
             SQLStatement.execute(SQLCommandText);
             SQLStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * This method is used to update agent's memory with new observations.
-     */
-    public void updateAgentMemory() {
-        if(isInsertFlagPositive())
-            agent.discoverObservations(fetchNewObservations());
     }
 }

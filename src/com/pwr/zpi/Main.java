@@ -7,6 +7,7 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.*;
+import com.pwr.zpi.life_cycle.LifeCycle;
 import com.pwr.zpi.linguistic.Question;
 import com.pwr.zpi.semantic.QRCode;
 
@@ -24,20 +25,22 @@ class Main {
 
         //dbLoopTest();
 
-        Agent agent = new Agent();
-        QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
-        Trait[] tr = new Trait[]{
-                new Trait("Red"),
-                new Trait("White"),
-                new Trait("Blinking"),
-                new Trait("Blue"),
-                new Trait("Soft")};
+//        Agent agent = new Agent();
+//        QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
+//        Trait[] tr = new Trait[]{
+//                new Trait("Red"),
+//                new Trait("White"),
+//                new Trait("Blinking"),
+//                new Trait("Blue"),
+//                new Trait("Soft")};
 
          //simplyModalitiesScenario(agent, qrCodes, tr);
         //or
        // simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-         testVoice(agent, qrCodes, tr);
+        (new Thread(new LifeCycle())).start();
+
+         //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
         // is present in db after launching one of them, so they can't be used together.
 
@@ -76,13 +79,13 @@ class Main {
         ///to powinno być w kontrolerze
         VoiceConversation voiceConversation = new VoiceConversation();
         voiceConversation.start();
-        while(voiceConversation.getCurentQuestion()==null)
+        while(voiceConversation.getCurrentQuestion()==null)
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        Question question = new Question(voiceConversation.getCurentQuestion(), agent);
+        Question question = new Question(voiceConversation.getCurrentQuestion(), agent);
         try {
             Formula formula = question.getFormula();
             System.out.print(formula.getModel().getIdentifier().getIdNumber() + " " + formula.getTraits().get(0).getName());

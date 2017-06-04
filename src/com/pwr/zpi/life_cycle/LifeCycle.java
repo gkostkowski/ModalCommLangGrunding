@@ -42,6 +42,8 @@ public class LifeCycle implements Runnable {
      */
     private Agent agent;
 
+    private Thread updateThread = new Thread(new UpdateThread(agent));
+
     /**
      * main loop of the agent. Periodically checks for new observations and new questions
      */
@@ -52,7 +54,7 @@ public class LifeCycle implements Runnable {
             if(checkIfNewObservations())
             {
                 take(true);
-                //todo update
+                updateThread.start();
                 release(true);
             }
             String question = listeningThread.getQuestion();
@@ -62,8 +64,7 @@ public class LifeCycle implements Runnable {
     }
 
     private boolean checkIfNewObservations() {
-        //todo
-        return false;
+        return agent.isNewObservationInDatabase();
     }
 
     /**

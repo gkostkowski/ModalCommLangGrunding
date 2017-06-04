@@ -45,7 +45,7 @@ public class Agent {
         knowledgeBase = new BPCollection();
         Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
         holonsCollection = new HolonCollection(this, contextualisation);
-        database = new DatabaseAO(this);
+        database = new DatabaseAO();
     }
 
     /*public Agent(String databaseFilename) {
@@ -231,7 +231,15 @@ public class Agent {
      * Updates agent's episodic memory by fetching new observations from database.
      */
     public void updateMemory() {
-        database.updateAgentMemory();
+        discoverObservations(database.fetchNewObservations());
+    }
+
+    /**
+     * Checks whether there are new observations in database.
+     * @return true/false
+     */
+    public boolean isNewObservationInDatabase() {
+        return database.isInsertFlagPositive();
     }
 
     public void updateBeliefs(){

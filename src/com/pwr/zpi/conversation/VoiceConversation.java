@@ -34,7 +34,7 @@ public class VoiceConversation implements Runnable {
     /**
      * @return current question to agent;
      */
-    public String getCurentQuestion() {
+    public String getCurrentQuestion() {
         String string = curentQuestion;
         currentAnswer = null;
         return string;
