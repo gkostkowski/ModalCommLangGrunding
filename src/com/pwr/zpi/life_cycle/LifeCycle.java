@@ -45,6 +45,21 @@ public class LifeCycle implements Runnable {
     private Thread updateThread = new Thread(new UpdateThread(agent));
 
     /**
+     * Constructor of LifeCycle, it creates a thread which will work on new agent
+     */
+    public LifeCycle()
+    { }
+
+    /**
+     * Constructor of LifeCycle which allows to working with existing instance of agent
+     * @param agent     copy of the agent
+     */
+    public LifeCycle(Agent agent)
+    {
+        this.agent = agent;
+    }
+
+    /**
      * main loop of the agent. Periodically checks for new observations and new questions
      */
     @Override
@@ -88,17 +103,7 @@ public class LifeCycle implements Runnable {
             thread.start();
         }
     }
-
-    /**
-     * Allows for start new cycle of agent from copy
-     * @param agent
-     */
-    public void startWithCopy(Agent agent)
-    {
-        this.agent = agent;
-        start();
-    }
-
+    
     /**
      * stops life cycle of agent, but leaves options for resuming it in the future
      */

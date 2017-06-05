@@ -27,21 +27,21 @@ class Main {
 
         Agent agent = new Agent();
 //        Scenario scenario = new Scenario(agent, null, "scenario01.csv", "conv001");
-        Scenario scenario = new Scenario(agent, null, "conj_scenario01.csv", "conj conv001");
-        scenario.execute();
-//        QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
-//        Trait[] tr = new Trait[]{
-//                new Trait("Red"),
-//                new Trait("White"),
-//                new Trait("Blinking"),
-//                new Trait("Blue"),
-//                new Trait("Soft")};
+ //       Scenario scenario = new Scenario(agent, null, "conj_scenario01.csv", "conj conv001");
+ //       scenario.execute();
+        QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
+        Trait[] tr = new Trait[]{
+                new Trait("Red"),
+                new Trait("White"),
+                new Trait("Blinking"),
+                new Trait("Blue"),
+                new Trait("Soft")};
 
          //simplyModalitiesScenario(agent, qrCodes, tr);
         //or
        // simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        startLifeCycle();
+        startLifeCycle(agent, qrCodes, tr);
 
          //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
@@ -50,11 +50,34 @@ class Main {
         //modalConjunctionsScenario(agent, qrCodes, tr);
     }
 
-    private static void startLifeCycle()
+    private static void startLifeCycle(Agent agent, QRCode[] qrCodes, Trait[] tr)
     {
-        LifeCycle lf = new LifeCycle();
+        LifeCycle lf = new LifeCycle(agent);
         lf.start();
-        lf.stop();
+        agent.getModels().addNameToModel(qrCodes[0], "Bobby");
+        int t = 0;
+        agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+            put(tr[0], true);
+            put(tr[1], false);
+            put(tr[2], false);
+        }}, t++));
+        agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+            put(tr[0], true);
+            put(tr[1], false);
+            put(tr[2], false);
+        }}, t++));
+        agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+            put(tr[0], true);
+            put(tr[1], true);
+            put(tr[2], true);
+        }}, t++));
+        agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+            put(tr[0], true);
+            put(tr[1], null);
+            put(tr[2], null);
+        }}, t++));
+
+
     }
 
     private static void testVoice(Agent agent, QRCode[] qrCodes, Trait[] tr){
