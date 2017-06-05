@@ -24,6 +24,8 @@ public class Scenario {
 
     private static final int FIRST_TRAIT_POS = 2;
     private static final int NAME_POS = 0;
+    private static final char COMMENT_SIGN = '#';
+    private static final String SCENARIO_MARKER = "SCENARIO";
     private Agent agent;
     private Contextualisation contextualisation;
     private List<String> IndModIDs;
@@ -53,24 +55,28 @@ public class Scenario {
         add('#');
     }};
     private String filename;
-    private final int ID_POS=1;
+    private final int ID_POS = 1;
+    private final String DEFINITIONS_MARKER = "DEF";
 
 
     public Scenario(Agent agent, Contextualisation contextualisation, String filename, String
             cnversationName) {
+        this.IMsDefinitions = new HashMap<>();
+        this.IMPositions = new HashMap<>();
+        this.notLoadedObservations = new HashMap<>();
+        notUsedQuestionsAndAnswers = new ArrayList<>();
         this.filename = filename;
         this.agent = agent;
         IndModIDs = new LinkedList<>();
         traits = new ArrayList<>();
         this.conversation = new Conversation(agent, cnversationName, 0, contextualisation);
-        conversation.start();
-        execute();
     }
 
     /**
      * Processes entire file and produces appropriate data structure.
      */
-    private void execute() {
+    public void execute() {
+        conversation.start();
         List<String> readContent;
         try {
             readContent = readContent();
@@ -81,22 +87,30 @@ public class Scenario {
 
         List<List<String>> parsedContent = parseLines(readContent);
         for (List<String> parsedLine : parsedContent) {
-            processLine(parsedLine, parsedContent);
-            System.out.println(parseLine(parsedLine));
+            try {
+                processLine(parsedLine, parsedContent);
+            } catch (InvalidScenarioException e) {
+                Logger.getAnonymousLogger().log(Level.WARNING, "File contains malformed scenario.", e);
+            } catch (InterruptedException e) {
+                Logger.getAnonymousLogger().log(Level.INFO, "Thread was interrupted.", e);
+            }
+            //System.out.println(parseLine(parsedLine));
         }
 
     }
 
-    void processLine(List<String> line, List<List<String>> allLines) throws InvalidScenarioException, InterruptedException {
+    private void processLine(List<String> line, List<List<String>> allLines) throws InvalidScenarioException, InterruptedException {
         if (!shouldBeIgnored(line.get(0))) {
             LINE_TYPE type = determineLineType(line, allLines);
             switch (type) {
                 case IM_DEF:
                     addIMDefinition(line);
-
                     break;
-                case AFFECTED_IMS_DEF:
+                case AFFECTED_IMS_DEF: //feature for "multiobservation"
                     //makeTraitPositionAssoc(line);
+                    break;
+                case SCENARIO_HEADER: //feature for "multiobservation"
+                    break;
                 case SCENARIO_ENTRY:
                     addNewSingleIMObservation(extractTimestamp(line), extractRelatedIndModelID(line),
                             extractStatedTraits(line));
@@ -123,19 +137,18 @@ public class Scenario {
             System.out.println("asking...");
             conversation.addQuestion(notUsedQuestionsAndAnswers.get(0).getKey());
             Thread.sleep(1000);
-            System.out.println("(EXPECTED: "+notUsedQuestionsAndAnswers.get(0).getValue()+")");
+            System.out.println("(EXPECTED: " + notUsedQuestionsAndAnswers.get(0).getValue() + ")");
         }
         notUsedQuestionsAndAnswers.clear();
     }
 
     private void addQuestions(List<String> line) throws InvalidScenarioException {
-        int observationSize=IMsDefinitions.get(extractRelatedIndModelID
-                (line)).getValue().size();
-        int firstQuestionIndex = FIRST_TRAIT_POS + observationSize+1;
+        int observationSize = IMsDefinitions.get(line.get(1)).getValue().size();
+        int firstQuestionIndex = FIRST_TRAIT_POS + observationSize;
         List<String> questionsAndAnswers = line.subList(firstQuestionIndex, line.size());
         if (questionsAndAnswers.size() % 2 != 0)
             throw new InvalidScenarioException("There is a lack of question or answer.");
-        for (int i = firstQuestionIndex; i < line.size(); i+=2) {
+        for (int i = firstQuestionIndex; i < line.size(); i += 2) {
             notUsedQuestionsAndAnswers.add(new Pair<>(line.get(i), line.get(i + 1)));
         }
     }
@@ -147,7 +160,7 @@ public class Scenario {
     private Map<Trait, Boolean> extractStatedTraits(List<String> line) throws InvalidScenarioException {
         Map<Trait, Boolean> res = new HashMap<>();
         List<Trait> relatedTraits = IMsDefinitions.get(line.get(1)).getValue();
-        List<String> traitValues=line.subList(FIRST_TRAIT_POS, FIRST_TRAIT_POS + relatedTraits.size
+        List<String> traitValues = line.subList(FIRST_TRAIT_POS, FIRST_TRAIT_POS + relatedTraits.size
                 ());
         if (relatedTraits.size() != traitValues.size())
             throw new InvalidScenarioException("Value for some trait was not provided");
@@ -164,7 +177,6 @@ public class Scenario {
     }
 
 
-
     private void makeTraitPositionAssoc(List<String> line) {
         /*int nextAvailableIndex = 2;
         for (String id : line) {
@@ -175,8 +187,13 @@ public class Scenario {
     }
 
     private void addIMDefinition(List<String> line) {
-        IMsDefinitions.put(line.get(NAME_POS),
-                new Pair(line.get(ID_POS), extractTraits(line.subList(ID_POS + 1, line.size()))));
+        String id = line.get(ID_POS),
+                name = line.get(NAME_POS);
+        IMsDefinitions.put(name,
+                new Pair(id, extractTraits(line.subList(ID_POS + 1, line.size()))));
+        if (agent.getModels().getRepresentationByName(name) == null)
+            agent.getModels().addNameToModel(new QRCode(id), name);
+
     }
 
     private List<Trait> extractTraits(List<String> traits) {
@@ -190,12 +207,52 @@ public class Scenario {
         return Integer.parseInt(line.get(0));
     }
 
-    private LINE_TYPE determineLineType(List<String> line, List<List<String>> allLines) {
+    private LINE_TYPE determineLineType(List<String> line, List<List<String>> allLines) throws InvalidScenarioException {
+        String first = line.get(0);
+        if (line == null || line.isEmpty() || first.isEmpty())
+            return LINE_TYPE.IGNORABLE;
+        if (first.charAt(0) == COMMENT_SIGN)
+            return LINE_TYPE.COMMENT;
+        if (first.equals(DEFINITIONS_MARKER))
+            return LINE_TYPE.DEF_MARKER;
+        if (first.equals(SCENARIO_MARKER))
+            return LINE_TYPE.SCENARIO_MARKER;
 
+        int currentIndex = spotCurrentIndex(line, allLines);
+        if (currentIndex < 1) throw new InvalidScenarioException("Scenario file should be started with DEF marker.");
+        int scenarioMarkerIndex = findSCENARIOLineNbr(allLines);
+        if (currentIndex > findDEFLineNbr(allLines) && currentIndex < scenarioMarkerIndex)
+            return LINE_TYPE.IM_DEF;
+        if (currentIndex == (scenarioMarkerIndex + 1))
+            return LINE_TYPE.AFFECTED_IMS_DEF;
+        if (currentIndex == (scenarioMarkerIndex + 2))
+            return LINE_TYPE.SCENARIO_HEADER;
+        if (currentIndex > (scenarioMarkerIndex + 2)) {
+            return containsQuestion(line) ? LINE_TYPE.SC_QUESTION_ENTRY : LINE_TYPE.SCENARIO_ENTRY;
+        }
+        return LINE_TYPE.IGNORABLE;
+    }
+
+    private boolean containsQuestion(List<String> line) {
+        return !line.get(line.size() - 1).matches("^\\d*$");
+    }
+
+    private int findDEFLineNbr(List<List<String>> allLines) throws InvalidScenarioException {
+        for (int i = 0; i < allLines.size(); i++)
+            if (allLines.get(i).get(0).equals(DEFINITIONS_MARKER))
+                return i;
+        throw new InvalidScenarioException("Scenario doesn't contain DEF marker.");
+    }
+
+    private int findSCENARIOLineNbr(List<List<String>> allLines) throws InvalidScenarioException {
+        for (int i = 0; i < allLines.size(); i++)
+            if (allLines.get(i).get(0).equals(SCENARIO_MARKER))
+                return i;
+        throw new InvalidScenarioException("Scenario doesn't contain SCENARIO marker.");
     }
 
     private boolean shouldBeIgnored(String line) {
-        return IGNORABLE_SIGN.contains(line.charAt(0));
+        return line == null || line.isEmpty() || IGNORABLE_SIGN.contains(line.charAt(0));
     }
 
     private List<String> readContent() throws IOException {
@@ -206,7 +263,7 @@ public class Scenario {
         }
     }
 
-    List<String> parseLine(String line) {
+    private List<String> parseLine(String line) {
         List<String> fields = new ArrayList<>(Arrays.asList(line.split(";")));
         for (Iterator<String> it = fields.iterator(); it.hasNext(); )
             if (it.next().isEmpty())
@@ -214,7 +271,7 @@ public class Scenario {
         return fields;
     }
 
-    List<List<String>> parseLines(List<String> line) {
+    private List<List<String>> parseLines(List<String> line) {
         List<List<String>> res = new ArrayList<>();
         for (String s : line) {
             res.add(parseLine(s));
@@ -250,6 +307,17 @@ public class Scenario {
 
     }
 
+
+    private int spotCurrentIndex(List<String> line, List<List<String>> allLines) throws InvalidScenarioException {
+        int i = 0;
+        for (List<String> list : allLines) {
+            if (list.containsAll(line))
+                return i;
+            i++;
+        }
+        throw new InvalidScenarioException("Can't ");
+    }
+
     enum LINE_TYPE {
         IM_DEF,
         COMMENT,
@@ -258,6 +326,7 @@ public class Scenario {
         SC_QUESTION_ENTRY,
         DEF_MARKER,
         SCENARIO_MARKER,
-        AFFECTED_IMS_DEF
+        AFFECTED_IMS_DEF,
+        IGNORABLE;
     }
 }

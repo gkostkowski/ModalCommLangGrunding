@@ -76,6 +76,8 @@ public class IMCollection {
     public void addNameToModel(Identifier identifier, String name)
     {
         lexicon.put(name.toLowerCase(), identifier);
+        if (getRepresentationByIdentifier(identifier) == null)
+        individualModelSet.add(new IndividualModel(identifier, identifier.getType()));
     }
 
     /**

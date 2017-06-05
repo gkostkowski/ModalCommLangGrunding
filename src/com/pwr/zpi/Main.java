@@ -23,11 +23,13 @@ class Main {
      */
     static public void main(String... args) throws InterruptedException {
 
-        Scenario scenario = new Scenario("scenario01.csv");
-        //System.out.println(scenario);
+
         //dbLoopTest();
 
-//        Agent agent = new Agent();
+        Agent agent = new Agent();
+//        Scenario scenario = new Scenario(agent, null, "scenario01.csv", "conv001");
+        Scenario scenario = new Scenario(agent, null, "conj_scenario01.csv", "conj conv001");
+        scenario.execute();
 //        QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
 //        Trait[] tr = new Trait[]{
 //                new Trait("Red"),
@@ -40,7 +42,7 @@ class Main {
         //or
        // simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        (new Thread(new LifeCycle())).start();
+        //(new Thread(new LifeCycle())).start();
 
          //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
