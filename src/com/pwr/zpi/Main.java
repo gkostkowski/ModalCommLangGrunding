@@ -23,6 +23,8 @@ class Main {
      */
     static public void main(String... args) throws InterruptedException {
 
+        Scenario scenario = new Scenario("scenario01.csv");
+        //System.out.println(scenario);
         //dbLoopTest();
 
 //        Agent agent = new Agent();
