@@ -64,7 +64,7 @@ public class Listening implements Runnable {
         try {
             listeningServer = new ServerSocket(6666);
             System.out.println("Listening server up");
-            listeningApp = new ProcessBuilder("voice/Listening.exe", "6666", "voice/Grammar.xml").start();
+            listeningApp = new ProcessBuilder("voice/Listening/Listening.exe", "6666", "voice/Listening/Grammar.xml").start();
             listeningClient = listeningServer.accept();
             System.out.println("Listening client connected");
             bufferedReader = new BufferedReader(new InputStreamReader(listeningClient.getInputStream()));
@@ -101,11 +101,13 @@ public class Listening implements Runnable {
             try {
                 String question = bufferedReader.readLine();
                 JSONObject object = new JSONObject(question);
-                questions.add(object.getString("question"));
+                questions.add(object.getString("message"));
+                System.out.println(questions.peek());
             } catch (IOException e) { }
             catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
+
 }

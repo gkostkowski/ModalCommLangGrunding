@@ -1,3 +1,0 @@
-Grammar.xml file allows for recognition of simple and complex sentences which contains defined words. Rule "question"
-should not be modified, as it lines the structure of the sentence. Sentence should be built in following way, where words
-preceded by '*' are optional and words in bracets are chosen from another specific rule

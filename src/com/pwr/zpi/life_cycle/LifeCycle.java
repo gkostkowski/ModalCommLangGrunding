@@ -34,7 +34,7 @@ public class LifeCycle implements Runnable {
     /**
      * static Object foo is used for synchronization between Threads //todo może jednak flagi
      */
-    private static int semaphore = 0;
+    private static Integer semaphore = 0;
 
     private static List<Formula> formulasInProcess;
     /**
@@ -69,12 +69,13 @@ public class LifeCycle implements Runnable {
             if(checkIfNewObservations())
             {
                 acquire(true);
-                updateThread.start();
+         //       updateThread.start();
                 release(true);
             }
             String question = listeningThread.getQuestion();
+            if(question!=null)System.out.println(question);
             if(question!=null)
-                new AnswerThread(talkingThread, question, this);
+                new AnswerThread(talkingThread, question, this, agent);
         }
         System.out.println("Stop life cycle");
     }
@@ -103,7 +104,7 @@ public class LifeCycle implements Runnable {
             thread.start();
         }
     }
-    
+
     /**
      * stops life cycle of agent, but leaves options for resuming it in the future
      */
@@ -145,7 +146,7 @@ public class LifeCycle implements Runnable {
         synchronized (formulasInProcess)
         {
             formulasInProcess.remove(formula);
-            notifyAll();
+            formulasInProcess.notifyAll();
         }
     }
 
@@ -159,14 +160,14 @@ public class LifeCycle implements Runnable {
         {
             while(semaphore >0)
                 try {
-                    wait();
+                    semaphore.wait();
                 } catch (InterruptedException e) { e.printStackTrace(); }
             semaphore--;
         }
         else {
             while(semaphore <0)
                 try {
-                    wait();
+                    semaphore.wait();
                 } catch (InterruptedException e) { e.printStackTrace(); }
             semaphore++;
         }
@@ -176,12 +177,13 @@ public class LifeCycle implements Runnable {
      * method releases blockage and allows other threads to access resources
      * @param isMemoryUpdateThread  true if releasing thread is the memory update one
      */
-    public synchronized void release(boolean isMemoryUpdateThread)
+    public void release(boolean isMemoryUpdateThread)
     {
-        if(isMemoryUpdateThread)
-            semaphore++;
-        else semaphore--;
-        notifyAll();
+        synchronized (semaphore) {
+            if (isMemoryUpdateThread)
+                semaphore++;
+            else semaphore--;
+        }
     }
 
 

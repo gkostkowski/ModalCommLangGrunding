@@ -37,12 +37,13 @@ public class AnswerThread implements Runnable {
      * @param question  asked question
      * @param lifeCycle reference to life_cycle thread instance
      */
-    public AnswerThread(Talking talking, String question, LifeCycle lifeCycle)
+    public AnswerThread(Talking talking, String question, LifeCycle lifeCycle, Agent agent)
     {
         this.question = question;
+        this.agent = agent;
         talkingThread = talking;
         this.lifeCycle = lifeCycle;
-        Thread thread = new Thread(this);
+        Thread thread = new Thread(this, "AnswerThread");
         thread.start();
     }
 

@@ -95,6 +95,8 @@ class QuestionTest extends GroovyTestCase {
         shouldFail {question.getFormula()}
         question = new Question("Is pepe pan dziobak either black or not soft", agent)
         shouldFail {question.getFormula()}
+        question = new Question("Is Zenek either red",agent)
+        shouldFail {question.getFormula()}
     }
 
 }

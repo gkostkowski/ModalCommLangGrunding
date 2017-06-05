@@ -11,6 +11,7 @@ public class InvalidQuestionException extends Exception {
     public static final int NO_OPERATOR = 4;
     public static final int NO_QUESTION = 5;
     public static final int WRONG_STATES = 6;
+    public static final int WRONG_STRUCTURE = 7;
 
     private int mistake = 0;
 
@@ -44,6 +45,7 @@ public class InvalidQuestionException extends Exception {
             case NO_OPERATOR: return "No operator";
             case NO_QUESTION: return "When you finally decide what you want to ask, then come again";
             case WRONG_STATES: return "Negations cannot be used with alternative";
+            case WRONG_STRUCTURE: return "question cannot be asked that way";
             case 0: return "Something wrong";
             default: return null;
         }

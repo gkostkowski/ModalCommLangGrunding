@@ -68,7 +68,7 @@ public class Talking implements Runnable {
         {
             talkingServer = new ServerSocket(6667);
             System.out.println("Talking server up");
-            talkingApp = new ProcessBuilder("voice/Talking.exe", "6667").start();
+            talkingApp = new ProcessBuilder("voice/Talking/Talking.exe", "6667").start();
             talkingClient = talkingServer.accept();
             System.out.println("Talking client connected");
             printWriter = new PrintWriter(talkingClient.getOutputStream(), true);
@@ -106,7 +106,7 @@ public class Talking implements Runnable {
                 while(answers.isEmpty())
                     Thread.sleep(500);
                 JSONObject object = new JSONObject();
-                object.put("question", answers.remove());
+                object.put("message", answers.remove());
                 printWriter.println(object.toString());
                 printWriter.flush();
                 Thread.sleep(500);
