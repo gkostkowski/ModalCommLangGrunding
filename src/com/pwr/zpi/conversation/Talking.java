@@ -67,10 +67,10 @@ public class Talking implements Runnable {
         try
         {
             talkingServer = new ServerSocket(6667);
-            Logger.getAnonymousLogger("Talking server up");
+            System.out.println("Talking server up");
             talkingApp = new ProcessBuilder("voice/Talking.exe", "6667").start();
             talkingClient = talkingServer.accept();
-            Logger.getAnonymousLogger("Talking client connected");
+            System.out.println("Talking client connected");
             printWriter = new PrintWriter(talkingClient.getOutputStream(), true);
             if(thread == null)
             {
@@ -89,13 +89,11 @@ public class Talking implements Runnable {
     {
         RUNNING = false;
         try {
-            printWriter.close();
             talkingClient.close();
             talkingServer.close();
             talkingApp.destroy();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            System.out.println("Talking service stopped");
+        } catch (IOException e) {}
     }
     /**
      * thread runs while RUNNING is true and sends given answers through socket in form of JSON object
@@ -118,6 +116,4 @@ public class Talking implements Runnable {
             }
         }
     }
-
-
 }

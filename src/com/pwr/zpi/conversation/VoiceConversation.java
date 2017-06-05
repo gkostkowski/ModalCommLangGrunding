@@ -87,7 +87,6 @@ public class VoiceConversation implements Runnable {
             running = true;
             thread.start();
         }
-
     }
 
     /**
@@ -98,8 +97,6 @@ public class VoiceConversation implements Runnable {
         if(thread!=null)
             running = false;
     }
-
-
 
 }
 

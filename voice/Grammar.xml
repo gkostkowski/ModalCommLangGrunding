@@ -30,6 +30,9 @@
 
   <rule id="restOfSentence" scope="public">
     <item repeat="0-1">
+      <item> either </item>
+    </item>
+    <item repeat="0-1">
       <item> not </item>
     </item>
     <ruleref uri="#traits"/>

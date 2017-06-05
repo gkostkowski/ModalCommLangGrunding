@@ -65,7 +65,7 @@ public class AnswerThread implements Runnable {
                     e.printStackTrace();
                 }
             Map<Formula, ModalOperator> map;
-            lifeCycle.take(false);
+            lifeCycle.acquire(false);
             map = Grounder.performFormulaGrounding(agent, formula);
             lifeCycle.release(false);
             lifeCycle.removeFromFormulasInProccess(formula);

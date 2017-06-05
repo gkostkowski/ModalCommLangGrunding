@@ -40,7 +40,7 @@ public class Listening implements Runnable {
     /**
      * The listeningApp Process - client application with voice recognition engine
      */
-    private Process listeingApp;
+    private Process listeningApp;
     /**
      * The bufferedReader BufferedReader reads for information passed from listeningApp
      */
@@ -63,10 +63,10 @@ public class Listening implements Runnable {
             questions = new LinkedList<>();
         try {
             listeningServer = new ServerSocket(6666);
-            Logger.getAnonymousLogger("Listening server up");
-            listeingApp = new ProcessBuilder("voice/Listening.exe", "6666", "voice/Grammar.xml").start();
+            System.out.println("Listening server up");
+            listeningApp = new ProcessBuilder("voice/Listening.exe", "6666", "voice/Grammar.xml").start();
             listeningClient = listeningServer.accept();
-            Logger.getAnonymousLogger("Listening client connected");
+            System.out.println("Listening client connected");
             bufferedReader = new BufferedReader(new InputStreamReader(listeningClient.getInputStream()));
             if (thread == null) {
                 thread = new Thread(this, "Listening");
@@ -74,7 +74,7 @@ public class Listening implements Runnable {
                 thread.start();
             }
         } catch (IOException e) {
-            Logger.getAnonymousLogger("Could not start listening service");
+            System.out.println("Could not start listening service");
         }
     }
 
@@ -85,13 +85,11 @@ public class Listening implements Runnable {
     public void stop() {
         RUNNING = false;
         try {
-            bufferedReader.close();
             listeningClient.close();
             listeningServer.close();
-            listeingApp.destroy();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            listeningApp.destroy();
+            System.out.println("Listening service stopped");
+        } catch (IOException e) {}
     }
 
     /**
@@ -104,9 +102,8 @@ public class Listening implements Runnable {
                 String question = bufferedReader.readLine();
                 JSONObject object = new JSONObject(question);
                 questions.add(object.getString("question"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException e) { }
+            catch (JSONException e) {
                 e.printStackTrace();
             }
         }

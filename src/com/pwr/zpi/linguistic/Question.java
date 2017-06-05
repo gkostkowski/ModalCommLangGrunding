@@ -71,6 +71,7 @@ public class Question {
             throw new InvalidQuestionException(InvalidQuestionException.NO_QUESTION);
         List<Trait> traits = new ArrayList<>();
         List<State> states = new ArrayList<>();
+        boolean isXOR = false;
         findIndividualModel();
         if(parts[index].equalsIgnoreCase("not"))
         {
@@ -78,6 +79,11 @@ public class Question {
             index++;
         }
         else states.add(State.IS);
+        if(parts[index].equalsIgnoreCase("either"))
+        {
+            isXOR = true;
+            index++;
+        }
         traits.add(findTraits(1));
         if(index<length)
         {
@@ -85,6 +91,7 @@ public class Question {
             switch (parts[index].toLowerCase())
             {
                 case "and": op = LogicOperator.AND; break;
+                case "or": op = (isXOR)? LogicOperator.XOR : LogicOperator.OR; break;
                 default: throw new InvalidQuestionException(InvalidQuestionException.NO_OPERATOR);
             }
             index++;
@@ -94,7 +101,9 @@ public class Question {
             }
             else states.add(State.IS);
             traits.add(findTraits(2));
-            return new ComplexFormula(individualModel, traits, states, op);
+            if(checkValidityOfStatesInAltenrative(op, states))
+                return new ComplexFormula(individualModel, traits, states, op);
+            else throw new InvalidQuestionException(InvalidQuestionException.WRONG_STATES);
         }
         else return new SimpleFormula(individualModel, traits, states);
     }
@@ -146,6 +155,14 @@ public class Question {
                 throw new InvalidQuestionException(InvalidQuestionException.NO_FIRST_TRAIT);
             else throw new InvalidQuestionException(InvalidQuestionException.NO_SECOND_TRAIT);
         return trait;
+    }
+
+    private boolean checkValidityOfStatesInAltenrative(LogicOperator op, List<State> states)
+    {
+        if(op==LogicOperator.OR || op==LogicOperator.XOR)
+            if(states.get(0)==State.IS_NOT || states.get(1)==State.IS_NOT)
+                return false;
+        return true;
     }
 
 }

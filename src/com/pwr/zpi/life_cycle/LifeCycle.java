@@ -53,7 +53,7 @@ public class LifeCycle implements Runnable {
         {
             if(checkIfNewObservations())
             {
-                take(true);
+                acquire(true);
                 updateThread.start();
                 release(true);
             }
@@ -61,6 +61,7 @@ public class LifeCycle implements Runnable {
             if(question!=null)
                 new AnswerThread(talkingThread, question, this);
         }
+        System.out.println("Stop life cycle");
     }
 
     private boolean checkIfNewObservations() {
@@ -82,7 +83,7 @@ public class LifeCycle implements Runnable {
         talkingThread.start();
         if(thread==null)
         {
-            thread = new Thread(this, "life_cycle");
+            thread = new Thread(this, "life cycle");
             RUNNING = true;
             thread.start();
         }
@@ -101,7 +102,7 @@ public class LifeCycle implements Runnable {
     /**
      * stops life cycle of agent, but leaves options for resuming it in the future
      */
-    private void stop()
+    public void stop()
     {
         RUNNING = false;
         if(thread!=null)
@@ -147,7 +148,7 @@ public class LifeCycle implements Runnable {
      * method which blocks access for specific threads
      * @param isMemoryUpdateThread  true if blocking thread is the memory update thread
      */
-    public synchronized void take(boolean isMemoryUpdateThread)
+    public synchronized void acquire(boolean isMemoryUpdateThread)
     {
         if(isMemoryUpdateThread)
         {

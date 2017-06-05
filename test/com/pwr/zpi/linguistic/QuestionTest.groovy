@@ -53,6 +53,10 @@ class QuestionTest extends GroovyTestCase {
         assert question1.getFormula().equals(new SimpleFormula(model2, trait2, true))
         question1 = new Question("Is pepe pan dziobak not black and soft", agent)
         assert question1.getFormula().equals(new ComplexFormula(model2, [trait2, trait3], [State.IS_NOT, State.IS], LogicOperator.AND))
+        question1 = new Question("Is pepe pan dziobak black or soft", agent)
+        assert  question1.getFormula().equals(new ComplexFormula(model2, [trait2, trait3], [State.IS, State.IS], LogicOperator.OR))
+        question1 = new Question("Is pepe pan dziobak either black or soft", agent)
+        assert  question1.getFormula().equals(new ComplexFormula(model2, [trait2, trait3], [State.IS, State.IS], LogicOperator.XOR))
     }
 
     @Test
@@ -88,6 +92,8 @@ class QuestionTest extends GroovyTestCase {
     void testWrongOperator()
     {
         def question = new Question("Is Zenek red ond black", agent)
+        shouldFail {question.getFormula()}
+        question = new Question("Is pepe pan dziobak either black or not soft", agent)
         shouldFail {question.getFormula()}
     }
 

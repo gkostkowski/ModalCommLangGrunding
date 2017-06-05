@@ -23,7 +23,6 @@ class Main {
      */
     static public void main(String... args) throws InterruptedException {
 
-
         //dbLoopTest();
 
         Agent agent = new Agent();
@@ -42,13 +41,20 @@ class Main {
         //or
        // simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        //(new Thread(new LifeCycle())).start();
+        startLifeCycle();
 
          //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
         // is present in db after launching one of them, so they can't be used together.
 
         //modalConjunctionsScenario(agent, qrCodes, tr);
+    }
+
+    private static void startLifeCycle()
+    {
+        LifeCycle lf = new LifeCycle();
+        lf.start();
+        lf.stop();
     }
 
     private static void testVoice(Agent agent, QRCode[] qrCodes, Trait[] tr){
