@@ -133,7 +133,7 @@ public class LifeCycle implements Runnable {
      * @param formula   to which currently processed formula are compared
      * @return true if none was found, false if similar was found
      */
-    private boolean canFormulaBeProccessed(Formula formula)
+    public static boolean canFormulaBeProccessed(Formula formula)
     {
         synchronized (formulasInProcess) {
             for (Formula f : formulasInProcess) {
@@ -141,7 +141,6 @@ public class LifeCycle implements Runnable {
                     return false;
             }
             formulasInProcess.add(formula);
-            System.out.println("Adding formula");
             return true;
         }
     }
@@ -152,12 +151,10 @@ public class LifeCycle implements Runnable {
      */
     public void removeFromFormulasInProccess(Formula formula)
     {
-        System.out.println("removing");
         synchronized (formulasInProcess)
         {
             formulasInProcess.remove(formula);
             formulasInProcess.notifyAll();
-            System.out.println("removed");
         }
     }
 

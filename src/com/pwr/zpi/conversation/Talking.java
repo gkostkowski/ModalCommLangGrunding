@@ -136,6 +136,6 @@ public class Talking implements Runnable {
      */
     private int getTimeToWait(int length)
     {
-        return (length/100+1)*6000;
+        return (length/50+1)*3000;
     }
 }
