@@ -86,7 +86,7 @@ public interface Holon {
 
     /** Returns context which was used to build grounding sets for this holon.*/
     Contextualisation getContextualisation();
-
+    Integer getTimestamp();
     enum HolonKind{
         Binary,
         Non_Binary
