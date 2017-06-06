@@ -15,22 +15,22 @@ import java.util.Set;
 
 public class HolonCollection {
 
-    private Set<Holon> holonCollection;
+    private Set<Holon> holonsCollection;
 
     public HolonCollection()
     {
-        holonCollection = new HashSet<>();
+        holonsCollection = new HashSet<>();
     }
 
     */
 /**
      * Constructor which sets a set of Holons in Collection
-     * @param holonCollection
+     * @param holonsCollection
      *//*
 
-    public HolonCollection(Set<Holon> holonCollection)
+    public HolonCollection(Set<Holon> holonsCollection)
     {
-        this.holonCollection = holonCollection;
+        this.holonsCollection = holonsCollection;
     }
 
 
@@ -44,7 +44,7 @@ public class HolonCollection {
      *//*
 
     public Holon getHolon(Formula formula, Agent agent, int timeStamp){
-        for(Holon h:holonCollection){
+        for(Holon h:holonsCollection){
             if(h.getFormula().get(0).isFormulaSimilar(formula)){
                 return h;
             }
@@ -68,7 +68,7 @@ public class HolonCollection {
             if(formula instanceof SimpleFormula)
                 holon = new BinaryHolon(new DistributedKnowledge(agent, formula, timestamp, true));
             else holon = new NonBinaryHolon(new DistributedKnowledge(agent, formula, timestamp, true));
-            holonCollection.add(holon);
+            holonsCollection.add(holon);
         } catch (InvalidFormulaException e) {
             e.printStackTrace();
         } catch (NotApplicableException e) {
@@ -80,7 +80,7 @@ public class HolonCollection {
     }
 
     public void updateBeliefs(Agent agent, int timestamp) throws InvalidFormulaException, NotConsistentDKException, NotApplicableException {
-        for(Holon h : holonCollection){
+        for(Holon h : holonsCollection){
             h.update(new DistributedKnowledge(agent, h.getFormula().get(0), timestamp, true));
         }
     }
@@ -89,7 +89,7 @@ public class HolonCollection {
 /*
     public Holon findHolon(Formula formula, Agent agent, int timestamp)
     {
-        for(Holon holon : holonCollection)
+        for(Holon holon : holonsCollection)
             if(holon.getFormula().equals(formula))
                 return holon;
         return addHolon(formula, agent, timestamp);
@@ -104,7 +104,7 @@ public class HolonCollection {
  * Wprowadzone zmiany względem starego HolonCollection:
  * - głowna zmiana - dodanie referencji agenta jako atrybutu - kolekcja holonow jest tworzona dla konkretnego agenta
  * dlatego lepiej zapamietac go i wywolywac pozniejsze metody przekazujac te referencje niz kazac przy wywolaniu podawac
- * agenta ktory i tak nie moze byc inny niz wlasciciel tej holonCollection
+ * agenta ktory i tak nie moze byc inny niz wlasciciel tej holonsCollection
  * - jakieś kosmetyczne poprawki
  */
 package com.pwr.zpi.holons;
@@ -228,5 +228,9 @@ public class HolonCollection {
 
     public Contextualisation getHolonsContextualisation() {
         return holonsContextualisation;
+    }
+
+    public Set<Holon> getHolonCollection() {
+        return holonCollection;
     }
 }

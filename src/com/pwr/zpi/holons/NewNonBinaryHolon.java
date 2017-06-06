@@ -15,6 +15,16 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
+
+/**
+ * This class implements non-binary holon which is related to complex formulas and provides summarization them.
+ * Foundations for non-binary holon are related with conjunctive grounding sets and respective relative cardinality.
+ * In case of disjunctions (simple and exclusive) entire summarization can be calculated when basing on respective
+ * conjunctive summarizations. Thus, holons for disjunctions are not generated directly, but with usage of already created
+ * conjunctive holons.
+ * Note: Important contract is that due to above conditions, values stored in holon are not accessed directly, but through
+ * HolonsIntercessor.
+ */
 public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
     /**
      * Note: formula is given in standard form, namely: without any negations.
@@ -65,6 +75,11 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
     @Override
     public Map<Formula, Double> getSummaries() {
         return summaries;
+    }
+
+    @Override
+    public Map<Formula, Double> getSummaries(List<Formula> selectedFormulas) {
+        return null;
     }
 
     @Override

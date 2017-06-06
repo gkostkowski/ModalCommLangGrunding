@@ -146,17 +146,22 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
 
     @Override
     public List<Formula> getComplementaryFormulas() throws InvalidFormulaException {
-        switch (getType()) {
-            case MODAL_CONJUNCTION:
-                return getConjunctionComplementaryFormulas();
-            case MODAL_DISJUNCTION:
-            case MODAL_EXCLUSIVE_DISJUNCTION:
-                return getDisjunctionComplementaryFormulas();
-            default:
-                return null;
-        }
+        List<Formula> res = new ArrayList<>();
+
+        State[][] newStates = new State[][]{
+                {states.get(0), states.get(1)},
+                {states.get(0).not(), states.get(1)},
+                {states.get(0), states.get(1).not()},
+                {states.get(0).not(), states.get(1).not()}
+        };
+        for (int i = 0; i < COMPLEMENTARY_CONJ_FORMULAS_NUMBER; i++)
+            res.add(new ComplexFormula(individualModel, traits, Arrays.asList(newStates[i]), operator));
+        return res;
     }
 
+    private List<Formula> getExDisjunctionComplementaryFormulas() {
+        return null;
+    }
 
 
     /**
@@ -302,19 +307,6 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
         return val1 > val2 ? 1 : (val1 < val2 ? -1 : 0);
     }
 
-    private List<Formula> getConjunctionComplementaryFormulas() throws InvalidFormulaException {
-        List<Formula> res = new ArrayList<>();
-
-        State[][] newStates = new State[][]{
-                {states.get(0), states.get(1)},
-                {states.get(0).not(), states.get(1)},
-                {states.get(0), states.get(1).not()},
-                {states.get(0).not(), states.get(1).not()}
-        };
-        for (int i = 0; i < COMPLEMENTARY_CONJ_FORMULAS_NUMBER; i++)
-            res.add(new ComplexFormula(individualModel, traits, Arrays.asList(newStates[i]), operator));
-        return res;
-    }
 
 
     private List<Formula> getDisjunctionComplementaryFormulas() throws InvalidFormulaException {
@@ -325,14 +317,15 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
     }
 
     /**
-     * Method is used to point out exact formulas which should be used for building grounding set. It has application
-     * in case of disjunction where grounding sets are composed of more than one conjunctive grounding set. In case
-     * of simply modalities and conjunctions method should return formula which is provided as parameter.
+     * Method is used to point out exact formulas which should be used in grounding process for formulas processed
+     * in an indirect way. This situation takes place for disjunctions which use conjunctions.
+     * Such formulas can be used for building grounding set or retrieving summarization.
+     * In case of disjunction grounding sets, these are composed of more than one conjunctive grounding set.
      *
-     * @return Array of partial formulas used in exact grounding.
+     * @return Array of bind formulas used in exact grounding.
      */
     @Override
-    public List<Formula> getPartialFormulas() {
+    public List<Formula> getDependentFormulas() {
 
         if (getType().equals(Type.MODAL_CONJUNCTION))
             return Arrays.asList(new Formula[]{this});

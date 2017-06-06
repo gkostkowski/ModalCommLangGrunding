@@ -1,6 +1,7 @@
 package com.pwr.zpi.language;
 
-
+//todo usunac i uzywac klasy ze standardu
+@Deprecated
 public class Pair<K, V> {
 
     final K Case;

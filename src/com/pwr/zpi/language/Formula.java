@@ -33,12 +33,32 @@ public abstract class Formula {
     public abstract Formula getStandardFormula() throws InvalidFormulaException;
 
     /**
-     * Method is used to point out exact formulas which should be used for building grounding set. It has application
-     * in case of disjunction where grounding sets are composed of more than one conjunctive grounding set. In case
-     * of simply modalities and conjunctions method should return formula which is provided as parameter.
-     * @return Array of partial formulas used in exact grounding.
+     * Method is used to point out exact formulas which should be used in grounding process for formulas processed
+     * in an indirect way. This situation takes place for disjunctions which use conjunctions.
+     * Such formulas can be used for building grounding set or retrieving summarization.
+     * In case of disjunction grounding sets, these are composed of more than one conjunctive grounding set.
+     * In case of simply modalities and conjunctions method should return formula which is provided as parameter.
+     * @return Array of bind formulas used in exact grounding.
      */
-    public abstract List<Formula> getPartialFormulas();
+    public abstract List<Formula> getDependentFormulas();
+
+    /**
+     * Method creates new formula, based on this one, where the only one difference is logic operator given as parameter.
+     * @param newOperator
+     * @return
+     */
+    public ComplexFormula transformTo(LogicOperator newOperator) throws InvalidFormulaException {
+        return new ComplexFormula(getModel(), getTraits(), getStates(), newOperator);
+    }
+
+    /**
+     * Determines if checking for epistemic fulfillment relationship should also perform checking related with
+     * epsilon-concentration.
+     * @return
+     */
+    public boolean needEpsilonConcentrationChecking() {
+        return getType().equals(Type.MODAL_DISJUNCTION) || getType().equals(Type.MODAL_EXCLUSIVE_DISJUNCTION);
+    }
 
     /**
      * Gives list of successive states. Classic case will contains states which describe whether parts of formula[traits]
@@ -50,7 +70,7 @@ public abstract class Formula {
     public enum Type {
         SIMPLE_MODALITY,
         MODAL_CONJUNCTION,
-        MODAL_DISJUNCTION, MODAL_EXCLUSIVE_DISJUNCTION
+        MODAL_DISJUNCTION, MODAL_EXCLUSIVE_DISJUNCTION;
     }
 
     abstract boolean equals(Formula other);
@@ -101,4 +121,13 @@ public abstract class Formula {
 
     abstract public boolean isFormulaSimilar(Formula formula);
 
+    /**
+     * Method determines if holons for such this formula should be build <<b>in a direct way</b> (from grounding sets)
+     * or with company of others holons. It's determined based on this formula type. Only holons for simple modalities
+     * and modal conjunctions are built in direct way.
+     * @return
+     */
+    public boolean usesDirectHolonConstruction() {
+        return getType().equals(Type.SIMPLE_MODALITY) || getType().equals(Type.MODAL_CONJUNCTION);
+    }
 }

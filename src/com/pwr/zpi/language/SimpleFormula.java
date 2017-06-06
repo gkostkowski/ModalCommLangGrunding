@@ -201,7 +201,8 @@ public class SimpleFormula extends Formula {
      * @return Array of partial formulas used in exact grounding.
      */
     @Override
-    public List<Formula> getPartialFormulas() {
+    public List<Formula> getDependentFormulas() {
         return Arrays.asList(new Formula[]{this});
     }
+
 }

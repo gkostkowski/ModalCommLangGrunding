@@ -9,6 +9,7 @@ import com.pwr.zpi.exceptions.InvalidQuestionException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.HolonCollection;
+import com.pwr.zpi.holons.HolonsIntercessor;
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.io.DatabaseAO;
 import com.pwr.zpi.language.ComplexFormula;
@@ -33,9 +34,9 @@ public class Agent {
     private BPCollection knowledgeBase;
     private IMCollection models;
     /**
-     * Contains map of collections of holons built according to different contexts
+     * Agent interacts with knowledge summarization (holons) through HolonsIntercessor object.
      */
-    private HolonCollection holonsCollection;
+    private HolonsIntercessor holonsIntercessor;
     private DatabaseAO database;
     public static Collection<ObjectType> objectTypeCollection;
 
@@ -44,14 +45,14 @@ public class Agent {
         init();
         knowledgeBase = new BPCollection();
         Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
-        holonsCollection = new HolonCollection(this, contextualisation);
+        holonsIntercessor = new HolonsIntercessor(this, contextualisation);
         database = new DatabaseAO();
     }
 
     /*public Agent(String databaseFilename) {
         init();
         knowledgeBase = new BPCollection();
-        holonsCollection = new HolonCollection();
+        holonsIntercessor = new HolonsIntercessor();
         database = new DatabaseAO(this, databaseFilename);
     }*/
 
@@ -60,9 +61,9 @@ public class Agent {
         this.knowledgeBase = knowledgeBase;
 //        Contextualisation contextualisation = null; //todo podawanie odpowiedniego typu kontekstu
         Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
-        holonsCollection = new HolonCollection(this, contextualisation);
+        holonsIntercessor = new HolonsIntercessor(this, contextualisation);
 
-        //holonsCollection = new HolonCollection(this, contextualisation);
+        //holonsIntercessor = new HolonsIntercessor(this, contextualisation);
     }
 
     public Agent(BPCollection knowledgeBase, IMCollection models) {
@@ -71,15 +72,15 @@ public class Agent {
         this.knowledgeBase = knowledgeBase;
 //        Contextualisation contextualisation = null; //todo podawanie odpowiedniego typu kontekstu
         Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
-        holonsCollection = new HolonCollection(this, contextualisation);
+        holonsIntercessor = new HolonsIntercessor(this, contextualisation);
     }
 
-    public Agent(BPCollection knowledgeBase, IMCollection models, HolonCollection holons) {
-        if (knowledgeBase == null || models == null || holons == null)
+    public Agent(BPCollection knowledgeBase, IMCollection models, HolonsIntercessor holonsIntercessor) {
+        if (knowledgeBase == null || models == null || holonsIntercessor == null)
             throw new NullPointerException();
         this.knowledgeBase = knowledgeBase;
         this.models = models;
-        holonsCollection = holons;
+        this.holonsIntercessor = holonsIntercessor;
     }
 
     /**
@@ -108,12 +109,12 @@ public class Agent {
         this.models = models;
     }
 
-    public HolonCollection getHolons() {
-        return holonsCollection;
+    public HolonCollection getHolon() {
+        return holonsIntercessor.getHolonsCollection();
     }
 
     public Contextualisation getContextualisationMethod() {
-        return holonsCollection.getHolonsContextualisation();
+        return holonsIntercessor.getHolonsContextualisation();
     }
 
     @Deprecated //uzywamy updateMemory()
@@ -245,9 +246,9 @@ public class Agent {
     public void updateBeliefs(){
         try {
             System.out.print("Updating beliefs for t="+knowledgeBase.getTimestamp()+"...");
-            holonsCollection.updateBeliefs(knowledgeBase.getTimestamp());
+            holonsIntercessor.updateBeliefs(knowledgeBase.getTimestamp());
             System.out.println("Done.");
-        } catch (InvalidFormulaException | NotConsistentDKException | NotApplicableException e) {
+        } catch (InvalidFormulaException | NotApplicableException e) {
             System.out.println("Agent was not able to update holons.");
         }
     }
@@ -260,7 +261,7 @@ public class Agent {
 
     /**
      * Methods for testing purposes: adds given observation to database,
-     * then updates episodic memory (fetches new observations) and updates holonsCollection.
+     * then updates episodic memory (fetches new observations) and updates holonsIntercessor.
      * Semantic memory is also updated (if required) during updating episodic memory.
      */
     public void addAndUpdate(Observation[] observations) {
@@ -287,5 +288,9 @@ public class Agent {
             voiceConversation.setCurrentAnswer(Question.DEFAULT_FAILURE_ANSWER);
         }
         voiceConversation.setCurrentAnswer(ss.generateStatement());
+    }
+
+    public Map<Formula, Double> getSummarization(Formula currFormula, int timestamp) {
+        holonsIntercessor.getSummaries(currFormula, timestamp);
     }
 }

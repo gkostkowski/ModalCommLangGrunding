@@ -12,35 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Holon is representation of agent's reflections on gathered observations. Agent is suppoused to form Holons based
- *  on Traits or Formulas. Holon returns Operator(BEL,POS,KNOW,NOT) ,which has been most frequent in most observations.
- *
- */
-
-/*
-
-
-public abstract class Holon{
-    public abstract void update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException;
-    public abstract Pair getStrongest();
-    public abstract Pair getWeakest();
-    public abstract HolonKind getKind();
-    public abstract List<Formula> getFormula();
-    public abstract boolean isApplicable(Formula f) throws InvalidFormulaException;
-    public enum HolonKind{
-        Binary,
-        Non_Binary
-    }
-
-}
-
-*/
-
-/*Zmiany:
-* -nie ma potrzeby uzycia klasy abstrakcyjnej bo wszystkie metody sa abstrakcyjne
-* */
-
-/**
  * Shared interface for holons which are placed inside agent and represent embedded summarization of empirical
  * episodic experiences gathered by this agent. Each holon relates to particular experiences with strictly defined objects.
  * Thus, there is different holon for each formula considered by agent.
@@ -54,7 +25,14 @@ public interface Holon {
 
     Double getSummary(Formula formula);
 
+    /**
+     * Returns map of all summaries.
+     */
     Map<Formula, Double> getSummaries();
+    /**
+     * Returns map of summaries only for given Formulas.
+     */
+    Map<Formula, Double> getSummaries(List<Formula> selectedFormulas);
 
     /**
      * Returns list of complementary formulas which were used when building this holon.
