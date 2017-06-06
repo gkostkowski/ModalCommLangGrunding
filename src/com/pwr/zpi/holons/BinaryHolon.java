@@ -4,6 +4,9 @@ package com.pwr.zpi.holons;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.holons.contextv2.CompositeContext;
+import com.pwr.zpi.holons.contextv2.DistanceFunction;
+import com.pwr.zpi.holons.contextv2.distance.DistanceFunction1;
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.*;
 
@@ -15,35 +18,26 @@ import java.util.Set;
  * Represents belief on simple formula.
  *
  */
-public class BinaryHolon implements Holon {
+public class BinaryHolon implements Holon,Comparable<BinaryHolon> {
     /**
      * Represents ratio of IS,Is_Not and Mayhaps observations
      */
     protected Pair<Double, Double> Tao;
     protected List<Formula> formula;
+    protected  Map<Formula, Set<BaseProfile>> currContext;
+    protected Contextualisation context;
+    protected int timestamp;
 
-    public BinaryHolon(DistributedKnowledge dk, Contextualisation contextualisation) throws InvalidFormulaException, NotApplicableException {
+    public BinaryHolon(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
         this.formula = dk.getComplementaryFormulas();
-        Map<Formula, Set<BaseProfile>> contextualisedGroundedSets = contextualisation.performContextualisation(dk.mapOfGroundingSets());
-        //update(contextualisedGroundedSets); //todo
+        DistanceFunction f1 = new DistanceFunction1();
+        Contextualisation cj = new CompositeContext(f1,3);
+
+        cj.setMaxThreshold(8);
+        context = cj;
+        timestamp = dk.getTimestamp();
+        update(dk);
     }
-
-    // Odświeżenie Holonu odbywa się w pewnym momencie czasu (Nocy).
-    //  I.Wersja 1 , Bierzemy wszystkie BaseProfile które pamiętamy ,zbieramy profile dla formuły i wrzucamy do Groundera,Tao odzwierciedla przekonanie na temat formuły. Dopóki nie uznamy,że czas minął
-    // korzystamy ze starego Tao,do momentu update'u. Nawet jeśli nie odzwierciedla ostatnich obserwacji.
-    //  II. Wersja 2 Bierzemy BaseProfile od danego momentu w czasie ,aby nie bawić się w najstarsze.Reszta jak w I.
-    //  III. Wersja 3  Bierzemy BaseProfile dla wszystkich czasów(Od czasu ostatniego update'a). Dla każdego momentu czasu jaki rozważamy bierzemy profile i wrzucamy do groundera.Tao odzwierciedla np. 10 ostatnich obserwacji
-    //  na temat formuły .Dopóki nie postanowimy zadać kolejnej sesji odświeżania korzystamy ze starego Tao. Podczas kolejnego odświeżenia najstarsze wpisy są zapominane. Holon nie jest updatowany na żywo.
-
-    // Zapominanie do zaimplementowania
-    // Jednak potrzebujemy wszystkich profili bazowych. ++
-    // TaoList można wyrzucić
-
-    //Distributed Knowledge <- I z nich wyciągamy profile bazowe <- które tworzymy z Agenta + formulę i hurrej
-    // W agencie można zrobić metodę ,która tworzy distributed Knowledge
-
-    //Pamięć przedświadoma
-    //Pamięć świadoma
 
 
     /**
@@ -54,19 +48,22 @@ public class BinaryHolon implements Holon {
      */
     public boolean update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
 
+
         if (dk.getFormula().getType() != Formula.Type.SIMPLE_MODALITY) {
             throw new InvalidFormulaException();
         } else {
             double sumPositive = 0;
             double sumNegative = 0;
             if (((SimpleFormula) dk.getComplementaryFormulas().get(0)).isNegated()) {
-                sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getComplementaryFormulas().get(0));
-                sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1));
+                currContext = context.performContextualisation(dk.mapOfGroundingSets());
+                sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getComplementaryFormulas().get(0),currContext);
+                sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1),currContext);
             } else {
-                sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1));
-                sumPositive += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0));
+                currContext = context.performContextualisation(dk.mapOfGroundingSets());
+                sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1),currContext);
+                sumPositive += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0),currContext);
             }
-            //System.out.println(sumNegative + " " + sumPositive + " " + dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp()));
+            System.out.println(sumNegative + " " + sumPositive + " " + dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp()));
             Tao = new Pair<Double, Double>(sumPositive,sumNegative);
         }
         return true;
@@ -163,8 +160,24 @@ public class BinaryHolon implements Holon {
     /**
      * Returns context which was used to build grounding sets for this holon.
      */
+
     @Override
+    public Integer getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public int compareTo(BinaryHolon o) {
+        double res=0, res2=0;
+        for (Formula f:formula) {
+            res = f.hashCode() ;
+        }
+
+        for (Formula f:o.getFormula()) {
+            res2 = f.hashCode() ;
+        }
+        return res > res2 ? 1: (res < res2 ? -1 : 0);}
     public Contextualisation getContextualisation() {
-        return null; //todo
+        return context;
     }
 }
