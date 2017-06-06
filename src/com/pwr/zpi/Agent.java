@@ -205,12 +205,12 @@ public class Agent {
      * observation saved in agent database in program for processing.
      */
     public void discoverObservations(Collection<Observation> newObservations) {
-        System.out.println("Discovering new observations ...");
+        Logger.getAnonymousLogger().log(Level.INFO, "Discovering new observations ...");
 
         if (newObservations != null && !newObservations.isEmpty()) {
-            System.out.println("Processing " + newObservations.size() + " new observation(s):");
+            Logger.getAnonymousLogger().log(Level.INFO, "Processing " + newObservations.size() + " new observation(s):");
             for (Observation obs : newObservations) {
-                System.out.println("\t" + obs);
+                Logger.getAnonymousLogger().log(Level.FINE, "\t" + obs);
                 registerObservation(obs);
             }
         }
@@ -245,11 +245,11 @@ public class Agent {
 
     public void updateBeliefs(){
         try {
-            System.out.print("Updating beliefs for t="+knowledgeBase.getTimestamp()+"...");
+            Logger.getAnonymousLogger().log(Level.INFO, "Updating beliefs for t="+knowledgeBase.getTimestamp()+"...");
             holonsIntercessor.updateBeliefs(knowledgeBase.getTimestamp());
-            System.out.println("Done.");
+            Logger.getAnonymousLogger().log(Level.INFO, "Update is done.");
         } catch (InvalidFormulaException | NotApplicableException e) {
-            System.out.println("Agent was not able to update holons.");
+            Logger.getAnonymousLogger().log(Level.WARNING, "Agent was not able to update holons.");
         }
     }
 

@@ -38,7 +38,6 @@ public class HolonsIntercessor {
 
     public void updateBeliefs(int timestamp) throws InvalidFormulaException, NotApplicableException {
         for (Holon h : holonsCollection.getHolonCollection()) {
-            System.out.println(h);
             h.update(agent.distributeKnowledge(h.getAffectedFormulas().get(0), timestamp, true));
         }
     }

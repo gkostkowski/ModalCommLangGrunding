@@ -213,7 +213,6 @@ public class HolonCollection {
 
     public void updateBeliefs(int timestamp) throws InvalidFormulaException, NotConsistentDKException, NotApplicableException {
         for (Holon h : holonCollection) {
-            System.out.println(h);
             h.update(owner.distributeKnowledge(h.getAffectedFormulas().get(0), timestamp, true));
         }
     }
