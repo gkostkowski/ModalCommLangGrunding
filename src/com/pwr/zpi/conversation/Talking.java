@@ -29,6 +29,10 @@ public class Talking implements Runnable {
      */
     private boolean RUNNING;
     /**
+     * Refernce to Listening, used to be able to stop listening service for the moment of giving answer
+     */
+    private Listening listeningThread;
+    /**
      * The talkingServer ServerSocket allows for connection with outside application that receives answers
      */
     private ServerSocket talkingServer;
@@ -55,6 +59,11 @@ public class Talking implements Runnable {
         {
             answers.add(answer);
         }
+    }
+
+    public Talking(Listening listening)
+    {
+        this.listeningThread = listening;
     }
 
     /**
@@ -106,10 +115,12 @@ public class Talking implements Runnable {
                 while(answers.isEmpty())
                     Thread.sleep(500);
                 JSONObject object = new JSONObject();
+                listeningThread.shouldStopListening(true);
                 object.put("message", answers.remove());
                 printWriter.println(object.toString());
                 printWriter.flush();
-                Thread.sleep(500);
+                Thread.sleep(5000);
+                listeningThread.shouldStopListening(false);
             } catch(InterruptedException e) {}
             catch (JSONException e) {
                 e.printStackTrace();

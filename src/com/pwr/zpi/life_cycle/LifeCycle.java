@@ -71,11 +71,15 @@ public class LifeCycle implements Runnable {
                 acquire(true);
          //       updateThread.start();
                 release(true);
+
             }
             String question = listeningThread.getQuestion();
             if(question!=null)System.out.println(question);
             if(question!=null)
+            {
                 new AnswerThread(talkingThread, question, this, agent);
+
+            }
         }
         System.out.println("Stop life cycle");
     }
@@ -95,7 +99,7 @@ public class LifeCycle implements Runnable {
         formulasInProcess = new ArrayList<>();
         listeningThread = new Listening();
         listeningThread.start();
-        talkingThread = new Talking();
+        talkingThread = new Talking(listeningThread);
         talkingThread.start();
         if(thread==null)
         {
@@ -160,14 +164,14 @@ public class LifeCycle implements Runnable {
         {
             while(semaphore >0)
                 try {
-                    semaphore.wait();
+                    wait();
                 } catch (InterruptedException e) { e.printStackTrace(); }
             semaphore--;
         }
         else {
             while(semaphore <0)
                 try {
-                    semaphore.wait();
+                    wait();
                 } catch (InterruptedException e) { e.printStackTrace(); }
             semaphore++;
         }
