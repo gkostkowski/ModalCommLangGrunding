@@ -58,26 +58,29 @@ class Main {
         lf.start();
         agent.getModels().addNameToModel(qrCodes[0], "Bobby");
         int t = 0;
-        agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-            put(tr[0], true);
-            put(tr[1], false);
-            put(tr[2], false);
-        }}, t++));
-        agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-            put(tr[0], true);
-            put(tr[1], false);
-            put(tr[2], false);
-        }}, t++));
-        agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-            put(tr[0], true);
-            put(tr[1], true);
-            put(tr[2], true);
-        }}, t++));
-        agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-            put(tr[0], true);
-            put(tr[1], null);
-            put(tr[2], null);
-        }}, t++));
+        Observation[] obsTill3  = new Observation[]{ //inclusively
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], false);
+                    put(tr[2], false);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], false);
+                    put(tr[2], false);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], true);
+                    put(tr[2], true);
+                }}, t++),
+                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+                    put(tr[0], true);
+                    put(tr[1], null);
+                    put(tr[2], null);
+                }}, t++)
+        };
+        agent.addAndUpdate(obsTill3);
 
 
     }

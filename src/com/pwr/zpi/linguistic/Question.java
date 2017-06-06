@@ -105,6 +105,8 @@ public class Question {
                 return new ComplexFormula(individualModel, traits, states, op);
             else throw new InvalidQuestionException(InvalidQuestionException.WRONG_STATES);
         }
+        if(isXOR)
+            throw new InvalidQuestionException(InvalidQuestionException.WRONG_STRUCTURE);
         else return new SimpleFormula(individualModel, traits, states);
     }
 
