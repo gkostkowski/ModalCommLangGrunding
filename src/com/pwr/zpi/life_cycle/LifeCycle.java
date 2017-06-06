@@ -3,16 +3,10 @@ package com.pwr.zpi.life_cycle;
 import com.pwr.zpi.Agent;
 import com.pwr.zpi.conversation.Listening;
 import com.pwr.zpi.conversation.Talking;
-import com.pwr.zpi.episodic.Observation;
 import com.pwr.zpi.language.Formula;
-import com.pwr.zpi.language.Trait;
-import com.pwr.zpi.semantic.QRCode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * life_cycle allows for starting new thread with life cycle of an agent, which consists of cyclic behaviours
