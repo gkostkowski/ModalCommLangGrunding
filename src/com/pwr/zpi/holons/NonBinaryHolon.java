@@ -5,6 +5,7 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 public class NonBinaryHolon implements Holon{
@@ -167,6 +168,17 @@ public class NonBinaryHolon implements Holon{
 	@Override
 	public Map<Formula, Double> getSummaries() {
 		return null;
+	}
+
+	/**
+	 * Returns map of summaries only for given Formulas.
+	 *
+	 * @param selectedFormulas
+	 */
+	@Override
+	public Map<Formula, Double> getSummaries(List<Formula> selectedFormulas) {
+		throw new NotImplementedException();
+
 	}
 
 	/**

@@ -3,10 +3,7 @@ package com.pwr.zpi.language;
 import com.pwr.zpi.semantic.IndividualModel;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -346,4 +343,5 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
         }
         return null;
     }
+
 }

@@ -4,6 +4,7 @@ import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.semantic.IndividualModel;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -58,6 +59,10 @@ public abstract class Formula {
      */
     public boolean needEpsilonConcentrationChecking() {
         return getType().equals(Type.MODAL_DISJUNCTION) || getType().equals(Type.MODAL_EXCLUSIVE_DISJUNCTION);
+    }
+
+    public Comparator<Formula> comparator() {
+        return ((f1, f2) -> f1.hashCode() < f2.hashCode() ? -1 : (f1.hashCode() > f2.hashCode() ? 1 : 0));
     }
 
     /**

@@ -291,6 +291,6 @@ public class Agent {
     }
 
     public Map<Formula, Double> getSummarization(Formula currFormula, int timestamp) {
-        holonsIntercessor.getSummaries(currFormula, timestamp);
+        return holonsIntercessor.getSummaries(currFormula, timestamp);
     }
 }
