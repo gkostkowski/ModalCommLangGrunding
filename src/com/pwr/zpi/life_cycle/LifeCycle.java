@@ -76,7 +76,6 @@ public class LifeCycle implements Runnable {
         {
             if(checkIfNewObservations() && !updateThread.isAlive())
             {
-                System.out.println("i am here");
                 acquire(true);
                 updateThread = new Thread(new UpdateThread(agent));
                 updateThread.start();
