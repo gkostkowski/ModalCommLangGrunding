@@ -38,7 +38,9 @@ public class LifeCycle implements Runnable {
     /**
      * static Object foo is used for synchronization between Threads //todo może jednak flagi
      */
-    private static Integer semaphore = 0;
+    private int semaphore = 0;
+
+    public static final Object foo = new Object();
 
     public static List<Formula> formulasInProcess;
     /**
@@ -85,7 +87,7 @@ public class LifeCycle implements Runnable {
 
             }
         }
-        System.out.println("Stop life cycle");
+        System.out.println("Stopped - life cycle");
     }
 
     private boolean checkIfNewObservations() {
@@ -162,22 +164,26 @@ public class LifeCycle implements Runnable {
      * method which blocks access for specific threads
      * @param isMemoryUpdateThread  true if blocking thread is the memory update thread
      */
-    public synchronized void acquire(boolean isMemoryUpdateThread)
+    public void acquire(boolean isMemoryUpdateThread)
     {
-        if(isMemoryUpdateThread)
-        {
-            while(semaphore >0)
-                try {
-                    wait();
-                } catch (InterruptedException e) { e.printStackTrace(); }
-            semaphore--;
-        }
-        else {
-            while(semaphore <0)
-                try {
-                    wait();
-                } catch (InterruptedException e) { e.printStackTrace(); }
-            semaphore++;
+        synchronized (foo) {
+            if (isMemoryUpdateThread) {
+                while (semaphore > 0)
+                    try {
+                        foo.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                semaphore--;
+            } else {
+                while (semaphore < 0)
+                    try {
+                        foo.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                semaphore++;
+            }
         }
     }
 
@@ -187,23 +193,23 @@ public class LifeCycle implements Runnable {
      */
     public void release(boolean isMemoryUpdateThread)
     {
-        synchronized (semaphore) {
+        synchronized (foo) {
             if (isMemoryUpdateThread)
                 semaphore++;
             else semaphore--;
+            foo.notifyAll();
         }
     }
-
+    
     /**
-     * Method checks if formula can be processed, waits if similar is being processed at the moment
-     * @param formula   which has to be processed
+     * Method called when there is formula to process. It waits till no similar formula is being processed
+     * @param formula
      */
     public void tryProccessingFormula(Formula formula)
     {
         while(!canFormulaBeProccessed(formula))
             synchronized (formulasInProcess)
             {
-                System.out.println("I have to wait");
                 try {
                     formulasInProcess.wait();
                 } catch (InterruptedException e) {
