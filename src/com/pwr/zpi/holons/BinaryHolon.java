@@ -4,9 +4,9 @@ package com.pwr.zpi.holons;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
-import com.pwr.zpi.holons.contextv2.CompositeContext;
-import com.pwr.zpi.holons.contextv2.DistanceFunction;
-import com.pwr.zpi.holons.contextv2.distance.DistanceFunction1;
+import com.pwr.zpi.holons.ContextJar.DistanceFunction;
+import com.pwr.zpi.holons.ContextJar.DistanceFunctions.DistanceFunction1;
+import com.pwr.zpi.holons.context.CompositeContext;
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.*;
 
