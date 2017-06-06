@@ -11,6 +11,8 @@ import com.pwr.zpi.semantic.QRCode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * life_cycle allows for starting new thread with life cycle of an agent, which consists of cyclic behaviours
@@ -48,7 +50,7 @@ public class LifeCycle implements Runnable {
      */
     private Agent agent;
 
-    private Thread updateThread = new Thread(new UpdateThread(agent));
+    private Thread updateThread;
 
     /**
      * Constructor of LifeCycle, it creates a thread which will work on new agent
@@ -72,19 +74,19 @@ public class LifeCycle implements Runnable {
     public void run() {
         while(RUNNING)
         {
-            if(checkIfNewObservations())
+            if(checkIfNewObservations() && !updateThread.isAlive())
             {
+                System.out.println("i am here");
                 acquire(true);
-         //       updateThread.start();
+                updateThread = new Thread(new UpdateThread(agent));
+                updateThread.start();
                 release(true);
-
             }
             String question = listeningThread.getQuestion();
             if(question!=null)System.out.println(question);
             if(question!=null)
             {
                 new AnswerThread(talkingThread, question, this, agent);
-
             }
         }
         System.out.println("Stopped - life cycle");
@@ -107,6 +109,8 @@ public class LifeCycle implements Runnable {
         listeningThread.start();
         talkingThread = new Talking(listeningThread);
         talkingThread.start();
+        updateThread = new Thread(new UpdateThread(agent));
+        updateThread.start();
         if(thread==null)
         {
             thread = new Thread(this, "life cycle");
@@ -200,7 +204,7 @@ public class LifeCycle implements Runnable {
             foo.notifyAll();
         }
     }
-    
+
     /**
      * Method called when there is formula to process. It waits till no similar formula is being processed
      * @param formula

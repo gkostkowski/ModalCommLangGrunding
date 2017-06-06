@@ -27,10 +27,10 @@ class Main {
 
         Agent agent = new Agent();
 //        Scenario scenario = new Scenario(agent, null, "scenario01.csv", "conv001");
-        Scenario scenario = new Scenario(agent, null, "conj_scenario01.csv", "conj conv001");
-        //scenario.execute();
-
-        new Scenario(agent, null, "scenario01_main.csv", "conj conv002").execute();
+//        Scenario scenario = new Scenario(agent, null, "conj_scenario01.csv", "conj conv001");
+//        //scenario.execute();
+//
+//        new Scenario(agent, null, "scenario01_main.csv", "conj conv002").execute();
         QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
         Trait[] tr = new Trait[]{
                 new Trait("Red"),
@@ -41,9 +41,9 @@ class Main {
 
          //simplyModalitiesScenario(agent, qrCodes, tr);
         //or
-       // simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
+        //simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        //startLifeCycle(agent, qrCodes, tr);
+        startLifeCycle(agent, qrCodes, tr);
 
          //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
@@ -54,9 +54,6 @@ class Main {
 
     private static void startLifeCycle(Agent agent, QRCode[] qrCodes, Trait[] tr)
     {
-        LifeCycle lf = new LifeCycle(agent);
-        lf.start();
-        agent.getModels().addNameToModel(qrCodes[0], "Bobby");
         int t = 0;
         Observation[] obsTill3  = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
@@ -81,7 +78,10 @@ class Main {
                 }}, t++)
         };
         agent.addAndUpdate(obsTill3);
+        agent.getModels().addNameToModel(qrCodes[0], "Bobby");
 
+        LifeCycle lf = new LifeCycle(agent);
+        lf.start();
 
     }
 
