@@ -3,6 +3,8 @@ package com.pwr.zpi.holons.context.selectors;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.ContextualisationException;
 import com.pwr.zpi.language.Formula;
+import com.pwr.zpi.language.State;
+import com.pwr.zpi.semantic.IndividualModel;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -13,6 +15,8 @@ import java.util.Set;
  * Selector chooses last basing profile, according to timestamp.
  */
 public class LatestSelector implements RepresentativesSelector {
+
+
     /**
      * Method provides way to determine representative base profile. In this implementation returned set contains
      * only one grounding set which is the latest one (according to timestamp). In case of more than one base profile
@@ -28,10 +32,15 @@ public class LatestSelector implements RepresentativesSelector {
         if (namedGroundingSets == null || namedGroundingSets.isEmpty())
             throw new NullPointerException("Representative base profiles cannot be resolved.");
 
+        IndividualModel relatedObject = namedGroundingSets.keySet().iterator().next().getModel();
+
         Set<BaseProfile> representativeBPs;
         Set<BaseProfile> all = new HashSet<>();
         namedGroundingSets.values().forEach(all::addAll);
-        BaseProfile res = all.stream().max(Comparator.comparing(BaseProfile::getTimestamp)).get();
+        BaseProfile res = all.stream()
+                .filter(bp -> bp.getAffectedIMs(State.IS, State.IS_NOT).contains(relatedObject))
+                .max(Comparator.comparing(BaseProfile::getTimestamp))
+                .get();
         representativeBPs = new HashSet<>();
         representativeBPs.add(res);
         return representativeBPs;

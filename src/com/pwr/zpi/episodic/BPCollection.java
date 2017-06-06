@@ -31,6 +31,7 @@ public class BPCollection {
 
 
 
+
     /**
      * Describes allowed types of agent's memory. According to the accepted theoretical model, there are two memory
      * levels: Working memory and long-term memory.
@@ -269,6 +270,10 @@ public class BPCollection {
      * @throws IllegalStateException
      */
     public static Set<BaseProfile> asBaseProfilesSet(Set<BaseProfile>... bps) throws IllegalStateException {
+        return asBaseProfilesSet(Arrays.asList(bps));
+    }
+
+    public static Set<BaseProfile> asBaseProfilesSet(Collection<Set<BaseProfile>> bps) {
         if (bps == null)
             throw new NullPointerException("Array is null.");
         Set<BaseProfile> res = new HashSet<>();
@@ -276,7 +281,6 @@ public class BPCollection {
             res.addAll(bp);
         return res;
     }
-
 
     /**
      * Returns set of base profiles which are associated with moment in time from range [beginning, given endTimestamp],

@@ -27,8 +27,10 @@ class Main {
 
         Agent agent = new Agent();
 //        Scenario scenario = new Scenario(agent, null, "scenario01.csv", "conv001");
- //       Scenario scenario = new Scenario(agent, null, "conj_scenario01.csv", "conj conv001");
- //       scenario.execute();
+        Scenario scenario = new Scenario(agent, null, "conj_scenario01.csv", "conj conv001");
+        //scenario.execute();
+
+        new Scenario(agent, null, "scenario01_main.csv", "conj conv002").execute();
         QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
         Trait[] tr = new Trait[]{
                 new Trait("Red"),
@@ -41,7 +43,7 @@ class Main {
         //or
        // simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        startLifeCycle(agent, qrCodes, tr);
+        //startLifeCycle(agent, qrCodes, tr);
 
          //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which

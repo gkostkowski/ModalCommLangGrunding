@@ -4,6 +4,8 @@ import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.ContextualisationException;
 import com.pwr.zpi.exceptions.InvalidGroupSelectorException;
 import com.pwr.zpi.language.Formula;
+import com.pwr.zpi.language.State;
+import com.pwr.zpi.semantic.IndividualModel;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -39,10 +41,14 @@ public class LatestGroupSelector implements RepresentativesSelector {
             throw new NullPointerException("Representative base profiles cannot be resolved.");
         }
 
+        IndividualModel relatedObject = namedGroundingSets.keySet().iterator().next().getModel();
+
+
         Set<BaseProfile> representativeBPs;
         Set<BaseProfile> all = new HashSet<>();
         namedGroundingSets.values().forEach(all::addAll);
         representativeBPs = all.stream()
+                .filter(bp -> bp.getAffectedIMs(State.IS, State.IS_NOT).contains(relatedObject))
                 .sorted(Comparator.comparingInt(BaseProfile::getTimestamp).reversed())
                 .limit(groupSize)
                 .collect(Collectors.toSet());

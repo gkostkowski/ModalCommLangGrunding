@@ -2,6 +2,8 @@ package com.pwr.zpi.holons.context.selectors;
 
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.language.Formula;
+import com.pwr.zpi.language.State;
+import com.pwr.zpi.semantic.IndividualModel;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -16,8 +18,8 @@ import java.util.stream.Collectors;
  */
 public class LatestFocusedGroupSelector implements RepresentativesSelector {
 
-    Formula formula;
-
+    private Formula formula;
+    private IndividualModel relatedObject;
     /**
      *
      * @param formula Description of base profile which can be used to build a context. If exemplary formula is
@@ -29,6 +31,8 @@ public class LatestFocusedGroupSelector implements RepresentativesSelector {
         if (formula == null)
             throw new NullPointerException();
         this.formula = formula;
+         relatedObject= formula.getModel();
+
     }
 
     /**
@@ -48,8 +52,13 @@ public class LatestFocusedGroupSelector implements RepresentativesSelector {
         Set<BaseProfile> all = new HashSet<>();
         namedGroundingSets.values().forEach(all::addAll);
         representativeBPs = all.stream()
-                .filter(bp->formula.isFormulaFulfilled(bp))
+                .filter(this::isEligible)
                 .collect(Collectors.toSet());
         return representativeBPs;
+    }
+
+    private boolean isEligible(BaseProfile bp) {
+        return bp.getAffectedIMs(State.IS, State.IS_NOT).contains(relatedObject)
+                && formula.isFormulaFulfilled(bp);
     }
 }

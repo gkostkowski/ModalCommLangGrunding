@@ -128,19 +128,31 @@ public class  BaseProfile {
      * @param resultedSet Set witch will be extended to resulted individual models.
      * @return Given as parameter set extended to set of Individual models associated with given map.
      */
-    private Set<IndividualModel> getAffectedIMs(Map<Trait, Set<IndividualModel>> relatedMap, Set<IndividualModel> resultedSet) {
+    public Set<IndividualModel> getAffectedIMs(Map<Trait, Set<IndividualModel>> relatedMap, Set<IndividualModel> resultedSet) {
         for (Set<IndividualModel> set : relatedMap.values())
             resultedSet.addAll(set);
         return resultedSet;
     }
 
-    /**
-     * Returns set of all individual models included in given base profiles. Used when as an example merging base profiles
-     * from working memory and long-term memory.
-     *
-     * @param baseProfileSet Set of base profiles.
-     * @return Set of observations.
-     */
+    public Set<IndividualModel> getAffectedIMs(Set<IndividualModel> resultedSet, State ... relatedStates) {
+        Set<IndividualModel> res = new HashSet<>();
+        for (State state : relatedStates) {
+            res.addAll(getAffectedIMs(getContainer(state), resultedSet));
+        }
+        return res;
+    }
+
+    public Set<IndividualModel> getAffectedIMs(State ... relatedStates) {
+        return getAffectedIMs(new HashSet<>(), relatedStates);
+    }
+
+        /**
+         * Returns set of all individual models included in given base profiles. Used when as an example merging base profiles
+         * from working memory and long-term memory.
+         *
+         * @param baseProfileSet Set of base profiles.
+         * @return Set of observations.
+         */
     public static Set<IndividualModel> getAffectedIMs(Collection<BaseProfile> baseProfileSet) {
         Set<IndividualModel> res = new HashSet<>();
         for (BaseProfile bp : baseProfileSet)

@@ -10,6 +10,7 @@ import com.pwr.zpi.holons.Holon;
 import com.pwr.zpi.holons.NonBinaryHolon;
 import com.sun.istack.internal.Nullable;
 
+import javax.naming.directory.Attributes;
 import java.util.*;
 
 /**
@@ -38,11 +39,12 @@ public class Grounder {
     /**
      * Thresholds for modal disjunctions. //TODO rozwazyc inne wartosci
      */
-    private static final double DISJ_MIN_POS = 0.1;
-    private static final double DISJ_MAX_POS = 0.6;
+    private static final double DISJ_MIN_POS = 0.2;
+    private static final double DISJ_MAX_POS = 0.65;
     private static final double DISJ_MIN_BEL = 0.65;
     private static final double DISJ_MAX_BEL = 0.9;
     public static final double DISJ_KNOW = 1.0;
+
 
     /**
      * Arrays of thresholds for certain formula types. Order of elements in arrays is strictly defined and can't be other:
@@ -112,7 +114,7 @@ public class Grounder {
      * <em>composeGroundingSet()</em> which uses this method in particular way to build desired grounding sets.
      *
      * @param formula Simple modality and modal conjunction.
-     * @param all Set of all available base profiles.
+     * @param all     Set of all available base profiles.
      * @return Grounding set for given formula.
      * @throws InvalidFormulaException
      */
@@ -378,13 +380,16 @@ public class Grounder {
         return 0.0;
     }
 
-    public static Map<Formula, Double> relativeCard_(Map<Formula, Set<BaseProfile>> groundingSets) {
+    public static Map<Formula, Double> relativeCard_(Map<Formula, Set<BaseProfile>> groundingSets) throws InvalidFormulaException {
         Map<Formula, Double> res = new HashMap<>();
         int totalSize = groundingSets.entrySet().stream()
                 .map(x -> x.getValue().size())
                 .reduce(0, (s1, s2) -> s1 + s2);
         for (Formula f : groundingSets.keySet()) {
-            Double relativeCard = (double) groundingSets.get(f).size() / (double) totalSize;
+            Set<BaseProfile> currGroundingSet = groundingSets.get(f);
+            if (f.getType().equals(Formula.Type.MODAL_DISJUNCTION) || f.getType().equals(Formula.Type.MODAL_EXCLUSIVE_DISJUNCTION))
+                currGroundingSet = getGroundingSet(f, BPCollection.asBaseProfilesSet(groundingSets.values()));
+            Double relativeCard = (double) currGroundingSet.size() / (double) totalSize;
             res.put(f, relativeCard);
         }
         return res;

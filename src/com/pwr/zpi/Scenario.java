@@ -26,6 +26,7 @@ public class Scenario {
     private static final int NAME_POS = 0;
     private static final char COMMENT_SIGN = '#';
     private static final String SCENARIO_MARKER = "SCENARIO";
+    private static final String DEF_SCENARIOS_DIR = "config/scenarios/";
     private Agent agent;
     private Contextualisation contextualisation;
     private List<String> IndModIDs;
@@ -143,7 +144,7 @@ public class Scenario {
     }
 
     private void addQuestions(List<String> line) throws InvalidScenarioException {
-        int observationSize = IMsDefinitions.get(line.get(1)).getValue().size();
+        int observationSize = IMsDefinitions.get(extractObjectName(line)).getValue().size();
         int firstQuestionIndex = FIRST_TRAIT_POS + observationSize;
         List<String> questionsAndAnswers = line.subList(firstQuestionIndex, line.size());
         if (questionsAndAnswers.size() % 2 != 0)
@@ -159,7 +160,7 @@ public class Scenario {
 
     private Map<Trait, Boolean> extractStatedTraits(List<String> line) throws InvalidScenarioException {
         Map<Trait, Boolean> res = new HashMap<>();
-        List<Trait> relatedTraits = IMsDefinitions.get(line.get(1)).getValue();
+        List<Trait> relatedTraits = IMsDefinitions.get(extractObjectName(line)).getValue();
         List<String> traitValues = line.subList(FIRST_TRAIT_POS, FIRST_TRAIT_POS + relatedTraits.size
                 ());
         if (relatedTraits.size() != traitValues.size())
@@ -173,7 +174,11 @@ public class Scenario {
     }
 
     private String extractRelatedIndModelID(List<String> line) {
-        return IMsDefinitions.get(line.get(1)).getKey();
+        return IMsDefinitions.get(extractObjectName(line)).getKey();
+    }
+
+    private String extractObjectName(List<String> line) {
+        return line.get(1).toLowerCase();
     }
 
 
@@ -188,7 +193,7 @@ public class Scenario {
 
     private void addIMDefinition(List<String> line) {
         String id = line.get(ID_POS),
-                name = line.get(NAME_POS);
+                name = line.get(NAME_POS).toLowerCase();
         IMsDefinitions.put(name,
                 new Pair(id, extractTraits(line.subList(ID_POS + 1, line.size()))));
         if (agent.getModels().getRepresentationByName(name) == null)
@@ -252,12 +257,12 @@ public class Scenario {
     }
 
     private boolean shouldBeIgnored(String line) {
-        return line == null || line.isEmpty() || IGNORABLE_SIGN.contains(line.charAt(0));
+        return line == null || line.matches("^;*$") || IGNORABLE_SIGN.contains(line.charAt(0));
     }
 
     private List<String> readContent() throws IOException {
         try {
-            return Files.readAllLines(Paths.get("config/" + filename), Charset.forName("UTF-8"));
+            return Files.readAllLines(Paths.get(DEF_SCENARIOS_DIR + filename), Charset.forName("UTF-8"));
         } catch (IOException e) {
             return Files.readAllLines(Paths.get(filename), Charset.forName("UTF-8")); //if absolute
         }
@@ -274,7 +279,8 @@ public class Scenario {
     private List<List<String>> parseLines(List<String> line) {
         List<List<String>> res = new ArrayList<>();
         for (String s : line) {
-            res.add(parseLine(s));
+            if(!shouldBeIgnored(s))
+                res.add(parseLine(s));
         }
         return res;
     }
