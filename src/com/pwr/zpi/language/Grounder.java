@@ -541,12 +541,12 @@ public class Grounder {
      * @return Double value of Type of operator which can be applied to formula given through distribution of knowledge.
      * @see DistributedKnowledge
      */
-    public static double determineFulfillmentDouble(DistributedKnowledge dk, Formula formula) throws InvalidFormulaException, NotApplicableException {
+    public static double determineFulfillmentDouble(DistributedKnowledge dk, Formula formula,Map<Formula, Set<BaseProfile>>  context) throws InvalidFormulaException, NotApplicableException {
 
         if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
                 || dk.isDkComplex() && !new ArrayList(dk.getComplementaryFormulas()).contains(formula))
             throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
-        return checkEpistemicConditionsDouble(formula, dk, dk.getTimestamp());
+        return checkEpistemicConditionsDouble(formula, dk, dk.getTimestamp(), context);
     }
 
 
@@ -559,15 +559,15 @@ public class Grounder {
      */
     @Nullable
     public static Double checkEpistemicConditionsDouble(Formula formula, DistributedKnowledge dk
-            , int timestamp) throws NotApplicableException, InvalidFormulaException {
+            , int timestamp,Map<Formula, Set<BaseProfile>>  context) throws NotApplicableException, InvalidFormulaException {
        /* double mayhapsD = 0;
         for (int i = 0; i < formula.getTraits().size(); i++) {  //supports complex formulas
             mayhapsD = dk.getRelatedObservationsBase().getMayhapsBP(timestamp,formula,i);
         }*/
         if (formula.getType() == Formula.Type.SIMPLE_MODALITY) {
-            return simpleFormulaFinalGrounder(formula, dk);
+            return simpleFormulaFinalGrounder(formula, dk,context);
         } else if (formula.getType() == Formula.Type.MODAL_CONJUNCTION) {
-            return complexFormulaFinalGrounder(formula, dk);
+            return complexFormulaFinalGrounder(formula, dk,context);
 
         }
         return 0.0;
@@ -581,22 +581,34 @@ public class Grounder {
      * @param dk      Distributed knowledge for respective grounding sets related with certain formula.
      * @return
      */
-    public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) throws InvalidFormulaException {
+    public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk,Map<Formula, Set<BaseProfile>>  context) throws InvalidFormulaException, NotApplicableException {
 
         double sum = 0;
-        //  System.out.println(formula.getTraits().get(0) + " " + dk.getTimestamp());
-        for (BaseProfile bp : dk.getGroundingSet(formula)) {
-            if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && !((SimpleFormula) formula).isNegated()) {
-                sum++;
-            } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT) && ((SimpleFormula) formula).isNegated()) {
-                sum++;
-            } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.MAYHAPS)) {
-                sum++;
+        if(context.size()==0) {
+            for (BaseProfile bp : dk.getGroundingSet(formula)) {
+                if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && !((SimpleFormula) formula).isNegated()) {
+                    sum++;
+                } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT) && ((SimpleFormula) formula).isNegated()) {
+                    sum++;
+                } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.MAYHAPS)) {
+                    sum++;
+                }
             }
         }
-
+        else{
+            if(context.get(formula)!=null){
+            for (BaseProfile bp : context.get(formula)) {
+                if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && !((SimpleFormula) formula).isNegated()) {
+                    sum++;
+                } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT) && ((SimpleFormula) formula).isNegated()) {
+                    sum++;
+                } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.MAYHAPS)) {
+                    sum++;
+                }
+            }}
+        }
         if (sum != 0) {
-            return sum / getGroundingSetsForComplementaryFormula(dk, formula);
+            return sum /relativeCard(dk.mapOfGroundingSets(),formula);
         }
         return 0.0;
     }
@@ -608,18 +620,20 @@ public class Grounder {
      * @param dk      Distributed knowledge for respective grounding sets related with certain formula.
      * @return
      */
-    public static Double complexFormulaFinalGrounder(Formula formula, DistributedKnowledge dk) throws InvalidFormulaException {
+    public static Double complexFormulaFinalGrounder(Formula formula, DistributedKnowledge dk,Map<Formula, Set<BaseProfile>>  context) throws InvalidFormulaException {
 
         double sum = 0;
-        if (dk.getGroundingSet(formula).size() == 0) {
-            return 0.0;
+        if(context.size()==0) {
+            sum = context.get(formula).size();
+            if (sum != 0) {
+                return sum / getGroundingSetsForComplementaryFormula(dk, formula);
+            }
         }
-        sum = dk.getGroundingSet(formula).size();
-
-        if (sum != 0) {
-            //System.out.println("sumsum" +sum + " " + formula);
-
-            return sum / getGroundingSetsForComplementaryFormula(dk, formula);
+        else{
+            sum = dk.getGroundingSet(formula).size();
+            if (sum != 0) {
+                return sum / getGroundingSetsForComplementaryFormula(dk, formula);
+            }
         }
         return 0.0;
     }
