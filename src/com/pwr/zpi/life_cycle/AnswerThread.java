@@ -59,12 +59,7 @@ public class AnswerThread implements Runnable {
         try {
             Statement statement;
             Formula formula = question1.getFormula();
-            while(!LifeCycle.canFormulaBeProccessed(formula))
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            lifeCycle.tryProccessingFormula(formula);
             Map<Formula, ModalOperator> map;
             lifeCycle.acquire(false);
             map = Grounder.performFormulaGrounding(agent, formula);

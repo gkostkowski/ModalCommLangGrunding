@@ -60,6 +60,11 @@ public class Listening implements Runnable {
         else return questions.remove();
     }
 
+    public void putQuestion(String question)
+    {
+        questions.add(question);
+    }
+
     /**
      * method starts the thread, starts the listeningApp, establishes connection between those
      */

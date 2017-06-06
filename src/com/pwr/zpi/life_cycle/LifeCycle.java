@@ -3,9 +3,13 @@ package com.pwr.zpi.life_cycle;
 import com.pwr.zpi.Agent;
 import com.pwr.zpi.conversation.Listening;
 import com.pwr.zpi.conversation.Talking;
+import com.pwr.zpi.episodic.Observation;
 import com.pwr.zpi.language.Formula;
+import com.pwr.zpi.language.Trait;
+import com.pwr.zpi.semantic.QRCode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,7 +40,7 @@ public class LifeCycle implements Runnable {
      */
     private static Integer semaphore = 0;
 
-    private static List<Formula> formulasInProcess;
+    public static List<Formula> formulasInProcess;
     /**
      * Agent which life cycle concerns
      */
@@ -129,7 +133,7 @@ public class LifeCycle implements Runnable {
      * @param formula   to which currently processed formula are compared
      * @return true if none was found, false if similar was found
      */
-    public static boolean canFormulaBeProccessed(Formula formula)
+    private boolean canFormulaBeProccessed(Formula formula)
     {
         synchronized (formulasInProcess) {
             for (Formula f : formulasInProcess) {
@@ -137,6 +141,7 @@ public class LifeCycle implements Runnable {
                     return false;
             }
             formulasInProcess.add(formula);
+            System.out.println("Adding formula");
             return true;
         }
     }
@@ -147,10 +152,12 @@ public class LifeCycle implements Runnable {
      */
     public void removeFromFormulasInProccess(Formula formula)
     {
+        System.out.println("removing");
         synchronized (formulasInProcess)
         {
             formulasInProcess.remove(formula);
             formulasInProcess.notifyAll();
+            System.out.println("removed");
         }
     }
 
@@ -188,6 +195,24 @@ public class LifeCycle implements Runnable {
                 semaphore++;
             else semaphore--;
         }
+    }
+
+    /**
+     * Method checks if formula can be processed, waits if similar is being processed at the moment
+     * @param formula   which has to be processed
+     */
+    public void tryProccessingFormula(Formula formula)
+    {
+        while(!canFormulaBeProccessed(formula))
+            synchronized (formulasInProcess)
+            {
+                System.out.println("I have to wait");
+                try {
+                    formulasInProcess.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
     }
 
 

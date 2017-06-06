@@ -116,15 +116,26 @@ public class Talking implements Runnable {
                     Thread.sleep(500);
                 JSONObject object = new JSONObject();
                 listeningThread.shouldStopListening(true);
-                object.put("message", answers.remove());
+                System.out.println(answers.peek().length());
+                object.put("message", answers.peek());
                 printWriter.println(object.toString());
                 printWriter.flush();
-                Thread.sleep(5000);
+                Thread.sleep(getTimeToWait(answers.remove().length()));
                 listeningThread.shouldStopListening(false);
             } catch(InterruptedException e) {}
             catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Counts rounded time needed to say the message
+     * @param length
+     * @return
+     */
+    private int getTimeToWait(int length)
+    {
+        return (length/100+1)*6000;
     }
 }
