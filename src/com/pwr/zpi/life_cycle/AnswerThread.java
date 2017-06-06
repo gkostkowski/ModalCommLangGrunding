@@ -56,20 +56,15 @@ public class AnswerThread implements Runnable {
     @Override
     public void run() {
         Question question1 = new Question(question, agent);
+        Formula formula = null;
         try {
             Statement statement;
-            Formula formula = question1.getFormula();
-            while(!LifeCycle.canFormulaBeProccessed(formula))
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            formula = question1.getFormula();
+            lifeCycle.tryProccessingFormula(formula);
             Map<Formula, ModalOperator> map;
             lifeCycle.acquire(false);
             map = Grounder.performFormulaGrounding(agent, formula);
-            lifeCycle.release(false);
-            lifeCycle.removeFromFormulasInProccess(formula);
+            releaseResources(formula);
             if(formula instanceof ComplexFormula)
                 statement = new ComplexStatement((ComplexFormula)formula, map, question1.getName());
             else statement = new SimpleStatement((SimpleFormula)formula, map, question1.getName());
@@ -80,9 +75,18 @@ public class AnswerThread implements Runnable {
             talkingThread.addAnswer(e.getMessage());
         } catch (NotConsistentDKException e) {
             talkingThread.addAnswer(e.getMessage());
+            releaseResources(formula);
         } catch (NotApplicableException e) {
             talkingThread.addAnswer(e.getMessage());
-        }
+            releaseResources(formula);
+        } catch (Exception e) {
+            talkingThread.addAnswer("Somethig terrible happend");
+            releaseResources(formula);}
+    }
 
+    private void releaseResources(Formula formula)
+    {
+        lifeCycle.release(false);
+        lifeCycle.removeFromFormulasInProccess(formula);
     }
 }

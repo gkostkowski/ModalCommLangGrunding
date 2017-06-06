@@ -34,15 +34,17 @@ public class LifeCycle implements Runnable {
     /**
      * static Object foo is used for synchronization between Threads //todo może jednak flagi
      */
-    private static Integer semaphore = 0;
+    private int semaphore = 0;
 
-    private static List<Formula> formulasInProcess;
+    public static final Object foo = new Object();
+
+    public static List<Formula> formulasInProcess;
     /**
      * Agent which life cycle concerns
      */
     private Agent agent;
 
-    private Thread updateThread = new Thread(new UpdateThread(agent));
+    private Thread updateThread;
 
     /**
      * Constructor of LifeCycle, it creates a thread which will work on new agent
@@ -66,18 +68,21 @@ public class LifeCycle implements Runnable {
     public void run() {
         while(RUNNING)
         {
-            if(checkIfNewObservations())
+            if(checkIfNewObservations() && !updateThread.isAlive())
             {
                 acquire(true);
-         //       updateThread.start();
+                updateThread = new Thread(new UpdateThread(agent));
+                updateThread.start();
                 release(true);
             }
             String question = listeningThread.getQuestion();
             if(question!=null)System.out.println(question);
             if(question!=null)
+            {
                 new AnswerThread(talkingThread, question, this, agent);
+            }
         }
-        System.out.println("Stop life cycle");
+        System.out.println("Stopped - life cycle");
     }
 
     private boolean checkIfNewObservations() {
@@ -95,8 +100,10 @@ public class LifeCycle implements Runnable {
         formulasInProcess = new ArrayList<>();
         listeningThread = new Listening();
         listeningThread.start();
-        talkingThread = new Talking();
+        talkingThread = new Talking(listeningThread);
         talkingThread.start();
+        updateThread = new Thread(new UpdateThread(agent));
+        updateThread.start();
         if(thread==null)
         {
             thread = new Thread(this, "life cycle");
@@ -154,22 +161,26 @@ public class LifeCycle implements Runnable {
      * method which blocks access for specific threads
      * @param isMemoryUpdateThread  true if blocking thread is the memory update thread
      */
-    public synchronized void acquire(boolean isMemoryUpdateThread)
+    public void acquire(boolean isMemoryUpdateThread)
     {
-        if(isMemoryUpdateThread)
-        {
-            while(semaphore >0)
-                try {
-                    semaphore.wait();
-                } catch (InterruptedException e) { e.printStackTrace(); }
-            semaphore--;
-        }
-        else {
-            while(semaphore <0)
-                try {
-                    semaphore.wait();
-                } catch (InterruptedException e) { e.printStackTrace(); }
-            semaphore++;
+        synchronized (foo) {
+            if (isMemoryUpdateThread) {
+                while (semaphore > 0)
+                    try {
+                        foo.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                semaphore--;
+            } else {
+                while (semaphore < 0)
+                    try {
+                        foo.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                semaphore++;
+            }
         }
     }
 
@@ -179,11 +190,29 @@ public class LifeCycle implements Runnable {
      */
     public void release(boolean isMemoryUpdateThread)
     {
-        synchronized (semaphore) {
+        synchronized (foo) {
             if (isMemoryUpdateThread)
                 semaphore++;
             else semaphore--;
+            foo.notifyAll();
         }
+    }
+
+    /**
+     * Method called when there is formula to process. It waits till no similar formula is being processed
+     * @param formula
+     */
+    public void tryProccessingFormula(Formula formula)
+    {
+        while(!canFormulaBeProccessed(formula))
+            synchronized (formulasInProcess)
+            {
+                try {
+                    formulasInProcess.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
     }
 
 

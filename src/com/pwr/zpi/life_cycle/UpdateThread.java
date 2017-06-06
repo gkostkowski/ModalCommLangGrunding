@@ -25,7 +25,6 @@ public class UpdateThread implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("<updateThread> - updating");
         agent.updateMemory();
     }
 }

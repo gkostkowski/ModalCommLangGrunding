@@ -3,6 +3,7 @@ package com.pwr.zpi.conversation;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -45,6 +46,10 @@ public class Listening implements Runnable {
      * The bufferedReader BufferedReader reads for information passed from listeningApp
      */
     private BufferedReader bufferedReader;
+    /**
+     * The printWriter PrintWriter object allows for sending JSON through socket
+     */
+    PrintWriter printWriter;
 
     /**
      * @return first question bufferedReader queue or null if none was asked
@@ -53,6 +58,11 @@ public class Listening implements Runnable {
         if (questions.isEmpty())
             return null;
         else return questions.remove();
+    }
+
+    public void putQuestion(String question)
+    {
+        questions.add(question);
     }
 
     /**
@@ -68,6 +78,7 @@ public class Listening implements Runnable {
             listeningClient = listeningServer.accept();
             System.out.println("Listening client connected");
             bufferedReader = new BufferedReader(new InputStreamReader(listeningClient.getInputStream()));
+            printWriter = new PrintWriter(listeningClient.getOutputStream(), true);
             if (thread == null) {
                 thread = new Thread(this, "Listening");
                 RUNNING = true;
@@ -107,6 +118,18 @@ public class Listening implements Runnable {
             catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void shouldStopListening(boolean shouldListen)
+    {
+        JSONObject object1 = new JSONObject();
+        try {
+            object1.put("stop", shouldListen);
+            printWriter.println(object1.toString());
+            printWriter.flush();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

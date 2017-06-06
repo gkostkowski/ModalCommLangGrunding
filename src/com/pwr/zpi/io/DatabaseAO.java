@@ -46,6 +46,7 @@ public class DatabaseAO {
             e.printStackTrace();
         }
         addTablesForAllObjectTypes();
+        setInsertFlag(true);
     }
 
     /**
