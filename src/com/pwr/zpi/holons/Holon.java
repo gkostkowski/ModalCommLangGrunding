@@ -18,6 +18,8 @@ import java.util.Map;
  * Holons constitute layer in agent's architecture which works with semantic memory, episodic memory and linguistic module.
  * Its aim is to provide summarization for linguistic module which it to perform grounding of affected formula.
  * To build some hierarchy of knowledge according to some groups of associated observations, contextualisation of holons is introduced.
+ * @author Grzegorz Kostkowski
+ * @author Jarema Radom
  */
 public interface Holon {
 

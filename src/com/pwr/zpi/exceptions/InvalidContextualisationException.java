@@ -1,8 +1,8 @@
+/*
+ * Created by Grzegorz Kostkowski
+ */
 package com.pwr.zpi.exceptions;
 
-/**
- * Created by Grzesiek on 2017-06-03.
- */
 public class InvalidContextualisationException extends Throwable {
     /**
      * Constructs a new throwable with {@code null} as its detail message.

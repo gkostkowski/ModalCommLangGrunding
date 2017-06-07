@@ -29,6 +29,10 @@ import java.util.logging.Logger;
 /**
  * Agent is crucial class for project - it has members of collections
  * that hold all of data that we are processing.
+ *
+ * @author Grzegorz Kostkowski
+ * @author Mateusz Gawlowski
+ * @author Jarema Radom
  */
 public class Agent {
     private BPCollection knowledgeBase;

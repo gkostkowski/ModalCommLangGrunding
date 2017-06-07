@@ -1,3 +1,6 @@
+/*
+ * Created by Grzegorz Kostkowski
+ */
 package com.pwr.zpi;
 
 import com.pwr.zpi.conversation.Conversation;
@@ -19,6 +22,8 @@ import java.util.logging.Logger;
 
 /**
  * Class implements realisation of scenario of conversation with agent.
+ * todo
+ *
  */
 public class Scenario {
 

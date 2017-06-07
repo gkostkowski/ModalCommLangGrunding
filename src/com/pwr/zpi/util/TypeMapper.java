@@ -8,6 +8,8 @@ import java.util.Map;
 
 /**
  * Mapper for java non-primitive types used for loading types definitions from config file.
+ *
+ * @author Grzegorz Kostkowski
  */
 public class TypeMapper {
 

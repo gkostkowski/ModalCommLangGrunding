@@ -8,6 +8,8 @@ import static java.util.stream.Collectors.toSet;
 
 /**
  * Class enables permute certain List.
+ *
+ * Based on code at http://www.programcreek.com.
  */
 public class Permutation {
 

@@ -9,6 +9,9 @@ import java.util.List;
 
 /**
  * SimpleFormula is understood as atomic formula and it's used as part of ComplexFormula.
+ *
+ * @author Weronika Wolska
+ * @author Grzegorz Kostkowski
  */
 public class SimpleFormula extends Formula {
 

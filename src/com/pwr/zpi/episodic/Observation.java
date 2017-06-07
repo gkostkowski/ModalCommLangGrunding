@@ -9,6 +9,9 @@ import java.util.Map;
 /**
  * Describes object's observation with its timestamp, id and set of valuedTraits.
  * Represents observations placed in real world, witnessed by agent.
+ *
+ * @author Mateusz Gawłowski
+ * @author Grzegorz Kostkowski
  */
 public class Observation {
     private Identifier identifier;

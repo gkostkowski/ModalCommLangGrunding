@@ -27,6 +27,8 @@ import java.util.*;
  * TA1 - Represents set of all base profiles, which are included in long-term memory and presents individualModel as described by
  * given trait.
  * Etc.
+ *
+ * @author Grzegorz Kostkowski
  */
 public class DistributedKnowledge {
     /**

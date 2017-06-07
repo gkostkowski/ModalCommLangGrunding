@@ -18,6 +18,7 @@ import java.util.Collection;
 
 /**
  * Class provides Data Access Object which is used to read configuration from config.xml file.
+ * @author Grzegorz Kostkowski
  */
 public class XMLDAO<T extends ObjectType> {
     protected XStream xstream = new XStream(new DomDriver());

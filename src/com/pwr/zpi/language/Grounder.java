@@ -9,6 +9,7 @@ import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.NonBinaryHolon;
 import com.pwr.zpi.util.Permutation;
 import com.sun.istack.internal.Nullable;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -18,6 +19,9 @@ import java.util.stream.Stream;
 
 /**
  * Class contains methods used in process of grounding natural language.
+ * //todo
+ * @author Grzegorz Kostkowski
+ * @author Jarema Radom
  */
 public class Grounder {
 
@@ -571,7 +575,8 @@ public class Grounder {
 
             switch (((ComplexFormula) formula).getOperator()) {
                 case AND:
-                    return complexFormulaFinalGrounder(formula, dk);
+                    /*return complexFormulaFinalGrounder(formula, dk);*/
+                    throw new NotImplementedException();
                 case OR:
                     break;
                 default:

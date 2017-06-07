@@ -8,7 +8,9 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- *
+ * //todo
+ * @author Weronika Wolska
+ * @author Grzegorz Kostkowski
  */
 public abstract class Formula {
 
@@ -127,7 +129,7 @@ public abstract class Formula {
     abstract public boolean isFormulaSimilar(Formula formula);
 
     /**
-     * Method determines if holons for such this formula should be build <<b>in a direct way</b> (from grounding sets)
+     * Method determines if holons for such this formula should be build <b>in a direct way</b> (from grounding sets)
      * or with company of others holons. It's determined based on this formula type. Only holons for simple modalities
      * and modal conjunctions are built in direct way.
      * @return

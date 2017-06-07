@@ -4,7 +4,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * todo
+ *
+ * @param <T> Generic type
+ *
+ * @author Grzegorz Kostkowski
+ */
 public class GenericObject<T> {
     private T object;
 

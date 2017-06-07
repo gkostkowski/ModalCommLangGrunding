@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Class represents context, which is established basing on some base profiles known as representative - in
  * standard version this representatives could contain last observed base profile.
+ * @author Grzegorz Kostkowski
  */
 final public class Context {
     List<Trait> observedTraits;

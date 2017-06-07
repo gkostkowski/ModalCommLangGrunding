@@ -10,7 +10,10 @@ import java.util.logging.Logger;
 import com.pwr.zpi.holons.NonBinaryHolon.FormulaCase;
 
 /**
- *
+ * //todo
+ * @author Weronika Wolska
+ * @author Grzegorz Kostkowski
+ * @author Jarema Radom
  */
 public class ComplexFormula extends Formula implements Comparable<ComplexFormula> {
 

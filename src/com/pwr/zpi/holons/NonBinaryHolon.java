@@ -20,7 +20,7 @@ public class NonBinaryHolon implements Holon{
         update(dk);
     }
 	public boolean update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException{
-		if (dk.getFormula().getType() != Formula.Type.MODAL_CONJUNCTION) {
+		/*if (dk.getFormula().getType() != Formula.Type.MODAL_CONJUNCTION) {
 			throw new InvalidFormulaException();
 		}else{
         double pq = 0;
@@ -34,7 +34,9 @@ public class NonBinaryHolon implements Holon{
 		pnq = Grounder.determineFulfillmentDouble(dk,temp.get(2));
 		npnq = Grounder.determineFulfillmentDouble(dk,temp.get(3));
         Tao = new Quadrilateral(pq,npq,pnq,npnq);}
-		return true;
+		return true;*/
+		throw new NotImplementedException();
+
 	}
 	/**
 	 *
@@ -195,5 +197,10 @@ public class NonBinaryHolon implements Holon{
 	@Override
 	public Contextualisation getContextualisation() {
 		return null;
+	}
+
+	@Override
+	public Integer getTimestamp() {
+		throw new NotImplementedException();
 	}
 }

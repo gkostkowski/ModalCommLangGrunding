@@ -7,6 +7,7 @@ import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Pair;
 import com.pwr.zpi.language.SimpleFormula;
 import com.pwr.zpi.language.Trait;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,7 +44,7 @@ public class CompositeContext implements Contextualisation {
      */
     @Override
     public Map<Formula, Set<BaseProfile>> performContextualisation(Map<Formula, Set<BaseProfile>> namedGroundingSets) {
-        Map<Formula, Set<BaseProfile>> out = new HashMap<>();
+        /*Map<Formula, Set<BaseProfile>> out = new HashMap<>();
         for(Formula f:namedGroundingSets.keySet()){
 
             Set<BaseProfile> givenLast = new HashSet<>();
@@ -66,7 +67,8 @@ public class CompositeContext implements Contextualisation {
                 else{contextTraits.setK(new Pair<>(f,lilContextTraits));}
             }
         }
-        return out;
+        return out;*/
+        throw new NotImplementedException();
     }
 
     public Pair<Set<Trait>,Set<Trait>> fidlar(BaseProfile[] contextArray) {

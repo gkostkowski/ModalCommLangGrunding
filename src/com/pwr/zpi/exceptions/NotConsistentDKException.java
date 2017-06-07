@@ -1,3 +1,6 @@
+/*
+ * Created by Grzegorz Kostkowski
+ */
 package com.pwr.zpi.exceptions;
 
 public class NotConsistentDKException extends Exception {

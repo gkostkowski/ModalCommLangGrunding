@@ -29,7 +29,7 @@ public class BinaryHolon implements Holon,Comparable<BinaryHolon> {
     protected Contextualisation context;
     protected int timestamp;
 
-    public BinaryHolon(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+    public BinaryHolon(DistributedKnowledge dk, Contextualisation holonsContextualisation) throws InvalidFormulaException, NotApplicableException {
         this.formula = dk.getComplementaryFormulas();
         DistanceFunction f1 = new DistanceFunction1();
         Contextualisation cj = new CompositeContext(f1,3);

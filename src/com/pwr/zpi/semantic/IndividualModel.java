@@ -11,6 +11,7 @@ import java.util.List;
  * which is a signature for that IndividualModel.
  * There is one individual model for each object.
  * It has a name which gives a way of communication between human and agent.
+ *
  */
 public class IndividualModel {
     private Identifier identifier;
