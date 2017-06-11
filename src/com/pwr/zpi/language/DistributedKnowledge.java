@@ -256,4 +256,8 @@ public class DistributedKnowledge {
         return relatedObservationsBase.getEpisodicBaseSize(BPCollection.MemoryType.WM)
                 > dk.relatedObservationsBase.getEpisodicBaseSize(BPCollection.MemoryType.WM);
     }
+
+    public Map<Formula, Set<BaseProfile>> getGroundingSetsMap() {
+        return groundingSetsMap;
+    }
 }

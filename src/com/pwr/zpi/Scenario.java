@@ -7,7 +7,6 @@ import com.pwr.zpi.conversation.Conversation;
 import com.pwr.zpi.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidScenarioException;
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
-import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.semantic.QRCode;
 import javafx.util.Pair;
@@ -19,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Class implements realisation of scenario of conversation with agent.
@@ -65,7 +65,7 @@ public class Scenario {
     private final String DEFINITIONS_MARKER = "DEF";
 
 
-    public Scenario(Agent agent, Contextualisation contextualisation, String filename, String
+    public Scenario(Agent agent, String filename, String
             cnversationName) {
         this.IMsDefinitions = new HashMap<>();
         this.IMPositions = new HashMap<>();
@@ -75,7 +75,7 @@ public class Scenario {
         this.agent = agent;
         IndModIDs = new LinkedList<>();
         traits = new ArrayList<>();
-        this.conversation = new Conversation(agent, cnversationName, 0, contextualisation);
+        this.conversation = new Conversation(agent, cnversationName, 0, agent.getContextualisationMethod());
     }
 
     /**
@@ -141,9 +141,9 @@ public class Scenario {
     private void askQuestions() throws InterruptedException {
         for (int i = 0; i < notUsedQuestionsAndAnswers.size(); i++) {
             System.out.println("asking...");
-            conversation.addQuestion(notUsedQuestionsAndAnswers.get(0).getKey());
+            conversation.addQuestion(notUsedQuestionsAndAnswers.get(i).getKey());
             Thread.sleep(1000);
-            System.out.println("(EXPECTED: " + notUsedQuestionsAndAnswers.get(0).getValue() + ")");
+            System.out.println("(EXPECTED: " + notUsedQuestionsAndAnswers.get(i).getValue() + ")");
         }
         notUsedQuestionsAndAnswers.clear();
     }
@@ -235,12 +235,29 @@ public class Scenario {
             return LINE_TYPE.IM_DEF;
         if (currentIndex == (scenarioMarkerIndex + 1))
             return LINE_TYPE.AFFECTED_IMS_DEF;
-        if (currentIndex == (scenarioMarkerIndex + 2))
+        if (currentIndex == (scenarioMarkerIndex + 2)) {
+            if(getNoOfTraitsInHeader(line) !=getDeclatedTraits().size() )
+                throw new InvalidScenarioException("Not all declared traits are inclueded in header.");
             return LINE_TYPE.SCENARIO_HEADER;
+        }
         if (currentIndex > (scenarioMarkerIndex + 2)) {
             return containsQuestion(line) ? LINE_TYPE.SC_QUESTION_ENTRY : LINE_TYPE.SCENARIO_ENTRY;
         }
         return LINE_TYPE.IGNORABLE;
+    }
+
+    private int getNoOfTraitsInHeader(List<String> header) {
+        List<String> declaredTraits = getDeclatedTraits().stream().map(Trait::getName).collect(Collectors.toList());
+        return (int)header.stream()
+                .filter(declaredTraits::contains)
+                .count();
+    }
+
+    private List<Trait> getDeclatedTraits() {
+        return IMsDefinitions.entrySet().stream()
+                .map(e -> e.getValue().getValue())
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     private boolean containsQuestion(List<String> line) {
@@ -322,7 +339,7 @@ public class Scenario {
     private int spotCurrentIndex(List<String> line, List<List<String>> allLines) throws InvalidScenarioException {
         int i = 0;
         for (List<String> list : allLines) {
-            if (list.containsAll(line))
+            if (list.containsAll(line) && line.containsAll(list))
                 return i;
             i++;
         }

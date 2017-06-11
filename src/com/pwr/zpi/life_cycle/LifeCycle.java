@@ -96,7 +96,7 @@ public class LifeCycle implements Runnable {
     public void start()
     {
         if(agent==null)
-            agent = new Agent();
+            agent = new Agent.AgentBuilder().build();
         formulasInProcess = new ArrayList<>();
         listeningThread = new Listening();
         listeningThread.start();

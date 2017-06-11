@@ -15,15 +15,28 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class provides Data Access Object which is used to read configuration from config.xml file.
+ *
  * @author Grzegorz Kostkowski
  */
 public class XMLDAO<T extends ObjectType> {
+    private static final String MAIN_MODULE_PATH = "ModalCommLangGrunding";
     protected XStream xstream = new XStream(new DomDriver());
     protected String xml;
-    protected static final String DEF_FILEPATH = System.getProperty("user.dir") + "\\config\\types_def.xml";
+    protected static final String DEF_FILEPATH = makePath() + "\\config\\types_def.xml";
+
+    private static String makePath() {
+        File currDir = new File(System.getProperty("user.dir"));
+        if (!currDir.toString().contains(MAIN_MODULE_PATH))
+            throw new IllegalArgumentException("Invalid module name - provide correct one.");
+        if (!currDir.getName().equals(MAIN_MODULE_PATH))
+            return currDir.getParent().toString();
+        return currDir.toString();
+    }
 
 
     private Collection<T> fromFile(final String filepath) {
@@ -34,9 +47,10 @@ public class XMLDAO<T extends ObjectType> {
                 file.createNewFile();
             else {
                 xml = new String(Files.readAllBytes(Paths.get(filepath)), StandardCharsets.UTF_8);
-                return (Collection<T>)((DataWrapper<ObjectType>) xstream.fromXML(xml)).getData();
+                return (Collection<T>) ((DataWrapper<ObjectType>) xstream.fromXML(xml)).getData();
             }
         } catch (IOException e) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, "Not able to load objects definitions", e);
             return null;
         }
         return null;

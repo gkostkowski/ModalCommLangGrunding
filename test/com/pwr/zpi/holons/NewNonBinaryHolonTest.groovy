@@ -2,10 +2,12 @@ import com.pwr.zpi.Agent
 import com.pwr.zpi.episodic.BPCollection
 import com.pwr.zpi.episodic.BaseProfile
 import com.pwr.zpi.holons.NewNonBinaryHolon
+import com.pwr.zpi.holons.context.builders.ConcreteContextBuilder
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation
 import com.pwr.zpi.holons.context.contextualisation.FilteringContextualisation
 import com.pwr.zpi.holons.context.measures.Distance
 import com.pwr.zpi.holons.context.measures.Measure
+import com.pwr.zpi.holons.context.selectors.LatestSelector
 import com.pwr.zpi.language.*
 import com.pwr.zpi.semantic.IndividualModel
 import com.pwr.zpi.semantic.ObjectType
@@ -105,7 +107,7 @@ class NewNonBinaryHolonTest extends GroovyTestCase {
         9   N   N   1
          */
 
-        contextualisation = new FilteringContextualisation(new Distance(), 3)
+
     }
 
     void buildRelatedScenario(int phaseNbr) {
@@ -150,6 +152,9 @@ class NewNonBinaryHolonTest extends GroovyTestCase {
         testCDk1 = new DistributedKnowledge(agent, cformula1, true) //with complex formula - complex distribution
 
         measure = new Distance(2)
+
+//        contextualisation = new FilteringContextualisation(new ConcreteContextBuilder(), measure,
+//                im1, new LatestSelector(), testDk1.getGroundingSetsMap());
     }
 
 

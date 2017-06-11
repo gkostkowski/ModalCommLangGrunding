@@ -5,6 +5,7 @@ package com.pwr.zpi.holons.context.contextualisation;
 
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.language.Formula;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +27,6 @@ public interface Contextualisation {
      */
     Map<Formula, Set<BaseProfile>> performContextualisation(Map<Formula, Set<BaseProfile>> namedGroundingSets);
 
-    void setMaxThreshold(double threshold);
-
     /**
      * This method provides names of all concrete implementations of this interface spoken in natural language.
      * Every contextualisation method which should be accessed via voice command must be included in resulted map.
@@ -35,7 +34,7 @@ public interface Contextualisation {
      */
     @Deprecated
     static Map<String, Class> getNaturalLanguageNames() {
-        return null;
+        throw new NotImplementedException();
         /*return new HashMap<String, Class>(){{
             put(DEFAULT_CONTEXT, null);
             put(LatestFilteringContextualisation.getContextName(), LatestFilteringContextualisation.class);
@@ -44,4 +43,6 @@ public interface Contextualisation {
         }};*/
 
     }
+
+    void setMaxThreshold(double threshold);
 }

@@ -1,8 +1,10 @@
 package com.pwr.zpi.language;
 
 import com.pwr.zpi.Agent;
+import com.pwr.zpi.Configuration;
 import com.pwr.zpi.episodic.BPCollection;
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.exceptions.InvalidConfigurationException;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
@@ -25,47 +27,10 @@ import java.util.stream.Stream;
  */
 public class Grounder {
 
-    /**
-     * Thresholds for simple modalities.
-     */
-    public static final double MIN_POS = 0.2;
-    public static final double MAX_POS = 0.6;
-    public static final double MIN_BEL = 0.7;
-    public static final double MAX_BEL = 0.9;
-    public static final double KNOW = 1.0;
 
-    /**
-     * Thresholds for modal conjunctions.
-     */
-    private static final double CONJ_MIN_POS = 0.1;
-    private static final double CONJ_MAX_POS = 0.6;
-    private static final double CONJ_MIN_BEL = 0.65;
-    private static final double CONJ_MAX_BEL = 0.9;
-    public static final double CONJ_KNOW = 1.0;
 
-    /**
-     * Thresholds for modal disjunctions. //TODO rozwazyc inne wartosci
-     */
-    private static final double DISJ_MIN_POS = 0.4;
-    private static final double DISJ_MAX_POS = 0.55;
-    private static final double DISJ_MIN_BEL = DISJ_MAX_POS;
-    private static final double DISJ_MAX_BEL = 1.0;
-    public static final double DISJ_KNOW = 1.0;
 
-    private static final double EX_DISJ_MIN_POS = 0.21;
-    private static final double EX_DISJ_MAX_POS = 0.67;
-    private static final double EX_DISJ_MIN_BEL = DISJ_MAX_POS;
-    private static final double EX_DISJ_MAX_BEL = 1;
-    public static final double EX_DISJ_KNOW = 1.0;
 
-    /**
-     * Arrays of thresholds for certain formula types. Order of elements in arrays is strictly defined and can't be other:
-     * [MIN_POS, MAX_POS, MIN_BEL, MAX_BEL, KNOW].
-     */
-    public final static double[] simpleThresholds = new double[]{MIN_POS, MAX_POS, MIN_BEL, MAX_BEL, KNOW};
-    public final static double[] conjThresholds = new double[]{CONJ_MIN_POS, CONJ_MAX_POS, CONJ_MIN_BEL, CONJ_MAX_BEL, CONJ_KNOW};
-    public final static double[] disjThresholds = new double[]{DISJ_MIN_POS, DISJ_MAX_POS, DISJ_MIN_BEL, DISJ_MAX_BEL, DISJ_KNOW};
-    public final static double[] exDisjThresholds = new double[]{EX_DISJ_MIN_POS, EX_DISJ_MAX_POS, EX_DISJ_MIN_BEL, EX_DISJ_MAX_BEL, EX_DISJ_KNOW};
     private static final double DEF_DISJ_EPS_MULTIPLIER = 1;
     private static final double DEF_EX_DISJ_EPS_MULTIPLIER = 0.25;
     private static final double EPS_FST_COEFFICIENT = 1 / 6;
@@ -92,7 +57,7 @@ public class Grounder {
     }
 
     /**
-     * Method intermediates between getGroundingSets() method and getGroundingSet() which provides concrete grounding
+     * Method intermediates between getGroundingSetsMap() method and getGroundingSet() which provides concrete grounding
      * set. This method was developed to allow seamless grounding process for conjunctions and disjunctions which base on
      * particular conjunctive grounding sets.
      * Note: it also supports simple modalities.
@@ -220,7 +185,13 @@ public class Grounder {
 //            double currRelCard = holon.getSummary(formula);
             double currRelCard = summarization.get(formula);
             ModalOperator[] checkedOps = {ModalOperator.POS, ModalOperator.BEL, ModalOperator.KNOW};
-            double[] appropriateTresholds = getThresholds(formula);
+            double[] appropriateTresholds;
+            try {
+                appropriateTresholds = getThresholds(formula);
+            } catch (InvalidConfigurationException e) {
+                Logger.getAnonymousLogger().log(Level.SEVERE, "Unable to check epistemic conditions.", e);
+                return null;
+            }
             for (int i = 0; i < checkedOps.length && res == null; i++)
                 res = checkEpistemicCondition(true, isPresentInWM, currRelCard,
                         checkedOps[i], appropriateTresholds);
@@ -237,34 +208,16 @@ public class Grounder {
 
 
     /**
-     * Returns array of appropriate thresholds for specified type.
-     *
-     * @param type
-     * @return
-     */
-    private static double[] getThresholds(Formula.Type type) {
-        switch (type) {
-            case SIMPLE_MODALITY:
-                return simpleThresholds;
-            case MODAL_CONJUNCTION:
-                return conjThresholds;
-            case MODAL_DISJUNCTION:
-                return disjThresholds;
-            case MODAL_EXCLUSIVE_DISJUNCTION:
-                return exDisjThresholds;
-            default:
-                return null;
-        }
-    }
-
-    /**
      * Returns array of appropriate thresholds for formula with specified type.
      *
      * @param formula
      * @return
      */
-    private static double[] getThresholds(Formula formula) {
-        return getThresholds(formula.getType());
+    private static double[] getThresholds(Formula formula) throws InvalidConfigurationException {
+        return Configuration.getThresholds(formula.getType());
+    }
+    private static double[] getThresholds(Formula.Type type) throws InvalidConfigurationException {
+        return Configuration.getThresholds(type);
     }
 
     public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk, Map<Formula, Double> summarization)
@@ -387,7 +340,8 @@ public class Grounder {
      * @return Pair of double values where key is lower threshold and value is upper threshold.
      * @throws NotApplicableException
      */
-    static javafx.util.Pair<Double, Double> getConcentrationEpsilonRange(ComplexFormula formula) throws NotApplicableException {
+    static javafx.util.Pair<Double, Double> getConcentrationEpsilonRange(ComplexFormula formula)
+            throws NotApplicableException, InvalidConfigurationException {
         switch (formula.getType()) {
             case MODAL_DISJUNCTION:
                 return new javafx.util.Pair<>(DEF_EPS_LOWER_RANGE, countEpsilonConcentrationPartial(DEF_DISJ_EPS_MULTIPLIER));
@@ -399,7 +353,7 @@ public class Grounder {
 
     }
 
-    static private double countEpsilonConcentrationPartial(double multiplier) {
+    static private double countEpsilonConcentrationPartial(double multiplier) throws InvalidConfigurationException {
         Formula.Type type = Formula.Type.MODAL_CONJUNCTION;
         double minPos = getThresholds(type)[0];
         double posBel = getThresholds(type)[1] == getThresholds(type)[2] ? getThresholds(type)[1] :
@@ -410,7 +364,7 @@ public class Grounder {
     /**
      * By default, returns value from the middle.
      */
-    static private double getConcentrationEpsilon(ComplexFormula formula) throws NotApplicableException {
+    static private double getConcentrationEpsilon(ComplexFormula formula) throws NotApplicableException, InvalidConfigurationException {
         javafx.util.Pair<Double, Double> range = getConcentrationEpsilonRange(formula);
         return (range.getKey()+range.getValue())/2;
     }
@@ -449,7 +403,7 @@ public class Grounder {
         try {
             return isEpsilonConcentrated(formula, getFormulasSetsFamily(formula), formula.getDependentFormulas(),
                     getConcentrationEpsilon(formula), episodicSet);
-        } catch (NotApplicableException e) {
+        } catch (NotApplicableException | InvalidConfigurationException e) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Epsilon-concentration checking was not performed.", e);
             return false;
         }

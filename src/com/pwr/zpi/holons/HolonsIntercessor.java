@@ -50,6 +50,10 @@ public class HolonsIntercessor {
         return contextualisation;
     }
 
+    public void setHolonsContextualisation(Contextualisation newContextualisation) {
+        this.contextualisation =newContextualisation;
+    }
+
     public HolonCollection getHolonsCollection() {
         return holonsCollection;
     }

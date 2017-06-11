@@ -13,6 +13,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Class implements distance measure between base profile and context. If distance is equal 0, then it means that given
@@ -46,14 +47,12 @@ public class NormalisedDistance extends Distance implements Measure {
     public double count(BaseProfile bp, Context context) throws InvalidMeasureImplementation {
         double differences = super.count(bp, context);
         Set<Trait> positive = new HashSet<>();
-        positive.addAll(bp.getRelatedTraits(context.getRelatedObject(), State.IS));
-        positive.addAll(context.getObservedTraits());
-        double allUnique = positive.size();
-        positive = new HashSet<>();
-        positive.addAll(bp.getRelatedTraits(context.getRelatedObject(), State.IS_NOT));
-        positive.addAll(context.getNotObservedTraits());
-        allUnique += positive.size();
-        double res = differences / allUnique;
+        State[] availableStates = new State[]{State.IS, State.IS_NOT, State.MAYHAPS};
+        int noOfUnique = (int)Stream.of(availableStates)
+                .map(s -> new HashSet(bp.getRelatedTraits(context.getRelatedObject(), s)))
+                .flatMap(s -> s.stream())
+                .count();
+        double res = differences / (noOfUnique*2.0);
         if (res > 1.0)
             throw new InvalidMeasureImplementation();
         return res;

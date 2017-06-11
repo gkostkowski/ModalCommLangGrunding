@@ -18,7 +18,7 @@ public abstract class Identifier {
      * @return Type of object described by this identifier.
      */
     public ObjectType getType() {
-        for(ObjectType objectType : objectTypeCollection){
+        for(ObjectType objectType : ObjectType.getObjectTypes()){
             if(objectType.getTypeId().equals(getIdNumber().substring(0,2))) //substring(0,2) returns two first chars
                 return objectType;
         }

@@ -2,10 +2,19 @@ package com.pwr.zpi;
 
 import com.pwr.zpi.conversation.Conversation;
 import com.pwr.zpi.conversation.VoiceConversation;
+import com.pwr.zpi.episodic.BPCollection;
 import com.pwr.zpi.episodic.Observation;
+import com.pwr.zpi.exceptions.InvalidContextualisationException;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
+import com.pwr.zpi.exceptions.InvalidMeasureException;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
+import com.pwr.zpi.holons.context.builders.ConcreteContextBuilder;
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
+import com.pwr.zpi.holons.context.contextualisation.FilteringContextualisation;
+import com.pwr.zpi.holons.context.measures.Distance;
+import com.pwr.zpi.holons.context.measures.FocusedDistance;
+import com.pwr.zpi.holons.context.measures.NormalisedDistance;
+import com.pwr.zpi.holons.context.selectors.LatestSelector;
 import com.pwr.zpi.language.*;
 import com.pwr.zpi.life_cycle.LifeCycle;
 import com.pwr.zpi.linguistic.Question;
@@ -21,16 +30,30 @@ class Main {
      * Realizacja przykładowych przebiegow
      * @param args
      */
-    static public void main(String... args) throws InterruptedException {
+    static public void main(String... args) throws InterruptedException, InvalidMeasureException, InvalidContextualisationException {
 
         //dbLoopTest();
 
-        Agent agent = new Agent();
+        Contextualisation latestContext= new FilteringContextualisation(new ConcreteContextBuilder(), new LatestSelector(),
+                new NormalisedDistance(0.5));
+//                new Distance(2));
+        Agent agent = new Agent.AgentBuilder()
+                .contextualisation(latestContext)
+                .build();
+        Agent agent2 = new Agent.AgentBuilder()
+                .contextualisation(latestContext)
+                .build();
+
 //        Scenario scenario = new Scenario(agent, null, "scenario01.csv", "conv001");
 //        Scenario scenario = new Scenario(agent, null, "conj_scenario01.csv", "conj conv001");
 //        //scenario.execute();
 //
 //        new Scenario(agent, null, "scenario01_main.csv", "conj conv002").execute();
+        //new Scenario(agent, null, "conj_context_scenario02.csv", "conj conv003").execute();
+
+
+        new Scenario(agent, "conj_latest_context_scenario03.csv", "conj latest context conv003").execute();
+
         QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
         Trait[] tr = new Trait[]{
                 new Trait("Red"),
@@ -43,7 +66,7 @@ class Main {
         //or
         //simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        startLifeCycle(agent, qrCodes, tr);
+        //startLifeCycle(agent, qrCodes, tr);
 
          //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
@@ -509,7 +532,7 @@ class Main {
                     put(tr2[0], false);
                 }}, t2++)};
 
-        Agent agent3 = new Agent();
+        Agent agent3 = new Agent.AgentBuilder().build();
         agent3.addObservationToDatabase(obs2);
 
         try {
