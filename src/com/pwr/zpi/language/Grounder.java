@@ -30,8 +30,8 @@ public class Grounder {
 
     private static final double DEF_DISJ_EPS_MULTIPLIER = 1;
     private static final double DEF_EX_DISJ_EPS_MULTIPLIER = 0.25;
-    private static final double EPS_FST_COEFFICIENT = 1 / 6;
-    private static final double EPS_SND_COEFFICIENT = 1 / 2;
+    private static final double EPS_FST_COEFFICIENT = 1.0 / 6.0;
+    private static final double EPS_SND_COEFFICIENT = 1.0 / 2.0;
     private static final Double DEF_EPS_LOWER_RANGE = 0.0;
 
     /**
@@ -372,33 +372,44 @@ public class Grounder {
 
 
     /**
-     * Method performs checking of fourth epistemic condition dedicated for disjunctions. Condition determines if
-     * set of respective disjunctive formulas is epsilon-concentrated according to given family of formula sets, epsilon
-     * and with usage of relative grounding sets cardinality function.
+     * Method performs checking of fourth epistemic condition dedicated for single formula (dependent conjunction)
+     * which is a member of dependent conjunctions set.
+     * When determining fulfillment, three conditions are taken into consideration:
+     * <ol>
+     *     <li>If formula is a member of relevant family of formulas,</li>
+     *     <li>is the set's diameter value enough small,</li>
+     *     <li>is given set of dependent formulas minimal</li>
+     * </ol>
      *
-     * @param formula
-     * @param relevantFamily
-     * @param dependentFormulas
+     * @param conjunction
      * @param concentrationEpsilon
      * @param episodicSet
      * @return
      */
-    private static boolean isEpsilonConcentrated(ComplexFormula formula, List<Set<ComplexFormula>> relevantFamily,
-                                                 Collection<Formula> dependentFormulas, double concentrationEpsilon, Set<BaseProfile> episodicSet) {
+    private static boolean isFormulaEpsilonConcentrated(ComplexFormula conjunction,
+                                                 Set<BaseProfile> episodicSet, double concentrationEpsilon) {
+
+        List<Formula> dependentFormulas = conjunction.getDependentFormulas();
+        if(!isMemberOfFamily(conjunction, dependentFormulas))
+            return false;
+        try {
+            return countSetDiameter(conjunction, dependentFormulas, episodicSet) <= concentrationEpsilon
+                    && isSetMinimal(conjunction, dependentFormulas, episodicSet, concentrationEpsilon);
+        } catch (InvalidFormulaException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Cannot determine epsilon concentration.", e);
+            return false;
+        }
+    }
+
+    private static boolean isMemberOfFamily(ComplexFormula conjunction, List<Formula> dependentFormulas) {
         boolean isMemberOfFamily = false;
-        for (Set<ComplexFormula> l : relevantFamily)
+        for (Set<ComplexFormula> l : getFormulasSetsFamily(conjunction))
             isMemberOfFamily = new ArrayList<>(l).containsAll(dependentFormulas) || isMemberOfFamily;
         if (!isMemberOfFamily) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Given dependentFormulas set does not belong to specified family of formulas");
             return false;
         }
-        try {
-            return countSetDiameter(formula, dependentFormulas, episodicSet) <= concentrationEpsilon
-                    && isSetMinimal(formula, dependentFormulas, episodicSet, concentrationEpsilon);
-        } catch (InvalidFormulaException e) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Cannot determine epsilon concentration.", e);
-            return false;
-        }
+        return isMemberOfFamily;
     }
 
     /**
@@ -409,6 +420,9 @@ public class Grounder {
      * @return True, if this condition is fulfilled; false otherwise.
      */
     public static boolean checkEpsilonConcentratedCondition(ComplexFormula disjunction, Set<BaseProfile> episodicSet) {
+        if (disjunction == null || episodicSet == null) {
+            throw new NullPointerException("One of parameter was not provided");
+        }
         double relevantEpsilonValue = 0;
         try {
             relevantEpsilonValue = getConcentrationEpsilon(disjunction);
@@ -416,25 +430,25 @@ public class Grounder {
             Logger.getAnonymousLogger().log(Level.WARNING, "Epsilon-concentration checking was not performed.", e);
             return false;
         }
-        return isEpsilonConcentrated(disjunction.getDependentFormulas(), episodicSet, relevantEpsilonValue);
+        return isSetEpsilonConcentrated(disjunction.getDependentFormulas(), episodicSet, relevantEpsilonValue);
     }
 
-    private static boolean isEpsilonConcentrated(List<Formula> dependentFormulas, Set<BaseProfile> episodicSet, double epsilon) {
-        if (dependentFormulas == null || dependentFormulas.isEmpty())
-            throw new NullPointerException("Formulas were not provided");
+    /**
+     * Checks if set of dependent formulas is epsilon-concentrated for given epsilon value.
+     * @param dependentFormulas
+     * @param episodicSet
+     * @param epsilon
+     * @return
+     */
+    private static boolean isSetEpsilonConcentrated(List<Formula> dependentFormulas, Set<BaseProfile> episodicSet, double epsilon) {
         for (Formula formula : dependentFormulas) {
-            if (!isEpsilonConcentrated((ComplexFormula) formula, episodicSet, epsilon))
+            ComplexFormula conjunction = (ComplexFormula) formula;
+            if (!isFormulaEpsilonConcentrated(conjunction, episodicSet, epsilon))
                 return false;
         }
         return true;
     }
 
-    private static boolean isEpsilonConcentrated(ComplexFormula formula, Set<BaseProfile> episodicSet, double epsilon) {
-        if (formula == null)
-            throw new NullPointerException("Formula was not provided");
-        return isEpsilonConcentrated(formula, getFormulasSetsFamily(formula), formula.getDependentFormulas(),
-                epsilon, episodicSet);
-    }
 
     private static boolean isSetMinimal(ComplexFormula formula, Collection<Formula> formulasSet,
                                         Set<BaseProfile> episodicSet, double concentrationEpsilon) {

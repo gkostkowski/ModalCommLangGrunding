@@ -24,16 +24,17 @@ import java.util.logging.Logger;
  * @author Grzegorz Kostkowski
  */
 public class XMLDAO<T extends ObjectType> {
-    private static final String MAIN_MODULE_PATH = "ModalCommLangGrunding";
+    private static final String MAIN_MODULE_NAME = "ModalCommLangGrunding";
     protected XStream xstream = new XStream(new DomDriver());
     protected String xml;
-    protected static final String DEF_FILEPATH = makePath() + "\\config\\types_def.xml";
+    protected static final String DEF_RELATIVE_FILEPATH ="\\config\\types_def.xml";
+    protected static final String DEF_FILEPATH = makePath() + DEF_RELATIVE_FILEPATH;
 
     private static String makePath() {
         File currDir = new File(System.getProperty("user.dir"));
-        if (!currDir.toString().contains(MAIN_MODULE_PATH))
+        if (!currDir.toString().contains(MAIN_MODULE_NAME))
             throw new IllegalArgumentException("Invalid module name - provide correct one.");
-        if (!currDir.getName().equals(MAIN_MODULE_PATH))
+        if (!currDir.getName().equals(MAIN_MODULE_NAME))
             return currDir.getParent().toString();
         return currDir.toString();
     }

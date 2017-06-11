@@ -30,7 +30,7 @@ class GrounderTest extends GroovyTestCase {
     BPCollection bpCollection1
     Agent agent
     SimpleFormula sformula1, sformula2, sformula3
-    ComplexFormula cformula1, cformula2, cformula3, cformula4, cformula5, cformula6
+    ComplexFormula cformula1, cformula2, cformula3, cformula4, cformula5, cformula6, cformula7, cformula8
     DistributedKnowledge testDk, testDk1, testDk2, testDk3, testDk4, testDk5, testDk6,
                          testCDk1, testCDk2
 
@@ -201,17 +201,17 @@ NR  RED WHI BLI
 
         ] as List, t1)
         bp2_a = new BaseProfile([[(tr1): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
-                               [(tr2): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
-                               new HashMap<Trait, Set<IndividualModel>>()
+                                 [(tr2): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                                 new HashMap<Trait, Set<IndividualModel>>()
         ] as List, t2)
-        bp3_a = new BaseProfile([[(tr1): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
-                               [(tr2): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
-                               new HashMap<Trait, Set<IndividualModel>>()
+        bp3_a = new BaseProfile([[(tr2): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                                 [(tr1): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                                 new HashMap<Trait, Set<IndividualModel>>()
 
         ] as List, t3)
-        bp4_a = new BaseProfile([[(tr1): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
-                               [(tr2): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
-                               [(tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>
+        bp4_a = new BaseProfile([[(tr2): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                                 [(tr1): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                                 new HashMap<Trait, Set<IndividualModel>>()
         ] as List, t4)
         bp5_a = new BaseProfile([new HashMap<Trait, Set<IndividualModel>>(),
                                [(tr2): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
@@ -239,10 +239,10 @@ NR  RED WHI BLI
 NR  RED WHI BLI
 1   1   0   0
 2   1   0   0
-3   1   0   1
-4   N   0   1
+3   0   1   1
+4   0   1   1
+5   N   0   1
 -------------
-5   0   0   0
 6   0   0   1
 7   1   1   1
 8   0   1   0
@@ -260,7 +260,7 @@ NR  RED WHI BLI
                 bpCollection1 = new BPCollection([bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9] as Set, [] as Set)
                 break
             case 3:
-                bpCollection1 = new BPCollection([bp1_a, bp2_a, bp3_a, bp4_a/*, bp5_a, bp6_a, bp7_a, bp8_a, bp9_a*/] as Set, [] as Set)
+                bpCollection1 = new BPCollection([bp1_a, bp2_a, bp3_a, bp4_a, bp5_a/*, bp6_a, bp7_a, bp8_a, bp9_a*/] as Set, [] as Set)
                 break
         }
 
@@ -283,6 +283,10 @@ NR  RED WHI BLI
                 [State.IS_NOT, State.IS_NOT], LogicOperator.OR)
         cformula6 = new ComplexFormula(formulaIM, [tr2, tr3],
                 [State.IS, State.IS_NOT], LogicOperator.OR)
+        cformula7 = new ComplexFormula(formulaIM, [tr1, tr2],
+                [State.IS_NOT, State.IS_NOT], LogicOperator.OR)
+        cformula8 = new ComplexFormula(formulaIM, [tr1, tr2],
+                [State.IS, State.IS], LogicOperator.XOR)
 
     }
 
@@ -407,12 +411,13 @@ NR  RED WHI BLI
     void testIsEpsilonConcentrated() {
         buildRelatedScenario(2)
         assertFalse(Grounder.checkEpsilonConcentratedCondition(cformula5, [bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9] as Set<BaseProfile>))
+        assertTrue(Grounder.checkEpsilonConcentratedCondition(cformula8, [bp1_a, bp2_a, bp3_a, bp4_a, bp5_a] as Set<BaseProfile>))
 
     }
 
     @Test
     void testCountSetDiameter() {
-        buildRelatedScenario(2)
+        buildRelatedScenario(3)
 
         //dependent test  todo should be moved to FormulaTest
         def dependent = cformula5.getDependentFormulas()
@@ -421,8 +426,15 @@ NR  RED WHI BLI
         def expected3 = new ComplexFormula(cformula5.getModel(), cformula5.getTraits(), [State.IS, State.IS_NOT]as List<State>, LogicOperator.AND)
         assertTrue(dependent.containsAll([expected1, expected3, expected2]as List<ComplexFormula>) && dependent.size()==3)
         //
-
-        println Grounder.relativeCard_(Grounder.getGroundingSets(dependent.get(0), [bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9]as Set<BaseProfile>))
         assertEquals(0.6, Grounder.countSetDiameter(dependent.get(0), dependent, [bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9]as Set<BaseProfile>))
+
+        dependent = cformula8.getDependentFormulas()
+//        println Grounder.relativeCard_(Grounder.getGroundingSets(dependent.get(0), [bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9]as Set<BaseProfile>))
+        println Grounder.relativeCard_(Grounder.getGroundingSets(dependent.get(0), [bp1_a, bp2_a, bp3_a, bp4_a, bp5_a]as Set<BaseProfile>))
+        println cformula8
+        println dependent.get(0)
+        println dependent.get(1)
+        println( Grounder.countSetDiameter(dependent.get(0), dependent, [bp1_a, bp2_a, bp3_a, bp4_a, bp5_a]as Set<BaseProfile>))
+        println( Grounder.countSetDiameter(dependent.get(1), dependent, [bp1_a, bp2_a, bp3_a, bp4_a, bp5_a]as Set<BaseProfile>))
     }
 }

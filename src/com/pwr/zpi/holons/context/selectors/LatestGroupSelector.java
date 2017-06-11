@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 public class LatestGroupSelector implements RepresentativesSelector {
 
-    private static final int DEF_GROUP_SIZE = 5;
+    private static final int DEF_LATEST_GROUP_SIZE = 5;
     private int groupSize;
 
     public LatestGroupSelector(int groupSize) throws InvalidGroupSelectorException {
@@ -36,7 +36,7 @@ public class LatestGroupSelector implements RepresentativesSelector {
      */
     @Override
     public Set<BaseProfile> select(Map<Formula, Set<BaseProfile>> namedGroundingSets){
-        int groupSize = this.groupSize != 0 ? this.groupSize : DEF_GROUP_SIZE;
+        int groupSize = this.groupSize != 0 ? this.groupSize : DEF_LATEST_GROUP_SIZE;
         if (namedGroundingSets == null || namedGroundingSets.isEmpty()) {
             throw new NullPointerException("Representative base profiles cannot be resolved.");
         }
