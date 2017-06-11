@@ -291,9 +291,13 @@ public class Agent {
 
 
         public AgentBuilder() {
-            if (Agent.database != null)
+            /*if (Agent.database != null)
                 Agent.database.deleteDatabase();
-            this.database = Agent.database = new DatabaseAO(ObjectType.getObjectTypes());
+            this.database = Agent.database = new DatabaseAO(ObjectType.getObjectTypes());*/ //todo
+
+            if (Agent.database == null)
+                Agent.database = new DatabaseAO(ObjectType.getObjectTypes());
+            this.database = Agent.database;
             this.models = new IMCollection();
             this.knowledgeBase = new BPCollection();
             this.contextualisation =null;
