@@ -16,7 +16,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
 
 /**
  * Class contains methods used in process of grounding natural language.
@@ -816,8 +815,6 @@ public class Grounder {
                         sum++;
                     }
                 }
-            }
-
             }
         }
         if (sum != 0) {
