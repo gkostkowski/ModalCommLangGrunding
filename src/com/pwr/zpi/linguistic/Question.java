@@ -67,7 +67,7 @@ public class Question {
      */
     public Formula getFormula() throws InvalidQuestionException, InvalidFormulaException
     {
-        if(length<2)
+        if(length<5)
             throw new InvalidQuestionException(InvalidQuestionException.NO_QUESTION);
         List<Trait> traits = new ArrayList<>();
         List<State> states = new ArrayList<>();
@@ -121,9 +121,10 @@ public class Question {
      */
     private void findIndividualModel() throws InvalidQuestionException
     {
-        String name = parts[1];
+        index = 3;
+        String name = parts[index];
         individualModel = agent.getModels().getRepresentationByName(name);
-        index=2;
+        index++;
         while(index<length-1 && individualModel==null)
         {
             name += " " + parts[index];

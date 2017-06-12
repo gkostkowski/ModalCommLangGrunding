@@ -76,9 +76,9 @@ public class LifeCycle implements Runnable {
                 release(true);
             }
             String question = listeningThread.getQuestion();
-            if(question!=null)System.out.println(question);
             if(question!=null)
             {
+                System.out.println(question);
                 new AnswerThread(talkingThread, question, this, agent);
             }
         }

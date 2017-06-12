@@ -249,26 +249,6 @@ public class Agent {
         updateBeliefs();
     }
 
-    /**
-     * Methods performs question processing and the expected result is the answer.
-     * This method should be run by controller.
-     *
-     * @param question
-     * @param voiceConversation
-     */
-    public void processQuestion(Question question, VoiceConversation voiceConversation) {
-        ComplexStatement ss = null;
-        try {
-            Formula formula = question.getFormula();
-            ss = new ComplexStatement((ComplexFormula) formula,
-                    Grounder.performFormulaGrounding(this, formula), question.getName());
-        } catch (InvalidFormulaException | NotApplicableException | NotConsistentDKException | InvalidQuestionException e) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Question can't be processed.", e);
-            voiceConversation.setCurrentAnswer(Question.DEFAULT_FAILURE_ANSWER);
-        }
-        voiceConversation.setCurrentAnswer(ss.generateStatement());
-    }
-
     public Map<Formula, Double> getSummarization(Formula currFormula, int timestamp) {
         return holonsIntercessor.getSummaries(currFormula, timestamp);
     }

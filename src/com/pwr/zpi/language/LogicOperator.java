@@ -2,7 +2,7 @@ package com.pwr.zpi.language;
 
 
 /**
- * //todo
+ * Enum which collects all the logic operators which can be used in grounded complex formula
  */
 public enum LogicOperator {
 

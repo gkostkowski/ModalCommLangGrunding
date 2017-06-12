@@ -43,7 +43,7 @@ public class CompositeContext implements Contextualisation {
      */
     @Override
     public Map<Formula, Set<BaseProfile>> performContextualisation(Map<Formula, Set<BaseProfile>> namedGroundingSets) {
-        /*Map<Formula, Set<BaseProfile>> out = new HashMap<>();
+        Map<Formula, Set<BaseProfile>> out = new HashMap<>();
         for(Formula f:namedGroundingSets.keySet()){
 
             Set<BaseProfile> givenLast = new HashSet<>();
@@ -66,8 +66,7 @@ public class CompositeContext implements Contextualisation {
                 else{contextTraits.setK(new Pair<>(f,lilContextTraits));}
             }
         }
-        return out;*/
-        throw new NotImplementedException();
+        return out;
     }
 
     public Pair<Set<Trait>,Set<Trait>> fidlar(BaseProfile[] contextArray) {

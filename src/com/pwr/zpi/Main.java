@@ -1,28 +1,19 @@
 package com.pwr.zpi;
 
 import com.pwr.zpi.conversation.Conversation;
-import com.pwr.zpi.conversation.VoiceConversation;
-import com.pwr.zpi.episodic.BPCollection;
 import com.pwr.zpi.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidContextualisationException;
-import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidMeasureException;
-import com.pwr.zpi.exceptions.InvalidQuestionException;
 import com.pwr.zpi.holons.context.builders.ConcreteContextBuilder;
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.holons.context.contextualisation.FilteringContextualisation;
-import com.pwr.zpi.holons.context.measures.Distance;
-import com.pwr.zpi.holons.context.measures.FocusedDistance;
 import com.pwr.zpi.holons.context.measures.NormalisedDistance;
 import com.pwr.zpi.holons.context.selectors.LatestSelector;
-import com.pwr.zpi.language.*;
+import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.life_cycle.LifeCycle;
-import com.pwr.zpi.linguistic.Question;
 import com.pwr.zpi.semantic.QRCode;
 
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class Main {
 
@@ -52,7 +43,7 @@ class Main {
         //new Scenario(agent, null, "conj_context_scenario02.csv", "conj conv003").execute();
 
 
-        new Scenario(agent, "conj_latest_context_scenario03.csv", "conj latest context conv003").execute();
+  //      new Scenario(agent, "conj_latest_context_scenario03.csv", "conj latest context conv003").execute();
 
         QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
         Trait[] tr = new Trait[]{
@@ -62,11 +53,11 @@ class Main {
                 new Trait("Blue"),
                 new Trait("Soft")};
 
-         //simplyModalitiesScenario(agent, qrCodes, tr);
+        // simplyModalitiesScenario(agent, qrCodes, tr);
         //or
         //simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        //startLifeCycle(agent, qrCodes, tr);
+        startLifeCycle(agent, qrCodes, tr);
 
          //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
@@ -78,84 +69,31 @@ class Main {
     private static void startLifeCycle(Agent agent, QRCode[] qrCodes, Trait[] tr)
     {
         int t = 0;
-        Observation[] obsTill3  = new Observation[]{ //inclusively
-                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
-                    put(tr[1], false);
-                    put(tr[2], false);
-                }}, t++),
-                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
-                    put(tr[1], false);
-                    put(tr[2], false);
-                }}, t++),
-                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
-                    put(tr[1], true);
-                    put(tr[2], true);
-                }}, t++),
-                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
-                    put(tr[1], null);
-                    put(tr[2], null);
-                }}, t++)
-        };
-        agent.addAndUpdate(obsTill3);
+        agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+            put(tr[0], true);
+            put(tr[1], false);
+            put(tr[2], false);
+        }}, t++));
+        agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+            put(tr[0], true);
+            put(tr[1], false);
+            put(tr[2], false);
+        }}, t++));
+        agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+            put(tr[0], true);
+            put(tr[1], true);
+            put(tr[2], true);
+        }}, t++));
+        agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
+            put(tr[0], true);
+            put(tr[1], null);
+            put(tr[2], null);
+        }}, t++));
         agent.getModels().addNameToModel(qrCodes[0], "Bobby");
 
         LifeCycle lf = new LifeCycle(agent);
         lf.start();
 
-    }
-
-    private static void testVoice(Agent agent, QRCode[] qrCodes, Trait[] tr){
-
-        agent.getModels().addNameToModel(qrCodes[0], "Bobby");
-        int t = 0;
-
-        Observation[] obsTill3  = new Observation[]{ //inclusively
-                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
-                    put(tr[1], false);
-                    put(tr[2], false);
-                }}, t++),
-                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
-                    put(tr[1], false);
-                    put(tr[2], false);
-                }}, t++),
-                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
-                    put(tr[1], true);
-                    put(tr[2], true);
-                }}, t++),
-                new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
-                    put(tr[0], true);
-                    put(tr[1], null);
-                    put(tr[2], null);
-                }}, t++)
-        };
-        agent.addAndUpdate(obsTill3);
-
-        ///to powinno być w kontrolerze
-        VoiceConversation voiceConversation = new VoiceConversation();
-        voiceConversation.start();
-        while(voiceConversation.getCurrentQuestion()==null)
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        Question question = new Question(voiceConversation.getCurrentQuestion(), agent);
-        try {
-            Formula formula = question.getFormula();
-            System.out.print(formula.getModel().getIdentifier().getIdNumber() + " " + formula.getTraits().get(0).getName());
-            agent.processQuestion(question, voiceConversation);
-        } catch (InvalidFormulaException | InvalidQuestionException e) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Question or formula is malformed.", e);
-        }
-
-        /////
     }
 
     /**

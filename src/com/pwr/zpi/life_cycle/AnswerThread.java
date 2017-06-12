@@ -7,6 +7,8 @@ import com.pwr.zpi.language.*;
 import com.pwr.zpi.linguistic.*;
 
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Thread that processes the question asked to agent. There are allowed multiple instances of this thread during the same
@@ -80,9 +82,12 @@ public class AnswerThread implements Runnable {
             talkingThread.addAnswer(e.getMessage());
             releaseResources(formula);
         } catch (Exception e) {
-            talkingThread.addAnswer("Somethig terrible happend");
+            talkingThread.addAnswer("Something terrible happened");
+            Logger.getAnonymousLogger().log(Level.WARNING, "not able to answer - unidentified exception", e);
+            e.printStackTrace();
             releaseResources(formula);}
     }
+
 
     private void releaseResources(Formula formula)
     {

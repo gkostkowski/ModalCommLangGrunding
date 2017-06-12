@@ -15,8 +15,7 @@ public class Trait implements Comparable<Trait> {
     }
 
     /**
-     *
-     * @return Name of Trait.
+     * @return name of Trait.
      */
     public String getName() {
         return name;

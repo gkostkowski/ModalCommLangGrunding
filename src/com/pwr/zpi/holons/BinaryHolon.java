@@ -165,14 +165,12 @@ public class BinaryHolon implements Holon,Comparable<BinaryHolon> {
      */
     @Override
     public List<Formula> getAffectedFormulas() {
-        return null;
+        return formula;
     }
 
     /**
      * Returns context which was used to build grounding sets for this holon.
      */
-
-    @Override
     public Integer getTimestamp() {
         return timestamp;
     }

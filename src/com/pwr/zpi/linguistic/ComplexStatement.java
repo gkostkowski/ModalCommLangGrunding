@@ -247,24 +247,20 @@ public class ComplexStatement extends Statement {
      * @return String with sentence
      */
     private String generateRestOfSentence(FormulaCase formulaCase, boolean isName) {
-        String op = "";
         String subject = (isName) ? name : "it";
-        if (operator.equals(LogicOperator.AND))
-            op = " and ";
-        else if (operator.equals(LogicOperator.OR))
-            op = " or ";
+        String isXOR = (formula.getOperator()==LogicOperator.XOR)? "either " : "";
         if (formulaCase.equals(FormulaCase.PQ))
-            return subject + " is " + formula.getTraits().get(0).getName()
-                    + op + formula.getTraits().get(1).getName();
+            return subject + " is " + isXOR + formula.getTraits().get(0).getName()
+                    + formula.getOperator() + formula.getTraits().get(1).getName();
         if (formulaCase.equals(FormulaCase.NPQ))
-            return subject + " is not " + formula.getTraits().get(0).getName()
-                    + op + formula.getTraits().get(1).getName();
+            return subject + " is " + isXOR + "not " + formula.getTraits().get(0).getName()
+                    + formula.getOperator() + formula.getTraits().get(1).getName();
         if (formulaCase.equals(FormulaCase.PNQ))
-            return subject + " is " + formula.getTraits().get(0).getName()
-                    + op + "not " + formula.getTraits().get(1).getName();
+            return subject + " is " + isXOR + formula.getTraits().get(0).getName()
+                    + formula.getOperator() + "not " + formula.getTraits().get(1).getName();
         if (formulaCase.equals(FormulaCase.NPNQ))
-            return subject + " is not " + formula.getTraits().get(0).getName()
-                    + op + "not " + formula.getTraits().get(1).getName();
+            return subject + " is " + isXOR + "not " + formula.getTraits().get(0).getName()
+                    + formula.getOperator() + "not " + formula.getTraits().get(1).getName();
         return null;
     }
 

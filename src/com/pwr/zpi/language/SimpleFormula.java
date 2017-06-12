@@ -13,7 +13,7 @@ import java.util.List;
  * @author Weronika Wolska
  * @author Grzegorz Kostkowski
  */
-public class SimpleFormula extends Formula {
+public class SimpleFormula extends Formula implements Comparable<SimpleFormula>{
 
     private IndividualModel individualModel;
     private Trait trait;
@@ -208,4 +208,10 @@ public class SimpleFormula extends Formula {
         return Arrays.asList(new Formula[]{this});
     }
 
+    @Override
+    public int compareTo(SimpleFormula o) {
+        int val1 = getStates().hashCode() + getTrait().hashCode() + individualModel.hashCode();
+        int val2 = o.getStates().hashCode() + o.getTrait().hashCode() + o.individualModel.hashCode();
+        return val1 > val2 ? 1 : (val1 < val2 ? -1 : 0);
+    }
 }

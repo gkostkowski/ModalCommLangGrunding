@@ -170,11 +170,6 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
         return contextualisation;
     }
 
-    @Override
-    public Integer getTimestamp() {
-        return null;
-    }
-
     /**
      * Compares this object with the specified object for order.  Returns a
      * negative integer, zero, or a positive integer as this object is less
@@ -226,8 +221,4 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
         return res > res2 ? 1: (res < res2 ? -1 : 0);
     }
 
-    @Override
-    public Integer getTimestamp() {
-        throw new NotImplementedException();
-    }
 }

@@ -199,8 +199,4 @@ public class NonBinaryHolon implements Holon{
 		return null;
 	}
 
-	@Override
-	public Integer getTimestamp() {
-        throw new NotImplementedException();
-	}
 }

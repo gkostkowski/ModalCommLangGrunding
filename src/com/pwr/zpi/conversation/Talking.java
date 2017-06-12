@@ -116,7 +116,6 @@ public class Talking implements Runnable {
                     Thread.sleep(500);
                 JSONObject object = new JSONObject();
                 listeningThread.shouldStopListening(true);
-                System.out.println(answers.peek().length());
                 object.put("message", answers.peek());
                 printWriter.println(object.toString());
                 printWriter.flush();

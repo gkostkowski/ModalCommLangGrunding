@@ -112,7 +112,6 @@ public class Listening implements Runnable {
                 String question = bufferedReader.readLine();
                 JSONObject object = new JSONObject(question);
                 questions.add(object.getString("message"));
-                System.out.println(questions.peek());
             } catch (IOException e) { }
             catch (JSONException e) {
                 e.printStackTrace();
