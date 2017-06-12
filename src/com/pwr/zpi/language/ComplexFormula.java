@@ -347,4 +347,10 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
         return null;
     }
 
+    public static Collection<ComplexFormula> asComplexFormulas(List<Formula> formulasSet) {
+        List<ComplexFormula> res = new ArrayList<>();
+        for (Formula f: formulasSet)
+            res.add((ComplexFormula) f);
+        return res;
+    }
 }

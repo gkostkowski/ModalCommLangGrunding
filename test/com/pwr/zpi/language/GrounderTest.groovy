@@ -410,7 +410,9 @@ NR  RED WHI BLI
     @Test
     void testIsEpsilonConcentrated() {
         buildRelatedScenario(2)
+        println("first check")
         assertFalse(Grounder.checkEpsilonConcentratedCondition(cformula5, [bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9] as Set<BaseProfile>))
+        println("second check")
         assertTrue(Grounder.checkEpsilonConcentratedCondition(cformula8, [bp1_a, bp2_a, bp3_a, bp4_a, bp5_a] as Set<BaseProfile>))
 
     }

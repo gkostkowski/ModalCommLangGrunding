@@ -9,7 +9,6 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.NonBinaryHolon;
-import com.pwr.zpi.util.Permutation;
 import com.sun.istack.internal.Nullable;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -298,39 +297,38 @@ public class Grounder {
      * @param protoform Formula which will be used to build relevant family of sets.
      * @return formulas sets family.
      */
-    static List<Set<ComplexFormula>> getFormulasSetsFamily(ComplexFormula protoform) {
+    static List<Set<Formula>> getFormulasSetsFamily(ComplexFormula protoform) {
         if (protoform == null)
             throw new NullPointerException("Protoform was not provided.");
-        List<Formula> complForm;
+
+        ComplexFormula disjunction, exDisjunction, conjunction;
         try {
-            complForm = protoform.getDependentFormulas().get(0).getStandardFormula().getComplementaryFormulas();
+            disjunction = protoform.transformTo(LogicOperator.OR);
+            exDisjunction = protoform.transformTo(LogicOperator.XOR);
+            conjunction = protoform.transformTo(LogicOperator.AND);
         } catch (InvalidFormulaException e) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Unable to build family of sets for given formula.", e);
             return null;
         }
-        return new ArrayList<Set<ComplexFormula>>() {{
-            add(new HashSet<ComplexFormula>() {{
-                add((ComplexFormula) complForm.get(0));
+
+        List<Set<Formula>> res = new ArrayList<Set<Formula>>();
+        try {
+            for (Formula conj : conjunction.getComplementaryFormulas())
+                res.add(new HashSet<Formula>() {{
+                    add(conj);
+                }});
+            res.add(new HashSet<Formula>() {{
+                addAll(exDisjunction.getDependentFormulas());
             }});
-            add(new HashSet<ComplexFormula>() {{
-                add((ComplexFormula) complForm.get(2));
+
+            res.add(new HashSet<Formula>() {{
+                addAll(disjunction.getDependentFormulas());
             }});
-            add(new HashSet<ComplexFormula>() {{
-                add((ComplexFormula) complForm.get(1));
-            }});
-            add(new HashSet<ComplexFormula>() {{
-                add((ComplexFormula) complForm.get(3));
-            }});
-            add(new HashSet<ComplexFormula>() {{
-                add((ComplexFormula) complForm.get(1));
-                add((ComplexFormula) complForm.get(2));
-            }});
-            add(new HashSet<ComplexFormula>() {{
-                add((ComplexFormula) complForm.get(0));
-                add((ComplexFormula) complForm.get(1));
-                add((ComplexFormula) complForm.get(2));
-            }});
-        }};
+        } catch (InvalidFormulaException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Unable to build family of sets for given formula.", e);
+            return null;
+        }
+        return res;
     }
 
     /**
@@ -371,45 +369,23 @@ public class Grounder {
     }
 
 
-    /**
-     * Method performs checking of fourth epistemic condition dedicated for single formula (dependent conjunction)
-     * which is a member of dependent conjunctions set.
-     * When determining fulfillment, three conditions are taken into consideration:
-     * <ol>
-     *     <li>If formula is a member of relevant family of formulas,</li>
-     *     <li>is the set's diameter value enough small,</li>
-     *     <li>is given set of dependent formulas minimal</li>
-     * </ol>
-     *
-     * @param conjunction
-     * @param concentrationEpsilon
-     * @param episodicSet
-     * @return
-     */
-    private static boolean isFormulaEpsilonConcentrated(ComplexFormula conjunction,
-                                                 Set<BaseProfile> episodicSet, double concentrationEpsilon) {
-
-        List<Formula> dependentFormulas = conjunction.getDependentFormulas();
-        if(!isMemberOfFamily(conjunction, dependentFormulas))
-            return false;
-        try {
-            return countSetDiameter(conjunction, dependentFormulas, episodicSet) <= concentrationEpsilon
-                    && isSetMinimal(conjunction, dependentFormulas, episodicSet, concentrationEpsilon);
-        } catch (InvalidFormulaException e) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Cannot determine epsilon concentration.", e);
-            return false;
-        }
-    }
-
-    private static boolean isMemberOfFamily(ComplexFormula conjunction, List<Formula> dependentFormulas) {
+    private static boolean isMemberOfFamily(ComplexFormula formula, Collection<Formula> familyCandidate) {
         boolean isMemberOfFamily = false;
-        for (Set<ComplexFormula> l : getFormulasSetsFamily(conjunction))
-            isMemberOfFamily = new ArrayList<>(l).containsAll(dependentFormulas) || isMemberOfFamily;
-        if (!isMemberOfFamily) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Given dependentFormulas set does not belong to specified family of formulas");
+        ComplexFormula standardFormula;
+        try {
+            standardFormula = (ComplexFormula) Formula.getStandardFormula(familyCandidate);
+        } catch (InvalidFormulaException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Not able to check if formula is member of family.", e);
             return false;
         }
-        return isMemberOfFamily;
+        for (Set<Formula> familyMember : getFormulasSetsFamily(formula))
+            isMemberOfFamily = new ArrayList<>(familyMember).containsAll(familyCandidate)
+                    && familyCandidate.containsAll(familyMember) || isMemberOfFamily;
+        if (!isMemberOfFamily) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Given familyCandidate set does not belong to specified family of formulas");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -430,48 +406,74 @@ public class Grounder {
             Logger.getAnonymousLogger().log(Level.WARNING, "Epsilon-concentration checking was not performed.", e);
             return false;
         }
-        return isSetEpsilonConcentrated(disjunction.getDependentFormulas(), episodicSet, relevantEpsilonValue);
+        return isSetEpsilonConcentrated(disjunction, episodicSet, relevantEpsilonValue);
     }
-
     /**
-     * Checks if set of dependent formulas is epsilon-concentrated for given epsilon value.
-     * @param dependentFormulas
+     *
+     * @param conjunction
+     * @param concentrationEpsilon
      * @param episodicSet
-     * @param epsilon
      * @return
      */
-    private static boolean isSetEpsilonConcentrated(List<Formula> dependentFormulas, Set<BaseProfile> episodicSet, double epsilon) {
-        for (Formula formula : dependentFormulas) {
-            ComplexFormula conjunction = (ComplexFormula) formula;
-            if (!isFormulaEpsilonConcentrated(conjunction, episodicSet, epsilon))
-                return false;
+    /**
+     * Checks if set of dependent formulas is epsilon-concentrated for given epsilon value.
+     * Method performs checking of fourth epistemic condition dedicated for certain set of formulas which is
+     * set of dependent conjunctions.
+     * When determining fulfillment, three conditions are taken into consideration:
+     * <ol>
+     * <li>If set is a member of relevant family of formulas,</li>
+     * <li>if the set's diameter value is enough small,</li>
+     * <li>if given set of dependent formulas is minimal</li>
+     * </ol>
+
+     * @param formula
+     * @param episodicSet Set of all available base profiles.
+     * @param epsilon Value of epsilon.
+     * @return True if condition is fulfilled; false otherwise.
+     */
+    private static boolean isSetEpsilonConcentrated(ComplexFormula formula,
+                                                    Set<BaseProfile> episodicSet, double epsilon) {
+
+        List<Formula> formulasSet = formula.getDependentFormulas();
+        if (!isMemberOfFamily(formula, formulasSet))
+            return false;
+        try {
+            return countSetDiameter(formulasSet, episodicSet) <= epsilon
+                    && isSetMinimal(formulasSet, episodicSet, epsilon);
+        } catch (InvalidFormulaException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Cannot determine epsilon concentration.", e);
+            return false;
         }
-        return true;
     }
 
 
-    private static boolean isSetMinimal(ComplexFormula formula, Collection<Formula> formulasSet,
+    private static boolean isSetMinimal(Collection<Formula> formulasSet,
                                         Set<BaseProfile> episodicSet, double concentrationEpsilon) {
         if (formulasSet.isEmpty()) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Provided collection of formulas cannot be empty.");
             return false;
         }
-        if (formulasSet.size() == 1)
-            return true;
-        else {
-            List<ArrayList<Formula>> allPosMinimalSets = Permutation
-                    .getAllPossiblePermutations(new ArrayList<Formula>(formulasSet), formula.comparator());
-            for (List<Formula> minimalElem : allPosMinimalSets) {
-                try {
-                    if (countSetDiameter(formula, minimalElem, episodicSet) < concentrationEpsilon)
-                        return false;
-                } catch (InvalidFormulaException e) {
-                    Logger.getAnonymousLogger().log(Level.WARNING, "Cannot determine IsMinimal condition.", e);
-                    return false;
-                }
-            }
-            return true;
+
+        ComplexFormula standardFormula= null;
+        try {
+            standardFormula = (ComplexFormula) Formula.getStandardFormula(formulasSet);
+        } catch (InvalidFormulaException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Unable to determine if set is minimal", e);
+            return false;
         }
+        List<Set<Formula>> relevantFamily = getFormulasSetsFamily(standardFormula);
+        List<Set<Formula>> allPosMinimalSets = Formula.getFormulaSupersets(formulasSet, relevantFamily);
+
+        for (Collection<Formula> minimalElem : allPosMinimalSets) {
+            try {
+                if (countSetDiameter(minimalElem, episodicSet) < concentrationEpsilon)
+                    return false;
+            } catch (InvalidFormulaException e) {
+                Logger.getAnonymousLogger().log(Level.WARNING, "Cannot determine IsMinimal condition.", e);
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -480,15 +482,18 @@ public class Grounder {
      *
      * @return
      */
-    public static double countSetDiameter(ComplexFormula dependentConj, Collection<Formula> dependentFormulas,
+    public static double countSetDiameter(Collection<? extends Formula> dependentFormulas,
                                           Set<BaseProfile> allBPs) throws InvalidFormulaException {
-        Set<Double> relCards = relativeCard_(getGroundingSets(dependentConj, allBPs))
+        List<Double> relCards = relativeCard_(getGroundingSets(Formula.getStandardFormula((Collection<Formula>) dependentFormulas), allBPs))
                 .entrySet()
                 .stream()
                 .filter(entry -> dependentFormulas.contains(entry.getKey()))
                 .mapToDouble(entry -> entry.getValue())
                 .boxed()
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
+        if (relCards.size() != dependentFormulas.size())
+            Logger.getAnonymousLogger().log(Level.WARNING, "Size of provided dependent formulas and entrySet used" +
+                    "to count diameter is different.");
         return Collections.max(relCards) - Collections.min(relCards);
     }
 
