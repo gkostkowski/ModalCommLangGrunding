@@ -1,3 +1,4 @@
+
 package com.pwr.zpi.holons;
 
 
@@ -29,10 +30,10 @@ public class NonBinaryHolon implements Holon{
         double npnq = 0;
 
 		List<Formula> temp = getComplementaryFormulasv2((ComplexFormula) dk.getFormula());
-		pq = Grounder.determineFulfillmentDouble(dk,temp.get(0));
-		npq = Grounder.determineFulfillmentDouble(dk,temp.get(1));
-		pnq = Grounder.determineFulfillmentDouble(dk,temp.get(2));
-		npnq = Grounder.determineFulfillmentDouble(dk,temp.get(3));
+		//pq = Grounder.determineFulfillmentDouble(dk,temp.get(0));
+		//npq = Grounder.determineFulfillmentDouble(dk,temp.get(1));
+		//pnq = Grounder.determineFulfillmentDouble(dk,temp.get(2));
+		//npnq = Grounder.determineFulfillmentDouble(dk,temp.get(3));
         Tao = new Quadrilateral(pq,npq,pnq,npnq);}
 		return true;
 	}
@@ -194,6 +195,11 @@ public class NonBinaryHolon implements Holon{
 	 */
 	@Override
 	public Contextualisation getContextualisation() {
+		return null;
+	}
+
+	@Override
+	public Integer getTimestamp() {
 		return null;
 	}
 }

@@ -2,7 +2,11 @@ package com.pwr.zpi.holons.ContextJar.DistanceFunctions;
 
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.holons.ContextJar.DistanceFunction;
+import com.pwr.zpi.language.Pair;
+import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.semantic.IndividualModel;
+
+import java.util.Set;
 
 /**
  * Created by Jarema on 5/24/2017.
@@ -22,5 +26,21 @@ public class DistanceFunction1 extends DistanceFunction {
             }
         }
         return sum;
+    }
+
+    @Override
+    public double composite(BaseProfile first, Pair<Set<Trait>, Set<Trait>> second) {
+        double sum = 0;
+        for(Trait t:first.getNotDescribedByTraits().keySet()){
+            if(second.getV().contains(t)){
+                sum++;
+            }
+        }
+        for(Trait t:first.getDescribedByTraits().keySet()){
+            if(second.getK().contains(t)){
+                sum++;
+            }
+        }
+        return sum ;
     }
 }

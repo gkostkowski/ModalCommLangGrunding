@@ -4,8 +4,8 @@ package com.pwr.zpi.language;
 @Deprecated
 public class Pair<K, V> {
 
-    final K Case;
-    final V Value;
+    K Case;
+    V Value;
 
     public static <K, V> Pair<K, V> createPair(K element0, V element1) {
         return new Pair<K, V>(element0, element1);
@@ -24,4 +24,11 @@ public class Pair<K, V> {
         return Value;
     }
 
+    public void setK(K k) {
+        this.Case = k;
+    }
+
+    public void setV(V v) {
+        this.Value = v;
+    }
 }

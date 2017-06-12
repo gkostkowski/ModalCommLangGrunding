@@ -1,5 +1,7 @@
 package com.pwr.zpi.conversation;
 
+import org.json.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,9 +10,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.logging.Logger;
-
-import org.json.*;
 
 /**
  * Thread that connects with application that listens to voice questions and provides with strings with those.

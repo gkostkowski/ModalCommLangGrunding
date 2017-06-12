@@ -14,7 +14,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.DoubleStream;
-import java.util.stream.Stream;
 
 /**
  * Class contains methods used in process of grounding natural language.
@@ -571,7 +570,7 @@ public class Grounder {
 
             switch (((ComplexFormula) formula).getOperator()) {
                 case AND:
-                    return complexFormulaFinalGrounder(formula, dk);
+                    //return complexFormulaFinalGrounder(formula, dk);
                 case OR:
                     break;
                 default:
@@ -596,30 +595,43 @@ public class Grounder {
      */
     public static double relativeCard(Map<Formula, Set<BaseProfile>> groundingSets, Formula formula)
             throws NotApplicableException, InvalidFormulaException {
-        if (formula.getType() == Formula.Type.SIMPLE_MODALITY && !groundingSets.get(formula).toArray
-                (new BaseProfile[groundingSets.get(formula).size()])[groundingSets.get(formula).size() - 1]
-                .isContainingClearDescriptionFor(formula.getModel(), formula.getTraits().get(0))) {
-            groundingSets.get(formula).remove(groundingSets.get(formula).toArray()[groundingSets.get(formula).size()]);
-
-            double out = 0;
+        if (formula.getType() == Formula.Type.SIMPLE_MODALITY ) {
+            double out = 0;int count = 0;
+            if(groundingSets.get(formula) == null){return out;}
             for (BaseProfile bp : groundingSets.get(formula)) {
-                out += bp.getDescribedByTraits().size();
-                //out += bp.getIndefiniteByTraits().size();
-                out += bp.getNotDescribedByTraits().size();
+                if(count == groundingSets.get(formula).size()){
+                    if(bp.getIndefiniteByTraits().containsKey(formula.getTraits().get(0))){
+                        break;
+                    }
+                }else{
+                    if(bp.getDescribedByTraits().containsKey(formula.getTraits().get(0))){
+                        out++;
+                    }
+                    if(bp.getNotDescribedByTraits().containsKey(formula.getTraits().get(0))){
+                        out++;
+                    }
+                    if(bp.getIndefiniteByTraits().containsKey(formula.getTraits().get(0))){
+                        out++;
+                    }}count++;
             }
             return out;
-        } else if (formula.getType() == Formula.Type.MODAL_CONJUNCTION && (!groundingSets.get(formula).toArray
-                (new BaseProfile[groundingSets.get(formula).size()])[groundingSets.get(formula).size() - 1]
-                .isContainingClearDescriptionFor(formula.getModel(), formula.getTraits().get(0)) ||
-                !groundingSets.get(formula).toArray
-                        (new BaseProfile[groundingSets.get(formula).size()])[groundingSets.get(formula).size() - 1]
-                        .isContainingClearDescriptionFor(formula.getModel(), formula.getTraits().get(1)))) {
-            groundingSets.get(formula).remove(groundingSets.get(formula).toArray()[groundingSets.get(formula).size()]);
-            double out = 0;
+        } else if (formula.getType() == Formula.Type.MODAL_CONJUNCTION ) {
+            double out = 0;int count = 0;
+            if(groundingSets.get(formula) == null){return out;}
             for (BaseProfile bp : groundingSets.get(formula)) {
-                out += bp.getDescribedByTraits().size();
-                //out += bp.getIndefiniteByTraits().size();
-                out += bp.getNotDescribedByTraits().size();
+                if(count == groundingSets.get(formula).size()){
+                    if(bp.getIndefiniteByTraits().containsKey(formula.getTraits().get(0))&& bp.getIndefiniteByTraits().containsKey(formula.getTraits().get(1))){
+                        break;
+                    }
+                }else{
+                    if(bp.getDescribedByTraits().containsKey(formula.getTraits().get(0)) && bp.getIndefiniteByTraits().containsKey(formula.getTraits().get(1))){
+                        out++;
+                    }
+                    if(bp.getIndefiniteByTraits().containsKey(formula.getTraits().get(0)) && bp.getIndefiniteByTraits().containsKey(formula.getTraits().get(1))){
+                        out++;
+                    }if(bp.getNotDescribedByTraits().containsKey(formula.getTraits().get(0)) && bp.getIndefiniteByTraits().containsKey(formula.getTraits().get(1))) {
+                        out++;
+                    }}count++;
             }
             return out;
         }
@@ -772,7 +784,8 @@ public class Grounder {
     public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk,Map<Formula, Set<BaseProfile>>  context) throws InvalidFormulaException, NotApplicableException {
 
         double sum = 0;
-        if(context.size()==0) {
+        if(context == null ||context.size()==0 ) {
+
             for (BaseProfile bp : dk.getGroundingSet(formula)) {
                 if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && !((SimpleFormula) formula).isNegated()) {
                     sum++;
@@ -794,6 +807,7 @@ public class Grounder {
                     sum++;
                 }
             }}
+
         }
         if (sum != 0) {
             return sum /relativeCard(dk.mapOfGroundingSets(),formula);

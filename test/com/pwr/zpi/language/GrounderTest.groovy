@@ -334,4 +334,23 @@ class GrounderTest extends GroovyTestCase {
                 0.95, ModalOperator.KNOW, simpleThresholds))
     }
 
+    @Test
+    void testRelativeCard() {
+        setUp()
+        def groundingSets = Grounder.getGroundingSets(sformula1, agent.knowledgeBase.getBaseProfiles())
+        assertEquals(8.0, Grounder.relativeCard(groundingSets,sformula1))
+        assertEquals(0.0, Grounder.relativeCard(groundingSets,sformula2))
+        def groundingSets2 = Grounder.getGroundingSets(sformula3, agent.knowledgeBase.getBaseProfiles())
+        assertEquals(1.0, Grounder.relativeCard(groundingSets2,sformula3))
+
+        def groundingSets3 = Grounder.getGroundingSets(cformula1, agent.knowledgeBase.getBaseProfiles())
+        assertEquals(12.0, Grounder.relativeCard(groundingSets3,cformula1))
+
+        def groundingSets4 = Grounder.getGroundingSets(cformula2, agent.knowledgeBase.getBaseProfiles())
+        assertEquals(0.0, Grounder.relativeCard(groundingSets4,cformula2))
+
+        def groundingSets5 = Grounder.getGroundingSets(cformula3, agent.knowledgeBase.getBaseProfiles())
+        assertEquals(0.0, Grounder.relativeCard(groundingSets5,cformula3))
+    }
+
 }

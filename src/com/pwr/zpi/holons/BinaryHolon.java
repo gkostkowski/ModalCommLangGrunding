@@ -4,9 +4,9 @@ package com.pwr.zpi.holons;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
+import com.pwr.zpi.holons.ContextJar.CompositeContext;
 import com.pwr.zpi.holons.ContextJar.DistanceFunction;
 import com.pwr.zpi.holons.ContextJar.DistanceFunctions.DistanceFunction1;
-import com.pwr.zpi.holons.context.CompositeContext;
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -29,7 +29,7 @@ public class BinaryHolon implements Holon,Comparable<BinaryHolon> {
     protected Contextualisation context;
     protected int timestamp;
 
-    public BinaryHolon(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
+    public BinaryHolon(DistributedKnowledge dk, Contextualisation contextualisation) throws InvalidFormulaException, NotApplicableException {
         this.formula = dk.getComplementaryFormulas();
         DistanceFunction f1 = new DistanceFunction1();
         Contextualisation cj = new CompositeContext(f1,3);
