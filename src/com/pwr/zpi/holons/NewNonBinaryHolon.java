@@ -24,6 +24,8 @@ import java.util.*;
  * conjunctive holons.
  * Note: Important contract is that due to above conditions, values stored in holon are not accessed directly, but through
  * HolonsIntercessor.
+ *
+ * @author Grzegorz Kostkowski
  */
 public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
     /**
@@ -222,5 +224,10 @@ public class NewNonBinaryHolon implements Holon, Comparable<NewNonBinaryHolon> {
             res2 = f.hashCode() + o.summaries.get(f);
         }
         return res > res2 ? 1: (res < res2 ? -1 : 0);
+    }
+
+    @Override
+    public Integer getTimestamp() {
+        throw new NotImplementedException();
     }
 }

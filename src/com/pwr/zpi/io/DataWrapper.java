@@ -7,12 +7,17 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class DataWrapper <T> implements Serializable {
+/**
+ * @param <T> Generic type of wrapping objects.
+ * @author Grzegorz Kostkowski
+ */
+public class DataWrapper<T> implements Serializable {
     private LinkedList<T> collection;
 
     public DataWrapper() {
         collection = new LinkedList<T>();
     }
+
     public DataWrapper(LinkedList<T> elems) {
         setData(elems);
     }

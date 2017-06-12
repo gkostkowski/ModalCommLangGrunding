@@ -8,5 +8,6 @@
  * </ul>
  * Package contains Context class which provides structure of a context which is widely used across the entire package.
  * Aim of particular mechanism is described in certain subpackage.
+ * @author Grzegorz Kostkowski
  */
 package com.pwr.zpi.holons.context;

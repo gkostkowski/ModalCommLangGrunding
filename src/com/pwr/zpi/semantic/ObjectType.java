@@ -13,6 +13,8 @@ import java.util.List;
  * Represents types of observations existed in world, which observations are processed in system.
  * Only objects with some of types defined in config file can exist in system.
  * It determines allowed set of valuedTraits for certain object (and its observation).
+ *
+ * @author Grzegorz Kostkowski
  */
 public class ObjectType {
     private String typeId;

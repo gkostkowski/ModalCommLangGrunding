@@ -29,6 +29,10 @@ import java.util.logging.Logger;
 /**
  * Agent is crucial class for project - it has members of collections
  * that hold all of data that we are processing.
+ *
+ * @author Grzegorz Kostkowski
+ * @author Mateusz Gawlowski
+ * @author Jarema Radom
  */
 public class Agent {
     private BPCollection knowledgeBase;
@@ -37,59 +41,17 @@ public class Agent {
      * Agent interacts with knowledge summarization (holons) through HolonsIntercessor object.
      */
     private HolonsIntercessor holonsIntercessor;
-    private DatabaseAO database;
+    private static DatabaseAO database;
     public static Collection<ObjectType> objectTypeCollection;
 
 
-    public Agent() {
-        init();
-        knowledgeBase = new BPCollection();
-        Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
-        holonsIntercessor = new HolonsIntercessor(this, contextualisation);
-        database = new DatabaseAO();
-    }
 
-    /*public Agent(String databaseFilename) {
-        init();
-        knowledgeBase = new BPCollection();
-        holonsIntercessor = new HolonsIntercessor();
-        database = new DatabaseAO(this, databaseFilename);
-    }*/
-
-    public Agent(BPCollection knowledgeBase) {
-        init();
-        this.knowledgeBase = knowledgeBase;
-//        Contextualisation contextualisation = null; //todo podawanie odpowiedniego typu kontekstu
-        Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
-        holonsIntercessor = new HolonsIntercessor(this, contextualisation);
-
-        //holonsIntercessor = new HolonsIntercessor(this, contextualisation);
-    }
-
-    public Agent(BPCollection knowledgeBase, IMCollection models) {
-        init();
-        this.models = models;
-        this.knowledgeBase = knowledgeBase;
-//        Contextualisation contextualisation = null; //todo podawanie odpowiedniego typu kontekstu
-        Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
-        holonsIntercessor = new HolonsIntercessor(this, contextualisation);
-    }
-
-    public Agent(BPCollection knowledgeBase, IMCollection models, HolonsIntercessor holonsIntercessor) {
-        if (knowledgeBase == null || models == null || holonsIntercessor == null)
-            throw new NullPointerException();
-        this.knowledgeBase = knowledgeBase;
-        this.models = models;
-        this.holonsIntercessor = holonsIntercessor;
-    }
-
-    /**
-     * Performs initials actions related to loading semantic memory: builds instances of ObjectTypes and IndividualModels.
-     * Note: builds IMs according to config file and objects occurrences in DB entries.
-     */
-    private void init() {
-        objectTypeCollection = ObjectType.getObjectTypes();
-        models = new IMCollection();
+    private Agent(AgentBuilder builder) {
+        knowledgeBase = builder.getKnowledgeBase();
+        holonsIntercessor = new HolonsIntercessor(this, builder.getContextualisation());
+        this.objectTypeCollection = builder.getObjectTypeCollection();
+        this.models = builder.getModels();
+        database = builder.getDatabase();
     }
 
 
@@ -117,6 +79,10 @@ public class Agent {
         return holonsIntercessor.getHolonsContextualisation();
     }
 
+    public void setContextualisationMethod(Contextualisation newContextualisation) {
+        holonsIntercessor.setHolonsContextualisation(newContextualisation);
+    }
+
     @Deprecated //uzywamy updateMemory()
     public DatabaseAO getDatabase() {
         return database;
@@ -142,6 +108,19 @@ public class Agent {
         }
     }
 
+    /**
+     * Produces complete map of grounding sets for specified formula. Used for convenient creation of contextualisation.
+     * @param formula
+     * @return
+     */
+    public Map<Formula, Set<BaseProfile>> makeGroundingSets(Formula formula) {
+        try {
+            return distributeKnowledge(formula).getGroundingSetsMap();
+        } catch (InvalidFormulaException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Not able to produce grounding sets", e);
+            return new HashMap<>();
+        }
+    }
 
 
 /*    *//**
@@ -292,5 +271,84 @@ public class Agent {
 
     public Map<Formula, Double> getSummarization(Formula currFormula, int timestamp) {
         return holonsIntercessor.getSummaries(currFormula, timestamp);
+    }
+
+    /**
+     * Class is introduced due to diversity of ways of agent creation. it simplifies construction of agent.
+     * Class implements builder pattern.
+     *
+     * @author Grzegorz Kostkowski
+     */
+    public static class AgentBuilder {
+        private BPCollection knowledgeBase;
+        private IMCollection models;
+        /**
+         * Agent interacts with knowledge summarization (holons) through HolonsIntercessor object.
+         */
+        private HolonsIntercessor holonsIntercessor;
+        private DatabaseAO database;
+        private Contextualisation contextualisation;
+
+
+        public AgentBuilder() {
+            /*if (Agent.database != null)
+                Agent.database.deleteDatabase();
+            this.database = Agent.database = new DatabaseAO(ObjectType.getObjectTypes());*/ //todo
+
+            if (Agent.database == null)
+                Agent.database = new DatabaseAO(ObjectType.getObjectTypes());
+            this.database = Agent.database;
+            this.models = new IMCollection();
+            this.knowledgeBase = new BPCollection();
+            this.contextualisation =null;
+        }
+
+        public AgentBuilder knowledgeBase(BPCollection bpCollection) {
+            this.knowledgeBase = bpCollection;
+            return this;
+        }
+
+        public AgentBuilder models(IMCollection ims) {
+            this.models =ims;
+            return this;
+        }
+
+        public AgentBuilder database(DatabaseAO dao) {
+            this.database = dao;
+            return this;
+        }
+
+        public AgentBuilder contextualisation(Contextualisation contextualisation) {
+            this.contextualisation=contextualisation;
+            return this;
+        }
+
+        /**
+         * Method which creates
+         * @return
+         */
+        public Agent build() {
+            return new Agent(this);
+        }
+
+        public BPCollection getKnowledgeBase() {
+            return knowledgeBase;
+        }
+
+        public IMCollection getModels() {
+            return models;
+        }
+
+        public DatabaseAO getDatabase() {
+            return database;
+        }
+
+        public Collection<ObjectType> getObjectTypeCollection() {
+            return objectTypeCollection;
+        }
+
+        public Contextualisation getContextualisation() {
+            return contextualisation;
+        }
     }
 }

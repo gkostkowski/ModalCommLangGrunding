@@ -27,6 +27,8 @@ import java.util.*;
  * TA1 - Represents set of all base profiles, which are included in long-term memory and presents individualModel as described by
  * given trait.
  * Etc.
+ *
+ * @author Grzegorz Kostkowski
  */
 public class DistributedKnowledge {
     /**
@@ -253,5 +255,9 @@ public class DistributedKnowledge {
             return relatedObservationsBase.getEpisodicBaseSize() > dk.relatedObservationsBase.getEpisodicBaseSize();
         return relatedObservationsBase.getEpisodicBaseSize(BPCollection.MemoryType.WM)
                 > dk.relatedObservationsBase.getEpisodicBaseSize(BPCollection.MemoryType.WM);
+    }
+
+    public Map<Formula, Set<BaseProfile>> getGroundingSetsMap() {
+        return groundingSetsMap;
     }
 }

@@ -1,70 +1,37 @@
 package com.pwr.zpi.language;
 
 import com.pwr.zpi.Agent;
+import com.pwr.zpi.Configuration;
 import com.pwr.zpi.episodic.BPCollection;
 import com.pwr.zpi.episodic.BaseProfile;
+import com.pwr.zpi.exceptions.InvalidConfigurationException;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.holons.NonBinaryHolon;
-import com.pwr.zpi.util.Permutation;
 import com.sun.istack.internal.Nullable;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 /**
  * Class contains methods used in process of grounding natural language.
+ * //todo
+ *
+ * @author Grzegorz Kostkowski
+ * @author Jarema Radom
  */
 public class Grounder {
 
-    /**
-     * Thresholds for simple modalities.
-     */
-    public static final double MIN_POS = 0.2;
-    public static final double MAX_POS = 0.6;
-    public static final double MIN_BEL = 0.7;
-    public static final double MAX_BEL = 0.9;
-    public static final double KNOW = 1.0;
 
-    /**
-     * Thresholds for modal conjunctions.
-     */
-    private static final double CONJ_MIN_POS = 0.1;
-    private static final double CONJ_MAX_POS = 0.6;
-    private static final double CONJ_MIN_BEL = 0.65;
-    private static final double CONJ_MAX_BEL = 0.9;
-    public static final double CONJ_KNOW = 1.0;
-
-    /**
-     * Thresholds for modal disjunctions. //TODO rozwazyc inne wartosci
-     */
-    private static final double DISJ_MIN_POS = 0.4;
-    private static final double DISJ_MAX_POS = 0.55;
-    private static final double DISJ_MIN_BEL = DISJ_MAX_POS;
-    private static final double DISJ_MAX_BEL = 1.0;
-    public static final double DISJ_KNOW = 1.0;
-
-    private static final double EX_DISJ_MIN_POS = 0.21;
-    private static final double EX_DISJ_MAX_POS = 0.67;
-    private static final double EX_DISJ_MIN_BEL = DISJ_MAX_POS;
-    private static final double EX_DISJ_MAX_BEL = 1;
-    public static final double EX_DISJ_KNOW = 1.0;
-
-    /**
-     * Arrays of thresholds for certain formula types. Order of elements in arrays is strictly defined and can't be other:
-     * [MIN_POS, MAX_POS, MIN_BEL, MAX_BEL, KNOW].
-     */
-    public final static double[] simpleThresholds = new double[]{MIN_POS, MAX_POS, MIN_BEL, MAX_BEL, KNOW};
-    public final static double[] conjThresholds = new double[]{CONJ_MIN_POS, CONJ_MAX_POS, CONJ_MIN_BEL, CONJ_MAX_BEL, CONJ_KNOW};
-    public final static double[] disjThresholds = new double[]{DISJ_MIN_POS, DISJ_MAX_POS, DISJ_MIN_BEL, DISJ_MAX_BEL, DISJ_KNOW};
-    public final static double[] exDisjThresholds = new double[]{EX_DISJ_MIN_POS, EX_DISJ_MAX_POS, EX_DISJ_MIN_BEL, EX_DISJ_MAX_BEL, EX_DISJ_KNOW};
     private static final double DEF_DISJ_EPS_MULTIPLIER = 1;
     private static final double DEF_EX_DISJ_EPS_MULTIPLIER = 0.25;
-    private static final double EPS_FST_COEFFICIENT = 1 / 6;
-    private static final double EPS_SND_COEFFICIENT = 1 / 2;
+    private static final double EPS_FST_COEFFICIENT = 1.0 / 6.0;
+    private static final double EPS_SND_COEFFICIENT = 1.0 / 2.0;
     private static final Double DEF_EPS_LOWER_RANGE = 0.0;
 
     /**
@@ -87,7 +54,7 @@ public class Grounder {
     }
 
     /**
-     * Method intermediates between getGroundingSets() method and getGroundingSet() which provides concrete grounding
+     * Method intermediates between getGroundingSetsMap() method and getGroundingSet() which provides concrete grounding
      * set. This method was developed to allow seamless grounding process for conjunctions and disjunctions which base on
      * particular conjunctive grounding sets.
      * Note: it also supports simple modalities.
@@ -215,7 +182,13 @@ public class Grounder {
 //            double currRelCard = holon.getSummary(formula);
             double currRelCard = summarization.get(formula);
             ModalOperator[] checkedOps = {ModalOperator.POS, ModalOperator.BEL, ModalOperator.KNOW};
-            double[] appropriateTresholds = getThresholds(formula);
+            double[] appropriateTresholds;
+            try {
+                appropriateTresholds = getThresholds(formula);
+            } catch (InvalidConfigurationException e) {
+                Logger.getAnonymousLogger().log(Level.SEVERE, "Unable to check epistemic conditions.", e);
+                return null;
+            }
             for (int i = 0; i < checkedOps.length && res == null; i++)
                 res = checkEpistemicCondition(true, isPresentInWM, currRelCard,
                         checkedOps[i], appropriateTresholds);
@@ -223,34 +196,13 @@ public class Grounder {
             res = formula.isFormulaFulfilled(lastBP) ? ModalOperator.KNOW : null;
 
         if (formula.needEpsilonConcentrationChecking()) {
-            if(!isEpsilonConcentrated((ComplexFormula) formula, dk.getRelatedObservationsBase().getBaseProfiles()))
-                res=null;
+            if (!checkEpsilonConcentratedCondition((ComplexFormula) formula, dk.getRelatedObservationsBase().getBaseProfiles()))
+//            if(!isEpsilonConcentrated((ComplexFormula) formula, dk.getRelatedObservationsBase().getBaseProfiles()))
+                res = null;
         }
         return res;
     }
 
-
-
-    /**
-     * Returns array of appropriate thresholds for specified type.
-     *
-     * @param type
-     * @return
-     */
-    private static double[] getThresholds(Formula.Type type) {
-        switch (type) {
-            case SIMPLE_MODALITY:
-                return simpleThresholds;
-            case MODAL_CONJUNCTION:
-                return conjThresholds;
-            case MODAL_DISJUNCTION:
-                return disjThresholds;
-            case MODAL_EXCLUSIVE_DISJUNCTION:
-                return exDisjThresholds;
-            default:
-                return null;
-        }
-    }
 
     /**
      * Returns array of appropriate thresholds for formula with specified type.
@@ -258,8 +210,12 @@ public class Grounder {
      * @param formula
      * @return
      */
-    private static double[] getThresholds(Formula formula) {
-        return getThresholds(formula.getType());
+    private static double[] getThresholds(Formula formula) throws InvalidConfigurationException {
+        return Configuration.getThresholds(formula.getType());
+    }
+
+    private static double[] getThresholds(Formula.Type type) throws InvalidConfigurationException {
+        return Configuration.getThresholds(type);
     }
 
     public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk, Map<Formula, Double> summarization)
@@ -342,47 +298,50 @@ public class Grounder {
      * @param protoform Formula which will be used to build relevant family of sets.
      * @return formulas sets family.
      */
-    static List<Set<ComplexFormula>> getFormulasSetsFamily(ComplexFormula protoform) {
-        List<Formula> complForm;
+    static List<Set<Formula>> getFormulasSetsFamily(ComplexFormula protoform) {
+        if (protoform == null)
+            throw new NullPointerException("Protoform was not provided.");
+
+        ComplexFormula disjunction, exDisjunction, conjunction;
         try {
-            complForm = protoform.getStandardFormula().getComplementaryFormulas();
+            disjunction = protoform.transformTo(LogicOperator.OR);
+            exDisjunction = protoform.transformTo(LogicOperator.XOR);
+            conjunction = protoform.transformTo(LogicOperator.AND);
         } catch (InvalidFormulaException e) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Unable to build family of sets for given formula.", e);
             return null;
         }
-        return new ArrayList<Set<ComplexFormula>>() {{
-            add(new HashSet<ComplexFormula>() {{
-                add((ComplexFormula) complForm.get(0));
+
+        List<Set<Formula>> res = new ArrayList<Set<Formula>>();
+        try {
+            for (Formula conj : conjunction.getComplementaryFormulas())
+                res.add(new HashSet<Formula>() {{
+                    add(conj);
+                }});
+            res.add(new HashSet<Formula>() {{
+                addAll(exDisjunction.getDependentFormulas());
             }});
-            add(new HashSet<ComplexFormula>() {{
-                add((ComplexFormula) complForm.get(2));
+
+            res.add(new HashSet<Formula>() {{
+                addAll(disjunction.getDependentFormulas());
             }});
-            add(new HashSet<ComplexFormula>() {{
-                add((ComplexFormula) complForm.get(1));
-            }});
-            add(new HashSet<ComplexFormula>() {{
-                add((ComplexFormula) complForm.get(3));
-            }});
-            add(new HashSet<ComplexFormula>() {{
-                add((ComplexFormula) complForm.get(1));
-                add((ComplexFormula) complForm.get(2));
-            }});
-            add(new HashSet<ComplexFormula>() {{
-                add((ComplexFormula) complForm.get(0));
-                add((ComplexFormula) complForm.get(1));
-                add((ComplexFormula) complForm.get(2));
-            }});
-        }};
+        } catch (InvalidFormulaException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Unable to build family of sets for given formula.", e);
+            return null;
+        }
+        return res;
     }
 
     /**
      * Method counts range of possible values of concentration-epsilon which is used to determine power of coincidence
      * among particular grounding sets.
+     *
      * @param formula Related formula.
      * @return Pair of double values where key is lower threshold and value is upper threshold.
      * @throws NotApplicableException
      */
-    static javafx.util.Pair<Double, Double> getConcentrationEpsilonRange(ComplexFormula formula) throws NotApplicableException {
+    static javafx.util.Pair<Double, Double> getConcentrationEpsilonRange(ComplexFormula formula)
+            throws NotApplicableException, InvalidConfigurationException {
         switch (formula.getType()) {
             case MODAL_DISJUNCTION:
                 return new javafx.util.Pair<>(DEF_EPS_LOWER_RANGE, countEpsilonConcentrationPartial(DEF_DISJ_EPS_MULTIPLIER));
@@ -394,99 +353,149 @@ public class Grounder {
 
     }
 
-    static private double countEpsilonConcentrationPartial(double multiplier) {
+    static private double countEpsilonConcentrationPartial(double multiplier) throws InvalidConfigurationException {
         Formula.Type type = Formula.Type.MODAL_CONJUNCTION;
         double minPos = getThresholds(type)[0];
         double posBel = getThresholds(type)[1] == getThresholds(type)[2] ? getThresholds(type)[1] :
-                (getThresholds(type)[1] + getThresholds(type)[2])/2.0;
-        return multiplier*Math.min(EPS_FST_COEFFICIENT-minPos, posBel-EPS_SND_COEFFICIENT);
+                (getThresholds(type)[1] + getThresholds(type)[2]) / 2.0;
+        return multiplier * Math.min(EPS_FST_COEFFICIENT - minPos, posBel - EPS_SND_COEFFICIENT);
     }
 
     /**
      * By default, returns value from the middle.
      */
-    static private double getConcentrationEpsilon(ComplexFormula formula) throws NotApplicableException {
+    static private double getConcentrationEpsilon(ComplexFormula formula) throws NotApplicableException, InvalidConfigurationException {
         javafx.util.Pair<Double, Double> range = getConcentrationEpsilonRange(formula);
-        return (range.getKey()+range.getValue())/2;
+        return (range.getKey() + range.getValue()) / 2;
     }
 
 
+    private static boolean isMemberOfFamily(ComplexFormula formula, Collection<Formula> familyCandidate) {
+        boolean isMemberOfFamily = false;
+        ComplexFormula standardFormula;
+        try {
+            standardFormula = (ComplexFormula) Formula.getStandardFormula(familyCandidate);
+        } catch (InvalidFormulaException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Not able to check if formula is member of family.", e);
+            return false;
+        }
+        for (Set<Formula> familyMember : getFormulasSetsFamily(formula))
+            isMemberOfFamily = new ArrayList<>(familyMember).containsAll(familyCandidate)
+                    && familyCandidate.containsAll(familyMember) || isMemberOfFamily;
+        if (!isMemberOfFamily) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Given familyCandidate set does not belong to specified family of formulas");
+            return false;
+        }
+        return true;
+    }
+
     /**
-     * Method performs checking of fourth epistemic condition dedicated for disjunctions. Condition determines if
-     * set of respective disjunctive formulas is epsilon-concentrated according to given family of formula sets, epsilon
-     * and with usage of relative grounding sets cardinality function.
-     * @param formula
-     * @param relevantFamily
-     * @param dependentFormulas
+     * This is main formula related with epsilon-concentrated condition checked during epistemic fulfillment conditions.
+     *
+     * @param disjunction ComplexFormula, namely simple or exclusive disjunction.
+     * @param episodicSet Set of available base profiles.
+     * @return True, if this condition is fulfilled; false otherwise.
+     */
+    public static boolean checkEpsilonConcentratedCondition(ComplexFormula disjunction, Set<BaseProfile> episodicSet) {
+        if (disjunction == null || episodicSet == null) {
+            throw new NullPointerException("One of parameter was not provided");
+        }
+        double relevantEpsilonValue = 0;
+        try {
+            relevantEpsilonValue = getConcentrationEpsilon(disjunction);
+        } catch (NotApplicableException | InvalidConfigurationException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Epsilon-concentration checking was not performed.", e);
+            return false;
+        }
+        return isSetEpsilonConcentrated(disjunction, episodicSet, relevantEpsilonValue);
+    }
+    /**
+     *
+     * @param conjunction
      * @param concentrationEpsilon
      * @param episodicSet
      * @return
      */
-    private static boolean isEpsilonConcentrated(ComplexFormula formula, List<Set<ComplexFormula>> relevantFamily,
-                                                 Collection<Formula> dependentFormulas, double concentrationEpsilon, Set<BaseProfile> episodicSet) {
-        boolean isMemberOfFamily=false;
-        for (Set<ComplexFormula> l : relevantFamily)
-            isMemberOfFamily = new ArrayList<>(l).containsAll(dependentFormulas) || isMemberOfFamily;
-        if (!isMemberOfFamily) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Given dependentFormulas set does not belong to specified family of formulas");
+    /**
+     * Checks if set of dependent formulas is epsilon-concentrated for given epsilon value.
+     * Method performs checking of fourth epistemic condition dedicated for certain set of formulas which is
+     * set of dependent conjunctions.
+     * When determining fulfillment, three conditions are taken into consideration:
+     * <ol>
+     * <li>If set is a member of relevant family of formulas,</li>
+     * <li>if the set's diameter value is enough small,</li>
+     * <li>if given set of dependent formulas is minimal</li>
+     * </ol>
+
+     * @param formula
+     * @param episodicSet Set of all available base profiles.
+     * @param epsilon Value of epsilon.
+     * @return True if condition is fulfilled; false otherwise.
+     */
+    private static boolean isSetEpsilonConcentrated(ComplexFormula formula,
+                                                    Set<BaseProfile> episodicSet, double epsilon) {
+
+        List<Formula> formulasSet = formula.getDependentFormulas();
+        if (!isMemberOfFamily(formula, formulasSet))
             return false;
-        }
         try {
-            return countSetDiameter(formula, dependentFormulas, episodicSet) <= concentrationEpsilon
-                    && isSetMinimal(formula, dependentFormulas, episodicSet, concentrationEpsilon);
+            return countSetDiameter(formulasSet, episodicSet) <= epsilon
+                    && isSetMinimal(formulasSet, episodicSet, epsilon);
         } catch (InvalidFormulaException e) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Cannot determine epsilon concentration.", e);
             return false;
         }
     }
 
-    private static boolean isEpsilonConcentrated(ComplexFormula formula, Set<BaseProfile> episodicSet) {
-        try {
-            return isEpsilonConcentrated(formula, getFormulasSetsFamily(formula), formula.getDependentFormulas(),
-                    getConcentrationEpsilon(formula), episodicSet);
-        } catch (NotApplicableException e) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Epsilon-concentration checking was not performed.", e);
+
+    private static boolean isSetMinimal(Collection<Formula> formulasSet,
+                                        Set<BaseProfile> episodicSet, double concentrationEpsilon) {
+        if (formulasSet.isEmpty()) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Provided collection of formulas cannot be empty.");
             return false;
         }
-    }
 
-    private static boolean isSetMinimal(ComplexFormula formula, Collection<Formula> formulasSet,
-                                        Set<BaseProfile> episodicSet, double concentrationEpsilon) {
-        if (formulasSet.isEmpty()){
-                Logger.getAnonymousLogger().log(Level.WARNING, "Provided collection of formulas cannot be empty.");
+        ComplexFormula standardFormula= null;
+        try {
+            standardFormula = (ComplexFormula) Formula.getStandardFormula(formulasSet);
+        } catch (InvalidFormulaException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Unable to determine if set is minimal", e);
+            return false;
+        }
+        List<Set<Formula>> relevantFamily = getFormulasSetsFamily(standardFormula);
+        List<Set<Formula>> allPosMinimalSets = Formula.getFormulaSupersets(formulasSet, relevantFamily);
+
+        for (Collection<Formula> minimalElem : allPosMinimalSets) {
+            try {
+                if (countSetDiameter(minimalElem, episodicSet) < concentrationEpsilon)
+                    return false;
+            } catch (InvalidFormulaException e) {
+                Logger.getAnonymousLogger().log(Level.WARNING, "Cannot determine IsMinimal condition.", e);
                 return false;
             }
-        if (formulasSet.size() ==1)
-            return true;
-        else {
-            List<ArrayList<Formula>> allPosMinimalSets = Permutation
-                    .getAllPossiblePermutations(new ArrayList<Formula>(formulasSet), formula.comparator());
-            for (List<Formula> minimalElem : allPosMinimalSets) {
-                try {
-                    if(countSetDiameter(formula, minimalElem, episodicSet) < concentrationEpsilon)
-                        return false;
-                } catch (InvalidFormulaException e) {
-                    Logger.getAnonymousLogger().log(Level.WARNING, "Cannot determine IsMinimal condition.", e);
-                    return false;
-                }
-            }
-            return true;
         }
+        return true;
     }
 
     /**
      * Counts diameter for given set of formulas. This value indicates how much relative cardinality for grounding sets
      * (which are built according to formulas in provided set of formulas) differs.
+     *
      * @return
      */
-    private static double countSetDiameter(ComplexFormula dependentConj, Collection<Formula> dependentFormulas,
-                                           Set<BaseProfile> allBPs) throws InvalidFormulaException {
-        DoubleStream relCards = relativeCard_(getGroundingSets(dependentConj, allBPs))
+    public static double countSetDiameter(Collection<? extends Formula> dependentFormulas,
+                                          Set<BaseProfile> allBPs) throws InvalidFormulaException {
+        List<Double> relCards = relativeCard_(getGroundingSets(Formula.getStandardFormula((Collection<Formula>) dependentFormulas), allBPs))
                 .entrySet()
                 .stream()
                 .filter(entry -> dependentFormulas.contains(entry.getKey()))
-                .mapToDouble(entry -> entry.getValue());
-        return relCards.max().getAsDouble() - relCards.min().getAsDouble();
+                .mapToDouble(entry -> entry.getValue())
+                .boxed()
+                .collect(Collectors.toList());
+        if (relCards.size() != dependentFormulas.size())
+            Logger.getAnonymousLogger().log(Level.WARNING, "Size of provided dependent formulas and entrySet used" +
+                    "to count diameter is different.");
+        return Collections.max(relCards) - Collections.min(relCards);
     }
 
 
@@ -570,7 +579,8 @@ public class Grounder {
 
             switch (((ComplexFormula) formula).getOperator()) {
                 case AND:
-                    //return complexFormulaFinalGrounder(formula, dk);
+                    /*return complexFormulaFinalGrounder(formula, dk);*/
+                    throw new NotImplementedException();
                 case OR:
                     break;
                 default:
@@ -741,7 +751,7 @@ public class Grounder {
      * @return Double value of Type of operator which can be applied to formula given through distribution of knowledge.
      * @see DistributedKnowledge
      */
-    public static double determineFulfillmentDouble(DistributedKnowledge dk, Formula formula,Map<Formula, Set<BaseProfile>>  context) throws InvalidFormulaException, NotApplicableException {
+    public static double determineFulfillmentDouble(DistributedKnowledge dk, Formula formula, Map<Formula, Set<BaseProfile>> context) throws InvalidFormulaException, NotApplicableException {
 
         if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
                 || dk.isDkComplex() && !new ArrayList(dk.getComplementaryFormulas()).contains(formula))
@@ -759,15 +769,15 @@ public class Grounder {
      */
     @Nullable
     public static Double checkEpistemicConditionsDouble(Formula formula, DistributedKnowledge dk
-            , int timestamp,Map<Formula, Set<BaseProfile>>  context) throws NotApplicableException, InvalidFormulaException {
+            , int timestamp, Map<Formula, Set<BaseProfile>> context) throws NotApplicableException, InvalidFormulaException {
        /* double mayhapsD = 0;
         for (int i = 0; i < formula.getTraits().size(); i++) {  //supports complex formulas
             mayhapsD = dk.getRelatedObservationsBase().getMayhapsBP(timestamp,formula,i);
         }*/
         if (formula.getType() == Formula.Type.SIMPLE_MODALITY) {
-            return simpleFormulaFinalGrounder(formula, dk,context);
+            return simpleFormulaFinalGrounder(formula, dk, context);
         } else if (formula.getType() == Formula.Type.MODAL_CONJUNCTION) {
-            return complexFormulaFinalGrounder(formula, dk,context);
+            return complexFormulaFinalGrounder(formula, dk, context);
 
         }
         return 0.0;
@@ -781,7 +791,7 @@ public class Grounder {
      * @param dk      Distributed knowledge for respective grounding sets related with certain formula.
      * @return
      */
-    public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk,Map<Formula, Set<BaseProfile>>  context) throws InvalidFormulaException, NotApplicableException {
+    public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk, Map<Formula, Set<BaseProfile>> context) throws InvalidFormulaException, NotApplicableException {
 
         double sum = 0;
         if(context == null ||context.size()==0 ) {
@@ -795,22 +805,23 @@ public class Grounder {
                     sum++;
                 }
             }
-        }
-        else{
-            if(context.get(formula)!=null){
-            for (BaseProfile bp : context.get(formula)) {
-                if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && !((SimpleFormula) formula).isNegated()) {
-                    sum++;
-                } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT) && ((SimpleFormula) formula).isNegated()) {
-                    sum++;
-                } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.MAYHAPS)) {
-                    sum++;
+        } else {
+            if (context.get(formula) != null) {
+                for (BaseProfile bp : context.get(formula)) {
+                    if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && !((SimpleFormula) formula).isNegated()) {
+                        sum++;
+                    } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS_NOT) && ((SimpleFormula) formula).isNegated()) {
+                        sum++;
+                    } else if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.MAYHAPS)) {
+                        sum++;
+                    }
                 }
-            }}
+            }
 
+            }
         }
         if (sum != 0) {
-            return sum /relativeCard(dk.mapOfGroundingSets(),formula);
+            return sum / relativeCard(dk.mapOfGroundingSets(), formula);
         }
         return 0.0;
     }
@@ -822,16 +833,15 @@ public class Grounder {
      * @param dk      Distributed knowledge for respective grounding sets related with certain formula.
      * @return
      */
-    public static Double complexFormulaFinalGrounder(Formula formula, DistributedKnowledge dk,Map<Formula, Set<BaseProfile>>  context) throws InvalidFormulaException {
+    public static Double complexFormulaFinalGrounder(Formula formula, DistributedKnowledge dk, Map<Formula, Set<BaseProfile>> context) throws InvalidFormulaException {
 
         double sum = 0;
-        if(context.size()==0) {
+        if (context.size() == 0) {
             sum = context.get(formula).size();
             if (sum != 0) {
                 return sum / getGroundingSetsForComplementaryFormula(dk, formula);
             }
-        }
-        else{
+        } else {
             sum = dk.getGroundingSet(formula).size();
             if (sum != 0) {
                 return sum / getGroundingSetsForComplementaryFormula(dk, formula);

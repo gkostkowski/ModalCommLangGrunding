@@ -12,6 +12,8 @@ import java.util.*;
 
 /**
  * Represents state of world from agent perspective. It's established for certain moment in time.
+ * //todo
+ * @author Grzegorz Kostkowski
  */
 public class  BaseProfile {
     /**

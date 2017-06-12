@@ -20,7 +20,7 @@ import java.util.*;
  */
 public class Distance implements Measure {
 
-    private static final double DEF_MAX_THRESHOLD = 5;
+    private static final double DEF_MAX_THRESHOLD = 3;
     private static final String NATURAL_LANG_NAME = "distance";
     double maxThreshold;
 

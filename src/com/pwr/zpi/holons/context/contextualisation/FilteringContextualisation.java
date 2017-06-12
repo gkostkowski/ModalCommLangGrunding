@@ -3,6 +3,7 @@
  */
 package com.pwr.zpi.holons.context.contextualisation;
 
+import com.pwr.zpi.Agent;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidContextualisationException;
 import com.pwr.zpi.exceptions.InvalidMeasureImplementation;
@@ -30,46 +31,47 @@ import java.util.stream.Collectors;
  */
 public class FilteringContextualisation implements Contextualisation {
 
+    protected final RepresentativesSelector selector;
+    private final ContextBuilder contextBuilder;
     protected Measure measure;
-    protected Context context;
-    protected double maxValue;
 
-
-
-    public FilteringContextualisation(Context context, Measure measure, double maxValue) throws InvalidContextualisationException {
-        if (measure == null || context == null)
-            throw new NullPointerException("One of parameters was not specified.");
-        if (maxValue < 0)
-            throw new InvalidContextualisationException("Not valid value for maximum threshold.");
-        this.context = context;
-        this.measure = measure;
-        this.maxValue = maxValue;
-    }
 
     /**
-     * If max allowable value won't be provided then this value is fetched from measure object.
-     */
-    public FilteringContextualisation(Context context, Measure measure) throws InvalidContextualisationException {
-        this(context, measure, measure.getMaxThreshold());
-    }
-
-    /**
-     * This constructor allows to provide ContextBuilder with required arguments, which will be used to build context
-     * instead of providing context, for convenience.
+     * This constructor allows to provide ContextBuilder with required arguments, which will be used to build
+     * concrete context.
      *
      * @param contextBuilder ContextBuilder used to builde context.
      * @param measure Measure.
-     * @param relatedObject   Individual model.
      * @param selector RepresentativesSelector used to gain representative base profiles.
-     * @param namedGroundingSets map of grounding sets.
      */
-    public FilteringContextualisation(ContextBuilder contextBuilder, Measure measure, IndividualModel relatedObject,
-                                      RepresentativesSelector selector, Map<Formula, Set<BaseProfile>> namedGroundingSets)
+    public FilteringContextualisation(ContextBuilder contextBuilder, RepresentativesSelector selector, Measure measure)
             throws InvalidContextualisationException {
-        this(contextBuilder.build(relatedObject, selector.select(namedGroundingSets)),
+        if (measure == null || contextBuilder == null || selector == null)
+            throw new NullPointerException("One of parameters was not specified.");
+
+        this.contextBuilder = contextBuilder;
+        this.selector = selector;
+        this.measure = measure;
+    }
+/*
+    *//**
+     * This constructor provide convenience way to build Contextualisation of holons. This contextualisation is prepared
+     * according to base profiles based on given formula. Source of base profiles used to prepare grounding sets
+     * is constituted through given agent's episodic memory.
+     * @param agent Agent, which collection of base profiles will be used to build groundig sets.
+     * @param measure Measure for determining base profiles matching the context.
+     * @param baseOfContextualisation Formula, which is a base to constitute base profiles.
+     * @throws InvalidContextualisationException
+     *//*
+    public FilteringContextualisation(Agent agent, Measure measure, Formula baseOfContextualisation,
+                                      ContextBuilder contextBuilder, RepresentativesSelector selector)
+            throws InvalidContextualisationException {
+
+        this(contextBuilder.build(
+                baseOfContextualisation.getModel(), selector.select(agent.makeGroundingSets(baseOfContextualisation))),
                 measure,
                 measure.getMaxThreshold());
-    }
+    }*/
 
     /**
      * This is exact method for performing contextualisation. Imposes exact Contextualisation instances to receive map of
@@ -81,7 +83,7 @@ public class FilteringContextualisation implements Contextualisation {
     @Override
     public Map<Formula, Set<BaseProfile>> performContextualisation(Map<Formula, Set<BaseProfile>> namedGroundingSets) {
         Map<Formula, Set<BaseProfile>> res = new TreeMap<>();
-
+        Context currentContext = buildContext(namedGroundingSets);
         for (Map.Entry<Formula, Set<BaseProfile>> entry : namedGroundingSets.entrySet()) {
             Set<BaseProfile> groundingSet = entry.getValue();
             res.put(entry.getKey(),
@@ -89,9 +91,8 @@ public class FilteringContextualisation implements Contextualisation {
                             .stream()
                             .filter(bp -> {
                                 try {
-                                    return determineFulfillment(bp);
+                                    return determineFulfillment(bp, currentContext);
                                 } catch (InvalidMeasureImplementation e) {
-                                    e.printStackTrace();
                                     Logger.getAnonymousLogger().log(Level.WARNING, "Unable to determine fulfillment.", e);
                                     return false;
                                 }
@@ -102,19 +103,41 @@ public class FilteringContextualisation implements Contextualisation {
     }
 
     /**
+     * Retireves one of complementary formulas from provided map of grounding sets. It is not important which one it
+     * will be exactly.
+     * @param namedGroundingSets
+     * @return
+     */
+    private Formula provideFormula(Map<Formula, Set<BaseProfile>> namedGroundingSets) {
+        return namedGroundingSets.keySet().iterator().next();
+    }
+
+    /**
+     * Method creates context for given grounding sets.
+     * @param namedGroundingSets
+     * @return
+     */
+    private Context buildContext(Map<Formula, Set<BaseProfile>> namedGroundingSets) {
+        Formula formula = provideFormula(namedGroundingSets);
+        return contextBuilder.build(formula.getModel(), selector.select(namedGroundingSets));
+    }
+
+    /**
      * This is key method in determining which base profiles should be used in holon building process.
-     * It uses already provided context to determine condition fulfillment.
+     * It uses provided context to determine condition fulfillment.
      * This method can be override to change way of base profiles selection.
      *
      * @param examined This base profile is examined if meets criteria.
+     * @param context Context which will be used to perform comparision.
      * @return true if given examined base profile met criteria; false otherwise.
      */
-    public boolean determineFulfillment(BaseProfile examined) throws InvalidMeasureImplementation {
-        return measure.count(examined, context) <= maxValue;
+    public boolean determineFulfillment(BaseProfile examined, Context context) throws InvalidMeasureImplementation {
+        System.out.println(measure.count(examined, context));
+        return measure.count(examined, context) <= measure.getMaxThreshold();
     }
 
     @Override
     public void setMaxThreshold(double threshold) {
-        maxValue = threshold;
+        measure.setMaxThreshold(threshold);
     }
 }

@@ -1,24 +1,36 @@
-package com.pwr.zpi.language
-
 import com.pwr.zpi.Agent
+import com.pwr.zpi.Configuration
 import com.pwr.zpi.episodic.BPCollection
 import com.pwr.zpi.episodic.BaseProfile
+import com.pwr.zpi.language.ComplexFormula
+import com.pwr.zpi.language.DistributedKnowledge
+import com.pwr.zpi.language.Formula
+import com.pwr.zpi.language.Grounder
+import com.pwr.zpi.language.LogicOperator
+import com.pwr.zpi.language.ModalOperator
+import com.pwr.zpi.language.SimpleFormula
+import com.pwr.zpi.language.State
+import com.pwr.zpi.language.Trait
 import com.pwr.zpi.semantic.IndividualModel
 import com.pwr.zpi.semantic.ObjectType
 import com.pwr.zpi.semantic.QRCode
 import org.testng.annotations.Test
 
+/**
+ * Created by Grzesiek on 2017-06-11.
+ */
 class GrounderTest extends GroovyTestCase {
 
 
     Map<Trait, Set<IndividualModel>> describedByTraits, notDescribedByTraits,
                                      indefiniteByTraits;
     BaseProfile bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9, bp2_2;
+    BaseProfile bp1_a, bp2_a, bp3_a, bp4_a, bp5_a, bp6_a, bp7_a, bp8_a, bp9_a
     int t0, t1, t2, t3, t4, t5, t6, t7, t8, t9
     BPCollection bpCollection1
     Agent agent
     SimpleFormula sformula1, sformula2, sformula3
-    ComplexFormula cformula1, cformula2, cformula3, cformula4, cformula5, cformula6
+    ComplexFormula cformula1, cformula2, cformula3, cformula4, cformula5, cformula6, cformula7, cformula8
     DistributedKnowledge testDk, testDk1, testDk2, testDk3, testDk4, testDk5, testDk6,
                          testCDk1, testCDk2
 
@@ -81,7 +93,7 @@ class GrounderTest extends GroovyTestCase {
 
         bpCollection1 = new BPCollection([bp1, bp2] as Set, [bp3, bp4, bp6] as Set)
 
-        agent = new Agent(bpCollection1)
+        agent = new Agent.AgentBuilder().knowledgeBase(bpCollection1).build()
 
         def formulaIM = model1
 
@@ -164,23 +176,77 @@ class GrounderTest extends GroovyTestCase {
                                [(tr1): [im1] as Set<IndividualModel>, (tr2): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>
         ] as List, t9)
 
-                /*
-        base profiles matrix:
-        NR  RED WHI BLI
-        1   1   0   0
-        2   1   0   0
-        3   1   0   1   (blinking, white): {(is, is not):KNOW}
-        -------------
-        4   1   0   N   (blinking, white): {(is, is not):POS, (si not, is not):BEL}
-                        (red, white): {(is, is not): know}
-                        (red, blinking): {(is, is): pos, (is, is not): bel}
-        -------------
-        5   N   0   0
-        6   N   0   N
-        7   N   1   1
-        8   0   1   N
-        9   N   N   1   (red, blinking): {(is, is): pos, (is, is not): bel}
-                        (white, blinking): {(is, is): pos, (is not, is): pos}
+        /*
+base profiles matrix:
+NR  RED WHI BLI
+1   1   0   0
+2   1   0   0
+3   1   0   1   (blinking, white): {(is, is not):KNOW}
+-------------
+4   1   0   N   (blinking, white): {(is, is not):POS, (si not, is not):BEL}
+                (red, white): {(is, is not): know}
+                (red, blinking): {(is, is): pos, (is, is not): bel}
+-------------
+5   N   0   0
+6   N   0   N
+7   N   1   1
+8   0   1   N
+9   N   N   1   (red, blinking): {(is, is): pos, (is, is not): bel}
+                (white, blinking): {(is, is): pos, (is not, is): pos}
+ */
+
+        bp1_a = new BaseProfile([[(tr1): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                               [(tr2): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                               new HashMap<Trait, Set<IndividualModel>>()
+
+        ] as List, t1)
+        bp2_a = new BaseProfile([[(tr1): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                                 [(tr2): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                                 new HashMap<Trait, Set<IndividualModel>>()
+        ] as List, t2)
+        bp3_a = new BaseProfile([[(tr2): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                                 [(tr1): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                                 new HashMap<Trait, Set<IndividualModel>>()
+
+        ] as List, t3)
+        bp4_a = new BaseProfile([[(tr2): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                                 [(tr1): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                                 new HashMap<Trait, Set<IndividualModel>>()
+        ] as List, t4)
+        bp5_a = new BaseProfile([new HashMap<Trait, Set<IndividualModel>>(),
+                               [(tr2): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                               [(tr1): [im1] as Set<IndividualModel>]
+        ] as List, t5)
+        bp6_a = new BaseProfile([new HashMap<Trait, Set<IndividualModel>>(),
+                               [(tr2): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                               [(tr1): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>]
+        ] as List, t6)
+        bp7_a = new BaseProfile([[(tr2): [im1] as Set<IndividualModel>, (tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                               new HashMap<Trait, Set<IndividualModel>>(),
+                               [(tr1): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>
+        ] as List, t7)
+        bp8_a = new BaseProfile([[(tr2): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                               [(tr1): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                               [(tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>
+        ] as List, t8)
+        bp9_a = new BaseProfile([[(tr3): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>,
+                               new HashMap<Trait, Set<IndividualModel>>(),
+                               [(tr1): [im1] as Set<IndividualModel>, (tr2): [im1] as Set<IndividualModel>] as Map<Trait, Set<IndividualModel>>
+        ] as List, t9)
+
+        /*
+        alternative base profiles matrix:
+NR  RED WHI BLI
+1   1   0   0
+2   1   0   0
+3   0   1   1
+4   0   1   1
+5   N   0   1
+-------------
+6   0   0   1
+7   1   1   1
+8   0   1   0
+9   1   1   1
          */
 
         switch (phaseNbr) {
@@ -193,10 +259,13 @@ class GrounderTest extends GroovyTestCase {
             case 2:
                 bpCollection1 = new BPCollection([bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9] as Set, [] as Set)
                 break
+            case 3:
+                bpCollection1 = new BPCollection([bp1_a, bp2_a, bp3_a, bp4_a, bp5_a/*, bp6_a, bp7_a, bp8_a, bp9_a*/] as Set, [] as Set)
+                break
         }
 
 
-        agent = new Agent(bpCollection1)
+        agent = new Agent.AgentBuilder().knowledgeBase(bpCollection1).build()
 
         def formulaIM = im1
 
@@ -214,6 +283,10 @@ class GrounderTest extends GroovyTestCase {
                 [State.IS_NOT, State.IS_NOT], LogicOperator.OR)
         cformula6 = new ComplexFormula(formulaIM, [tr2, tr3],
                 [State.IS, State.IS_NOT], LogicOperator.OR)
+        cformula7 = new ComplexFormula(formulaIM, [tr1, tr2],
+                [State.IS_NOT, State.IS_NOT], LogicOperator.OR)
+        cformula8 = new ComplexFormula(formulaIM, [tr1, tr2],
+                [State.IS, State.IS], LogicOperator.XOR)
 
     }
 
@@ -233,7 +306,7 @@ class GrounderTest extends GroovyTestCase {
 
         buildRelatedScenario(1)
         groundingSets = Grounder.getGroundingSets(cformula5, agent.knowledgeBase.getBaseProfiles())
-        assertEquals([bp1, bp2, bp3, bp4] as Set<BaseProfile>, groundingSets.get(cformula5))
+        assertEquals([bp1, bp2, bp3] as Set<BaseProfile>, groundingSets.get(cformula5))
 
         buildRelatedScenario(1)
         groundingSets = Grounder.getGroundingSets(cformula6, agent.knowledgeBase.getBaseProfiles())
@@ -241,7 +314,7 @@ class GrounderTest extends GroovyTestCase {
 
         buildRelatedScenario(2)
         groundingSets = Grounder.getGroundingSets(cformula5, agent.knowledgeBase.getBaseProfiles())
-        assertEquals([bp1, bp2, bp3, bp4, bp5, bp6] as Set<BaseProfile>, groundingSets.get(cformula5))
+        assertEquals([bp1, bp2, bp3, bp5] as Set<BaseProfile>, groundingSets.get(cformula5))
     }
 
 
@@ -297,7 +370,7 @@ class GrounderTest extends GroovyTestCase {
 
     @Test
     void testCheckEpistemicCondition() {
-        final double[] simpleThresholds = Grounder.simpleThresholds;
+        final double[] simpleThresholds = Configuration.simpleThresholds;
         //[0.2, 0.6, 0.7, 0.9, 1.0];
 
         assertNull(Grounder.checkEpistemicCondition(true, true,
@@ -353,4 +426,36 @@ class GrounderTest extends GroovyTestCase {
         assertEquals(0.0, Grounder.relativeCard(groundingSets5,cformula3))
     }
 
+    @Test
+    void testIsEpsilonConcentrated() {
+        buildRelatedScenario(2)
+        println("first check")
+        assertFalse(Grounder.checkEpsilonConcentratedCondition(cformula5, [bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9] as Set<BaseProfile>))
+        println("second check")
+        assertTrue(Grounder.checkEpsilonConcentratedCondition(cformula8, [bp1_a, bp2_a, bp3_a, bp4_a, bp5_a] as Set<BaseProfile>))
+
+    }
+
+    @Test
+    void testCountSetDiameter() {
+        buildRelatedScenario(3)
+
+        //dependent test  todo should be moved to FormulaTest
+        def dependent = cformula5.getDependentFormulas()
+        def expected1 = new ComplexFormula(cformula5.getModel(), cformula5.getTraits(), [State.IS_NOT, State.IS_NOT]as List<State>, LogicOperator.AND)
+        def expected2 = new ComplexFormula(cformula5.getModel(), cformula5.getTraits(), [State.IS_NOT, State.IS]as List<State>, LogicOperator.AND)
+        def expected3 = new ComplexFormula(cformula5.getModel(), cformula5.getTraits(), [State.IS, State.IS_NOT]as List<State>, LogicOperator.AND)
+        assertTrue(dependent.containsAll([expected1, expected3, expected2]as List<ComplexFormula>) && dependent.size()==3)
+        //
+        assertEquals(0.6, Grounder.countSetDiameter(dependent.get(0), dependent, [bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9]as Set<BaseProfile>))
+
+        dependent = cformula8.getDependentFormulas()
+//        println Grounder.relativeCard_(Grounder.getGroundingSets(dependent.get(0), [bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9]as Set<BaseProfile>))
+        println Grounder.relativeCard_(Grounder.getGroundingSets(dependent.get(0), [bp1_a, bp2_a, bp3_a, bp4_a, bp5_a]as Set<BaseProfile>))
+        println cformula8
+        println dependent.get(0)
+        println dependent.get(1)
+        println( Grounder.countSetDiameter(dependent.get(0), dependent, [bp1_a, bp2_a, bp3_a, bp4_a, bp5_a]as Set<BaseProfile>))
+        println( Grounder.countSetDiameter(dependent.get(1), dependent, [bp1_a, bp2_a, bp3_a, bp4_a, bp5_a]as Set<BaseProfile>))
+    }
 }

@@ -12,7 +12,7 @@ import com.pwr.zpi.semantic.IndividualModel;
 import java.util.*;
 
 /**
- * This is concrete realisation of ContextBuilder. This builder
+ * This is concrete realisation of ContextBuilder.
  */
 public class ConcreteContextBuilder implements ContextBuilder {
 

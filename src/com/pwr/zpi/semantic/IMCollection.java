@@ -6,6 +6,10 @@ import java.util.*;
 
 /**
  * Collection of individual models. Used to find or add new model.
+ *
+ * @author Mateusz Gawlowski
+ * @author Weronika Wolska
+ * @author Grzegorz Kostkowski
  */
 public class IMCollection {
 

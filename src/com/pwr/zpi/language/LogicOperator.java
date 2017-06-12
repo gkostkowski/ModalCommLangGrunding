@@ -2,7 +2,7 @@ package com.pwr.zpi.language;
 
 
 /**
- *
+ * //todo
  */
 public enum LogicOperator {
 

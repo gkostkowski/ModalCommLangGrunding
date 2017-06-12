@@ -1,3 +1,6 @@
+/*
+ * Created by Grzegorz Kostkowski
+ */
 package com.pwr.zpi.holons;
 
 import com.pwr.zpi.Agent;
@@ -20,6 +23,7 @@ import java.util.logging.Logger;
  * In case of summaries for conjunctions, relatives grounding cardinality is fixed straight from respective conjunctive
  * grounding sets. In case of disjunctions, such values are determined based on relative grounding cardinality for
  * conjunctions.
+ * @author Grzegorz Kostkowski
  */
 public class HolonsIntercessor {
 
@@ -44,6 +48,10 @@ public class HolonsIntercessor {
 
     public Contextualisation getHolonsContextualisation(){
         return contextualisation;
+    }
+
+    public void setHolonsContextualisation(Contextualisation newContextualisation) {
+        this.contextualisation =newContextualisation;
     }
 
     public HolonCollection getHolonsCollection() {

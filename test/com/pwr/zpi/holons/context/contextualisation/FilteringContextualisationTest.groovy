@@ -93,13 +93,13 @@ class FilteringContextualisationTest extends GroovyTestCase {
         shouldFail { testObj.selectRepresentativeBPs(new HashSet<BaseProfile>()) }
         assertEquals([bp4] as Set<BaseProfile>, testObj.selectRepresentativeBPs(namedGroundingSets))
         //bo bp5 sie nie gruntuje
-        assertEquals([bp3] as Set<BaseProfile>, testObj.selectRepresentativeBPs(Grounder.getGroundingSets(formula, [bp1, bp3] as Set<BaseProfile>)))
+        assertEquals([bp3] as Set<BaseProfile>, testObj.selectRepresentativeBPs(Grounder.getGroundingSetsMap(formula, [bp1, bp3] as Set<BaseProfile>)))
 
     }
 */
 
     /*void testIsMeetingCondition() {
-        namedGroundingSets = Grounder.getGroundingSets(formula, [bp1, bp2, bp3, bp4] as Set<BaseProfile>)
+        namedGroundingSets = Grounder.getGroundingSetsMap(formula, [bp1, bp2, bp3, bp4] as Set<BaseProfile>)
         testObj.selectRepresentativeBPs(namedGroundingSets)
 
         //last representative is bp4 [1 0 null]
@@ -114,16 +114,16 @@ class FilteringContextualisationTest extends GroovyTestCase {
         testObj.setMaxThreshold(1)
         assertEquals(true, testObj.isMeetingCondition(bp3))
         assertEquals(false, testObj.isMeetingCondition(bp2))
-        testObj.selectRepresentativeBPs(Grounder.getGroundingSets(formula, [bp1, bp2, bp3] as Set<BaseProfile>))
+        testObj.selectRepresentativeBPs(Grounder.getGroundingSetsMap(formula, [bp1, bp2, bp3] as Set<BaseProfile>))
         assertEquals(false, testObj.isMeetingCondition(bp2))
         assertEquals(true, testObj.isMeetingCondition(bp1))
 
-        testObj.selectRepresentativeBPs(Grounder.getGroundingSets(formula, [bp1, bp2] as Set<BaseProfile>))
+        testObj.selectRepresentativeBPs(Grounder.getGroundingSetsMap(formula, [bp1, bp2] as Set<BaseProfile>))
         testObj.setMaxThreshold(0)
         assertEquals(false, testObj.isMeetingCondition(bp1))
         assertEquals(true, testObj.isMeetingCondition(bp2))
 
-        testObj.selectRepresentativeBPs(Grounder.getGroundingSets(formula, [bp1, bp2, bp3, bp4] as Set<BaseProfile>))
+        testObj.selectRepresentativeBPs(Grounder.getGroundingSetsMap(formula, [bp1, bp2, bp3, bp4] as Set<BaseProfile>))
         testObj.setMaxThreshold(2)
         assertEquals(true, testObj.isMeetingCondition(bp2))
     }*/

@@ -1,19 +1,19 @@
 package com.pwr.zpi.io;
 
-import com.pwr.zpi.*;
 import com.pwr.zpi.episodic.Observation;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.semantic.Identifier;
 import com.pwr.zpi.semantic.ObjectType;
 import com.pwr.zpi.semantic.QRCode;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.*;
 
-import static com.pwr.zpi.Agent.objectTypeCollection;
 
 /**
  * This class acts as data access layer for SQLite database that is used to gather observations
@@ -22,10 +22,15 @@ import static com.pwr.zpi.Agent.objectTypeCollection;
 public class DatabaseAO {
 
     public static final String DEF_DATABASE_FILENAME = "baza1.db";
+    private static Collection<ObjectType> objectTypeCollection;
     private Connection dbConnection;
     private Map<String, Integer> nameIndexMap;
 
     public DatabaseAO() {
+        init();
+    }
+    public DatabaseAO(Collection<ObjectType> objectTypes) {
+        this.objectTypeCollection = objectTypes;
         init();
     }
 
@@ -54,9 +59,10 @@ public class DatabaseAO {
      * This method is only for simplifying tests and should not be used in real agent.
      */
     @Deprecated
-    private void deleteDatabase(){
+    public void deleteDatabase(){
         try {
-            if(Files.exists(Paths.get("db/" + DEF_DATABASE_FILENAME)))
+            Path path = Paths.get("db/" + DEF_DATABASE_FILENAME);
+            if(new File(path.toString()).exists() && Files.isReadable(path) && Files.isExecutable(path))
                 Files.delete(Paths.get("db/" + DEF_DATABASE_FILENAME));
         } catch (IOException e) {
             System.out.println("Probable solution: disconnect from database in your IDE.");
@@ -85,6 +91,8 @@ public class DatabaseAO {
             SQLStatement.addBatch(SQLCommandText.toString());
             SQLCommandText.setLength(0);
 
+            if (objectTypeCollection == null)
+                objectTypeCollection = ObjectType.getObjectTypes();
             for(ObjectType objectType : objectTypeCollection) {
                 tableName = objectType.getTypeId();
                 SQLCommandText.append("CREATE TABLE IF NOT EXISTS\"").append(tableName).

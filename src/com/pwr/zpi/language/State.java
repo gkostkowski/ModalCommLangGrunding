@@ -2,6 +2,7 @@ package com.pwr.zpi.language;
 
 /**
  * Describes state of trait in object - determines whether trait is, is not or might be in object.
+ * @author Jarema Radom
  */
 public enum State {
 

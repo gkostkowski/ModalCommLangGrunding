@@ -4,11 +4,13 @@ import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.semantic.IndividualModel;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
+ * //todo
  *
+ * @author Weronika Wolska
+ * @author Grzegorz Kostkowski
  */
 public abstract class Formula {
 
@@ -23,12 +25,14 @@ public abstract class Formula {
     /**
      * Produces set of formulas which are complementary to this one. Amount and form of this formulas depends on
      * formula type. For convenience, given formula is also included in resulted collection.
+     *
      * @return
      */
     public abstract List<Formula> getComplementaryFormulas() throws InvalidFormulaException;
 
     /**
      * Method returns standard version of this formula. Standard formula is known as formula without any negations.
+     *
      * @return new formula which is standard formula.
      */
     public abstract Formula getStandardFormula() throws InvalidFormulaException;
@@ -39,12 +43,14 @@ public abstract class Formula {
      * Such formulas can be used for building grounding set or retrieving summarization.
      * In case of disjunction grounding sets, these are composed of more than one conjunctive grounding set.
      * In case of simply modalities and conjunctions method should return formula which is provided as parameter.
+     *
      * @return Array of bind formulas used in exact grounding.
      */
     public abstract List<Formula> getDependentFormulas();
 
     /**
      * Method creates new formula, based on this one, where the only one difference is logic operator given as parameter.
+     *
      * @param newOperator
      * @return
      */
@@ -55,6 +61,7 @@ public abstract class Formula {
     /**
      * Determines if checking for epistemic fulfillment relationship should also perform checking related with
      * epsilon-concentration.
+     *
      * @return
      */
     public boolean needEpsilonConcentrationChecking() {
@@ -64,6 +71,39 @@ public abstract class Formula {
     public Comparator<Formula> comparator() {
         return ((f1, f2) -> f1.hashCode() < f2.hashCode() ? -1 : (f1.hashCode() > f2.hashCode() ? 1 : 0));
     }
+
+    /**
+     * Method returns standard formula for one of formulas from provided collection. This method can be used
+     * when there is certainty that entire collection contains similar formulas - namely, with same operator
+     * and same traits.
+     * @param familyCandidate
+     * @return Formula with same concrete type as this stored in provided collection.
+     * @throws InvalidFormulaException
+     */
+
+    public static Formula getStandardFormula(Collection<Formula> familyCandidate) throws InvalidFormulaException {
+        if (!familyCandidate.isEmpty())
+            return familyCandidate.iterator().next().getStandardFormula();
+        return null;
+    }
+
+    /**
+     * This static method is used to filter given family of sets of formulas - retains only this which are supersets
+     * for given formula set.
+     * @param formulasSet
+     * @param relevantFamily
+     * @return
+     */
+    public static List<Set<Formula>> getFormulaSupersets(Collection<Formula> formulasSet,
+                                                                      List<Set<Formula>> relevantFamily) {
+        List<Set<Formula>> res = new ArrayList<>();
+        for (Set<Formula> member : relevantFamily) {
+            if (member.size() > formulasSet.size() && new ArrayList<>(member).containsAll(formulasSet))
+                res.add(member);
+        }
+        return res;
+    }
+
 
     /**
      * Gives list of successive states. Classic case will contains states which describe whether parts of formula[traits]
@@ -106,7 +146,7 @@ public abstract class Formula {
         List<Trait> traits = getTraits();
         List<State> states = getStates();
         LogicOperator op = getType().equals(Formula.Type.SIMPLE_MODALITY) ? null
-                :(getType().equals(Formula.Type.MODAL_CONJUNCTION) ? LogicOperator.AND :LogicOperator.OR);
+                : (getType().equals(Formula.Type.MODAL_CONJUNCTION) ? LogicOperator.AND : LogicOperator.OR);
 
         boolean res = op != null && op.equals(LogicOperator.AND) ? true : false;
         for (int i = 0; i < traits.size(); i++) {
@@ -127,9 +167,10 @@ public abstract class Formula {
     abstract public boolean isFormulaSimilar(Formula formula);
 
     /**
-     * Method determines if holons for such this formula should be build <<b>in a direct way</b> (from grounding sets)
+     * Method determines if holons for such this formula should be build <b>in a direct way</b> (from grounding sets)
      * or with company of others holons. It's determined based on this formula type. Only holons for simple modalities
      * and modal conjunctions are built in direct way.
+     *
      * @return
      */
     public boolean usesDirectHolonConstruction() {
