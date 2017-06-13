@@ -10,7 +10,7 @@ import com.pwr.zpi.language.Trait
 import com.pwr.zpi.semantic.IndividualModel
 import com.pwr.zpi.semantic.ObjectType
 import com.pwr.zpi.semantic.QRCode
-import org.junit.jupiter.api.Test
+import org.testng.annotations.Test
 
 /**
  * Created by Jarema on 6/2/2017.

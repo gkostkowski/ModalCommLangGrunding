@@ -31,15 +31,12 @@ class Main {
         Agent agent = new Agent.AgentBuilder()
                 .contextualisation(latestContext)
                 .build();
-        Agent agent2 = new Agent.AgentBuilder()
-                .contextualisation(latestContext)
-                .build();
 
-//        Scenario scenario = new Scenario(agent, null, "scenario01.csv", "conv001");
-//        Scenario scenario = new Scenario(agent, null, "conj_scenario01.csv", "conj conv001");
-//        //scenario.execute();
+        //Scenario scenario = new Scenario(agent, "scenario01.csv", "conv001");
+//        Scenario scenario = new Scenario(agent, "conj_scenario01.csv", "conj conv001");
+//        scenario.execute();
 //
-//        new Scenario(agent, null, "scenario01_main.csv", "conj conv002").execute();
+        new Scenario(agent, "scenario01_main.csv", "conj conv002").execute();
         //new Scenario(agent, null, "conj_context_scenario02.csv", "conj conv003").execute();
 
 

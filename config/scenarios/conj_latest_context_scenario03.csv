@@ -1,0 +1,13 @@
+#;distance with threshold = 2;;;;;;;;;;;
+DEF;;;;;;;;;;;;
+Rysio;0412;Blue;Soft;Blinking;Green;Square;Solid;Striped;;;;
+SCENARIO;;;;;;;;;;;;
+Rysio;;;;;;;;;;;;
+timestamp;related_object;Blue;Soft;Blinking;Green;Square;Solid;Striped;;;;
+9;Rysio;1;1;1;1;1;1;-1;;;;
+10;Rysio;1;1;1;1;1;1;-1;;;;
+11;Rysio;1;1;1;0;1;-1;-1;;;;
+12;Rysio;-1;-1;-1;-1;-1;0;1;;;;
+13;Rysio;0;-1;-1;-1;-1;-1;0;is rysio blue and soft;No, I know it is not;Is Rysio not solid and not striped;it is possible that Rysio is not Solid and not Striped, however I believe that it is Solid and not Striped
+#;;;;;;;;;;because 9-12 base profiles belongs to one of base profile and 12 is used as context. Distance between context and any avaliable base profile is greater than 2, so it answers based only on 12;;11 is used as context and 9 and 10 are also selected to grounding sets becuse distance between context and {9, 10} is < 2
+#;;;;;;@up;no context:;;;Yes, I belive;;Yes, I belive

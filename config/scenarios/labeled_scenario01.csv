@@ -1,0 +1,21 @@
+COMMENT;#komentarz;;;;;;;;;;;;;;
+DEF_MARKER;DEF;;;;;;;;;;;;;;
+IM_DEF;Hyzio;124;Red;White;Blinking;;;;;;;;;;
+IM_DEF;Dyzio;1442;Blue;Soft;Blinking;;;;;;;;;;
+IM_DEF;Rysio;2442;Blue;Soft;Blinking;;;;;;;;;;
+IM_DEF;Zyzio;2452;Blue;Soft;Blinking;;;;;;;;;;
+SCENARIO_MARKER;SCENARIO;;;;;;;;;;;;;;
+AFFECTED_IMS_DEF;Hyzio;Rysio;Zyzio;;;;;;;;;;;;
+SCENARIO_HEADER;timestamp;related_object;Red;White;Blinking;Blue;Soft;Blinking;Blue;Soft;Blinking;;;;
+SC_QUESTION_ENTRY;0;Hyzio;1;-1;-1;;;;;;;is hyzio blinking;No, but I know that he is not;;
+SCENARIO_ENTRY;1;Hyzio;1;-1;-1;;;;;;;;;;
+SC_QUESTION_ENTRY;2;Hyzio;1;-1;1;;;;;;;;;Is hyzio blinking and not white;Yes, I am sure it is blinking and not white
+SC_QUESTION_ENTRY;3;Hyzio;1;-1;0;;;;;;;is hyzio red;i know;Is hyzio red and blinking;It is possible, that it is red and blinking, but I believe it is red and not blinking
+SC_QUESTION_ENTRY;4;Hyzio;0;-1;-1;;;;;;;is hyzio red;know p;;
+SC_QUESTION_ENTRY;5;Hyzio;0;-1;0;;;;;;;is hyzio blinking;It is possible it is blinking, but I believe it is not;is hyzio white;i know it is not
+SC_QUESTION_ENTRY;6;Hyzio;0;1;1;;;;;;;;;;
+SC_QUESTION_ENTRY;7;Hyzio;-1;1;0;;;;;;;is hyzio red;Know not;is hyzio white;know is
+SC_QUESTION_ENTRY;8;Hyzio;0;0;1;;;;;;;is hyzio red and blinking;It is possible, that it is red and blinking, but I believe it is red and not blinking;is hyzio not white and not blinking;I think it is possible that it is not white and not blinking
+SC_QUESTION_ENTRY;9;Rysio;;;;1;1;1;;;;is hyzio white;bel not pos is;;
+SCENARIO_ENTRY;10;Rysio;;;;-1;1;1;;;;;;;
+SC_QUESTION_ENTRY;11;Rysio;;;;1;-1;-1;;;;is hyzio red and blinking;I don't really know;;

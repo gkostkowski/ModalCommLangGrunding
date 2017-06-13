@@ -11,7 +11,7 @@ import com.pwr.zpi.holons.Holon
 import com.pwr.zpi.semantic.IndividualModel
 import com.pwr.zpi.semantic.ObjectType
 import com.pwr.zpi.semantic.QRCode
-import org.junit.jupiter.api.Test
+import org.testng.annotations.Test
 
 class BinaryHolonTest extends GroovyTestCase{
 

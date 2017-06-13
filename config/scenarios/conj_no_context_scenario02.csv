@@ -1,0 +1,12 @@
+#komentarz;;;;;;;;;;;;
+DEF;;;;;;;;;;;;
+Rysio;0412;Blue;Soft;Blinking;Green;Square;Solid;Striped;;;;
+SCENARIO;;;;;;;;;;;;
+Rysio;;;;;;;;;;;;
+timestamp;related_object;Blue;Soft;Blinking;Green;Square;Solid;Striped;;;;
+9;Rysio;1;1;1;1;1;1;-1;;;;
+10;Rysio;1;1;1;1;1;1;-1;;;;
+11;Rysio;1;1;1;1;1;1;-1;;;;
+12;Rysio;-1;-1;-1;-1;-1;-1;1;;;;
+13;Rysio;0;-1;-1;-1;-1;-1;0;is rysio blue and soft;Yes, I belive;Is Rysio solid and not striped;Yes, I belive
+#;;;;;;@up;dla latestFiltering:;;;No, I know it is not;;No, I know it is not
