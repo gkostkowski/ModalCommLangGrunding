@@ -84,6 +84,8 @@ public class ComplexStatement extends Statement {
      */
     @Override
     public String generateStatement() {
+        if(keys.isEmpty())
+            return "I do not know what to say about it";
         String answer = checkForKnow();
         if (answer != null)
             return answer;
@@ -106,14 +108,18 @@ public class ComplexStatement extends Statement {
             keys.remove(nextWithBel);
             addAlso = true;
         }
-        if (!keys.isEmpty()) {
-            sb.append(", but it is" + ((addAlso) ? " also" : "") + " possible that ");
-        }
-        String connecting = "";
-        for (Formula f : keys) {
-            sb.append(connecting);
-            sb.append(generateRestOfsentence((ComplexFormula) f, false, false));
-            connecting = " or ";
+        if(keys.size()==3)
+            sb.append(", but all other options are also possible");
+        else {
+            if (!keys.isEmpty()) {
+                sb.append(", but it is" + ((addAlso) ? " also" : "") + " possible that ");
+            }
+            String connecting = "";
+            for (Formula f : keys) {
+                sb.append(connecting);
+                sb.append(generateRestOfsentence((ComplexFormula) f, false, false));
+                connecting = " or ";
+            }
         }
         return sb.toString();
     }
