@@ -21,7 +21,7 @@ import java.util.Map;
  * @author Grzegorz Kostkowski
  * @author Jarema Radom
  */
-public interface Holon {
+public interface Holon extends Comparable<Holon> {
 
     void update() throws InvalidFormulaException, NotApplicableException;
 
@@ -58,11 +58,11 @@ public interface Holon {
      * @throws InvalidFormulaException
      * @throws NotApplicableException
      */
-    public abstract boolean update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException;
-    public abstract Pair getStrongest();
-    public abstract Pair getWeakest();
-    public abstract HolonKind getKind();
-    public abstract List<Formula> getFormula();
+    boolean update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException;
+    Pair getStrongest();
+    Pair getWeakest();
+    HolonKind getKind();
+    List<Formula> getFormula();
 
     /** Returns context which was used to build grounding sets for this holon.*/
     Contextualisation getContextualisation();
@@ -70,5 +70,18 @@ public interface Holon {
     enum HolonKind{
         Binary,
         Non_Binary
+    }
+
+    @Override
+    default int compareTo(Holon o) {
+        double res=0, res2=0;
+        for (Formula f:getSummaries().keySet()) {
+            res = f.hashCode() + getSummaries().get(f);
+        }
+
+        for (Formula f:o.getSummaries().keySet()) {
+            res2 = f.hashCode() + o.getSummaries().get(f);
+        }
+        return res > res2 ? 1: (res < res2 ? -1 : 0);
     }
 }

@@ -28,15 +28,21 @@ class Main {
         Contextualisation latestContext= new FilteringContextualisation(new ConcreteContextBuilder(), new LatestSelector(),
                 new NormalisedDistance(0.5));
 //                new Distance(2));
-        Agent agent = new Agent.AgentBuilder()
+        Agent agentNoCtxt = new Agent.AgentBuilder()
+                //.contextualisation(null)
+                .label("agentNoCtxt")
+                .build();
+        Agent agentLtstCntxt = new Agent.AgentBuilder()
                 .contextualisation(latestContext)
+                .label("agentLtstCntxt")
                 .build();
 
         //Scenario scenario = new Scenario(agent, "scenario01.csv", "conv001");
-//        Scenario scenario = new Scenario(agent, "conj_scenario01.csv", "conj conv001");
-//        scenario.execute();
+//        new Scenario(agentNoCtxt, "conj_no_context_scenario01.csv", "conj conv01").execute();
+//        new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv", "conj conv04").execute();
+        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv", "ex disj conv05").execute();
 //
-        new Scenario(agent, "scenario01_main.csv", "conj conv002").execute();
+//        new Scenario(agent, "scenario01_main.csv", "conj conv002").execute();
         //new Scenario(agent, null, "conj_context_scenario02.csv", "conj conv003").execute();
 
 
@@ -54,7 +60,7 @@ class Main {
         //or
         //simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        startLifeCycle(agent, qrCodes, tr);
+        //startLifeCycle(agent, qrCodes, tr);
 
          //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which

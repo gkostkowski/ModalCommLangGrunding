@@ -43,7 +43,7 @@ public class Agent {
     private HolonsIntercessor holonsIntercessor;
     private static DatabaseAO database;
     public static Collection<ObjectType> objectTypeCollection;
-
+    private String label;
 
 
     private Agent(AgentBuilder builder) {
@@ -52,6 +52,7 @@ public class Agent {
         this.objectTypeCollection = builder.getObjectTypeCollection();
         this.models = builder.getModels();
         database = builder.getDatabase();
+        this.label=builder.getLabel();
     }
 
 
@@ -253,6 +254,11 @@ public class Agent {
         return holonsIntercessor.getSummaries(currFormula, timestamp);
     }
 
+    @Override
+    public String toString() {
+        return label != null ? "Agent "+label : super.toString();
+    }
+
     /**
      * Class is introduced due to diversity of ways of agent creation. it simplifies construction of agent.
      * Class implements builder pattern.
@@ -268,6 +274,7 @@ public class Agent {
         private HolonsIntercessor holonsIntercessor;
         private DatabaseAO database;
         private Contextualisation contextualisation;
+        private String label=null;
 
 
         public AgentBuilder() {
@@ -290,6 +297,11 @@ public class Agent {
 
         public AgentBuilder models(IMCollection ims) {
             this.models =ims;
+            return this;
+        }
+
+        public AgentBuilder label(String label) {
+            this.label =label;
             return this;
         }
 
@@ -329,6 +341,10 @@ public class Agent {
 
         public Contextualisation getContextualisation() {
             return contextualisation;
+        }
+
+        public String getLabel() {
+            return label;
         }
     }
 }

@@ -1,0 +1,13 @@
+#scenario description;formulas type:;;conjunctions;;context:;NO;;
+DEF;;;;;;;;
+Rysio;0212;Blue;Soft;Blinking;;;;
+SCENARIO;;;;;;;;
+Rysio;;;;;;;;
+timestamp;related_object;Blue;Soft;Blinking;;;;
+9;Rysio;1;1;1;;;;
+10;Rysio;-1;1;1;;;;
+11;Rysio;1;-1;-1;;;;
+12;Rysio;-1;-1;-1;is rysio blue and soft;No, he is not blue and soft;;
+13;Rysio;0;1;1;;;;
+14;Rysio;0;1;1;;;;
+15;Rysio;1;0;1;is rysio soft and blinking;I believe it is sof and blinking, but it is possible it is opposite;is rysio blue and blinking;Yes, it is possible that it is blue and blinking, but all other options are also possible
