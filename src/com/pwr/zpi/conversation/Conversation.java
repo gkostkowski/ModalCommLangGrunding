@@ -16,6 +16,8 @@ import com.pwr.zpi.linguistic.SimpleStatement;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class starting a thread which listens to questions to agent and lets it answer
@@ -74,12 +76,14 @@ public class Conversation implements Runnable {
             Formula formula = question1.getFormula();
             return getAnswer(formula, contextualisation, question1.getName());
         } catch (InvalidQuestionException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Ivalid question", e);
             if(e.getMistake()==InvalidQuestionException.NO_QUESTION) return e.getStringWithInfo();
             else return "I didn't understand the question, sorry. It was because there is " + e.getStringWithInfo();
         } catch (InvalidFormulaException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Invalid formula", e);
             return "I couldn't create proper answer, I am really sorry";
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.WARNING, "Some error", e);
             return  "Something terrible happened!";}
     }
 
@@ -97,11 +101,11 @@ public class Conversation implements Runnable {
             try {
                 statement = new SimpleStatement((SimpleFormula)formula, Grounder.performFormulaGrounding(agent, formula), name);
             } catch (InvalidFormulaException e) {
-                e.printStackTrace();
+                Logger.getAnonymousLogger().log(Level.WARNING, "Invalid formula", e);
             } catch (NotApplicableException e) {
-                e.printStackTrace();
+                Logger.getAnonymousLogger().log(Level.WARNING, "Not applicable", e);
             } catch (NotConsistentDKException e) {
-                e.printStackTrace();
+                Logger.getAnonymousLogger().log(Level.WARNING, "Not consistent DK", e);
             }
             return statement.generateStatement();
         }
@@ -111,11 +115,11 @@ public class Conversation implements Runnable {
             try {
                 statement = new ComplexStatement((ComplexFormula)formula, Grounder.performFormulaGrounding(agent, formula), name);
             } catch (InvalidFormulaException e) {
-                e.printStackTrace();
+                Logger.getAnonymousLogger().log(Level.WARNING, "Invalid formula", e);
             } catch (NotApplicableException e) {
-                e.printStackTrace();
+                Logger.getAnonymousLogger().log(Level.WARNING, "Not applicable", e);
             } catch (NotConsistentDKException e) {
-                e.printStackTrace();
+                Logger.getAnonymousLogger().log(Level.WARNING, "Not consistent DK", e);
             }
             return statement.generateStatement();
         }
@@ -128,7 +132,6 @@ public class Conversation implements Runnable {
         {
             if(!queue.isEmpty())
             {
-          //      timestamp = agent.getEpisodicKnowledgeBase().getTimestamp();
                 System.out.println(askQuestion(queue.remove()));
                 System.out.println();
             }
