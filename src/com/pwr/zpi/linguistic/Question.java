@@ -67,12 +67,15 @@ public class Question {
      */
     public Formula getFormula() throws InvalidQuestionException, InvalidFormulaException
     {
-        if(length<5)
+        int startingIndex = 1;
+        if(parts[0].equalsIgnoreCase("Agent"))
+            startingIndex =3;
+        if(length<2+startingIndex)
             throw new InvalidQuestionException(InvalidQuestionException.NO_QUESTION);
         List<Trait> traits = new ArrayList<>();
         List<State> states = new ArrayList<>();
         boolean isXOR = false;
-        findIndividualModel();
+        findIndividualModel(startingIndex);
         if(parts[index].equalsIgnoreCase("not"))
         {
             states.add(State.IS_NOT);
@@ -119,9 +122,9 @@ public class Question {
      * method looks for a model represented by name given in question
      * @throws InvalidQuestionException if no match in memory of agent was found
      */
-    private void findIndividualModel() throws InvalidQuestionException
+    private void findIndividualModel(int startingIndex) throws InvalidQuestionException
     {
-        index = 3;
+        index = startingIndex;
         String name = parts[index];
         individualModel = agent.getModels().getRepresentationByName(name);
         index++;

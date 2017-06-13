@@ -1,6 +1,11 @@
 package com.pwr.zpi.linguistic
 
 import com.pwr.zpi.Agent
+import com.pwr.zpi.holons.context.builders.ConcreteContextBuilder
+import com.pwr.zpi.holons.context.contextualisation.Contextualisation
+import com.pwr.zpi.holons.context.contextualisation.FilteringContextualisation
+import com.pwr.zpi.holons.context.measures.NormalisedDistance
+import com.pwr.zpi.holons.context.selectors.LatestSelector
 import com.pwr.zpi.semantic.IndividualModel
 import com.pwr.zpi.semantic.ObjectType
 import com.pwr.zpi.semantic.QRCode
@@ -34,7 +39,11 @@ class QuestionTest extends GroovyTestCase {
         def id2 = new QRCode("id2")
         model1 = new IndividualModel(id, objectType)
         model2 = new IndividualModel(id2, objectType)
-        agent = new Agent()
+        Contextualisation latestContext= new FilteringContextualisation(new ConcreteContextBuilder(), new LatestSelector(),
+                new NormalisedDistance(0.5));
+        agent = new Agent.AgentBuilder()
+                .contextualisation(latestContext)
+                .build()
         agent.getModels().add(model1)
         agent.getModels().add(model2)
         agent.getModels().addNameToModel(id, "Zenek")
@@ -56,6 +65,8 @@ class QuestionTest extends GroovyTestCase {
         question1 = new Question("Is pepe pan dziobak black or soft", agent)
         assert  question1.getFormula().equals(new ComplexFormula(model2, [trait2, trait3], [State.IS, State.IS], LogicOperator.OR))
         question1 = new Question("Is pepe pan dziobak either black or soft", agent)
+        assert  question1.getFormula().equals(new ComplexFormula(model2, [trait2, trait3], [State.IS, State.IS], LogicOperator.XOR))
+        question1 = new Question("Agent Smith Is pepe pan dziobak either black or soft", agent)
         assert  question1.getFormula().equals(new ComplexFormula(model2, [trait2, trait3], [State.IS, State.IS], LogicOperator.XOR))
     }
 
