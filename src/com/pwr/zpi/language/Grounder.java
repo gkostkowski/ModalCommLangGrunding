@@ -196,7 +196,6 @@ public class Grounder {
 
         if (formula.needEpsilonConcentrationChecking()) {
             if (!checkEpsilonConcentratedCondition((ComplexFormula) formula, dk.getRelatedObservationsBase().getBaseProfiles()))
-//            if(!isEpsilonConcentrated((ComplexFormula) formula, dk.getRelatedObservationsBase().getBaseProfiles()))
                 res = null;
         }
         return res;
@@ -426,16 +425,16 @@ public class Grounder {
      * <li>if given set of dependent formulas is minimal</li>
      * </ol>
 
-     * @param formula
+     * @param disjFormula
      * @param episodicSet Set of all available base profiles.
      * @param epsilon Value of epsilon.
      * @return True if condition is fulfilled; false otherwise.
      */
-    private static boolean isSetEpsilonConcentrated(ComplexFormula formula,
+    private static boolean isSetEpsilonConcentrated(ComplexFormula disjFormula,
                                                     Set<BaseProfile> episodicSet, double epsilon) {
 
-        List<Formula> formulasSet = formula.getDependentFormulas();
-        if (!isMemberOfFamily(formula, formulasSet))
+        List<Formula> formulasSet = disjFormula.getDependentFormulas();
+        if (!isMemberOfFamily(disjFormula, formulasSet))
             return false;
         try {
             return countSetDiameter(formulasSet, episodicSet) <= epsilon
