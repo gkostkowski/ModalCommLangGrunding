@@ -364,7 +364,7 @@ public class Grounder {
      */
     static private double getConcentrationEpsilon(ComplexFormula formula) throws NotApplicableException, InvalidConfigurationException {
         javafx.util.Pair<Double, Double> range = getConcentrationEpsilonRange(formula);
-        return (range.getKey() + range.getValue()) / 2;
+        return Math.max(range.getKey(), range.getValue());
     }
 
 
