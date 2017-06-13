@@ -13,9 +13,9 @@ public enum LogicOperator {
         {
                 switch (this)
                 {
-                        case AND: return "and ";
-                        case OR: return  "or ";
-                        case XOR: return "xor";
+                        case AND: return " and ";
+                        case OR: return  " or ";
+                        case XOR: return " or ";
                         default: return null;
                 }
         }
