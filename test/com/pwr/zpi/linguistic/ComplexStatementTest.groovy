@@ -5,13 +5,14 @@ import com.pwr.zpi.language.ModalOperator
 import com.pwr.zpi.language.State
 import com.pwr.zpi.language.Trait
 import com.pwr.zpi.linguistic.ComplexStatement
+import com.pwr.zpi.linguistic.ComplexStatement
 import com.pwr.zpi.semantic.IndividualModel
 import com.pwr.zpi.semantic.ObjectType
 import com.pwr.zpi.semantic.QRCode
 import org.junit.Test
 
 /**
- * Created by Weronika on 28.05.2017.
+ * Created by Weronika on 13.06.2017.
  */
 class ComplexStatementTest extends GroovyTestCase {
 
@@ -31,7 +32,9 @@ class ComplexStatementTest extends GroovyTestCase {
         cf2 = new ComplexFormula(model1, [trait1, trait2], [State.IS_NOT, State.IS], LogicOperator.AND)
         cf3 = new ComplexFormula(model1, [trait1, trait2], [State.IS, State.IS_NOT], LogicOperator.AND)
         cf4 = new ComplexFormula(model1, [trait1, trait2], [State.IS_NOT, State.IS_NOT], LogicOperator.AND)
+
     }
+
 
     @Test
     void testGenerateStatementKNOW()
@@ -58,6 +61,72 @@ class ComplexStatementTest extends GroovyTestCase {
         assert cs.generateStatement().equalsIgnoreCase("No, but I know that Hyzio is Red and not Black")
     }
 
+
+    @Test
+    void testOR()
+    {
+        cf1 = new ComplexFormula(model1, [trait1, trait2], [State.IS, State.IS], LogicOperator.OR)
+        cf2 = new ComplexFormula(model1, [trait1, trait2], [State.IS_NOT, State.IS], LogicOperator.OR)
+        cf3 = new ComplexFormula(model1, [trait1, trait2], [State.IS, State.IS_NOT], LogicOperator.OR)
+        cf4 = new ComplexFormula(model1, [trait1, trait2], [State.IS_NOT, State.IS_NOT], LogicOperator.OR)
+        Map<Formula, ModalOperator> map = new HashMap<>();
+        map.put(cf1, ModalOperator.KNOW)
+        def cs = new ComplexStatement(cf1, map, "Hyzio")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, I know that Hyzio is Red or Black")
+        map = new HashMap<>();
+        map.put(cf2, ModalOperator.KNOW)
+        cs = new ComplexStatement(cf1, map, "Hyzio")
+        assert cs.generateStatement().equalsIgnoreCase("No, but I know that Hyzio is not Red or Black")
+        map = new HashMap<>();
+        map.put(cf1, ModalOperator.POS)
+        cs = new ComplexStatement(cf1, map, "Hyzio")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, it is possible that Hyzio is Red or Black")
+        map = new HashMap<>();
+        map.put(cf2, ModalOperator.POS)
+        cs = new ComplexStatement(cf1, map, "Hyzio")
+        assert cs.generateStatement().equalsIgnoreCase("I don't know about those states of Hyzio, " +
+                "but it is possible that it is not Red or Black")
+        map = new HashMap<>()
+        map.put(cf2, ModalOperator.BEL)
+        map.put(cf3, ModalOperator.POS)
+        cs = new ComplexStatement(cf1, map, "Hyzio")
+        assert cs.generateStatement().equalsIgnoreCase("I don't know about those states of Hyzio, " +
+                "however I believe that it is not Red or Black, but it is also possible that it is Red or not Black")
+        map = new HashMap<>()
+        map.put(cf1, ModalOperator.BEL)
+        map.put(cf3, ModalOperator.POS)
+        cs = new ComplexStatement(cf1, map, "Hyzio")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, I believe that Hyzio is Red or Black, " +
+                "but it is possible that it is Red or not Black")
+
+    }
+    @Test
+    void testForXOR()
+    {
+        cf1 = new ComplexFormula(model1, [trait1, trait2], [State.IS, State.IS], LogicOperator.XOR)
+        cf2 = new ComplexFormula(model1, [trait1, trait2], [State.IS_NOT, State.IS], LogicOperator.XOR)
+        cf3 = new ComplexFormula(model1, [trait1, trait2], [State.IS, State.IS_NOT], LogicOperator.XOR)
+        cf4 = new ComplexFormula(model1, [trait1, trait2], [State.IS_NOT, State.IS_NOT], LogicOperator.XOR)
+        Map<Formula, ModalOperator> map = new HashMap<>();
+        map.put(cf2, ModalOperator.KNOW)
+        map.put(cf1, ModalOperator.KNOW)
+        def cs = new ComplexStatement(cf1, map, "Hyzio")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, I know that Hyzio is either Red or Black")
+        map = new HashMap<>();
+        map.put(cf2, ModalOperator.KNOW)
+        map.put(cf3, ModalOperator.KNOW)
+        cs = new ComplexStatement(cf1, map, "Hyzio")
+        assert cs.generateStatement().equalsIgnoreCase("No, but I know that Hyzio is either Red or not Black")
+        map = new HashMap<>();
+        map.put(cf1, ModalOperator.POS)
+        map.put(cf4, ModalOperator.POS)
+        map.put(cf2, ModalOperator.BEL)
+        map.put(cf3, ModalOperator.BEL)
+        cs = new ComplexStatement(cf1, map, "Hyzio")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, it is possible that Hyzio is either Red or Black, " +
+                "however I believe that it is either Red or not Black")
+    }
+
     @Test
     void testGenerateStatementBEL()
     {
@@ -68,68 +137,68 @@ class ComplexStatementTest extends GroovyTestCase {
         map = new HashMap<>()
         map.put(cf2, ModalOperator.BEL)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("I do not know what to say about those states, however I believe that Hyzio is not Red and Black")
+        assert cs.generateStatement().equalsIgnoreCase("I don't know about those states of Hyzio, however I believe that it is not Red and Black")
         map = new HashMap<>()
         map.put(cf3, ModalOperator.BEL)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("I do not know what to say about those states, however I believe that Hyzio is Red and not Black")
+        assert cs.generateStatement().equalsIgnoreCase("I don't know about those states of Hyzio, however I believe that it is Red and not Black")
         map = new HashMap<>()
         map.put(cf4, ModalOperator.BEL)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("I do not know what to say about those states, however I believe that Hyzio is not Red and not Black")
+        assert cs.generateStatement().equalsIgnoreCase("I don't know about those states of Hyzio, however I believe that it is quite the opposite")
         map = new HashMap<>()
         map.put(cf1, ModalOperator.BEL)
         map.put(cf2, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("Yes, I believe that Hyzio is Red and Black, but it is also possible that it is not Red and Black")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, I believe that Hyzio is Red and Black, but it is possible that it is not Red and Black")
         map = new HashMap<>()
         map.put(cf3, ModalOperator.BEL)
         map.put(cf2, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("I do not know what to say about those states, however I believe that Hyzio is Red and not Black, and it is possible that it is not Red and Black")
+        assert cs.generateStatement().equalsIgnoreCase("I don't know about those states of Hyzio, however I believe that it is Red and not Black, but it is also possible that it is not Red and Black")
         map = new HashMap<>()
         map.put(cf3, ModalOperator.BEL)
         map.put(cf1, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("I think it is possible that Hyzio is Red and Black, however I believe that it is Red and not Black")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, it is possible that Hyzio is Red and Black, however I believe that it is Red and not Black")
         map = new HashMap<>()
         map.put(cf3, ModalOperator.BEL)
         map.put(cf2, ModalOperator.POS)
         map.put(cf4, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("I do not know what to say about those states, however I believe that Hyzio is Red and not Black and it is possible that other states are true")
+        assert cs.generateStatement().equalsIgnoreCase("I don't know about those states of Hyzio, however I believe that it is Red and not Black, but it is also possible that it is not Red and Black or it is quite the opposite")
         map = new HashMap<>()
         map.put(cf3, ModalOperator.BEL)
         map.put(cf1, ModalOperator.POS)
         map.put(cf4, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("I think it is possible that Hyzio is Red and Black, however I believe that it is Red and not Black and it is also possible that it is the opposite")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, it is possible that Hyzio is Red and Black, however I believe that it is Red and not Black, but it is also possible that it is quite the opposite")
         map = new HashMap<>()
         map.put(cf1, ModalOperator.BEL)
         map.put(cf2, ModalOperator.POS)
         map.put(cf4, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("Yes, I believe that Hyzio is Red and Black, but it is also possible that it is not Red and Black or even quite the opposite")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, I believe that Hyzio is Red and Black, but it is possible that it is not Red and Black or it is quite the opposite")
         map = new HashMap<>()
         map.put(cf1, ModalOperator.BEL)
         map.put(cf2, ModalOperator.POS)
         map.put(cf3, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("Yes, I believe that Hyzio is Red and Black, but it is also possible at given time only one part is true")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, I believe that Hyzio is Red and Black, but it is possible that it is Red and not Black or it is not Red and Black")
         map = new HashMap<>()
         map.put(cf1, ModalOperator.BEL)
         map.put(cf2, ModalOperator.POS)
         map.put(cf3, ModalOperator.POS)
         map.put(cf4, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("Yes, I believe that Hyzio is Red and Black however all other states are also a little bit possible")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, I believe that Hyzio is Red and Black, but all other options are also possible")
         map = new HashMap<>()
         map.put(cf2, ModalOperator.BEL)
         map.put(cf1, ModalOperator.POS)
         map.put(cf3, ModalOperator.POS)
         map.put(cf4, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("I think it is possible that Hyzio is Red and Black, however I believe that it is not Red and Black and it is even possible that other states are true");
+        assert cs.generateStatement().equalsIgnoreCase("Yes, it is possible that Hyzio is Red and Black, however I believe that it is not Red and Black, but it is also possible that it is Red and not Black or it is quite the opposite");
     }
 
     @Test
@@ -138,48 +207,48 @@ class ComplexStatementTest extends GroovyTestCase {
         Map<Formula, ModalOperator> map = new HashMap<>();
         map.put(cf1, ModalOperator.POS);
         def cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("It is possible that Hyzio is Red and Black")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, it is possible that Hyzio is Red and Black")
         map = new HashMap<>()
         map.put(cf2, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("I do not know what to say about these states, I only think it is possible that it is not Red and Black")
+        assert cs.generateStatement().equalsIgnoreCase("I don't know about those states of Hyzio, but it is possible that it is not Red and Black")
         map = new HashMap<>()
         map.put(cf3, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("I do not know what to say about these states, I only think it is possible that it is Red and not Black")
+        assert cs.generateStatement().equalsIgnoreCase("I don't know about those states of Hyzio, but it is possible that it is Red and not Black")
         map = new HashMap<>()
         map.put(cf4, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("I do not know what to say about these states, I only think it is possible that it is not Red and not Black")
+        assert cs.generateStatement().equalsIgnoreCase("I don't know about those states of Hyzio, but it is possible that it is quite the opposite")
         map = new HashMap<>()
         map.put(cf1, ModalOperator.POS)
         map.put(cf4, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("It is possible that Hyzio is Red and Black, but it is also possible that it is not Red and not Black")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, it is possible that Hyzio is Red and Black, but it is possible that it is quite the opposite")
         map = new HashMap<>()
         map.put(cf1, ModalOperator.POS)
         map.put(cf2, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("It is possible that Hyzio is Red and Black, but it is also possible that it is not Red and Black")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, it is possible that Hyzio is Red and Black, but it is possible that it is not Red and Black")
         map = new HashMap<>()
         map.put(cf1, ModalOperator.POS)
         map.put(cf2, ModalOperator.POS)
         map.put(cf4, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("It is possible that Hyzio is Red and Black, but it is also possible that it is not Red and Black or even quite the opposite")
-        map = new HashMap<>()
-        map.put(cf1, ModalOperator.POS)
-        map.put(cf2, ModalOperator.POS)
-        map.put(cf3, ModalOperator.POS)
-        cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("It is possible that Hyzio is Red and Black, but it is also possible at given time only one part is true")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, it is possible that Hyzio is Red and Black, but it is possible that it is not Red and Black or it is quite the opposite")
         map = new HashMap<>()
         map.put(cf1, ModalOperator.POS)
         map.put(cf2, ModalOperator.POS)
         map.put(cf3, ModalOperator.POS)
+        cs = new ComplexStatement(cf1, map, "Hyzio")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, it is possible that Hyzio is Red and Black, but it is possible that it is Red and not Black or it is not Red and Black")
+        map = new HashMap<>()
+        map.put(cf1, ModalOperator.POS)
+        map.put(cf2, ModalOperator.POS)
+        map.put(cf3, ModalOperator.POS)
         map.put(cf4, ModalOperator.POS)
         cs = new ComplexStatement(cf1, map, "Hyzio")
-        assert cs.generateStatement().equalsIgnoreCase("It is possible that Hyzio is Red and Black, but other options are also possible")
+        assert cs.generateStatement().equalsIgnoreCase("Yes, it is possible that Hyzio is Red and Black, but all other options are also possible")
     }
 
     @Test
@@ -189,6 +258,8 @@ class ComplexStatementTest extends GroovyTestCase {
         def cs = new ComplexStatement(cf1, map, "Hyzio")
         assert cs.generateStatement().equalsIgnoreCase("I do not know what to say about it")
     }
+
+
 
 
 
