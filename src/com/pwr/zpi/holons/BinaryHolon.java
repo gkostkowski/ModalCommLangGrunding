@@ -11,6 +11,7 @@ import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +20,7 @@ import java.util.Set;
  * Represents belief on simple formula.
  *
  */
-public class BinaryHolon implements Holon {
+public class BinaryHolon implements Holon,Comparable<Holon> {
     /**
      * Represents ratio of IS,Is_Not and Mayhaps observations
      */
@@ -135,19 +136,42 @@ public class BinaryHolon implements Holon {
         return Holon.HolonKind.Binary;
     }
 
+
     @Override
     public void update() throws InvalidFormulaException, NotApplicableException {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public Double getSummary(Formula formula) {
-        return null;
+        if(((SimpleFormula)formula).isNegated()){
+            return Tao.getV();
+        }
+        else{
+            return Tao.getK();
+        }
     }
 
     @Override
-    public Map<Formula, Double> getSummaries() {
-        return null;
+    public Map<Formula, Double> getSummaries()  {
+        Map<Formula, Double> out = new HashMap<Formula, Double>();
+        List<Formula> formulas = null;
+        try {
+            formulas = ((SimpleFormula)formula).getComplementaryFormulas();
+        } catch (InvalidFormulaException e) {
+            e.printStackTrace();
+        }
+        if(formulas!=null) {
+            if(((SimpleFormula)formula).isNegated()) {
+                out.put(formulas.get(0),Tao.getV() );
+                out.put(formulas.get(1),Tao.getK() );
+            }
+            else{
+                out.put(formulas.get(0),Tao.getK() );
+                out.put(formulas.get(1),Tao.getV() );
+            }
+        }
+        return out;
     }
 
     /**
@@ -157,7 +181,14 @@ public class BinaryHolon implements Holon {
      */
     @Override
     public Map<Formula, Double> getSummaries(List<Formula> selectedFormulas) {
-        throw new NotImplementedException();
+        if(selectedFormulas.size()==1){
+            HashMap<Formula, Double> out = new HashMap<Formula, Double>();
+            out.put(selectedFormulas.get(0),getSummary(selectedFormulas.get(0)));
+            return out;
+        }
+        else{
+            return getSummaries();
+        }
     }
 
     /**
@@ -177,5 +208,18 @@ public class BinaryHolon implements Holon {
 
     public Contextualisation getContextualisation() {
         return context;
+    }
+
+    @Override
+    public int compareTo(Holon o) {
+        double res=0, res2=0;
+        for (Formula f:formula) {
+            res = f.hashCode() ;
+        }
+
+        for (Formula f:o.getFormula()) {
+            res2 = f.hashCode() ;
+        }
+        return res > res2 ? 1: (res < res2 ? -1 : 0);
     }
 }
