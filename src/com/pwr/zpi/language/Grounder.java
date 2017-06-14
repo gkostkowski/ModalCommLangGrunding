@@ -32,6 +32,7 @@ public class Grounder {
     private static final double EPS_FST_COEFFICIENT = 1.0 / 6.0;
     private static final double EPS_SND_COEFFICIENT = 1.0 / 2.0;
     private static final Double DEF_EPS_LOWER_RANGE = 0.0;
+    private static boolean isEpsilonLogged =false;
 
     /**
      * Gives complete collection of grounding sets for certain formulas (in this context may be known as mental model).
@@ -165,7 +166,7 @@ public class Grounder {
     public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk, Map<Formula, Double> summarization,
                                                          int timestamp) throws NotApplicableException {
         boolean hasLastClearState = true;
-
+        System.out.println(summarization);
         BaseProfile lastBP = dk.getRelatedObservationsBase()
                 .getBaseProfile(timestamp, BPCollection.MemoryType.WM);
         for (Trait selectedTrait : formula.getTraits()) {  //supports complex formulas
@@ -401,6 +402,10 @@ public class Grounder {
         double relevantEpsilonValue = 0;
         try {
             relevantEpsilonValue = getConcentrationEpsilon(disjunction);
+            if (!isEpsilonLogged) {
+                Logger.getAnonymousLogger().log(Level.INFO, "epsilon: " + relevantEpsilonValue);
+                isEpsilonLogged = true;
+            }
         } catch (NotApplicableException | InvalidConfigurationException e) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Epsilon-concentration checking was not performed.", e);
             return false;

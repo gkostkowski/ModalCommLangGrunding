@@ -13,7 +13,7 @@ timestamp;related_object;Blue;Soft;Blinking;;;;;;
 3;Zyzio;0;-1;0;Is zyzio either soft or blinking;I don't know what to say about it;;;;
 #;;;;;;p xor q ma srednice 0.33 - 0.0 = 0.33 co > epsillon. !p xor q ma srednice  = 0.66 > epsilon;;;;
 4;Zyzio;0;1;-1;;;;;;
-5;Zyzio;0;-1;0;Is zyzio either soft or blinking;Yes, it is possible that zyzio is either soft or blinking ;Is zyzio either not soft or blinking;No, but it is possible that it is either soft or blinking;;
+5;Zyzio;0;-1;0;Is zyzio either soft or blinking;Yes, it is possible that zyzio is either soft or blinking ;Is zyzio either not soft or blinking;No, but it is possible that it is either not soft or not blinking;;
 #;;;;;;p xor q ma srednice 0.25 - 0.25 = 0 co < epsillon. !p xor q (p xor q) ma srednice 1.0 co > epsilon;;;;
 6;Zyzio;-1;1;0;;;;;;
 7;Zyzio;-1;1;-1;;;;;;

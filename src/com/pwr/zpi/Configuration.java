@@ -39,7 +39,7 @@ public class Configuration {
     private static final double EX_DISJ_MIN_POS = 0.21;
     private static final double EX_DISJ_MAX_POS = 0.67;
     private static final double EX_DISJ_MIN_BEL = DISJ_MAX_POS;
-    private static final double EX_DISJ_MAX_BEL = 1;
+    private static final double EX_DISJ_MAX_BEL = 1.0;
     public static final double EX_DISJ_KNOW = 1.0;
 
 

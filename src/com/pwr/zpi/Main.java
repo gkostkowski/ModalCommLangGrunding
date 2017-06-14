@@ -40,7 +40,9 @@ class Main {
         //Scenario scenario = new Scenario(agent, "scenario01.csv", "conv001");
 //        new Scenario(agentNoCtxt, "conj_no_context_scenario01.csv", "conj conv01").execute();
 //        new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv", "conj conv04").execute();
-        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv", "ex disj conv05").execute();
+
+//        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv", "ex disj conv05").execute();
+        new Scenario(agentNoCtxt, "disj_no_context_scenario06.csv", "disj conv06").execute();
 //
 //        new Scenario(agent, "scenario01_main.csv", "conj conv002").execute();
         //new Scenario(agent, null, "conj_context_scenario02.csv", "conj conv003").execute();
