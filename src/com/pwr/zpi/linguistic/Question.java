@@ -32,7 +32,7 @@ public class Question {
     /**
      * current index of parts
      */
-    private int index;
+    private int index=0;
 
     /**
      * IndividualModel which will be the subject of formula
@@ -67,26 +67,25 @@ public class Question {
      */
     public Formula getFormula() throws InvalidQuestionException, InvalidFormulaException
     {
-        int startingIndex = 1;
-        if(parts[0].equalsIgnoreCase("Agent"))
-            startingIndex =3;
-        if(length<2+startingIndex)
+        while(!parts[index].equalsIgnoreCase("IS"))
+            index++;
+        if(length<2+index++)
             throw new InvalidQuestionException(InvalidQuestionException.NO_QUESTION);
         List<Trait> traits = new ArrayList<>();
         List<State> states = new ArrayList<>();
         boolean isXOR = false;
-        findIndividualModel(startingIndex);
+        findIndividualModel();
+        if(parts[index].equalsIgnoreCase("either"))
+        {
+            isXOR = true;
+            index++;
+        }
         if(parts[index].equalsIgnoreCase("not"))
         {
             states.add(State.IS_NOT);
             index++;
         }
         else states.add(State.IS);
-        if(parts[index].equalsIgnoreCase("either"))
-        {
-            isXOR = true;
-            index++;
-        }
         traits.add(findTraits(1));
         if(index<length)
         {
@@ -104,9 +103,7 @@ public class Question {
             }
             else states.add(State.IS);
             traits.add(findTraits(2));
-            if(checkValidityOfStatesInAltenrative(op, states))
-                return new ComplexFormula(individualModel, traits, states, op);
-            else throw new InvalidQuestionException(InvalidQuestionException.WRONG_STATES);
+            return new ComplexFormula(individualModel, traits, states, op);
         }
         if(isXOR)
             throw new InvalidQuestionException(InvalidQuestionException.WRONG_STRUCTURE);
@@ -122,9 +119,8 @@ public class Question {
      * method looks for a model represented by name given in question
      * @throws InvalidQuestionException if no match in memory of agent was found
      */
-    private void findIndividualModel(int startingIndex) throws InvalidQuestionException
+    private void findIndividualModel() throws InvalidQuestionException
     {
-        index = startingIndex;
         String name = parts[index];
         individualModel = agent.getModels().getRepresentationByName(name);
         index++;
@@ -162,14 +158,5 @@ public class Question {
             else throw new InvalidQuestionException(InvalidQuestionException.NO_SECOND_TRAIT);
         return trait;
     }
-
-    private boolean checkValidityOfStatesInAltenrative(LogicOperator op, List<State> states)
-    {
-        if(op==LogicOperator.OR || op==LogicOperator.XOR)
-            if(states.get(0)==State.IS_NOT || states.get(1)==State.IS_NOT)
-                return false;
-        return true;
-    }
-
 }
 

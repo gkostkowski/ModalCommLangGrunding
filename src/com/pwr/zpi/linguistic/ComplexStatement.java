@@ -219,16 +219,16 @@ public class ComplexStatement extends Statement {
         String isXOR = (formula.getOperator() == LogicOperator.XOR) ? "either " : "";
         if (formula.getStates().get(0) == State.IS && formula.getStates().get(1) == State.IS)
             return subject + " is " + isXOR + formula.getTraits().get(0).getName()
-                    + formula.getOperator() + formula.getTraits().get(1).getName();
+                    + formula.getOperator().getString() + formula.getTraits().get(1).getName();
         if (formula.getStates().get(0) == State.IS_NOT && formula.getStates().get(1) == State.IS)
             return subject + " is " + isXOR + "not " + formula.getTraits().get(0).getName()
-                    + formula.getOperator() + formula.getTraits().get(1).getName();
+                    + formula.getOperator().getString() + formula.getTraits().get(1).getName();
         if (formula.getStates().get(0) == State.IS && formula.getStates().get(1) == State.IS_NOT)
             return subject + " is " + isXOR + formula.getTraits().get(0).getName()
-                    + formula.getOperator() + "not " + formula.getTraits().get(1).getName();
+                    + formula.getOperator().getString() + "not " + formula.getTraits().get(1).getName();
         if (formula.getStates().get(0) == State.IS_NOT && formula.getStates().get(1) == State.IS_NOT)
             return subject + " is " + isXOR + "not " + formula.getTraits().get(0).getName()
-                    + formula.getOperator() + "not " + formula.getTraits().get(1).getName();
+                    + formula.getOperator().getString() + "not " + formula.getTraits().get(1).getName();
         return null;
     }
 
