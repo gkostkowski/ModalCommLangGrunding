@@ -145,10 +145,11 @@ public abstract class Formula {
         IndividualModel object = getModel();
         List<Trait> traits = getTraits();
         List<State> states = getStates();
-        LogicOperator op = getType().equals(Formula.Type.SIMPLE_MODALITY) ? null
-                : (getType().equals(Formula.Type.MODAL_CONJUNCTION) ? LogicOperator.AND : LogicOperator.OR);
+        LogicOperator op = null;
+        if (!getType().equals(Type.SIMPLE_MODALITY))
+            op = ((ComplexFormula) this).getOperator();
 
-        boolean res = op != null && op.equals(LogicOperator.AND) ? true : false;
+        boolean res = op != null && op.equals(LogicOperator.AND);
         for (int i = 0; i < traits.size(); i++) {
             boolean partialRes = bp.checkIfObserved(object, traits.get(i), states.get(i));
             if (op == null)
@@ -158,6 +159,11 @@ public abstract class Formula {
                     res = res && partialRes;
                     break;
                 case OR:
+                    res = res || partialRes;
+                    break;
+                case XOR:
+                    if (res && partialRes)
+                        return false;
                     res = res || partialRes;
             }
         }

@@ -192,11 +192,11 @@ public class Grounder {
                 res = checkEpistemicCondition(true, isPresentInWM, currRelCard,
                         checkedOps[i], appropriateTresholds);
         } else
-            res = formula.isFormulaFulfilled(lastBP) ? ModalOperator.KNOW : null;
+            return formula.isFormulaFulfilled(lastBP) ? ModalOperator.KNOW : null;
 
         if (formula.needEpsilonConcentrationChecking()) {
             if (!checkEpsilonConcentratedCondition((ComplexFormula) formula, dk.getRelatedObservationsBase().getBaseProfiles()))
-                res = null;
+                return null;
         }
         return res;
     }

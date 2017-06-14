@@ -15,7 +15,7 @@ public enum LogicOperator {
                 {
                         case AND: return " and ";
                         case OR: return  " or ";
-                        case XOR: return " or ";
+                        case XOR: return " xor ";
                         default: return null;
                 }
         }
