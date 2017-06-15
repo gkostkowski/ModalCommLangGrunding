@@ -14,6 +14,8 @@ import com.pwr.zpi.language.Pair;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
@@ -47,7 +49,11 @@ public class NewNonBinaryHolon implements Holon{
      */
     NewNonBinaryHolon(DistributedKnowledge dk, Contextualisation contextualisation) throws InvalidFormulaException, NotApplicableException {
         relatedFormula = dk.getFormula();
-        this.dk = dk;
+        try {
+            this.dk = dk.clone();
+        } catch (CloneNotSupportedException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Not able to clone knowledge distribution.", e);
+        }
         this.contextualisation = contextualisation;
         summaries = new HashMap<>();
         update();
@@ -135,16 +141,21 @@ public class NewNonBinaryHolon implements Holon{
 
     @Override
     public boolean update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
-        if(updateDistributedKnowledge(dk)) {
+        if(shouldUpdateDistributedKnowledge(dk)) {
             update();
             return true;
         }
         return false;
     }
 
-    private boolean updateDistributedKnowledge(DistributedKnowledge dk) {
+    private boolean shouldUpdateDistributedKnowledge(DistributedKnowledge dk) {
         if(dk.isNewerThan(this.dk)) {
-            this.dk = dk;
+            try {
+                this.dk = dk.clone();
+            } catch (CloneNotSupportedException e) {
+                Logger.getAnonymousLogger().log(Level.WARNING, "Not able to clone knowledge distribution.", e);
+                return false;
+            }
             return true;
         }
         return false;

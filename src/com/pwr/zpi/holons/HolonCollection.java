@@ -11,6 +11,8 @@ import com.pwr.zpi.language.*;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class stores collection of all holons in agent's memory.
@@ -68,16 +70,21 @@ public class HolonCollection {
      * Method looks for specific holon in holons and returns it. If none is found returns newly created one.
      *
      * @param formula
-     * @param timeStamp
+     * @param timestamp
      * @return desired holon
      */
-    public Holon getHolon(Formula formula, int timeStamp) {
+    public Holon getHolon(Formula formula, int timestamp) {
         for (Holon h : holonCollection) {
             if (h.getAffectedFormulas().get(0).isFormulaSimilar(formula)) {
+                try {
+                    h.update(owner.distributeKnowledge(formula, timestamp));
+                } catch (InvalidFormulaException | NotApplicableException e) {
+                    Logger.getAnonymousLogger().log(Level.SEVERE, "Not able to produce holon.", e);
+                }
                 return h;
             }
         }
-        return addHolon(formula, timeStamp);
+        return addHolon(formula, timestamp);
     }
 
     /**
