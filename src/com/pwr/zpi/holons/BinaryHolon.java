@@ -20,7 +20,7 @@ import java.util.Set;
  * Represents belief on simple formula.
  *
  */
-public class BinaryHolon implements Holon,Comparable<Holon> {
+public class BinaryHolon implements Holon {
     /**
      * Represents ratio of IS,Is_Not and Mayhaps observations
      */
@@ -155,22 +155,15 @@ public class BinaryHolon implements Holon,Comparable<Holon> {
     @Override
     public Map<Formula, Double> getSummaries()  {
         Map<Formula, Double> out = new HashMap<Formula, Double>();
-        List<Formula> formulas = null;
-        try {
-            formulas = ((SimpleFormula)formula).getComplementaryFormulas();
-        } catch (InvalidFormulaException e) {
-            e.printStackTrace();
-        }
-        if(formulas!=null) {
-            if(((SimpleFormula)formula).isNegated()) {
-                out.put(formulas.get(0),Tao.getV() );
-                out.put(formulas.get(1),Tao.getK() );
+
+            if(((SimpleFormula)formula.get(0)).isNegated()) {
+                out.put(formula.get(0),Tao.getV() );
+                out.put(formula.get(1),Tao.getK() );
             }
-            else{
-                out.put(formulas.get(0),Tao.getK() );
-                out.put(formulas.get(1),Tao.getV() );
+            else {
+                out.put(formula.get(0), Tao.getK());
+                out.put(formula.get(1), Tao.getV());
             }
-        }
         return out;
     }
 
@@ -210,7 +203,7 @@ public class BinaryHolon implements Holon,Comparable<Holon> {
         return context;
     }
 
-    @Override
+/*
     public int compareTo(Holon o) {
         double res=0, res2=0;
         for (Formula f:formula) {
@@ -221,5 +214,5 @@ public class BinaryHolon implements Holon,Comparable<Holon> {
             res2 = f.hashCode() ;
         }
         return res > res2 ? 1: (res < res2 ? -1 : 0);
-    }
+    }*/
 }

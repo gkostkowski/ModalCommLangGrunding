@@ -610,22 +610,25 @@ public class Grounder {
             throws NotApplicableException, InvalidFormulaException {
         if (formula.getType() == Formula.Type.SIMPLE_MODALITY ) {
             double out = 0;int count = 0;
+            List<Formula> formulas = formula.getComplementaryFormulas();
             if(groundingSets.get(formula) == null){return out;}
-            for (BaseProfile bp : groundingSets.get(formula)) {
-                if(count == groundingSets.get(formula).size()){
-                    if(bp.getIndefiniteByTraits().containsKey(formula.getTraits().get(0))){
-                        break;
-                    }
-                }else{
-                    if(bp.getDescribedByTraits().containsKey(formula.getTraits().get(0))){
-                        out++;
-                    }
-                    if(bp.getNotDescribedByTraits().containsKey(formula.getTraits().get(0))){
-                        out++;
-                    }
-                    if(bp.getIndefiniteByTraits().containsKey(formula.getTraits().get(0))){
-                        out++;
-                    }}count++;
+
+            Set<BaseProfile> summed = groundingSets.get(formulas.get(0));
+            summed.addAll(groundingSets.get(formulas.get(1)));
+            for (BaseProfile bp : summed) {
+                if(bp.getDescribedByTraits().containsKey(formulas.get(0).getTraits().get(0))||
+                        bp.getDescribedByTraits().containsKey(formulas.get(1).getTraits().get(0))
+                        ){
+                    out++;
+                }
+                if(bp.getNotDescribedByTraits().containsKey(formula.getTraits().get(0))||
+                        bp.getNotDescribedByTraits().containsKey(formulas.get(1).getTraits().get(0)) ){
+                    out++;
+                }
+                if(bp.getIndefiniteByTraits().containsKey(formula.getTraits().get(0))||
+                        bp.getIndefiniteByTraits().containsKey(formulas.get(1).getTraits().get(0)) ){
+                    out++;
+                }
             }
             return out;
         } else if (formula.getType() == Formula.Type.MODAL_CONJUNCTION ) {
@@ -822,6 +825,7 @@ public class Grounder {
             }
         }
         if (sum != 0) {
+
             return sum / relativeCard(dk.mapOfGroundingSets(), formula);
         }
         return 0.0;

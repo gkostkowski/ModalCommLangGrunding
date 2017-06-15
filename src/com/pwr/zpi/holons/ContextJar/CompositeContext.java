@@ -6,7 +6,6 @@ import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Pair;
 import com.pwr.zpi.language.SimpleFormula;
 import com.pwr.zpi.language.Trait;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,7 +52,7 @@ public class CompositeContext implements Contextualisation {
                     contextArray[i] = bpArray[namedGroundingSets.get(f).size()-i-1];
                 }
                 Set<BaseProfile> littleOut = new HashSet<>();
-                Pair<Set<Trait>,Set<Trait>> lilContextTraits = fidlar(contextArray);
+                Pair<Set<Trait>,Set<Trait>> lilContextTraits = establishCommonTraits(contextArray);
                 for (BaseProfile bp : namedGroundingSets.get(f)) {
 
                     if(df.composite(bp,lilContextTraits)<dMax){
@@ -69,7 +68,7 @@ public class CompositeContext implements Contextualisation {
         return out;
     }
 
-    public Pair<Set<Trait>,Set<Trait>> fidlar(BaseProfile[] contextArray) {
+    public Pair<Set<Trait>,Set<Trait>> establishCommonTraits(BaseProfile[] contextArray) {
         Set<Trait> positive = contextArray[0].getDescribedByTraits().keySet();
         Set<Trait> negative = contextArray[0].getNotDescribedByTraits().keySet();
         if(contextArray.length>1){
