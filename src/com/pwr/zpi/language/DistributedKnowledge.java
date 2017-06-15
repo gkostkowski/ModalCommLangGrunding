@@ -30,7 +30,7 @@ import java.util.*;
  *
  * @author Grzegorz Kostkowski
  */
-public class DistributedKnowledge {
+public class DistributedKnowledge implements Cloneable {
     /**
      * Describes possible versions of distributed knowledge: Simple if false (building only dk classes associated
      * with given relatedFormula) or complex if true (building all dk classes - also for mental models related to
@@ -43,7 +43,7 @@ public class DistributedKnowledge {
      * Describes what kind of knowledge distribution this instance represents.
      */
     private boolean dkIsComplex;
-    private int timestamp;
+    private final int timestamp;
     private final Formula relatedFormula;
     private final List<Trait> traits;
     private final IndividualModel individualModel;
@@ -122,6 +122,25 @@ public class DistributedKnowledge {
             throws InvalidFormulaException, NotConsistentDKException {
         this(agent, formula, agent.getKnowledgeBase().getTimestamp(), makeCompleteDistribution);
     }
+
+    private DistributedKnowledge(boolean dkIsComplex, int timestamp, Formula relatedFormula, List<Trait> traits,
+                                IndividualModel individualModel, Set<BaseProfile> inLM, Set<BaseProfile> inWM,
+                                BPCollection relatedObservationsBase, List<Formula> complementaryFormulas,
+                                Map<Formula, Set<BaseProfile>> groundingSetsMap,
+                                 Map<Pair<Formula, BPCollection.MemoryType>, Set<BaseProfile>> dkClasses) {
+        this.dkIsComplex = dkIsComplex;
+        this.timestamp = timestamp;
+        this.relatedFormula = relatedFormula;
+        this.traits = traits;
+        this.individualModel = individualModel;
+        this.inLM = inLM;
+        this.inWM = inWM;
+        this.relatedObservationsBase = relatedObservationsBase;
+        this.complementaryFormulas = complementaryFormulas;
+        this.groundingSetsMap = groundingSetsMap;
+        this.dkClasses = dkClasses;
+    }
+
 
     /**
      * Performs checking to ensure that knowledge distribution was built in proper way.
@@ -215,7 +234,7 @@ public class DistributedKnowledge {
     }
 
     public Set<BaseProfile> getGroundingSet(Formula formula) {
-        TreeMap <Formula, Set<BaseProfile>> res = new TreeMap<>();
+        TreeMap<Formula, Set<BaseProfile>> res = new TreeMap<>();
         res.putAll(groundingSetsMap);
         return res.get(formula);
     }
@@ -240,12 +259,13 @@ public class DistributedKnowledge {
      * Method determines if given distributed knowledge is more recent than this one.
      * One dk is understood as more recent than other if:
      * <ul>
-     *     <li>has greater value of timestamp</li>
-     *     <li>Number of included base profiles is greater (when timestamps are the same)</li>
-     *     <li>Number of included base profiles in working memory is greater (when general sizes of episodic base
-     *     are the same)</li>
-     *     <li>If none of above is applied, then given dk is treated as up-to-date.</li>
+     * <li>has greater value of timestamp</li>
+     * <li>Number of included base profiles is greater (when timestamps are the same)</li>
+     * <li>Number of included base profiles in working memory is greater (when general sizes of episodic base
+     * are the same)</li>
+     * <li>If none of above is applied, then given dk is treated as up-to-date.</li>
      * </ul>
+     *
      * @param dk Examined distributedKnowledge.
      * @return False if provided dk is newer; true otherwise.
      */
@@ -259,5 +279,14 @@ public class DistributedKnowledge {
 
     public Map<Formula, Set<BaseProfile>> getGroundingSetsMap() {
         return groundingSetsMap;
+    }
+
+
+    @Override
+    public DistributedKnowledge clone() throws CloneNotSupportedException {
+        return new DistributedKnowledge(dkIsComplex, timestamp, relatedFormula, new ArrayList<>(traits), individualModel,
+                new HashSet<>(inLM), new HashSet<>(inWM), relatedObservationsBase,
+                new ArrayList<>(complementaryFormulas), new HashMap<>(groundingSetsMap),
+                new HashMap<>(dkClasses));
     }
 }

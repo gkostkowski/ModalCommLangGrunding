@@ -759,7 +759,8 @@ public class Grounder {
      */
     public static double determineFulfillmentDouble(DistributedKnowledge dk, Formula formula, Map<Formula, Set<BaseProfile>> context) throws InvalidFormulaException, NotApplicableException {
 
-        if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
+        if (!dk.isDkComplex() && !dk.getFormula().isFormulaSimilar(formula)
+//        if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
                 || dk.isDkComplex() && !new ArrayList(dk.getComplementaryFormulas()).contains(formula))
             throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
         return checkEpistemicConditionsDouble(formula, dk, dk.getTimestamp(), context);

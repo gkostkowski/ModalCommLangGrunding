@@ -29,6 +29,7 @@ public class BinaryHolon implements Holon {
     protected  Map<Formula, Set<BaseProfile>> currContext;
     protected Contextualisation context;
     protected int timestamp;
+    protected DistributedKnowledge dk;
 
     public BinaryHolon(DistributedKnowledge dk, Contextualisation contextualisation) throws InvalidFormulaException, NotApplicableException {
         this.formula = dk.getComplementaryFormulas();
@@ -38,6 +39,7 @@ public class BinaryHolon implements Holon {
         cj.setMaxThreshold(8);
         context = cj;
         timestamp = dk.getTimestamp();
+        this.dk = dk;
         update(dk);
     }
 
@@ -50,7 +52,7 @@ public class BinaryHolon implements Holon {
      */
     public boolean update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
 
-
+        this.dk=dk;
         if (dk.getFormula().getType() != Formula.Type.SIMPLE_MODALITY) {
             throw new InvalidFormulaException();
         } else {
@@ -139,7 +141,7 @@ public class BinaryHolon implements Holon {
 
     @Override
     public void update() throws InvalidFormulaException, NotApplicableException {
-        throw new NotImplementedException();
+        update(dk);
     }
 
     @Override

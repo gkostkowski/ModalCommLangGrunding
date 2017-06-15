@@ -170,7 +170,7 @@ public class Agent {
         try {
             return new DistributedKnowledge(this, formula, buildComplexDK);
         } catch (NotConsistentDKException e) {
-            e.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.WARNING, "Not able to distribute knowledge.", e);
             return null;
         }
     }

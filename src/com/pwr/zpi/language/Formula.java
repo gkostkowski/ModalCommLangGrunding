@@ -39,7 +39,7 @@ public abstract class Formula {
 
     /**
      * Method is used to point out exact formulas which should be used in grounding process for formulas processed
-     * in an indirect way. This situation takes place for disjunctions which use conjunctions.
+     * in an <b>indirect way</b>. This situation takes place for disjunctions which use conjunctions.
      * Such formulas can be used for building grounding set or retrieving summarization.
      * In case of disjunction grounding sets, these are composed of more than one conjunctive grounding set.
      * In case of simply modalities and conjunctions method should return formula which is provided as parameter.
