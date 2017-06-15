@@ -4,7 +4,6 @@ package com.pwr.zpi.holons;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
-import com.pwr.zpi.holons.ContextJar.CompositeContext;
 import com.pwr.zpi.holons.ContextJar.DistanceFunction;
 import com.pwr.zpi.holons.ContextJar.DistanceFunctions.DistanceFunction1;
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
@@ -33,10 +32,9 @@ public class BinaryHolon implements Holon {
     public BinaryHolon(DistributedKnowledge dk, Contextualisation contextualisation) throws InvalidFormulaException, NotApplicableException {
         this.formula = dk.getComplementaryFormulas();
         DistanceFunction f1 = new DistanceFunction1();
-        Contextualisation cj = new CompositeContext(f1,3);
-
-        cj.setMaxThreshold(8);
-        context = cj;
+        //Contextualisation cj = new CompositeContext(f1,3);
+        //cj.setMaxThreshold(8);
+        context = contextualisation;
         timestamp = dk.getTimestamp();
         update(dk);
     }
@@ -57,11 +55,13 @@ public class BinaryHolon implements Holon {
             double sumPositive = 0;
             double sumNegative = 0;
             if (((SimpleFormula) dk.getComplementaryFormulas().get(0)).isNegated()) {
-                currContext = context.performContextualisation(dk.mapOfGroundingSets());
+                if(currContext != null){
+                currContext = context.performContextualisation(dk.mapOfGroundingSets());}
                 sumPositive += Grounder.determineFulfillmentDouble(dk, dk.getComplementaryFormulas().get(0),currContext);
                 sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1),currContext);
             } else {
-                currContext = context.performContextualisation(dk.mapOfGroundingSets());
+                if(currContext != null){
+                currContext = context.performContextualisation(dk.mapOfGroundingSets());}
                 sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1),currContext);
                 sumPositive += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0),currContext);
             }

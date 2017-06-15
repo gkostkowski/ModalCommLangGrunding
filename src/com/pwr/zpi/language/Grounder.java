@@ -758,7 +758,6 @@ public class Grounder {
      * @see DistributedKnowledge
      */
     public static double determineFulfillmentDouble(DistributedKnowledge dk, Formula formula, Map<Formula, Set<BaseProfile>> context) throws InvalidFormulaException, NotApplicableException {
-
         if (!dk.isDkComplex() && !dk.getFormula().equals(formula)
                 || dk.isDkComplex() && !new ArrayList(dk.getComplementaryFormulas()).contains(formula))
             throw new NotApplicableException("Given formula is not related to specified knowledge distribution.");
@@ -798,10 +797,8 @@ public class Grounder {
      * @return
      */
     public static Double simpleFormulaFinalGrounder(Formula formula, DistributedKnowledge dk, Map<Formula, Set<BaseProfile>> context) throws InvalidFormulaException, NotApplicableException {
-
         double sum = 0;
         if(context == null ||context.size()==0 ) {
-
             for (BaseProfile bp : dk.getGroundingSet(formula)) {
                 if (bp.checkIfObserved(formula.getModel(), formula.getTraits().get(0), State.IS) && !((SimpleFormula) formula).isNegated()) {
                     sum++;

@@ -69,8 +69,8 @@ public class CompositeContext implements Contextualisation {
     }
 
     public Pair<Set<Trait>,Set<Trait>> establishCommonTraits(BaseProfile[] contextArray) {
-        Set<Trait> positive = contextArray[0].getDescribedByTraits().keySet();
-        Set<Trait> negative = contextArray[0].getNotDescribedByTraits().keySet();
+        Set<Trait> positive =  new HashSet<>(contextArray[0].getDescribedByTraits().keySet());
+        Set<Trait> negative = new HashSet<>(contextArray[0].getNotDescribedByTraits().keySet());
         if(contextArray.length>1){
             for(int i = 1;i<contextArray.length;i++){
                 Set<Trait> remove = new HashSet<>();

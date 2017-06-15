@@ -111,17 +111,19 @@ class CompositeContextTest extends GroovyTestCase {
         bpArray[0] = bp1
         bpArray[1] = bp3
         bpArray[2] = bp4
-        cj.fidlar(bpArray)
+        cj.establishCommonTraits(bpArray)
         //Counting how many Traits got into P+
-        assertEquals(2,cj.fidlar(bpArray).getK().size())
-        assertEquals(2,cj.fidlar(bpArray).getV().size())
+        assertEquals(2,cj.establishCommonTraits(bpArray).getK().size())
+        assertEquals(2,cj.establishCommonTraits(bpArray).getV().size())
 
-        for(Trait tT:cj.fidlar(bpArray).getK()){
+        for(Trait tT:cj.establishCommonTraits(bpArray).getK()){
             assertEquals(true, tT.toString() == tr1.toString() || tT.toString() == tr2.toString())
         }
-        for(Trait tT:cj.fidlar(bpArray).getV()){
+        for(Trait tT:cj.establishCommonTraits(bpArray).getV()){
             assertEquals(true, tT.toString() == tr1.toString() || tT.toString() == tr4.toString())
         }
+
+
     }
     @Test
     void testPerformContextualisation() {
