@@ -20,7 +20,7 @@ import java.util.Set;
  * Represents belief on simple formula.
  *
  */
-public class BinaryHolon implements Holon,Comparable<Holon> {
+public class BinaryHolon implements Holon {
     /**
      * Represents ratio of IS,Is_Not and Mayhaps observations
      */
@@ -203,7 +203,7 @@ public class BinaryHolon implements Holon,Comparable<Holon> {
         return context;
     }
 
-    @Override
+/*
     public int compareTo(Holon o) {
         double res=0, res2=0;
         for (Formula f:formula) {
@@ -214,5 +214,5 @@ public class BinaryHolon implements Holon,Comparable<Holon> {
             res2 = f.hashCode() ;
         }
         return res > res2 ? 1: (res < res2 ? -1 : 0);
-    }
+    }*/
 }
