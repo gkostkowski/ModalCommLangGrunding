@@ -19,13 +19,14 @@ class Main {
 
     /**
      * Realizacja przykładowych przebiegow
+     *
      * @param args
      */
     static public void main(String... args) throws InterruptedException, InvalidMeasureException, InvalidContextualisationException {
 
         //dbLoopTest();
 
-        Contextualisation latestContext= new FilteringContextualisation(new ConcreteContextBuilder(), new LatestSelector(),
+        Contextualisation latestContext = new FilteringContextualisation(new ConcreteContextBuilder(), new LatestSelector(),
                 new NormalisedDistance(0.5));
 //                new Distance(2));
         Agent agentNoCtxt = new Agent.AgentBuilder()
@@ -37,18 +38,19 @@ class Main {
                 .label("agentLtstCntxt")
                 .build();
 
-        //Scenario scenario = new Scenario(agent, "scenario01.csv", "conv001");
-//        new Scenario(agentNoCtxt, "conj_no_context_scenario01.csv", "conj conv01").execute();
+//        new Scenario(agentNoCtxt, "scenario01.csv", "conv001").execute();
+        new Scenario(agentNoCtxt, "scenario01_main.csv", "conv001").execute();
+        //new Scenario(agentNoCtxt, "conj_no_context_scenario01.csv", "conj conv01").execute();
 //        new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv", "conj conv04").execute();
 
 //        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv", "ex disj conv05").execute();
-        new Scenario(agentNoCtxt, "disj_no_context_scenario06.csv", "disj conv06").execute();
+        //new Scenario(agentNoCtxt, "disj_no_context_scenario06.csv", "disj conv06").execute();
 //
 //        new Scenario(agent, "scenario01_main.csv", "conj conv002").execute();
         //new Scenario(agent, null, "conj_context_scenario02.csv", "conj conv003").execute();
 
 
-  //      new Scenario(agent, "conj_latest_context_scenario03.csv", "conj latest context conv003").execute();
+        //      new Scenario(agent, "conj_latest_context_scenario03.csv", "conj latest context conv003").execute();
 
         QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
         Trait[] tr = new Trait[]{
@@ -64,15 +66,14 @@ class Main {
 
         //startLifeCycle(agent, qrCodes, tr);
 
-         //testVoice(agent, qrCodes, tr);
+        //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
         // is present in db after launching one of them, so they can't be used together.
 
         //modalConjunctionsScenario(agent, qrCodes, tr);
     }
 
-    private static void startLifeCycle(Agent agent, QRCode[] qrCodes, Trait[] tr)
-    {
+    private static void startLifeCycle(Agent agent, QRCode[] qrCodes, Trait[] tr) {
         int t = 0;
         agent.getDatabase().addNewObservation(new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
             put(tr[0], true);
@@ -114,7 +115,7 @@ class Main {
         agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
         Conversation c1 = new Conversation(agent, "SimpleModalConv", t, contextualisation);
 
-        Observation[] obsTill3  = new Observation[]{ //inclusively
+        Observation[] obsTill3 = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
                     put(tr[1], false);
@@ -231,7 +232,7 @@ class Main {
         agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
         Conversation c1 = new Conversation(agent, "SimpleAndConjModalConv", t, contextualisation);
 
-        Observation[] obsTill1  = new Observation[]{ //inclusively
+        Observation[] obsTill1 = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
                     put(tr[1], false);
@@ -253,7 +254,7 @@ class Main {
         Thread.sleep(1000);
         System.out.println("(EXPECTED: No, but I know that he is not)");
 
-        Observation[] obsTill2  = new Observation[]{ //inclusively
+        Observation[] obsTill2 = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
                     put(tr[1], false);
@@ -267,7 +268,7 @@ class Main {
         Thread.sleep(1000);
         System.out.println("(EXPECTED: Yes, I am sure it is blinking and not white )");
 
-        Observation[] obsTill3  = new Observation[]{ //inclusively
+        Observation[] obsTill3 = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
                     put(tr[0], true);
                     put(tr[1], false);
@@ -368,7 +369,7 @@ class Main {
 
         Conversation conversation = new Conversation(agent, "ModalConjConv", t, contextualisation);
 
-        Observation[] obsTill12  = new Observation[]{ //inclusively
+        Observation[] obsTill12 = new Observation[]{ //inclusively
                 new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
                     put(tr[3], true);
                     put(tr[4], true);
@@ -402,7 +403,7 @@ class Main {
         Thread.sleep(1000);
         System.out.println("(EXPECTED: No, he is not blue and soft)");
 
-        Observation[] obsTill15  = new Observation[]{ //inclusively
+        Observation[] obsTill15 = new Observation[]{ //inclusively
                 new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
                     put(tr[3], null);
                     put(tr[4], true);
@@ -427,7 +428,7 @@ class Main {
         System.out.println("(EXPECTED: I believe it is sof and blinking, but it is possible it is opposite)");
 
 
-        Observation[] obsTill16  = new Observation[]{ //inclusively
+        Observation[] obsTill16 = new Observation[]{ //inclusively
                 new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{
                     put(tr[3], null);
                     put(tr[4], null);
@@ -444,7 +445,7 @@ class Main {
     }
 
 
-    static public void dbLoopTest(){
+    static public void dbLoopTest() {
         QRCode[] qrCodes2 = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
         Trait[] tr2 = new Trait[]{
                 new Trait("Red"),
@@ -480,7 +481,7 @@ class Main {
 
         try {
             //noinspection InfiniteLoopStatement
-            while(true) {
+            while (true) {
                 System.out.println("<agent> zasypiam");
                 Thread.sleep(10000); // 10 seconds
                 System.out.println("<agent> wstaje");
