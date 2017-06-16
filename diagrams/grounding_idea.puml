@@ -1,0 +1,12 @@
+@startuml
+Agent->"Modul gruntujacy": zlecenie ugruntowania formuly <b>f</b> przy\n stanie wiedzy w chwili <b>t</b>
+Agent<-"Modul gruntujacy": pobranie wiedzy epizodycznej \nw postaci rozdystrybuowanej
+Agent-->"Modul gruntujacy": odpowiednia dystrybucja wiedzy <b>dk</b>
+"Modul gruntujacy"->"Modul gruntujacy": wyznaczenie komplementarnych\n formul <b>sf</b>
+loop dla kazdej <b>fk</b> z <b>sf</b>
+    "Modul gruntujacy"->"Modul gruntujacy":
+end
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: another authentication Response
+@enduml
+<b></b>

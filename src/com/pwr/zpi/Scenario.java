@@ -4,11 +4,12 @@
 package com.pwr.zpi;
 
 import com.pwr.zpi.conversation.Conversation;
-import com.pwr.zpi.episodic.Observation;
+import com.pwr.zpi.core.Agent;
+import com.pwr.zpi.core.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidScenarioException;
-import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
+import com.pwr.zpi.core.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.Trait;
-import com.pwr.zpi.semantic.QRCode;
+import com.pwr.zpi.core.semantic.QRCode;
 import javafx.util.Pair;
 
 import java.io.IOException;

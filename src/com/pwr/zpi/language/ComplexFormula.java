@@ -1,13 +1,13 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.semantic.IndividualModel;
+import com.pwr.zpi.core.semantic.IndividualModel;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.pwr.zpi.holons.NonBinaryHolon.FormulaCase;
+import com.pwr.zpi.core.holons.NonBinaryHolon.FormulaCase;
 
 /**
  * //todo

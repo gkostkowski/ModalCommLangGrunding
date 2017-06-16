@@ -1,0 +1,16 @@
+@startuml
+title Proces gruntowania formuly <b>f</b>\n w chwili czasu <b>t</b>
+start
+:pobranie wiedzy epizodycznej w postaci\n <u>dystrybucji wiedzy</u> dla <b>f</b> i <b>t</b>;
+:wyznaczenie komplementarnych formul <b>sf</b> dla <b>f</b>;
+while (dostepna formula \n z <b>sf</b> do przetworzenia)
+  :pobierz __podsumowania__ z holona\n dla wybranej formuly <b>wf</b>;
+  while (dostepny kolejny operator\n modalny <b>m</b> __oraz__ <b>wf</b> nie ugruntowana)
+    if (zachodzi epistemiczna relacja \nspelnienia dla <b>wf</b> i <b>m</b>) then
+        #PaleGreen:ugruntuj formule <b>wf</b>\n z operatorem <b>m</b>;
+    endif
+  endwhile
+endwhile
+:zwroc zbior ugruntowanych formul;
+end
+@enduml

@@ -1,8 +1,8 @@
 package com.pwr.zpi.io
 
-import com.pwr.zpi.Agent
-import com.pwr.zpi.episodic.Observation
-import com.pwr.zpi.semantic.QRCode
+import com.pwr.zpi.core.Agent
+import com.pwr.zpi.core.episodic.Observation
+import com.pwr.zpi.core.semantic.QRCode
 import com.pwr.zpi.language.Trait
 import org.junit.Test
 

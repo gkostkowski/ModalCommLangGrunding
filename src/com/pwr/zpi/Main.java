@@ -1,17 +1,18 @@
 package com.pwr.zpi;
 
 import com.pwr.zpi.conversation.Conversation;
-import com.pwr.zpi.episodic.Observation;
+import com.pwr.zpi.core.Agent;
+import com.pwr.zpi.core.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidContextualisationException;
 import com.pwr.zpi.exceptions.InvalidMeasureException;
-import com.pwr.zpi.holons.context.builders.ConcreteContextBuilder;
-import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
-import com.pwr.zpi.holons.context.contextualisation.FilteringContextualisation;
-import com.pwr.zpi.holons.context.measures.NormalisedDistance;
-import com.pwr.zpi.holons.context.selectors.LatestSelector;
+import com.pwr.zpi.core.holons.context.builders.ConcreteContextBuilder;
+import com.pwr.zpi.core.holons.context.contextualisation.Contextualisation;
+import com.pwr.zpi.core.holons.context.contextualisation.FilteringContextualisation;
+import com.pwr.zpi.core.holons.context.measures.NormalisedDistance;
+import com.pwr.zpi.core.holons.context.selectors.LatestSelector;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.life_cycle.LifeCycle;
-import com.pwr.zpi.semantic.QRCode;
+import com.pwr.zpi.core.semantic.QRCode;
 
 import java.util.HashMap;
 
