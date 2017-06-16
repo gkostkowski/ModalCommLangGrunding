@@ -3,7 +3,7 @@ package com.pwr.zpi.holons.ContextJar;
 import com.pwr.zpi.episodic.BaseProfile;
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.Formula;
-import com.pwr.zpi.language.Pair;
+import com.pwr.zpi.util.Pair;
 import com.pwr.zpi.language.SimpleFormula;
 import com.pwr.zpi.language.Trait;
 

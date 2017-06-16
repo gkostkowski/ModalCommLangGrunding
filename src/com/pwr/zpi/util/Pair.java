@@ -1,7 +1,11 @@
-package com.pwr.zpi.language;
+package com.pwr.zpi.util;
 
-//todo usunac i uzywac klasy ze standardu
-@Deprecated
+/**
+ * Custom class representing Pair of Objects, addition to standard javafx.util Class is addition of setters.
+ * @param <K>
+ * @param <V>
+ */
+
 public class Pair<K, V> {
 
     K Case;

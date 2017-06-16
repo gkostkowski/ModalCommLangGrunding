@@ -6,7 +6,7 @@ import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.DistributedKnowledge;
 import com.pwr.zpi.language.Formula;
-import com.pwr.zpi.language.Pair;
+import com.pwr.zpi.util.Pair;
 
 import java.util.List;
 import java.util.Map;
