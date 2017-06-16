@@ -1,4 +1,5 @@
 @startuml
+actor Uzytkownik
 Uzytkownik -> Agent: Deklaracja związanych obiektów
 Agent -> Srodowisko:Sprawdzenie istnienia nowych obserwacji
 Agent <- Srodowisko: Rejestracja nowej obserwacji
