@@ -1,10 +1,10 @@
 package com.pwr.zpi.io;
 
-import com.pwr.zpi.episodic.Observation;
+import com.pwr.zpi.core.episodic.Observation;
 import com.pwr.zpi.language.Trait;
-import com.pwr.zpi.semantic.Identifier;
-import com.pwr.zpi.semantic.ObjectType;
-import com.pwr.zpi.semantic.QRCode;
+import com.pwr.zpi.core.semantic.Identifier;
+import com.pwr.zpi.core.semantic.ObjectType;
+import com.pwr.zpi.core.semantic.QRCode;
 
 import java.io.File;
 import java.io.IOException;

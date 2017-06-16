@@ -5,10 +5,9 @@ import com.pwr.zpi.language.ModalOperator
 import com.pwr.zpi.language.State
 import com.pwr.zpi.language.Trait
 import com.pwr.zpi.linguistic.ComplexStatement
-import com.pwr.zpi.linguistic.ComplexStatement
-import com.pwr.zpi.semantic.IndividualModel
-import com.pwr.zpi.semantic.ObjectType
-import com.pwr.zpi.semantic.QRCode
+import com.pwr.zpi.core.semantic.IndividualModel
+import com.pwr.zpi.core.semantic.ObjectType
+import com.pwr.zpi.core.semantic.QRCode
 import org.junit.Test
 
 /**

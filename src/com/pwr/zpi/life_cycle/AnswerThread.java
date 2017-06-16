@@ -1,6 +1,6 @@
 package com.pwr.zpi.life_cycle;
 
-import com.pwr.zpi.Agent;
+import com.pwr.zpi.core.Agent;
 import com.pwr.zpi.conversation.Talking;
 import com.pwr.zpi.exceptions.*;
 import com.pwr.zpi.language.*;

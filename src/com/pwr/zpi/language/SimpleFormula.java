@@ -1,7 +1,7 @@
 package com.pwr.zpi.language;
 
 import com.pwr.zpi.exceptions.InvalidFormulaException;
-import com.pwr.zpi.semantic.IndividualModel;
+import com.pwr.zpi.core.semantic.IndividualModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;

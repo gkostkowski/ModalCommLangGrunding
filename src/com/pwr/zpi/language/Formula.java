@@ -1,7 +1,7 @@
 package com.pwr.zpi.language;
 
-import com.pwr.zpi.episodic.BaseProfile;
-import com.pwr.zpi.semantic.IndividualModel;
+import com.pwr.zpi.core.episodic.BaseProfile;
+import com.pwr.zpi.core.semantic.IndividualModel;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 
 import java.util.*;
@@ -118,7 +118,7 @@ public abstract class Formula {
         MODAL_DISJUNCTION, MODAL_EXCLUSIVE_DISJUNCTION;
     }
 
-    abstract boolean equals(Formula other);
+    public abstract boolean equals(Formula other);
 
 /*    abstract com.pwr.zpi.Object getAffectedObject();
 

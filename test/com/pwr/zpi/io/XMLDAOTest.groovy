@@ -1,6 +1,6 @@
 package com.pwr.zpi.io
 
-import com.pwr.zpi.semantic.ObjectType
+import com.pwr.zpi.core.semantic.ObjectType
 import com.pwr.zpi.util.GenericObject
 
 //package io
