@@ -1,8 +1,8 @@
 package com.pwr.zpi.language;
 
 /**
- * Enum representing available modal operators.
- * //todo
+ * Enum containing available modal operators.
+ * @author Weronika Wolska
  */
 public enum ModalOperator {
     POS, BEL, KNOW

@@ -8,7 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Thread that reads next questions to agent from console
+ * Thread extending Listening allowing for reading next question from console
+ * @author Weronika Wolska
  */
 public class ConsoleListening extends Listening implements Runnable {
 
@@ -39,7 +40,8 @@ public class ConsoleListening extends Listening implements Runnable {
         RUNNING = false;
         try {
             bufferedReader.close();
-        } catch (Exception e) {}
+        } catch (IOException e) { Logger.getAnonymousLogger().log(Level.WARNING,
+                "IOException while stopping ConsoleListening", e);}
     }
 
     /**

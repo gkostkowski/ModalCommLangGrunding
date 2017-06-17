@@ -8,6 +8,7 @@ import java.util.Map;
 /**
  * SimpleStatement allows for building an answer in natural language (English) based on knowledge
  * which agent currently has on given SimpleFormula
+ * @author Weronika Wolska
  */
 public class SimpleStatement extends Statement {
 

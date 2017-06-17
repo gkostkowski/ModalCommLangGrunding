@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * ComplexStatement allows for building an answer in natural language (English) based on knowledge
  * which agent currently has on given ComplexFormula
+ * @author Weronika Wolska
  */
 public class ComplexStatement extends Statement {
 
@@ -43,8 +44,7 @@ public class ComplexStatement extends Statement {
      */
     private List<Formula> extractKeys() {
         List<Formula> formulas = new ArrayList<>();
-        for (Formula f : groundedFormulas.keySet())
-            formulas.add(f);
+        formulas.addAll(groundedFormulas.keySet());
         return formulas;
     }
 
@@ -98,7 +98,8 @@ public class ComplexStatement extends Statement {
             keys.remove(0);
         } else {
             sb.append(getBeginningOfSubsentence(null));
-            sb.append(" of " + name);
+            sb.append(" of ");
+            sb.append(name);
         }
         Formula nextWithBel = lookForBEl();
         boolean addAlso = false;
@@ -112,7 +113,7 @@ public class ComplexStatement extends Statement {
             sb.append(", but all other options are also possible");
         else {
             if (!keys.isEmpty()) {
-                sb.append(", but it is" + ((addAlso) ? " also" : "") + " possible that ");
+                sb.append(", but it is").append((addAlso) ? " also" : "").append(" possible that ");
             }
             String connecting = "";
             for (Formula f : keys) {
@@ -177,13 +178,13 @@ public class ComplexStatement extends Statement {
         keys.remove(f1);
         for (Formula f : keys)
             if (f.getStates().get(1) == formula.getStates().get(1)) {
-                if (!isXor || (isXor && !isOppositeAlternative(temp, f)))
+                if (!isXor || !isOppositeAlternative(temp, f))
                     temp.add(f);
                 f1 = f;
                 break;
             }
         keys.remove(f1);
-        if (!keys.isEmpty() && (!isXor || (isXor && !isOppositeAlternative(temp, keys.get(0)))))
+        if (!keys.isEmpty() && (!isXor || !isOppositeAlternative(temp, keys.get(0))))
             temp.add(keys.get(0));
         keys = temp;
     }
@@ -239,8 +240,6 @@ public class ComplexStatement extends Statement {
      * @return true if it is exactly opposite, false otherwise
      */
     private boolean isOppositeFromFormula(Formula f) {
-        if (f.getStates().get(0) != formula.getStates().get(0) && f.getStates().get(1) != formula.getStates().get(1))
-            return true;
-        return false;
+        return f.getStates().get(0) != formula.getStates().get(0) && f.getStates().get(1) != formula.getStates().get(1);
     }
 }

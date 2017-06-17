@@ -3,7 +3,8 @@ package com.pwr.zpi.conversation;
 import java.util.LinkedList;
 
 /**
- * Thread that prints next answers onto system console
+ * Thread that extends Talking class and allows for printing answers onto system console
+ * @author Weronika Wolska
  */
 public class ConsoleTalking extends Talking implements Runnable {
 
@@ -36,7 +37,7 @@ public class ConsoleTalking extends Talking implements Runnable {
         while (RUNNING)
         {
             if(!answers.isEmpty())
-                System.out.println(answers.remove());
+                System.out.println(getAnswer());
         }
     }
 }

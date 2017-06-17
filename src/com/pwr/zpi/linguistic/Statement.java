@@ -8,6 +8,7 @@ import java.util.Map;
 /**
  * abstract class which must be extended by classes which provide transition from agent's knowledge
  * to natural language
+ * @author Weronika Wolska
  */
 public abstract class Statement {
 

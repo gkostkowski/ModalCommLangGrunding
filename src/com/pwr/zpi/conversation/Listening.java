@@ -3,7 +3,8 @@ package com.pwr.zpi.conversation;
 import java.util.Queue;
 
 /**
- * Created by Weronika on 17.06.2017.
+ * Abstract class which must be extended by class that enables user to ask the agent a question
+ * @author Weronika Wolska
  */
 public abstract class Listening implements Runnable{
 
@@ -20,19 +21,27 @@ public abstract class Listening implements Runnable{
      */
     protected boolean RUNNING;
     /**
+     * Object used to synchronize access to questions queue;
+     */
+    private final Object foo = new Object();
+    /**
      * The listeningServer ServerSocket allows for connection with outside application that provides next questions
      */
-    public void putQuestion(String question)
+    void putQuestion(String question)
     {
-        questions.add(question);
+        synchronized (foo){
+            questions.add(question);
+        }
     }
     /**
      * @return first question bufferedReader queue or null if none was asked
      */
     public String getQuestion() {
-        if (questions.isEmpty())
-            return null;
-        else return questions.remove();
+        synchronized (foo) {
+            if (questions.isEmpty())
+                return null;
+            else return questions.remove();
+        }
     }
     /**
      * method starts the thread
