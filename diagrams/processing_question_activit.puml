@@ -1,0 +1,23 @@
+@startuml
+title Proces przetwarzania pytania
+start
+repeat:
+    if (pytanie zawiera nazwę znanego agentowi obiektu) then (yes)
+        :ustal referencje do obiektu;
+        if (pytanie neguje kolejna ceche) then (yes)
+            :zaneguj kolejny stan;
+            if (obiekt moze posiadać cechę o którą pytamy) then (yes)
+                :dodaj kolejną cechę;
+            else (no)
+                stop
+            endif
+        else (no)
+            stop
+        endif
+    else (no)
+        stop
+    endif
+ repeat while (pytanie ma operator logiczny)
+ : zwróć formułę na postawie obiektu, cech i stanow;
+end
+@enduml

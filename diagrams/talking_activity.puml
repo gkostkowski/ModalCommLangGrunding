@@ -1,0 +1,19 @@
+@startuml
+title Wątek przekazujący odpowiedź użytkownika
+
+start
+    while (RUNNING)
+        if (kolejka odpowiedzi nie jest pusta?) then (yes)
+            : pobierz odpowiedz;
+            if (trzeba zatrzymac watek nasluchujacy?) then (yes)
+                : zatrzymaj wątek nasłuchujący;
+            endif
+            : przekaż odpowiedź użytkownikowi;
+            if (trzeba wznowic watek nasluchujacy?) then (yes)
+                : wznów wątek nasłuchujący;
+            endif
+        endif
+    endwhile
+end
+
+@enduml

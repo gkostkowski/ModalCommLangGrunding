@@ -1,0 +1,10 @@
+@startuml
+title Wątek nasłuchujący pytań użytkownika
+start
+    while (RUNNING)
+        : pobierz pytanie uzytkownika;
+        : dodaj pytanie do kolejki
+        pytań do przetworzenia ;
+    endwhile
+end
+@enduml

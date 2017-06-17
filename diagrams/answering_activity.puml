@@ -1,0 +1,20 @@
+@startuml
+
+title Proces generowania odpowiedzi w języku naturalnym \nz ugruntowanych formuł
+start
+:pobranie mapy ugruntowanych formuł z ich operatorami ;
+if (mapa pusta) then (yes)
+    : zwróc odpowiedź o braku wiedzy na
+    temat pytania;
+    end
+else
+:sortuj formuly zgodnie z podo-
+bienstwem do formuly z pytania ;
+repeat:
+    : pobierz kolejna formule i jej operator modalny;
+    : dodaj do odpowiedzi przekonanie agenta o tej formule;
+
+repeat while (jest jeszcze nie przetworzona formula)
+: zwróć odpowiedź ;
+end
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+title Proces odpowiedzi na pytanie użytkownika
+start
+    :proces przetwarzania pytania;
+    while (podobna formula jest aktualnie przetwarzana)
+        : czekaj;
+    endwhile
+    : Proces gruntowania formuly ;
+    : Proces generowania odpowiedzi
+    w języku naturalnym z ugruntowanych formuł;
+    : Przekaż odpowiedź do wątku,
+    który przekazuje ją użytkownikowi ;
+
+
+end
+
+
+@enduml
