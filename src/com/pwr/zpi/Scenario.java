@@ -3,7 +3,7 @@
  */
 package com.pwr.zpi;
 
-import com.pwr.zpi.conversation.Conversation;
+import com.pwr.zpi.conversation.ConversationSimulator;
 import com.pwr.zpi.core.Agent;
 import com.pwr.zpi.core.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidScenarioException;
@@ -37,7 +37,7 @@ public class Scenario {
     private Contextualisation contextualisation;
     private List<String> IndModIDs;
     private List<Trait> traits;
-    private Conversation conversation;
+    private ConversationSimulator conversation;
 
     /**
      * natural_name, Pair(ID, traits)
@@ -66,8 +66,7 @@ public class Scenario {
     private final String DEFINITIONS_MARKER = "DEF";
 
 
-    public Scenario(Agent agent, String filename, String
-            cnversationName) {
+    public Scenario(Agent agent, String filename) {
         this.IMsDefinitions = new HashMap<>();
         this.IMPositions = new HashMap<>();
         this.notLoadedObservations = new HashMap<>();
@@ -76,7 +75,7 @@ public class Scenario {
         this.agent = agent;
         IndModIDs = new LinkedList<>();
         traits = new ArrayList<>();
-        this.conversation = new Conversation(agent, cnversationName, 0, agent.getContextualisationMethod());
+        this.conversation = new ConversationSimulator(agent);
     }
 
     /**

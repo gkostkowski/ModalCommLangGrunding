@@ -1,7 +1,7 @@
-package com.pwr.zpi.life_cycle;
+package com.pwr.zpi.core.behaviours;
 
-import com.pwr.zpi.core.Agent;
 import com.pwr.zpi.conversation.Talking;
+import com.pwr.zpi.core.Agent;
 import com.pwr.zpi.exceptions.*;
 import com.pwr.zpi.language.*;
 import com.pwr.zpi.linguistic.*;
@@ -23,7 +23,7 @@ public class AnswerThread implements Runnable {
     /**
      * Reference to main life cycle thread
      */
-    LifeCycle lifeCycle;
+    Agent.LifeCycle lifeCycle;
     /**
      * String with a question asked to agent
      */
@@ -35,11 +35,11 @@ public class AnswerThread implements Runnable {
 
     /**
      * Constructor of AnswerThread
-     * @param talking   reference to Talking thread instance
+     * @param talking   reference to VoiceTalking thread instance
      * @param question  asked question
-     * @param lifeCycle reference to life_cycle thread instance
+     * @param lifeCycle reference to behaviours thread instance
      */
-    public AnswerThread(Talking talking, String question, LifeCycle lifeCycle, Agent agent)
+    public AnswerThread(Talking talking, String question, Agent.LifeCycle lifeCycle, Agent agent)
     {
         this.question = question;
         this.agent = agent;
@@ -84,7 +84,6 @@ public class AnswerThread implements Runnable {
         } catch (Exception e) {
             talkingThread.addAnswer("Something terrible happened");
             Logger.getAnonymousLogger().log(Level.WARNING, "not able to answer - unidentified exception", e);
-            e.printStackTrace();
             releaseResources(formula);}
     }
 

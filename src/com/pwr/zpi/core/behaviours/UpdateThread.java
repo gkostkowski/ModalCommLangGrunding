@@ -1,4 +1,4 @@
-package com.pwr.zpi.life_cycle;
+package com.pwr.zpi.core.behaviours;
 
 import com.pwr.zpi.core.Agent;
 

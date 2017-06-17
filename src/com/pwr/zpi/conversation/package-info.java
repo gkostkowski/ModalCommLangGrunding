@@ -1,6 +1,6 @@
 /**
  * Package with classes staring threads which listen for new questions and pass them to agent, and get answer from agent
- * and pass it to human. Information is passed between applications in form of JSON object. It's structure must be common
- * between given client program and server. For now it only has string field "message" in both - listening and talking.
+ * and pass it to human. There are two abstract classes, one for listening actions and one for talking actions.
+ * Further classes with desired form of communication must implement those abstract classes
  */
 package com.pwr.zpi.conversation;

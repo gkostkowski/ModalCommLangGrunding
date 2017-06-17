@@ -1,5 +1,9 @@
 package com.pwr.zpi.core;
 
+import com.pwr.zpi.conversation.Listening;
+import com.pwr.zpi.conversation.Talking;
+import com.pwr.zpi.conversation.VoiceListening;
+import com.pwr.zpi.conversation.VoiceTalking;
 import com.pwr.zpi.core.episodic.BPCollection;
 import com.pwr.zpi.core.episodic.BaseProfile;
 import com.pwr.zpi.core.episodic.Observation;
@@ -15,6 +19,8 @@ import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.core.semantic.IMCollection;
 import com.pwr.zpi.core.semantic.IndividualModel;
 import com.pwr.zpi.core.semantic.ObjectType;
+import com.pwr.zpi.core.behaviours.AnswerThread;
+import com.pwr.zpi.core.behaviours.UpdateThread;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -38,7 +44,7 @@ public class Agent {
     private static DatabaseAO database;
     public static Collection<ObjectType> objectTypeCollection;
     private String label;
-
+    LifeCycle lifeCycle;
 
     private Agent(AgentBuilder builder) {
         knowledgeBase = builder.getKnowledgeBase();
@@ -49,6 +55,17 @@ public class Agent {
         this.label=builder.getLabel();
     }
 
+    public void startLifeCycle()
+    {
+        lifeCycle = new LifeCycle();
+        lifeCycle.start();
+    }
+
+    public void sttopLifeCycle()
+    {
+        if(lifeCycle !=null)
+            lifeCycle.stop();
+    }
 
     public BPCollection getKnowledgeBase() {
         return knowledgeBase;
@@ -340,5 +357,198 @@ public class Agent {
         public String getLabel() {
             return label;
         }
+    }
+
+    /**
+     * LifeCycle allows for starting new thread with life cycle of an agent, which consists of cyclic behaviours
+     * that can trigger one-shot behaviours. For now it implements periodical checking for new observations and new questions.
+     */
+    public class LifeCycle implements Runnable {
+
+        /**
+         * The RUNNING boolean allows for constant looping through life cycle of the agent when it is true.
+         */
+        private boolean RUNNING = false;
+        /**
+         * The thread Thread is an instance of this thread
+         */
+        private Thread thread;
+        /**
+         * The listening thread is a thread that allows for receiving voice questions to agent
+         */
+        private Listening listeningThread;
+        /**
+         * The talkingThread is a thread that allows to send answer to program which will answer to question vocally
+         */
+        private Talking talkingThread;
+
+        private int semaphore = 0;
+        /**
+         * static Object foo is used for synchronization between Threads //todo może jednak flagi
+         */
+        private final Object foo = new Object();
+        /**
+         * list of formulas that are currently being processed by agent
+         */
+        private List<Formula> formulasInProcess;
+        /**
+         * Reference to thread updating agents memory
+         */
+        private Thread updateThread;
+
+        /**
+         * main loop of the agent. Periodically checks for new observations and new questions
+         */
+        @Override
+        public void run() {
+            while(RUNNING)
+            {
+                if(checkIfNewObservations() && !updateThread.isAlive())
+                {
+                    acquire(true);
+                    updateThread = new Thread(new UpdateThread(Agent.this));
+                    updateThread.start();
+                    release(true);
+                }
+                String question = listeningThread.getQuestion();
+                if(question!=null)
+                {
+                    System.out.println(question);
+                    new AnswerThread(talkingThread, question, this, Agent.this);
+                }
+            }
+            System.out.println("Stopped - life cycle");
+        }
+
+        private boolean checkIfNewObservations() {
+            return Agent.this.isNewObservationInDatabase();
+        }
+
+        /**
+         * starts new life cycle of a completly new Agent or resumes life cycle of agent. Also starts threads
+         * that allows for voice communications
+         */
+        public void start()
+        {
+            formulasInProcess = new ArrayList<>();
+            listeningThread = new VoiceListening();
+            listeningThread.start();
+            talkingThread = new VoiceTalking(listeningThread);
+            talkingThread.start();
+            updateThread = new Thread(new UpdateThread(Agent.this));
+            updateThread.start();
+            if(thread==null)
+            {
+                thread = new Thread(this, "life cycle");
+                RUNNING = true;
+                thread.start();
+            }
+        }
+
+        /**
+         * stops life cycle of agent, but leaves options for resuming it in the future
+         */
+        public void stop()
+        {
+            RUNNING = false;
+            if(thread!=null)
+                thread = null;
+            if(listeningThread!=null)
+                listeningThread.stop();
+            if(talkingThread!=null)
+                talkingThread.stop();
+        }
+
+        /**
+         * Method which checks if any similar formula is being processed at the moment, if none such was found it
+         * adds given formula to list of ones in middle of processing
+         * @param formula   to which currently processed formula are compared
+         * @return true if none was found, false if similar was found
+         */
+        public boolean canFormulaBeProccessed(Formula formula)
+        {
+            synchronized (formulasInProcess) {
+                for (Formula f : formulasInProcess) {
+                    if (formula.isFormulaSimilar(f))
+                        return false;
+                }
+                formulasInProcess.add(formula);
+                return true;
+            }
+        }
+
+        /**
+         * method removes given formula from formulas being processed
+         * @param formula   formula which was completely processed and is not used anymore
+         */
+        public void removeFromFormulasInProccess(Formula formula)
+        {
+            synchronized (formulasInProcess)
+            {
+                formulasInProcess.remove(formula);
+                formulasInProcess.notifyAll();
+            }
+        }
+
+        /**
+         * method which blocks access for specific threads
+         * @param isMemoryUpdateThread  true if blocking thread is the memory update thread
+         */
+        public void acquire(boolean isMemoryUpdateThread)
+        {
+            synchronized (foo) {
+                if (isMemoryUpdateThread) {
+                    while (semaphore > 0)
+                        try {
+                            foo.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    semaphore--;
+                } else {
+                    while (semaphore < 0)
+                        try {
+                            foo.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    semaphore++;
+                }
+            }
+        }
+
+        /**
+         * method releases blockage and allows other threads to access resources
+         * @param isMemoryUpdateThread  true if releasing thread is the memory update one
+         */
+        public void release(boolean isMemoryUpdateThread)
+        {
+            synchronized (foo) {
+                if (isMemoryUpdateThread)
+                    semaphore++;
+                else semaphore--;
+                foo.notifyAll();
+            }
+        }
+
+        /**
+         * Method called when there is formula to process. It waits till no similar formula is being processed
+         * @param formula
+         */
+        public void tryProccessingFormula(Formula formula)
+        {
+            while(!canFormulaBeProccessed(formula))
+                synchronized (formulasInProcess)
+                {
+                    try {
+                        formulasInProcess.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+        }
+
+
+
     }
 }

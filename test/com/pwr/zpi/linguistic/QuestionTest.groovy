@@ -70,6 +70,9 @@ class QuestionTest extends GroovyTestCase {
         assert  question1.getFormula().equals(new ComplexFormula(model2, [trait2, trait3], [State.IS, State.IS], LogicOperator.XOR))
         question1 = new Question("Is Zenek not black or not soft", agent)
         assert question1.getFormula().equals(new ComplexFormula(model1, [trait2, trait3], [State.IS_NOT, State.IS_NOT], LogicOperator.OR))
+        question1 = new Question("Is Zenek black or soft", agent)
+        assert question1.getFormula().equals(new ComplexFormula(model1, [trait2, trait3], [State.IS, State.IS], LogicOperator.OR))
+
     }
 
     @Test
