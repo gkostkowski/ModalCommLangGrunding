@@ -1,18 +1,17 @@
 package com.pwr.zpi;
 
-import com.pwr.zpi.conversation.Conversation;
+import com.pwr.zpi.conversation.ConversationSimulator;
 import com.pwr.zpi.core.Agent;
-import com.pwr.zpi.core.memory.episodic.Observation;
+import com.pwr.zpi.core.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidContextualisationException;
 import com.pwr.zpi.exceptions.InvalidMeasureException;
-import com.pwr.zpi.core.memory.holons.context.builders.ConcreteContextBuilder;
-import com.pwr.zpi.core.memory.holons.context.contextualisation.Contextualisation;
-import com.pwr.zpi.core.memory.holons.context.contextualisation.FilteringContextualisation;
-import com.pwr.zpi.core.memory.holons.context.measures.NormalisedDistance;
-import com.pwr.zpi.core.memory.holons.context.selectors.LatestSelector;
+import com.pwr.zpi.core.holons.context.builders.ConcreteContextBuilder;
+import com.pwr.zpi.core.holons.context.contextualisation.Contextualisation;
+import com.pwr.zpi.core.holons.context.contextualisation.FilteringContextualisation;
+import com.pwr.zpi.core.holons.context.measures.NormalisedDistance;
+import com.pwr.zpi.core.holons.context.selectors.LatestSelector;
 import com.pwr.zpi.language.Trait;
-import com.pwr.zpi.life_cycle.LifeCycle;
-import com.pwr.zpi.core.memory.semantic.QRCode;
+import com.pwr.zpi.core.semantic.QRCode;
 
 import java.util.HashMap;
 
@@ -41,21 +40,21 @@ class Main {
 
         /*Description of below lines:*/
         /*Launching scenarios for simple modalities: */
-//        new Scenario(agentNoCtxt, "scenario01.csv", "conv001").execute();
-       // new Scenario(agentNoCtxt, "scenario01_main_without_SM.csv", "conv001").execute();
-        new Scenario(agentNoCtxt, "scenario01_main.csv", "conv001").execute();
+//        new Scenario(agentNoCtxt, "scenario01.csv").execute();
+  //      new Scenario(agentNoCtxt, "scenario01_main_without_SM.csv").execute();
+//        new Scenario(agentNoCtxt, "scenario01_main.csv").execute();
 
-        //new Scenario(agentNoCtxt, "conj_no_context_scenario01.csv", "conj conv01").execute();
-//        new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv", "conj conv04").execute();
+        //new Scenario(agentNoCtxt, "conj_no_context_scenario01.csv").execute();
+//        new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv").execute();
 
-//        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv", "ex disj conv05").execute();
-        //new Scenario(agentNoCtxt, "disj_no_context_scenario06.csv", "disj conv06").execute();
+//        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv").execute();
+        //new Scenario(agentNoCtxt, "disj_no_context_scenario06.csv").execute();
 //
-//        new Scenario(agent, "scenario01_main.csv", "conj conv002").execute();
-        //new Scenario(agent, null, "conj_context_scenario02.csv", "conj conv003").execute();
+//        new Scenario(agent, "scenario01_main.csv").execute();
+        //new Scenario(agent, null, "conj_context_scenario02.csv").execute();
 
 
-        //      new Scenario(agent, "conj_latest_context_scenario03.csv", "conj latest context conv003").execute();
+        //      new Scenario(agent, "conj_latest_context_scenario03.csv").execute();
 
         QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
         Trait[] tr = new Trait[]{
@@ -69,7 +68,7 @@ class Main {
         //or
         //simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        //startLifeCycle(agent, qrCodes, tr);
+        //startLifeCycle(agentNoCtxt, qrCodes, tr);
 
         //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which
@@ -102,8 +101,7 @@ class Main {
         }}, t++));
         agent.getModels().addNameToModel(qrCodes[0], "Bobby");
 
-        LifeCycle lf = new LifeCycle(agent);
-        lf.start();
+        agent.startLifeCycle();
 
     }
 
@@ -118,7 +116,7 @@ class Main {
         Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
 
         agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
-        Conversation c1 = new Conversation(agent, "SimpleModalConv", t, contextualisation);
+        ConversationSimulator c1 = new ConversationSimulator(agent);
 
         Observation[] obsTill3 = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
@@ -144,7 +142,6 @@ class Main {
         };
 
         agent.addAndUpdate(obsTill3);
-        c1.setTimestamp(t);
         c1.start();
 
         System.out.println("asking...");
@@ -158,7 +155,6 @@ class Main {
                     put(tr[1], false);
                     put(tr[2], false);
                 }}, t++)};
-        c1.setTimestamp(t);
         agent.addAndUpdate(obsTill4);
 
         c1.addQuestion("Is Hyzio red");
@@ -174,7 +170,6 @@ class Main {
                 }}, t++)};
 
         agent.addAndUpdate(obsTill5);
-        c1.setTimestamp(t);
         c1.addQuestion("Is Hyzio blinking");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: It is possible it is blinking, but I believe it is not)");
@@ -197,7 +192,6 @@ class Main {
                 }}, t++)};
 
         agent.addAndUpdate(obsTill7);
-        c1.setTimestamp(t);
         c1.addQuestion("Is Hyzio red");
         System.out.println("(EXPECTED: Know not)");
 
@@ -218,13 +212,12 @@ class Main {
                 }}, t++)};
 
         agent.addAndUpdate(obsTill9);
-        c1.setTimestamp(t);
         c1.addQuestion("Is Hyzio white");
         System.out.println("(EXPECTED: bel not pos is)");
     }
 
     /**
-     * Conversation using simply modalities and modal conjunctions about Hyzio
+     * ConversationSimulator using simply modalities and modal conjunctions about Hyzio
      */
     private static void simplyAndConjunctionModalitiesScenario(Agent agent, QRCode[] qrCodes, Trait[] tr) throws InterruptedException {
 
@@ -235,7 +228,7 @@ class Main {
         Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
 
         agent.getModels().addNameToModel(qrCodes[0], "Hyzio");
-        Conversation c1 = new Conversation(agent, "SimpleAndConjModalConv", t, contextualisation);
+        ConversationSimulator c1 = new ConversationSimulator(agent);
 
         Observation[] obsTill1 = new Observation[]{ //inclusively
                 new Observation(qrCodes[0], new HashMap<Trait, Boolean>() {{
@@ -363,7 +356,7 @@ class Main {
 
 
     /**
-     * Conversation using modal conjunctions about Rysio
+     * ConversationSimulator using modal conjunctions about Rysio
      */
     private static void modalConjunctionsScenario(Agent agent, QRCode[] qrCodes, Trait[] tr) throws InterruptedException {
 
@@ -372,7 +365,7 @@ class Main {
         agent.getModels().addNameToModel(qrCodes[1], "Rysio");
         Contextualisation contextualisation = null;//new LatestFilteringContextualisation(new Distance(2));
 
-        Conversation conversation = new Conversation(agent, "ModalConjConv", t, contextualisation);
+        ConversationSimulator conversation = new ConversationSimulator(agent);
 
         Observation[] obsTill12 = new Observation[]{ //inclusively
                 new Observation(qrCodes[1], new HashMap<Trait, Boolean>() {{

@@ -74,7 +74,11 @@ class SimpleStatementTest extends GroovyTestCase {
         map = new HashMap<>()
         ss = new SimpleStatement(sf1, map, "Hyzio")
         assert ss.generateStatement().equalsIgnoreCase("I really do not know what to say about it")
-
+        map = new HashMap<>()
+        map.put(sf1, ModalOperator.POS)
+        map.put(sf2, ModalOperator.BEL)
+        ss = new SimpleStatement(sf1, map, "Hyzio")
+        assert ss.generateStatement().equalsIgnoreCase("I think it is possible, that Hyzio is Red, however I rather believe Hyzio is not Red")
 
 
     }
