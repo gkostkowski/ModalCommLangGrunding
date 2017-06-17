@@ -2,16 +2,16 @@ package com.pwr.zpi;
 
 import com.pwr.zpi.conversation.ConversationSimulator;
 import com.pwr.zpi.core.Agent;
-import com.pwr.zpi.core.episodic.Observation;
+import com.pwr.zpi.core.memory.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidContextualisationException;
 import com.pwr.zpi.exceptions.InvalidMeasureException;
-import com.pwr.zpi.core.holons.context.builders.ConcreteContextBuilder;
-import com.pwr.zpi.core.holons.context.contextualisation.Contextualisation;
-import com.pwr.zpi.core.holons.context.contextualisation.FilteringContextualisation;
-import com.pwr.zpi.core.holons.context.measures.NormalisedDistance;
-import com.pwr.zpi.core.holons.context.selectors.LatestSelector;
+import com.pwr.zpi.core.memory.holons.context.builders.ConcreteContextBuilder;
+import com.pwr.zpi.core.memory.holons.context.contextualisation.Contextualisation;
+import com.pwr.zpi.core.memory.holons.context.contextualisation.FilteringContextualisation;
+import com.pwr.zpi.core.memory.holons.context.measures.NormalisedDistance;
+import com.pwr.zpi.core.memory.holons.context.selectors.LatestSelector;
 import com.pwr.zpi.language.Trait;
-import com.pwr.zpi.core.semantic.QRCode;
+import com.pwr.zpi.core.memory.semantic.QRCode;
 
 import java.util.HashMap;
 
@@ -41,7 +41,7 @@ class Main {
         /*Description of below lines:*/
         /*Launching scenarios for simple modalities: */
 //        new Scenario(agentNoCtxt, "scenario01.csv").execute();
-  //      new Scenario(agentNoCtxt, "scenario01_main_without_SM.csv").execute();
+        new Scenario(agentNoCtxt, "scenario01_main_without_SM.csv").execute();
 //        new Scenario(agentNoCtxt, "scenario01_main.csv").execute();
 
         //new Scenario(agentNoCtxt, "conj_no_context_scenario01.csv").execute();
