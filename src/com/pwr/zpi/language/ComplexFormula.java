@@ -159,11 +159,6 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
         return res;
     }
 
-    private List<Formula> getExDisjunctionComplementaryFormulas() {
-        return null;
-    }
-
-
     /**
      * evaluates the formula, for now only for the AND and OR operators
      *
@@ -308,14 +303,6 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
     }
 
 
-
-    private List<Formula> getDisjunctionComplementaryFormulas() throws InvalidFormulaException {
-        return new ArrayList<Formula>(){{
-            add(new ComplexFormula(individualModel, traits, states, LogicOperator.XOR)); //order like in definition
-            add(new ComplexFormula(individualModel, traits, states, LogicOperator.OR));
-        }};
-    }
-
     /**
      * Method is used to point out exact formulas which should be used in grounding process for formulas processed
      * in an indirect way. This situation takes place for disjunctions which use conjunctions.
@@ -347,10 +334,4 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
         return null;
     }
 
-    public static Collection<ComplexFormula> asComplexFormulas(List<Formula> formulasSet) {
-        List<ComplexFormula> res = new ArrayList<>();
-        for (Formula f: formulasSet)
-            res.add((ComplexFormula) f);
-        return res;
-    }
 }
