@@ -1,12 +1,15 @@
 package holons.context
 
+import com.pwr.zpi.episodic.BaseProfile
+import com.pwr.zpi.holons.ContextJar.DistanceFunction
+import com.pwr.zpi.holons.ContextJar.DistanceFunctions.DistanceFunction1
+import com.pwr.zpi.util.Pair
 import com.pwr.zpi.core.episodic.BaseProfile
 import com.pwr.zpi.core.holons.ContextJar.DistanceFunction
 import com.pwr.zpi.core.holons.ContextJar.DistanceFunctions.DistanceFunction1
 import com.pwr.zpi.core.semantic.IndividualModel
 import com.pwr.zpi.core.semantic.ObjectType
 import com.pwr.zpi.core.semantic.QRCode
-import com.pwr.zpi.language.Pair
 import com.pwr.zpi.language.Trait
 import org.junit.Test
 

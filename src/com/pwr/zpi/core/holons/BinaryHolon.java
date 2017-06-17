@@ -9,6 +9,7 @@ import com.pwr.zpi.core.holons.ContextJar.DistanceFunction;
 import com.pwr.zpi.core.holons.ContextJar.DistanceFunctions.DistanceFunction1;
 import com.pwr.zpi.core.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.*;
+import com.pwr.zpi.util.Pair;
 
 import java.util.HashMap;
 import java.util.List;
@@ -117,7 +118,7 @@ public class BinaryHolon implements Holon {
      * @return Returns Pair of strongest value in Tao,first part of pair is true when IS side is stronger,otherwise false
      */
     @Override
-    public com.pwr.zpi.language.Pair<Boolean, Double> getStrongest() {
+    public Pair<Boolean, Double> getStrongest() {
         return Tao.getK() >= Tao.getV() ? (new Pair<Boolean, Double>(true, Tao.getK())) : (new Pair<Boolean, Double>(false, Tao.getV()));
     }
     /**
@@ -125,7 +126,7 @@ public class BinaryHolon implements Holon {
      * @return Returns Pair of weakest value in Tao,first part of pair is true when IS side is stronger,otherwise false
      */
     @Override
-    public com.pwr.zpi.language.Pair<Boolean, Double> getWeakest() {
+    public Pair<Boolean, Double> getWeakest() {
         return Tao.getK() < Tao.getV() ? (new Pair<Boolean, Double>(true, Tao.getK())) : (new Pair<Boolean, Double>(false, Tao.getV()));
     }
 

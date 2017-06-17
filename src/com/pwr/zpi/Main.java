@@ -42,8 +42,8 @@ class Main {
         /*Description of below lines:*/
         /*Launching scenarios for simple modalities: */
 //        new Scenario(agentNoCtxt, "scenario01.csv", "conv001").execute();
-        new Scenario(agentNoCtxt, "scenario01_main_without_SM.csv", "conv001").execute();
-//        new Scenario(agentNoCtxt, "scenario01_main.csv", "conv001").execute();
+       // new Scenario(agentNoCtxt, "scenario01_main_without_SM.csv", "conv001").execute();
+        new Scenario(agentNoCtxt, "scenario01_main.csv", "conv001").execute();
 
         //new Scenario(agentNoCtxt, "conj_no_context_scenario01.csv", "conj conv01").execute();
 //        new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv", "conj conv04").execute();

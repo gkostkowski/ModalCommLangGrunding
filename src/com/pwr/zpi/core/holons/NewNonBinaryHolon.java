@@ -10,7 +10,7 @@ import com.pwr.zpi.core.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.core.episodic.DistributedKnowledge;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Grounder;
-import com.pwr.zpi.language.Pair;
+import com.pwr.zpi.util.Pair;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
