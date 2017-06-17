@@ -5,7 +5,7 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidQuestionException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
-import com.pwr.zpi.core.holons.context.contextualisation.Contextualisation;
+import com.pwr.zpi.core.memory.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.language.ComplexFormula;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Grounder;

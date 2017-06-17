@@ -2,14 +2,14 @@ package com.pwr.zpi.language;
 
 import com.pwr.zpi.core.Agent;
 import com.pwr.zpi.Configuration;
-import com.pwr.zpi.core.episodic.BPCollection;
-import com.pwr.zpi.core.episodic.BaseProfile;
-import com.pwr.zpi.core.episodic.DistributedKnowledge;
+import com.pwr.zpi.core.memory.episodic.BPCollection;
+import com.pwr.zpi.core.memory.episodic.BaseProfile;
+import com.pwr.zpi.core.memory.episodic.DistributedKnowledge;
 import com.pwr.zpi.exceptions.InvalidConfigurationException;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
-import com.pwr.zpi.core.holons.NonBinaryHolon;
+import com.pwr.zpi.core.memory.holons.NonBinaryHolon;
 import com.sun.istack.internal.Nullable;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 

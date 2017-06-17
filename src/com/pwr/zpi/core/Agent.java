@@ -1,20 +1,20 @@
 package com.pwr.zpi.core;
 
-import com.pwr.zpi.core.episodic.BPCollection;
-import com.pwr.zpi.core.episodic.BaseProfile;
-import com.pwr.zpi.core.episodic.Observation;
+import com.pwr.zpi.core.memory.episodic.BPCollection;
+import com.pwr.zpi.core.memory.episodic.BaseProfile;
+import com.pwr.zpi.core.memory.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
-import com.pwr.zpi.core.holons.HolonCollection;
-import com.pwr.zpi.core.holons.HolonsIntercessor;
-import com.pwr.zpi.core.holons.context.contextualisation.Contextualisation;
+import com.pwr.zpi.core.memory.holons.HolonCollection;
+import com.pwr.zpi.core.memory.holons.HolonsIntercessor;
+import com.pwr.zpi.core.memory.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.io.DatabaseAO;
-import com.pwr.zpi.core.episodic.DistributedKnowledge;
+import com.pwr.zpi.core.memory.episodic.DistributedKnowledge;
 import com.pwr.zpi.language.Formula;
-import com.pwr.zpi.core.semantic.IMCollection;
-import com.pwr.zpi.core.semantic.IndividualModel;
-import com.pwr.zpi.core.semantic.ObjectType;
+import com.pwr.zpi.core.memory.semantic.IMCollection;
+import com.pwr.zpi.core.memory.semantic.IndividualModel;
+import com.pwr.zpi.core.memory.semantic.ObjectType;
 
 import java.util.*;
 import java.util.logging.Level;

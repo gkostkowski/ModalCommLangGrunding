@@ -1,14 +1,14 @@
 package com.pwr.zpi.linguistic
 
 import com.pwr.zpi.core.Agent
-import com.pwr.zpi.core.holons.context.builders.ConcreteContextBuilder
-import com.pwr.zpi.core.holons.context.contextualisation.Contextualisation
-import com.pwr.zpi.core.holons.context.contextualisation.FilteringContextualisation
-import com.pwr.zpi.core.holons.context.measures.NormalisedDistance
-import com.pwr.zpi.core.holons.context.selectors.LatestSelector
-import com.pwr.zpi.core.semantic.IndividualModel
-import com.pwr.zpi.core.semantic.ObjectType
-import com.pwr.zpi.core.semantic.QRCode
+import com.pwr.zpi.core.memory.holons.context.builders.ConcreteContextBuilder
+import com.pwr.zpi.core.memory.holons.context.contextualisation.Contextualisation
+import com.pwr.zpi.core.memory.holons.context.contextualisation.FilteringContextualisation
+import com.pwr.zpi.core.memory.holons.context.measures.NormalisedDistance
+import com.pwr.zpi.core.memory.holons.context.selectors.LatestSelector
+import com.pwr.zpi.core.memory.semantic.IndividualModel
+import com.pwr.zpi.core.memory.semantic.ObjectType
+import com.pwr.zpi.core.memory.semantic.QRCode
 import com.pwr.zpi.language.State
 import com.pwr.zpi.language.Trait
 import com.pwr.zpi.language.ComplexFormula
