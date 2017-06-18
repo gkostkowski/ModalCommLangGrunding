@@ -10,6 +10,7 @@ import com.pwr.zpi.core.memory.holons.context.Context;
 import com.pwr.zpi.language.State;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.core.memory.semantic.IndividualModel;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
@@ -21,7 +22,6 @@ import java.util.*;
 public class Distance implements Measure {
 
     private static final double DEF_MAX_THRESHOLD = 3;
-    private static final String NATURAL_LANG_NAME = "distance";
     double maxThreshold;
 
     public Distance(double maxThreshold) throws InvalidMeasureException {
@@ -59,7 +59,7 @@ public class Distance implements Measure {
      * @param fromContext
      * @return number of differences.
      */
-    private int partialDifference(List<Trait> fromBP, List<Trait> fromContext) {
+    protected int partialDifference(List<Trait> fromBP, List<Trait> fromContext) {
         List<Trait> common = new ArrayList<>(fromBP);
         int fromBPSize = fromBP.size(),
                 fromContextSize = fromContext.size();
@@ -84,6 +84,6 @@ public class Distance implements Measure {
     }
 
     public static String getContextName() {
-        return NATURAL_LANG_NAME;
+        throw new NotImplementedException();
     }
 }

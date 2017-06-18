@@ -63,4 +63,14 @@ final public class Context {
         result = 31 * result + relatedObject.hashCode();
         return result;
     }
+
+    /**
+     * Method determines if built context contain any traits. It is possible that context context will be empty and
+     * it could mean that selected set of representatives is too diverse.
+     * It depends on builder implementation.
+     * @return
+     */
+    public boolean isEmpty() {
+        return getObservedTraits().isEmpty() && getNotObservedTraits().isEmpty();
+    }
 }

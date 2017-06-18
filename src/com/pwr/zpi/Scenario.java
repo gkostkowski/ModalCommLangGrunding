@@ -12,6 +12,7 @@ import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.core.memory.semantic.QRCode;
 import javafx.util.Pair;
 
+import javax.crypto.spec.DESKeySpec;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -178,8 +179,11 @@ public class Scenario {
         return res;
     }
 
-    private String extractRelatedIndModelID(List<String> line) {
-        return IMsDefinitions.get(extractObjectName(line)).getKey();
+    private String extractRelatedIndModelID(List<String> line) throws InvalidScenarioException {
+        Pair<String, List<Trait>> id = IMsDefinitions.get(extractObjectName(line));
+        if (id == null)
+            throw new InvalidScenarioException("Used object was not declared in scenario declaration section.");
+        return id.getKey();
     }
 
     private String extractObjectName(List<String> line) {

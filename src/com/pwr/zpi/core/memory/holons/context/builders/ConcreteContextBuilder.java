@@ -10,6 +10,8 @@ import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.core.memory.semantic.IndividualModel;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This is concrete realisation of ContextBuilder.
@@ -24,8 +26,13 @@ public class ConcreteContextBuilder implements ContextBuilder {
         if (representatives.size() == 1)
             return new Context(representatives.iterator().next().getRelatedTraits(relatedObject, State.IS),
                     representatives.iterator().next().getRelatedTraits(relatedObject, State.IS_NOT), relatedObject);
-        return new Context(partialBuild(representatives, relatedObject, State.IS),
+
+        Context res=new Context(partialBuild(representatives, relatedObject, State.IS),
                 partialBuild(representatives, relatedObject, State.IS_NOT), relatedObject);
+        if (res.isEmpty())
+            Logger.getAnonymousLogger().log(Level.WARNING, "Built context is empty - provided set of base profiles " +
+                    "is too diverse.");
+        return res;
     }
 
     @Override

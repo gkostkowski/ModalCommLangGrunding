@@ -3,7 +3,10 @@ package com.pwr.zpi;
 import com.pwr.zpi.conversation.ConversationSimulator;
 import com.pwr.zpi.core.Agent;
 import com.pwr.zpi.core.memory.episodic.Observation;
+import com.pwr.zpi.core.memory.holons.context.measures.NormalisedSoftDistance;
+import com.pwr.zpi.core.memory.holons.context.selectors.LatestGroupSelector;
 import com.pwr.zpi.exceptions.InvalidContextualisationException;
+import com.pwr.zpi.exceptions.InvalidGroupSelectorException;
 import com.pwr.zpi.exceptions.InvalidMeasureException;
 import com.pwr.zpi.core.memory.holons.context.builders.ConcreteContextBuilder;
 import com.pwr.zpi.core.memory.holons.context.contextualisation.Contextualisation;
@@ -22,12 +25,19 @@ class Main {
      *
      * @param args
      */
-    static public void main(String... args) throws InterruptedException, InvalidMeasureException, InvalidContextualisationException {
+    static public void main(String... args) throws InterruptedException, InvalidMeasureException,
+            InvalidContextualisationException, InvalidGroupSelectorException {
 
         //dbLoopTest();
 
         Contextualisation latestContext = new FilteringContextualisation(new ConcreteContextBuilder(), new LatestSelector(),
                 new NormalisedDistance(0.5));
+        Contextualisation latestGroupContext = new FilteringContextualisation(new ConcreteContextBuilder(),
+                new LatestGroupSelector(3),
+                new NormalisedDistance(0.3));
+        Contextualisation latestGroupContextSoftDis = new FilteringContextualisation(new ConcreteContextBuilder(),
+                new LatestGroupSelector(3),
+                new NormalisedSoftDistance(0.3));
 //                new Distance(2));
         Agent agentNoCtxt = new Agent.AgentBuilder()
                 //.contextualisation(null)
@@ -37,15 +47,24 @@ class Main {
                 .contextualisation(latestContext)
                 .label("agentLtstCntxt")
                 .build();
+        Agent agentLtstGrpCntxt = new Agent.AgentBuilder()
+                .contextualisation(latestGroupContext)
+                .label("agentLtstGrpCntxt")
+                .build();
+        Agent agentLtstGrpCntxtSoftDist = new Agent.AgentBuilder()
+                .contextualisation(latestGroupContextSoftDis)
+                .label("agentLtstGrpCntxtSoftDist")
+                .build();
 
         /*Description of below lines:*/
         /*Launching scenarios for simple modalities: */
 //        new Scenario(agentNoCtxt, "scenario01.csv").execute();
-        new Scenario(agentNoCtxt, "scenario01_main_without_SM.csv").execute();
+//        new Scenario(agentNoCtxt, "scenario01_main_without_SM.csv").execute();
 //        new Scenario(agentNoCtxt, "scenario01_main.csv").execute();
 
         //new Scenario(agentNoCtxt, "conj_no_context_scenario01.csv").execute();
-//        new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv").execute();
+        //new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv").execute();
+        new Scenario(agentLtstGrpCntxtSoftDist, "conj_latest_group_context_scenario07.csv").execute();
 
 //        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv").execute();
         //new Scenario(agentNoCtxt, "disj_no_context_scenario06.csv").execute();
