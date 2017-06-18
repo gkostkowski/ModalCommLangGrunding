@@ -9,7 +9,6 @@ import com.pwr.zpi.exceptions.InvalidConfigurationException;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotApplicableException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
-import com.pwr.zpi.core.memory.holons.NonBinaryHolon;
 import com.sun.istack.internal.Nullable;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -862,9 +861,9 @@ public class Grounder {
                 size += dk.getGroundingSet(fi).size();
             }
         } else {
-            for (Formula fi : NonBinaryHolon.getComplementaryFormulasv2((ComplexFormula) f)) {
+           /* for (Formula fi : NonBinaryHolon.getComplementaryFormulasv2((ComplexFormula) f)) {
                 size += dk.getGroundingSet(fi).size();
-            }
+            }*/ throw new IllegalStateException("Class cannot be accessed - was deleted");
         }
         return size;
     }

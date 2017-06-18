@@ -12,11 +12,11 @@ import java.util.List;
 
 /**
  * Class allowing to generate formula out of string of text
+ * @author Weronika Wolska
  */
 
 public class Question {
 
-    public static final String DEFAULT_FAILURE_ANSWER = "Something terrible happened";
     /**
      * Instance of agent which memory will be searched through in order to build proper answer
      */

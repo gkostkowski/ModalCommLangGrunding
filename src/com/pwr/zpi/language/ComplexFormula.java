@@ -7,23 +7,47 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.pwr.zpi.core.memory.holons.NonBinaryHolon.FormulaCase;
-
 /**
- * //todo
+ * Class extends the Formula class. It creates an object which represents a complex formula in modal communication
+ * language. A complex formula is a structure which consists of o subject of formula, two traits of this subject, states
+ * of those traits (whether they are negated or not) and an operator which connects them. Operator can be one from
+ * the LogicOperator enum class from this package.
  * @author Weronika Wolska
  * @author Grzegorz Kostkowski
- * @author Jarema Radom
  */
 public class ComplexFormula extends Formula implements Comparable<ComplexFormula> {
 
+    /**
+     * todo
+     */
     private static final int COMPLEMENTARY_CONJ_FORMULAS_NUMBER = 4;
+    /**
+     * Logic operator of this formula
+     */
     private LogicOperator operator;
-    private SimpleFormula leftPart, rightPart;
+    /**
+     * left part of this complex formula, which is a SimpleFormula where it's trait and state
+     * are the same as the first trait and state of this complex formula
+     */
+    private SimpleFormula leftPart;
+    /**
+     * right part of this complex formula, which is a SimpleFormula where it's trait and state
+     * are the same as the second trait and state of this complex formula
+     */
+    private SimpleFormula rightPart;
+    /**
+     * List of traits of the formula
+     */
     private List<Trait> traits;
+    /**
+     * List of states of this formula, where first one is a state of first traits and second is
+     * a state of the second trait
+     */
     private List<State> states;
+    /**
+     * Subject of the formula in form of individual model
+     */
     private IndividualModel individualModel;
-    private FormulaCase formulaCase;
 
     /**
      * Constructor of Complex formula, for now there is made an assumption that ComplexFormula consists of two SimpleFormulas
@@ -46,19 +70,6 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
             throw new InvalidFormulaException("Given traits don't describe type of the object");
         leftPart = new SimpleFormula(model, traits.subList(0, 1), statesSeq.subList(0, 1));
         rightPart = new SimpleFormula(model, traits.subList(1, 2), statesSeq.subList(1, 2));
-        if (leftPart.isNegated()) {
-            if (rightPart.isNegated()) {
-                formulaCase = FormulaCase.NPNQ;
-            } else {
-                formulaCase = FormulaCase.NPQ;
-            }
-        } else {
-            if (rightPart.isNegated()) {
-                formulaCase = FormulaCase.PNQ;
-            } else {
-                formulaCase = FormulaCase.PQ;
-            }
-        }
         this.operator = op;
         this.states = statesSeq;
 
@@ -78,12 +89,19 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
     }
 
     /**
-     * @return Collection of SimpleFormulas, in order of left part and the right part of formula
+     * @return left part of this complex formula, which is a SimpleFormula where it's trait and state
+     * are the same as the first trait and state of this complex formula
      */
-    public Collection<Formula> getParts() {
-        return Arrays.asList(leftPart, rightPart);
+    public SimpleFormula getLeftPart() {
+        return leftPart;
     }
-
+    /**
+     * @return right part of this complex formula, which is a SimpleFormula where it's trait and state
+     * are the same as the second trait and state of this complex formula
+     */
+    public SimpleFormula getRightPart() {
+        return rightPart;
+    }
     /**
      * Returns the information that the formula is modal conjunction
      *
@@ -101,7 +119,6 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
                 return null;
         }
     }
-
     /**
      * @return operator's type of the formula
      */
@@ -141,9 +158,8 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
      * IS, IS_NOT
      * IS_NOT, IS_NOT
      *
-     * @return
+     * @return      list of complementary formulas
      */
-
     @Override
     public List<Formula> getComplementaryFormulas() throws InvalidFormulaException {
         List<Formula> res = new ArrayList<>();
@@ -160,11 +176,11 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
     }
 
     /**
-     * evaluates the formula, for now only for the AND and OR operators
-     *
-     * @return State of the whole formula
+     * Allows for comparing this complex formula with another formula and checking if they are the same
+     * without regarding order of traits
+     * @param other     second formula
+     * @return          true if formulas are same, false otherwise
      */
-
     public boolean equals(Formula other) {
         if (other instanceof ComplexFormula)
             if (individualModel.getIdentifier().equals(other.getModel().getIdentifier()))
@@ -174,22 +190,24 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
         return false;
     }
 
+    /**
+     * Comapre states and traits of this formula and another without regarding order of traits
+     * @param formula   second formula
+     * @return          true if traits and states are same in both formulas, false otherwise
+     */
     private boolean compareTraitsAndStates(ComplexFormula formula) {
         if (traits.get(0).equals(formula.getTraits().get(0)) && states.get(0).equals(formula.getStates().get(0)))
-            if (traits.get(1).equals(formula.getTraits().get(1)) && states.get(1).equals(formula.getStates().get(1)))
-                return true;
-            else return false;
+            return traits.get(1).equals(formula.getTraits().get(1)) && states.get(1).equals(formula.getStates().get(1));
         else if (traits.get(0).equals(formula.getTraits().get(1)) && states.get(0).equals(formula.getStates().get(1)))
-            if (traits.get(1).equals(formula.getTraits().get(0)) && states.get(1).equals(formula.getStates().get(0)))
-                return true;
+            return traits.get(1).equals(formula.getTraits().get(0)) && states.get(1).equals(formula.getStates().get(0));
         return false;
     }
 
     /**
-     * Checks if given formula regards the same object and same traits
+     * Checks if given formula regards the same object and same traits without checking their states
      *
-     * @param other
-     * @return
+     * @param other     Formula with which we compare this one
+     * @return          true if they are similar or false otherwise
      */
     public boolean isFormulaSimilar(Formula other) {
         if (other instanceof ComplexFormula)
@@ -200,36 +218,27 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
         return false;
     }
 
+    /**
+     * Compares traits of two formulas
+     * @param formula   complex formula with which traits we compare this formula traits
+     * @return          true if this formula traits are same with the other one's, false otherwise
+     */
     private boolean compareTraits(ComplexFormula formula) {
-        if (traits.get(0).equals(formula.getTraits().get(0)))
-            if (traits.get(1).equals(formula.getTraits().get(1)))
-                return true;
-            else return false;
-      /*  else if (traits.get(0).equals(formula.getTraits().get(1)))  // na przyszłość być może
-            if (traits.get(1).equals(formula.getTraits().get(0)))
-                return true;*/
-        return false;
+        return traits.get(0).equals(formula.getTraits().get(0)) && traits.get(1).equals(formula.getTraits().get(1));
     }
 
-    public SimpleFormula getLeftPart() {
-        return leftPart;
-    }
-
-    public SimpleFormula getRightPart() {
-        return rightPart;
-    }
-
+    /**
+     * @return      false if traits of formula are same or one of them does not describe the individual model
+     */
     private boolean checkTraits() {
-        boolean response;
-        if (traits.get(0).equals(traits.get(1))) response = false;
-        else response = individualModel.checkIfContainsTraits(traits);
-        return response;
+        return !traits.get(0).equals(traits.get(1)) && individualModel.checkIfContainsTraits(traits);
     }
 
-    public FormulaCase getFormulaCase() {
-        return formulaCase;
-    }
-
+    /**
+     * Compares this formula with another object
+     * @param o     object to compare
+     * @return      true if the o was an identical complex formula, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -237,11 +246,14 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
 
         ComplexFormula that = (ComplexFormula) o;
 
-        if (getOperator() != that.getOperator()) return false;
-        if (!getLeftPart().equals(that.getLeftPart())) return false;
-        return getRightPart().equals(that.getRightPart());
+        return getOperator() == that.getOperator() &&
+                getLeftPart().equals(that.getLeftPart()) &&
+                getRightPart().equals(that.getRightPart());
     }
 
+    /**
+     * @return hashcode of this complex formula
+     */
     @Override
     public int hashCode() {
         int result = getOperator().hashCode();
@@ -250,26 +262,10 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
         return result;
     }
 
-    public void setpq() {
-        if (leftPart.isNegated()) leftPart.negate();
-        if (rightPart.isNegated()) rightPart.negate();
-    }
-
-    public void setnpq() {
-        if (!leftPart.isNegated()) leftPart.negate();
-        if (rightPart.isNegated()) rightPart.negate();
-    }
-
-    public void setpnq() {
-        if (leftPart.isNegated()) leftPart.negate();
-        if (!rightPart.isNegated()) rightPart.negate();
-    }
-
-    public void setnpnq() {
-        if (!leftPart.isNegated()) leftPart.negate();
-        if (!rightPart.isNegated()) rightPart.negate();
-    }
-
+    /**
+     * @return  copy of the complex formula
+     * @throws InvalidFormulaException when the copy could not be created
+     */
     public ComplexFormula copy() throws InvalidFormulaException {
         return new ComplexFormula(individualModel, traits, states, operator);
     }
@@ -286,6 +282,9 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
         else return new ComplexFormula(individualModel, traits, operator);
     }
 
+    /**
+     * @return String representation of the formula
+     */
     @Override
     public String toString() {
         return "ComplexFormula{" + individualModel.getIdentifier() + ": " +
@@ -294,7 +293,12 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
                 '}';
     }
 
-
+    /**
+     * Compares hashcode of this complex formula with the other one
+     * @param o     second formula
+     * @return      1 if hashcode of the first was bigger then second's, 0 if they
+     *              were the same, and -1 if it was smaller
+     */
     @Override
     public int compareTo(ComplexFormula o) {
         int val1 = states.hashCode() + traits.hashCode() + individualModel.hashCode();
@@ -317,7 +321,7 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
         if (getType().equals(Type.MODAL_CONJUNCTION))
             return Arrays.asList(new Formula[]{this});
 
-        List<Formula> res=null;
+        List<Formula> res;
         try {
             res = new ComplexFormula(individualModel, traits, states, LogicOperator.AND)
                     .getComplementaryFormulas().subList(0, 3);

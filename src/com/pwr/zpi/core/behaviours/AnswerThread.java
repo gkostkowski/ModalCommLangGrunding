@@ -19,19 +19,19 @@ public class AnswerThread implements Runnable {
     /**
      * Reference to thread communicating with voice synthesis application
      */
-    Talking talkingThread;
+    private Talking talkingThread;
     /**
      * Reference to main life cycle thread
      */
-    Agent.LifeCycle lifeCycle;
+    private Agent.LifeCycle lifeCycle;
     /**
      * String with a question asked to agent
      */
-    String question;
+    private String question;
     /**
      * Instance of agent to which the question was directed
      */
-    Agent agent;
+    private Agent agent;
 
     /**
      * Constructor of AnswerThread
@@ -73,14 +73,14 @@ public class AnswerThread implements Runnable {
             talkingThread.addAnswer(statement.generateStatement());
         } catch (InvalidQuestionException e) {
            talkingThread.addAnswer(e.getStringWithInfo());
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception while parsing question", e);
         } catch (InvalidFormulaException e) {
             talkingThread.addAnswer(e.getMessage());
-        } catch (NotConsistentDKException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception while creating formulas", e);
+        } catch (NotConsistentDKException | NotApplicableException e) {
             talkingThread.addAnswer(e.getMessage());
             releaseResources(formula);
-        } catch (NotApplicableException e) {
-            talkingThread.addAnswer(e.getMessage());
-            releaseResources(formula);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception while grounding formulas", e);
         } catch (Exception e) {
             talkingThread.addAnswer("Something terrible happened");
             Logger.getAnonymousLogger().log(Level.WARNING, "not able to answer - unidentified exception", e);

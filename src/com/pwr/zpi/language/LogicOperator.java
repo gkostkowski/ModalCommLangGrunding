@@ -3,6 +3,7 @@ package com.pwr.zpi.language;
 
 /**
  * Enum which collects all the logic operators which can be used in grounded complex formula
+ * @author Weronika Wolska
  */
 public enum LogicOperator {
 

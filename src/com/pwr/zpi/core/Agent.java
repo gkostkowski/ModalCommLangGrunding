@@ -363,6 +363,7 @@ public class Agent {
     /**
      * LifeCycle allows for starting new thread with life cycle of an agent, which consists of cyclic behaviours
      * that can trigger one-shot behaviours. For now it implements periodical checking for new observations and new questions.
+     * @author Weronika Wolska
      */
     public class LifeCycle implements Runnable {
 

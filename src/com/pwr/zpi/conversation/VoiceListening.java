@@ -16,6 +16,7 @@ import java.util.logging.Logger;
  * Thread that extends Listening and connects with application that listens to voice
  * questions and provides with strings with those.
  * Acts as a server for a client application with voice recognition engine.
+ * @author Weronika Wolska
  */
 public class VoiceListening extends Listening implements Runnable {
 
@@ -74,7 +75,10 @@ public class VoiceListening extends Listening implements Runnable {
             listeningClient.close();
             listeningServer.close();
             listeningApp.destroy();
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING,
+                    "IOException while stopping VoiceListening", e);
+        }
     }
 
     /**
@@ -86,15 +90,21 @@ public class VoiceListening extends Listening implements Runnable {
             try {
                 String question = bufferedReader.readLine();
                 JSONObject object = new JSONObject(question);
-                questions.add(object.getString("message"));
-            } catch (IOException e) { }
+                putQuestion(object.getString("message"));
+            } catch (IOException e) {  Logger.getAnonymousLogger().log(Level.WARNING,
+                    "IOException while running VoiceListening", e);}
             catch (JSONException e) {
-                e.printStackTrace();
+                Logger.getAnonymousLogger().log(Level.WARNING,
+                        "JSONException while running VoiceListening", e);
             }
         }
     }
-
-    public void shouldStopListening(boolean shouldListen)
+    /**
+     * Method stops the voice recognition application for the moment of giving the answer by agent,
+     * if it is answering using voice or starts it again
+     * @param shouldListen  boolean indicating if the application should listen (true) or not (false)
+     */
+    void shouldStopListening(boolean shouldListen)
     {
         JSONObject object1 = new JSONObject();
         try {
@@ -102,7 +112,8 @@ public class VoiceListening extends Listening implements Runnable {
             printWriter.println(object1.toString());
             printWriter.flush();
         } catch (JSONException e) {
-            e.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.WARNING,
+                    "JSONException while running VoiceListening", e);
         }
     }
 

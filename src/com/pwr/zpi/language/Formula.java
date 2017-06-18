@@ -7,7 +7,7 @@ import com.pwr.zpi.exceptions.InvalidFormulaException;
 import java.util.*;
 
 /**
- * //todo
+ * Shared abstract class for SimpleFormula and ComplexFormula
  *
  * @author Weronika Wolska
  * @author Grzegorz Kostkowski
@@ -104,7 +104,6 @@ public abstract class Formula {
         return res;
     }
 
-
     /**
      * Gives list of successive states. Classic case will contains states which describe whether parts of formula[traits]
      * (in case of complex formula - simple formula is special case and contains one part) occur with or without negation.
@@ -119,14 +118,6 @@ public abstract class Formula {
     }
 
     public abstract boolean equals(Formula other);
-
-/*    abstract com.pwr.zpi.Object getAffectedObject();
-
-    *//**
-     * Returns traits affected in formula - only one trait in case of SimpleFormula; two or more in case of ComplexFormula.
-     * @return Collections of affected traits.
-     *//*
-    abstract Collection<Trait> getAffectedTraits();*/
 
     /**
      * Checks if given base profile is in accordance with mental model implied through this formula.
@@ -170,6 +161,11 @@ public abstract class Formula {
         return res;
     }
 
+    /**
+     * Method checks if given formula is same as another one without regarding their states (similar to it)
+     * @param formula   Formula with which we check the first one
+     * @return          true if they are similar, false otherwise
+     */
     abstract public boolean isFormulaSimilar(Formula formula);
 
     /**

@@ -3,7 +3,8 @@ package com.pwr.zpi.conversation;
 import java.util.Queue;
 
 /**
- * Created by Weronika on 17.06.2017.
+ * Abstract class which must be extended by class that enables agent to pass it's answer to user
+ * @author Weronika Wolska
  */
 public abstract class Talking implements Runnable {
     /**
@@ -19,13 +20,29 @@ public abstract class Talking implements Runnable {
      */
     protected boolean RUNNING;
     /**
-     * Refernce to VoiceListening, used to be able to stop listening service for the moment of giving answer
+     * Object used to synchronize access to questions queue;
+     */
+    private final Object foo = new Object();
+
+    /**
+     * synchronizes method that adds a new answer to answers queue
+     * @param answer    answer in form of String
      */
     public void addAnswer(String answer)
     {
-        synchronized (answers)
+        synchronized (foo)
         {
             answers.add(answer);
+        }
+    }
+    /**
+     * synchronizes method that obtains and removes first answer from answers queue
+     */
+    protected String getAnswer()
+    {
+        synchronized (foo)
+        {
+            return answers.remove();
         }
     }
     /**

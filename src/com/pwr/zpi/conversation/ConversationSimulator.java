@@ -19,39 +19,49 @@ import java.util.logging.Logger;
  * a new life cycle of an agent. It is also a merely simulation in that it doesn't leave the agent any way of
  * deciding what to do with the incoming question, as it only starts a thread which listens to questions
  * and answers them
+ *
+ * @author Weronika Wolska
  */
 public class ConversationSimulator implements Runnable {
 
+    /**
+     * Reference to agent with whom the conversation is held
+     */
     private final Agent agent;
-
     /**
      * Queue of questions to process
      */
-    private Queue<String> queue;
-
+    private Queue<String> questions;
+    /**
+     * The thread Thread is an instance of this thread
+     */
     private Thread thread;
-
+    /**
+     * The RUNNING boolean allows for constant listening for the questions while it is true.
+     */
     private boolean running = false;
 
     /**
      * Construction of ConversationSimulator
      *
-     * @param agent
+     * @param agent instance of agent with whom the conversation is held
      */
     public ConversationSimulator(Agent agent) {
         this.agent = agent;
-        queue = new LinkedList<>();
+        questions = new LinkedList<>();
     }
-
-    public void addQuestion(String question) {
-        queue.add(question);
-    }
-
-
     /**
-     * Method used to set answer for given question
+     * Method adds a new question to the questions queue
      *
-     * @param question
+     * @param question question to agent in form of String
+     */
+    public void addQuestion(String question) {
+        questions.add(question);
+    }
+    /**
+     * Method used to establish answer for given question
+     *
+     * @param question question removed from questions queue
      * @return String with answer or reason why can't it be given (in case of exception)
      */
     private String askQuestion(String question) {
@@ -72,13 +82,13 @@ public class ConversationSimulator implements Runnable {
             return "Something terrible happened!";
         }
     }
-
     /**
      * Method which receives proper answer from specific Statement class
+     * based on grounded formulas
      *
-     * @param formula
-     * @param name
-     * @return
+     * @param formula Formula used in grounding process
+     * @param name    Name of the object from question
+     * @return String with generated answer
      */
     private String setAnswer(Formula formula, String name) {
         Statement statement;
@@ -90,28 +100,40 @@ public class ConversationSimulator implements Runnable {
             else statement = new SimpleStatement((SimpleFormula) formula, map, name);
             return statement.generateStatement();
         } catch (InvalidFormulaException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING,
+                    "Invalid formula in setAnswer while running ConversationSimulator", e);
             return e.getMessage();
         } catch (NotApplicableException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING,
+                    "Not Applicable exception in setAnswer while running ConversationSimulator", e);
             return e.getMessage();
         } catch (NotConsistentDKException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING,
+                    "Not consistent DK in setAnswer while running ConversationSimulator", e);
             return e.getMessage();
         }
     }
-
+    /**
+     * While thread is running it checks whether a new question was asked
+     * and gives an answer for it
+     */
     @Override
     public void run() {
         while (running) {
-            if (!queue.isEmpty()) {
+            if (!questions.isEmpty()) {
                 System.out.println();
-                System.out.println(askQuestion(queue.remove()));
+                System.out.println(askQuestion(questions.remove()));
             }
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
+                Logger.getAnonymousLogger().log(Level.INFO, "Interrupted sleep in ConversationSimulator");
             }
         }
     }
-
+    /**
+     * Starts a new instance of this thread
+     */
     public void start() {
         System.out.println(agent + " is listening");
         if (thread == null) {
@@ -121,7 +143,9 @@ public class ConversationSimulator implements Runnable {
         }
 
     }
-
+    /**
+     * Stops this instance of thread
+     */
     public void stop() {
         if (thread != null)
             running = false;

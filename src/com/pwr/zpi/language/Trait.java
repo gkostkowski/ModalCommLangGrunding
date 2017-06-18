@@ -5,6 +5,8 @@ package com.pwr.zpi.language;
  * stands for valuedTraits signatures, so they don't have attached value.
  * Trait has its name.
  * There is assumption that all valuedTraits are binary.
+ * @author Weronika Wolska
+ * @author Grrzegorz Kostkowski
  */
 public class Trait implements Comparable<Trait> {
     private String name;

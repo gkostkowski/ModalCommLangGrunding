@@ -12,11 +12,21 @@ import java.util.List;
  *
  * @author Weronika Wolska
  * @author Grzegorz Kostkowski
+ * @author Mateusz Gawłowski
  */
 public class SimpleFormula extends Formula implements Comparable<SimpleFormula>{
 
+    /**
+     * Subject of the formula in form of individual model
+     */
     private IndividualModel individualModel;
+    /**
+     * Trait od the formula
+     */
     private Trait trait;
+    /**
+     * boolean if the state of the trait equals IS_NOT
+     */
     private boolean isNegated;
     /**
      * COnstructor of SimpleFormula
@@ -63,9 +73,7 @@ public class SimpleFormula extends Formula implements Comparable<SimpleFormula>{
         trait = traits.get(0);
         if(!checkTraits())
             throw new InvalidFormulaException("Trait doesn't describe type of the model");
-        if(statesSeq.get(0) == State.IS)
-            isNegated = false;
-        else isNegated = true;
+        isNegated = statesSeq.get(0) != State.IS;
     }
 
     /**
@@ -80,23 +88,32 @@ public class SimpleFormula extends Formula implements Comparable<SimpleFormula>{
         this(model, traits, Arrays.asList(State.IS));
     }
 
+    /**
+     * @return trait of the formula
+     */
     public Trait getTrait()
     {
         return trait;
     }
 
+    /**
+     * @return true if trait of formula equals IS_NOT, otherwise false
+     */
     public boolean isNegated()
     {
         return isNegated;
     }
-
-    public void negate() {isNegated = !isNegated;}
-
+    /**
+     * @return trait in form of list of Traits
+     */
     @Override
     public List<Trait> getTraits() {
         return Arrays.asList(trait);
     }
 
+    /**
+     * @return individual model which is the subject of the formula
+     */
     @Override
     public IndividualModel getModel() {
         return individualModel;
@@ -111,6 +128,10 @@ public class SimpleFormula extends Formula implements Comparable<SimpleFormula>{
         return Type.SIMPLE_MODALITY;
     }
 
+    /**
+     * State of the trait of the formula in form of list of states
+     * @return
+     */
     public List<State> getStates()
     {
         List<State> states = new ArrayList<>();
@@ -155,6 +176,11 @@ public class SimpleFormula extends Formula implements Comparable<SimpleFormula>{
         return individualModel.checkIfContainsTrait(trait);
     }
 
+    /**
+     * Checks if this object is equal to another one
+     * @param o     another object
+     * @return      true if they are same, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -166,7 +192,9 @@ public class SimpleFormula extends Formula implements Comparable<SimpleFormula>{
         if (!individualModel.equals(that.individualModel)) return false;
         return getTrait().equals(that.getTrait());
     }
-
+    /**
+     * @return hashcode of this formula
+     */
     @Override
     public int hashCode() {
         int result = individualModel.hashCode();
@@ -175,6 +203,12 @@ public class SimpleFormula extends Formula implements Comparable<SimpleFormula>{
         return result;
     }
 
+    /**
+     * Checks if given formula regards the same object and same trait without checking their states
+     *
+     * @param other     Formula with which we compare this one
+     * @return          true if they are similar or false otherwise
+     */
     public boolean isFormulaSimilar(Formula other)
     {
         if(other instanceof SimpleFormula)
@@ -207,7 +241,12 @@ public class SimpleFormula extends Formula implements Comparable<SimpleFormula>{
     public List<Formula> getDependentFormulas() {
         return Arrays.asList(new Formula[]{this});
     }
-
+    /**
+     * Compares hashcode of this formula with another one
+     * @param o     second formula
+     * @return      1 if hashcode of the first was bigger then second's, 0 if they
+     *              were the same, and -1 if it was smaller
+     */
     @Override
     public int compareTo(SimpleFormula o) {
         int val1 = getStates().hashCode() + getTrait().hashCode() + individualModel.hashCode();

@@ -5,12 +5,15 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.*;
 
 /**
  * Thread that connects with application that synthesis to voice the given message.
  * Acts as a server for a client application with voice synthesis engine
+ * @author Weronika Wolska
  */
 public class VoiceTalking extends Talking implements Runnable {
 
@@ -35,23 +38,15 @@ public class VoiceTalking extends Talking implements Runnable {
      */
     private PrintWriter printWriter;
 
+    /**
+     * Constructor of the class
+     * @param listening     reference to Listening thread, in case if there would be need
+     *                      to stop it for a moment
+     */
     public VoiceTalking(Listening listening)
     {
         this.listeningThread = listening;
     }
-
-    /**
-     * Method which puts next answer to the queue of answers
-     * @param answer    String with given answer
-     */
-    public void addAnswer(String answer)
-    {
-        synchronized (answers)
-        {
-            answers.add(answer);
-        }
-    }
-
     /**
      * method starts the thread, starts the talkingApp, establishes connection between those
      */
@@ -75,7 +70,6 @@ public class VoiceTalking extends Talking implements Runnable {
             }
         } catch (IOException e) { System.out.print("Could not start talking service");}
     }
-
     /**
      * method stops the thread, closes connection between server and client application, closes printWriter
      * and shuts the talkingApp
@@ -87,7 +81,8 @@ public class VoiceTalking extends Talking implements Runnable {
             talkingClient.close();
             talkingServer.close();
             talkingApp.destroy();
-        } catch (IOException e) {}
+        } catch (IOException e) {Logger.getAnonymousLogger().log(Level.WARNING,
+                "IOException in VoiceTalking", e);}
     }
     /**
      * thread runs while RUNNING is true and sends given answers through socket in form of JSON object
@@ -102,25 +97,27 @@ public class VoiceTalking extends Talking implements Runnable {
                 JSONObject object = new JSONObject();
                 if(listeningThread instanceof VoiceListening)
                     ((VoiceListening)listeningThread).shouldStopListening(true);
-                object.put("message", answers.peek());
+                String answer = getAnswer();
+                object.put("message", answer);
                 printWriter.println(object.toString());
                 printWriter.flush();
-                Thread.sleep(getTimeToWait(answers.remove().length()));
+                Thread.sleep(getTimeToSayTheAnswer(answer.length()));
                 if(listeningThread instanceof VoiceListening)
                     ((VoiceListening)listeningThread).shouldStopListening(false);
-            } catch(InterruptedException e) {}
+            } catch(InterruptedException e) { Logger.getAnonymousLogger().log(Level.INFO,
+                    "Interrupted sleep in VoiceTalking", e);}
             catch (JSONException e) {
-                e.printStackTrace();
+               Logger.getAnonymousLogger().log(Level.WARNING,
+                        "JSON exception in VoiceTalking", e);
             }
         }
     }
-
     /**
      * Counts rounded time needed to say the message
-     * @param length
-     * @return
+     * @param length    length of the message
+     * @return          time it would likely take to say the message out loud
      */
-    private int getTimeToWait(int length)
+    private int getTimeToSayTheAnswer(int length)
     {
         return (length/50+1)*3000;
     }
