@@ -137,7 +137,7 @@ public class Grounder {
         Map<Formula, ModalOperator> res = new HashMap<>();
         ModalOperator currOperator = null;
         int timestamp = dk.getTimestamp();
-
+        Logger.getAnonymousLogger().log(Level.INFO, "Grounding for timestamp="+timestamp);
         for (Formula currFormula : complementaryFormulas)
             if ((currOperator = checkEpistemicConditions(currFormula, dk,
                     agent.getSummarization(currFormula, timestamp))) != null)
