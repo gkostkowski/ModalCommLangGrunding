@@ -15,8 +15,11 @@ import com.pwr.zpi.core.memory.holons.context.measures.NormalisedDistance;
 import com.pwr.zpi.core.memory.holons.context.selectors.LatestSelector;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.core.memory.semantic.QRCode;
+import com.pwr.zpi.util.Util;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class Main {
 
@@ -28,6 +31,8 @@ class Main {
     static public void main(String... args) throws InterruptedException, InvalidMeasureException,
             InvalidContextualisationException, InvalidGroupSelectorException {
 
+        Level logsVisibilityLevel=Level.INFO;
+        Util.setLogLevel(logsVisibilityLevel);
         //dbLoopTest();
 
         Contextualisation latestContext = new FilteringContextualisation(new ConcreteContextBuilder(), new LatestSelector(),
@@ -37,7 +42,7 @@ class Main {
                 new NormalisedDistance(0.3));
         Contextualisation latestGroupContextSoftDis = new FilteringContextualisation(new ConcreteContextBuilder(),
                 new LatestGroupSelector(3),
-                new NormalisedSoftDistance(0.3));
+                new NormalisedSoftDistance(0.5));
 //                new Distance(2));
         Agent agentNoCtxt = new Agent.AgentBuilder()
                 //.contextualisation(null)
@@ -163,7 +168,7 @@ class Main {
         agent.addAndUpdate(obsTill3);
         c1.start();
 
-        System.out.println("asking...");
+        Logger.getAnonymousLogger().log(Level.INFO, "asking...");
         c1.addQuestion("Is Hyzio red");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: I know)");
@@ -266,7 +271,7 @@ class Main {
 
         c1.start();
 
-        System.out.println("asking...");
+        Logger.getAnonymousLogger().log(Level.INFO, "asking...");
         c1.addQuestion("Is Hyzio blinking");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: No, but I know that he is not)");
@@ -415,7 +420,7 @@ class Main {
 
         System.out.println("\tMODAL CONJUNCTIONS QUESTIONS:");
 
-        System.out.println("asking...");
+        Logger.getAnonymousLogger().log(Level.INFO, "asking...");
         conversation.addQuestion("Is Rysio blue and soft");
         Thread.sleep(1000);
         System.out.println("(EXPECTED: No, he is not blue and soft)");
@@ -499,9 +504,9 @@ class Main {
         try {
             //noinspection InfiniteLoopStatement
             while (true) {
-                System.out.println("<agent> zasypiam");
+                Logger.getAnonymousLogger().log(Level.INFO, "<agent> zasypiam");
                 Thread.sleep(10000); // 10 seconds
-                System.out.println("<agent> wstaje");
+                Logger.getAnonymousLogger().log(Level.INFO, "<agent> wstaje");
                 agent3.updateMemory();
             }
         } catch (InterruptedException e) {

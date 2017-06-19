@@ -49,10 +49,10 @@ public class VoiceListening extends Listening implements Runnable {
             questions = new LinkedList<>();
         try {
             listeningServer = new ServerSocket(6666);
-            System.out.println("Listening server up");
+            Logger.getAnonymousLogger().log(Level.INFO, "Listening server up");
             listeningApp = new ProcessBuilder("voice/Listening/Listening.exe", "6666", "voice/Listening/Grammar.xml").start();
             listeningClient = listeningServer.accept();
-            System.out.println("Listening client connected");
+            Logger.getAnonymousLogger().log(Level.INFO, "Listening client connected");
             bufferedReader = new BufferedReader(new InputStreamReader(listeningClient.getInputStream()));
             printWriter = new PrintWriter(listeningClient.getOutputStream(), true);
             if (thread == null) {

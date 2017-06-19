@@ -200,7 +200,7 @@ public class Agent {
         Logger.getAnonymousLogger().log(Level.INFO, "Discovering new observations ...");
 
         if (newObservations != null && !newObservations.isEmpty()) {
-            Logger.getAnonymousLogger().log(Level.INFO, "Processing " + newObservations.size() + " new observation(s):");
+            Logger.getAnonymousLogger().log(Level.FINE, "Processing " + newObservations.size() + " new observation(s):");
             for (Observation obs : newObservations) {
                 Logger.getAnonymousLogger().log(Level.FINE, "\t" + obs);
                 registerObservation(obs);
@@ -237,7 +237,7 @@ public class Agent {
 
     public void updateBeliefs(){
         try {
-            Logger.getAnonymousLogger().log(Level.INFO, "Updating beliefs for t="+knowledgeBase.getTimestamp()+"...");
+            Logger.getAnonymousLogger().log(Level.FINE, "Updating beliefs for t="+knowledgeBase.getTimestamp()+"...");
             holonsIntercessor.updateBeliefs(knowledgeBase.getTimestamp());
             Logger.getAnonymousLogger().log(Level.INFO, "Update is done.");
         } catch (InvalidFormulaException | NotApplicableException e) {
@@ -415,11 +415,11 @@ public class Agent {
                 String question = listeningThread.getQuestion();
                 if(question!=null)
                 {
-                    System.out.println(question);
+                    //System.out.println(question);
                     new AnswerThread(talkingThread, question, this, Agent.this);
                 }
             }
-            System.out.println("Stopped - life cycle");
+            Logger.getAnonymousLogger().log(Level.INFO, "Stopped - life cycle");
         }
 
         private boolean checkIfNewObservations() {

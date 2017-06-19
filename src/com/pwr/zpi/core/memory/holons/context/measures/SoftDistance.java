@@ -43,7 +43,7 @@ public class SoftDistance extends Distance implements Measure {
     protected int partialDifference(List<Trait> fromBP, List<Trait> fromContext) {
         List<Trait> common = new ArrayList<>(fromContext);
         int fromContextSize = fromContext.size();
-        common.retainAll(fromContext);
+        common.retainAll(fromBP);
         return fromContextSize - common.size();
     }
 }

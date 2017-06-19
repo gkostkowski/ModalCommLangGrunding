@@ -5,6 +5,7 @@ package com.pwr.zpi.core.memory.holons.context.builders;
 
 import com.pwr.zpi.core.memory.episodic.BaseProfile;
 import com.pwr.zpi.core.memory.holons.context.Context;
+import com.pwr.zpi.exceptions.InvalidContextException;
 import com.pwr.zpi.language.State;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.core.memory.semantic.IndividualModel;
@@ -27,8 +28,14 @@ public class ConcreteContextBuilder implements ContextBuilder {
             return new Context(representatives.iterator().next().getRelatedTraits(relatedObject, State.IS),
                     representatives.iterator().next().getRelatedTraits(relatedObject, State.IS_NOT), relatedObject);
 
-        Context res=new Context(partialBuild(representatives, relatedObject, State.IS),
-                partialBuild(representatives, relatedObject, State.IS_NOT), relatedObject);
+        Context res = null;
+        try {
+            res = new Context(partialBuild(representatives, relatedObject, State.IS),
+                    partialBuild(representatives, relatedObject, State.IS_NOT), relatedObject);
+        } catch (InvalidContextException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Built context is empty - provided set of base profiles " +
+                    "is too diverse.", e);
+        }
         if (res.isEmpty())
             Logger.getAnonymousLogger().log(Level.WARNING, "Built context is empty - provided set of base profiles " +
                     "is too diverse.");
@@ -41,7 +48,10 @@ public class ConcreteContextBuilder implements ContextBuilder {
     }
 
 
-        private List<Trait> partialBuild(Collection<BaseProfile> representatives, IndividualModel relatedObject, State state) {
+    private List<Trait> partialBuild(Collection<BaseProfile> representatives, IndividualModel relatedObject, State state) throws InvalidContextException {
+
+        if (representatives.isEmpty())
+            throw new InvalidContextException("Empty collection of representatives.");
         List<Trait> common = new ArrayList<>();
         Iterator<BaseProfile> iterator = representatives.iterator();
         common.addAll(iterator.next().getRelatedTraits(relatedObject, state));
@@ -49,7 +59,7 @@ public class ConcreteContextBuilder implements ContextBuilder {
             BaseProfile currentBP = iterator.next();
             List<Trait> relevant = currentBP.getRelatedTraits(relatedObject, state);
 
-            for (Iterator<Trait> it = common.iterator(); it.hasNext() && !common.isEmpty();) {
+            for (Iterator<Trait> it = common.iterator(); it.hasNext() && !common.isEmpty(); ) {
                 if (!relevant.contains(it.next()))
                     it.remove();
             }

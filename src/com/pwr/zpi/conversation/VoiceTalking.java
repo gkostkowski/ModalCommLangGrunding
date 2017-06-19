@@ -57,10 +57,10 @@ public class VoiceTalking extends Talking implements Runnable {
         try
         {
             talkingServer = new ServerSocket(6667);
-            System.out.println("Talking server up");
+            Logger.getAnonymousLogger().log(Level.INFO, "Talking server up");
             talkingApp = new ProcessBuilder("voice/Talking/Talking.exe", "6667").start();
             talkingClient = talkingServer.accept();
-            System.out.println("Talking client connected");
+            Logger.getAnonymousLogger().log(Level.INFO, "Talking client connected");
             printWriter = new PrintWriter(talkingClient.getOutputStream(), true);
             if(thread == null)
             {

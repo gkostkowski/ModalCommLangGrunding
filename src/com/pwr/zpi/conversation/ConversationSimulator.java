@@ -135,7 +135,7 @@ public class ConversationSimulator implements Runnable {
      * Starts a new instance of this thread
      */
     public void start() {
-        System.out.println(agent + " is listening");
+        Logger.getAnonymousLogger().log(Level.INFO, agent + " is listening");
         if (thread == null) {
             thread = new Thread(this);
             running = true;

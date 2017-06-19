@@ -141,9 +141,9 @@ public class Scenario {
 
     private void askQuestions() throws InterruptedException {
         for (int i = 0; i < notUsedQuestionsAndAnswers.size(); i++) {
-            System.out.println("asking...");
+            Logger.getAnonymousLogger().log(Level.INFO, "asking...");
             conversation.addQuestion(notUsedQuestionsAndAnswers.get(i).getKey());
-            Thread.sleep(1000);
+            Thread.sleep(350);
             System.out.println("(EXPECTED: " + notUsedQuestionsAndAnswers.get(i).getValue() + ")");
         }
         notUsedQuestionsAndAnswers.clear();

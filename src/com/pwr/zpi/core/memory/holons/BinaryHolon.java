@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents belief on simple formula.
@@ -68,7 +70,7 @@ public class BinaryHolon implements Holon {
                 sumNegative += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(1),currContext);
                 sumPositive += Grounder.determineFulfillmentDouble(dk,  dk.getComplementaryFormulas().get(0),currContext);
             }
-            System.out.println(sumNegative + " " + sumPositive + " " + dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp()));
+            Logger.getAnonymousLogger().log(Level.FINEST, sumNegative + " " + sumPositive + " " + dk.getRelatedObservationsBase().getCompleteSize(dk.getTimestamp()));
             Tao = new Pair<Double, Double>(sumPositive,sumNegative);
         }
         return true;

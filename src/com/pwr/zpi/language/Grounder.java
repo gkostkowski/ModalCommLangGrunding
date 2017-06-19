@@ -137,7 +137,7 @@ public class Grounder {
         Map<Formula, ModalOperator> res = new HashMap<>();
         ModalOperator currOperator = null;
         int timestamp = dk.getTimestamp();
-        Logger.getAnonymousLogger().log(Level.INFO, "Grounding for timestamp="+timestamp);
+        Logger.getAnonymousLogger().log(Level.FINE, "Grounding for timestamp="+timestamp);
         for (Formula currFormula : complementaryFormulas)
             if ((currOperator = checkEpistemicConditions(currFormula, dk,
                     agent.getSummarization(currFormula, timestamp))) != null)
@@ -166,7 +166,7 @@ public class Grounder {
     public static ModalOperator checkEpistemicConditions(Formula formula, DistributedKnowledge dk, Map<Formula, Double> summarization,
                                                          int timestamp) throws NotApplicableException {
         boolean hasLastClearState = true;
-        System.out.println(summarization);
+        Logger.getAnonymousLogger().log(Level.FINEST, summarization+"");
         BaseProfile lastBP = dk.getRelatedObservationsBase()
                 .getBaseProfile(timestamp, BPCollection.MemoryType.WM);
         for (Trait selectedTrait : formula.getTraits()) {  //supports complex formulas

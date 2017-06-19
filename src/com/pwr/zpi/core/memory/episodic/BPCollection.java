@@ -9,6 +9,8 @@ import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.language.Formula;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
@@ -400,7 +402,7 @@ public class BPCollection {
             }
         }
 
-        System.out.println("Suma " +suma + " obser " + observations.size() + " / "  + suma/(observations.size()) );
+        Logger.getAnonymousLogger().log(Level.FINEST, "Suma " +suma + " obser " + observations.size() + " / "  + suma/(observations.size()) );
         if(suma>0){
         return suma/observations.size();}
         else return 0.0;

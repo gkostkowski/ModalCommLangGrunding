@@ -47,12 +47,7 @@ public class NormalisedSoftDistance extends SoftDistance implements Measure {
     public double count(BaseProfile bp, Context context) throws InvalidMeasureImplementation {
         double differences = super.count(bp, context);
         Set<Trait> positive = new HashSet<>();
-        State[] availableStates = new State[]{State.IS, State.IS_NOT, State.MAYHAPS};
-        int noOfUnique = (int)Stream.of(availableStates)
-                .map(s -> new HashSet(bp.getRelatedTraits(context.getRelatedObject(), s)))
-                .flatMap(s -> s.stream())
-                .count();
-        double res = differences / (noOfUnique*2.0);
+        double res = differences / ((context.getObservedTraits().size()+ context.getNotObservedTraits().size()));
         if (res > 1.0)
             throw new InvalidMeasureImplementation();
         return res;
