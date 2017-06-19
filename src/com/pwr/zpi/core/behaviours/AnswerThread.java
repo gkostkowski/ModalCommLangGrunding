@@ -21,10 +21,6 @@ public class AnswerThread implements Runnable {
      */
     private Talking talkingThread;
     /**
-     * Reference to main life cycle thread
-     */
-    private Agent.LifeCycle lifeCycle;
-    /**
      * String with a question asked to agent
      */
     private String question;
@@ -37,14 +33,12 @@ public class AnswerThread implements Runnable {
      * Constructor of AnswerThread
      * @param talking   reference to VoiceTalking thread instance
      * @param question  asked question
-     * @param lifeCycle reference to behaviours thread instance
      */
-    public AnswerThread(Talking talking, String question, Agent.LifeCycle lifeCycle, Agent agent)
+    public AnswerThread(Talking talking, String question, Agent agent)
     {
         this.question = question;
         this.agent = agent;
         talkingThread = talking;
-        this.lifeCycle = lifeCycle;
         Thread thread = new Thread(this, "AnswerThread");
         thread.start();
     }
@@ -62,9 +56,9 @@ public class AnswerThread implements Runnable {
         try {
             Statement statement;
             formula = question1.getFormula();
-            lifeCycle.tryProccessingFormula(formula);
+            Statics.tryProccessingFormula(formula);
             Map<Formula, ModalOperator> map;
-            lifeCycle.acquire(false);
+            Statics.acquire(false);
             map = Grounder.performFormulaGrounding(agent, formula);
             releaseResources(formula);
             if(formula instanceof ComplexFormula)
@@ -90,7 +84,7 @@ public class AnswerThread implements Runnable {
 
     private void releaseResources(Formula formula)
     {
-        lifeCycle.release(false);
-        lifeCycle.removeFromFormulasInProccess(formula);
+        Statics.release(false);
+        Statics.removeFromFormulasInProccess(formula);
     }
 }

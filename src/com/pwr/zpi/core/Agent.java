@@ -21,6 +21,7 @@ import com.pwr.zpi.io.DatabaseAO;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.core.behaviours.AnswerThread;
 import com.pwr.zpi.core.behaviours.UpdateThread;
+import com.pwr.zpi.core.behaviours.Statics;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -384,15 +385,6 @@ public class Agent {
          */
         private Talking talkingThread;
 
-        private int semaphore = 0;
-        /**
-         * static Object foo is used for synchronization between Threads //todo może jednak flagi
-         */
-        private final Object foo = new Object();
-        /**
-         * list of formulas that are currently being processed by agent
-         */
-        private List<Formula> formulasInProcess;
         /**
          * Reference to thread updating agents memory
          */
@@ -405,18 +397,17 @@ public class Agent {
         public void run() {
             while(RUNNING)
             {
-                if(checkIfNewObservations() && !updateThread.isAlive())
+                if(checkIfNewObservations() && updateThread.isAlive())
                 {
-                    acquire(true);
+                    Statics.acquire(true);
                     updateThread = new Thread(new UpdateThread(Agent.this));
                     updateThread.start();
-                    release(true);
                 }
                 String question = listeningThread.getQuestion();
                 if(question!=null)
                 {
                     System.out.println(question);
-                    new AnswerThread(talkingThread, question, this, Agent.this);
+                    new AnswerThread(talkingThread, question,Agent.this);
                 }
             }
             System.out.println("Stopped - life cycle");
@@ -432,13 +423,10 @@ public class Agent {
          */
         public void start()
         {
-            formulasInProcess = new ArrayList<>();
             listeningThread = new VoiceListening();
             listeningThread.start();
             talkingThread = new VoiceTalking(listeningThread);
-            talkingThread.start();
             updateThread = new Thread(new UpdateThread(Agent.this));
-            updateThread.start();
             if(thread==null)
             {
                 thread = new Thread(this, "life cycle");
@@ -460,97 +448,6 @@ public class Agent {
             if(talkingThread!=null)
                 talkingThread.stop();
         }
-
-        /**
-         * Method which checks if any similar formula is being processed at the moment, if none such was found it
-         * adds given formula to list of ones in middle of processing
-         * @param formula   to which currently processed formula are compared
-         * @return true if none was found, false if similar was found
-         */
-        public boolean canFormulaBeProccessed(Formula formula)
-        {
-            synchronized (formulasInProcess) {
-                for (Formula f : formulasInProcess) {
-                    if (formula.isFormulaSimilar(f))
-                        return false;
-                }
-                formulasInProcess.add(formula);
-                return true;
-            }
-        }
-
-        /**
-         * method removes given formula from formulas being processed
-         * @param formula   formula which was completely processed and is not used anymore
-         */
-        public void removeFromFormulasInProccess(Formula formula)
-        {
-            synchronized (formulasInProcess)
-            {
-                formulasInProcess.remove(formula);
-                formulasInProcess.notifyAll();
-            }
-        }
-
-        /**
-         * method which blocks access for specific threads
-         * @param isMemoryUpdateThread  true if blocking thread is the memory update thread
-         */
-        public void acquire(boolean isMemoryUpdateThread)
-        {
-            synchronized (foo) {
-                if (isMemoryUpdateThread) {
-                    while (semaphore > 0)
-                        try {
-                            foo.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    semaphore--;
-                } else {
-                    while (semaphore < 0)
-                        try {
-                            foo.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    semaphore++;
-                }
-            }
-        }
-
-        /**
-         * method releases blockage and allows other threads to access resources
-         * @param isMemoryUpdateThread  true if releasing thread is the memory update one
-         */
-        public void release(boolean isMemoryUpdateThread)
-        {
-            synchronized (foo) {
-                if (isMemoryUpdateThread)
-                    semaphore++;
-                else semaphore--;
-                foo.notifyAll();
-            }
-        }
-
-        /**
-         * Method called when there is formula to process. It waits till no similar formula is being processed
-         * @param formula
-         */
-        public void tryProccessingFormula(Formula formula)
-        {
-            while(!canFormulaBeProccessed(formula))
-                synchronized (formulasInProcess)
-                {
-                    try {
-                        formulasInProcess.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-        }
-
-
 
     }
 }

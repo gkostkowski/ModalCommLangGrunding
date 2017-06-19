@@ -64,7 +64,7 @@ class Main {
 
         //new Scenario(agentNoCtxt, "conj_no_context_scenario01.csv").execute();
         //new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv").execute();
-        new Scenario(agentLtstGrpCntxtSoftDist, "conj_latest_group_context_scenario07.csv").execute();
+  //      new Scenario(agentLtstGrpCntxtSoftDist, "conj_latest_group_context_scenario07.csv").execute();
 
 //        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv").execute();
         //new Scenario(agentNoCtxt, "disj_no_context_scenario06.csv").execute();
@@ -87,7 +87,7 @@ class Main {
         //or
         //simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        //startLifeCycle(agentNoCtxt, qrCodes, tr);
+        startLifeCycle(agentNoCtxt, qrCodes, tr);
 
         //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which

@@ -8,11 +8,13 @@ public class UpdateThread implements Runnable {
 
     public UpdateThread(Agent agent)
     {
+        System.out.print("Bla");
         this.agent = agent;
     }
 
     @Override
     public void run() {
         agent.updateMemory();
+        Statics.release(true);
     }
 }
