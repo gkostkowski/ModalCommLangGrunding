@@ -24,7 +24,7 @@ public enum LogicOperator {
         /**
          * In a natural language sentence operator XOR is built as 'either ... or",
          * and this method returns for both OR and XOR 'or' in same place in sentence
-         * @return      string modified for natural language
+         * @return      string modified to use in natural language
          */
         public String getString()
         {

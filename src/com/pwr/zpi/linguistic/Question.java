@@ -55,9 +55,25 @@ public class Question {
      */
     public Question(String question, Agent agent)
     {
+        question = removeUnnecessaryChars(question);
         this.agent = agent;
         parts = question.split(" ");
         length = parts.length;
+    }
+
+    /**
+     * Method return unwanted chars like ",", "?", ".", "!" from string
+     * @param string    input string which needs to be cleaned
+     * @return          "cleaned string"
+     */
+    private String removeUnnecessaryChars(String string)
+    {
+        String[] regx = {",","?", ".", "!"};
+        for(String r : regx)
+        {
+            string = string.replace(r, "");
+        }
+        return string;
     }
 
     /**

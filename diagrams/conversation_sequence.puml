@@ -1,0 +1,18 @@
+@startuml
+title Przykładowy diagram sekwencji dla konwersacji
+Actor Użytkownik
+control sluchanie
+control odpowiadanie
+Użytkownik ->> sluchanie : zadanie pytania1
+sluchanie -> Agent : pytanie1
+Agent ->> Agent : przetworzenie pytania1
+Użytkownik ->> sluchanie : zadanie pytania
+Agent ->> odpowiadanie : odpowiedz1
+sluchanie -> Agent : pytanie2
+odpowiadanie -> Użytkownik : odpowiedz1
+Agent ->> Agent : przetworzenie pytania2
+Agent ->> odpowiadanie : odpowiedz1
+odpowiadanie -> Użytkownik : odpowiedz2
+
+
+@enduml
