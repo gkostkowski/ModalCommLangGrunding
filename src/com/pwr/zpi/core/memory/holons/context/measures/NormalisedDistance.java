@@ -7,6 +7,7 @@ import com.pwr.zpi.core.memory.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidMeasureException;
 import com.pwr.zpi.exceptions.InvalidMeasureImplementation;
 import com.pwr.zpi.core.memory.holons.context.Context;
+import com.pwr.zpi.io.Configuration;
 import com.pwr.zpi.language.State;
 import com.pwr.zpi.language.Trait;
 
@@ -20,7 +21,7 @@ import java.util.stream.Stream;
  */
 public class NormalisedDistance extends Distance implements Measure {
 
-    private static final double DEF_MAX_THRESHOLD = 0.4;
+    private static final double NORMALISED_MAX_THRESHOLD = Configuration.NORMALISED_MAX_THRESHOLD;
     private static final String NATURAL_LANG_NAME = "normalised distance";
     double maxThreshold;
 
@@ -31,7 +32,7 @@ public class NormalisedDistance extends Distance implements Measure {
     }
 
     public NormalisedDistance() {
-        this.maxThreshold = DEF_MAX_THRESHOLD;
+        this.maxThreshold = NORMALISED_MAX_THRESHOLD;
     }
 
     /**

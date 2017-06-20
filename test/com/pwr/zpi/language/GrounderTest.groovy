@@ -1,5 +1,5 @@
 import com.pwr.zpi.core.Agent
-import com.pwr.zpi.Configuration
+import com.pwr.zpi.io.Configuration
 import com.pwr.zpi.core.memory.episodic.BPCollection
 import com.pwr.zpi.core.memory.episodic.BaseProfile
 import com.pwr.zpi.language.ComplexFormula

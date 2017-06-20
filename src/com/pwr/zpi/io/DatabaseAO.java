@@ -21,7 +21,8 @@ import java.util.*;
  */
 public class DatabaseAO {
 
-    public static final String DEF_DATABASE_FILENAME = "baza1.db";
+    private static final String DATABASE_FILENAME = Configuration.DATABASE_FILENAME;
+
     private static Collection<ObjectType> objectTypeCollection;
     private Connection dbConnection;
     private Map<String, Integer> nameIndexMap;
@@ -29,6 +30,7 @@ public class DatabaseAO {
     public DatabaseAO() {
         init();
     }
+
     public DatabaseAO(Collection<ObjectType> objectTypes) {
         this.objectTypeCollection = objectTypes;
         init();
@@ -41,7 +43,7 @@ public class DatabaseAO {
      */
     private void init(){
         nameIndexMap = new HashMap<>();
-        String dbFilePath = Paths.get("db/" + DEF_DATABASE_FILENAME).toString();
+        String dbFilePath = Paths.get("db/" + DATABASE_FILENAME).toString();
         try {
             if(Files.notExists(Paths.get("db")))
                 Files.createDirectories(Paths.get("db"));
@@ -61,9 +63,9 @@ public class DatabaseAO {
     @Deprecated
     public void deleteDatabase(){
         try {
-            Path path = Paths.get("db/" + DEF_DATABASE_FILENAME);
+            Path path = Paths.get("db/" + DATABASE_FILENAME);
             if(new File(path.toString()).exists() && Files.isReadable(path) && Files.isExecutable(path))
-                Files.delete(Paths.get("db/" + DEF_DATABASE_FILENAME));
+                Files.delete(Paths.get("db/" + DATABASE_FILENAME));
         } catch (IOException e) {
             System.out.println("Probable solution: disconnect from database in your IDE.");
             e.printStackTrace();

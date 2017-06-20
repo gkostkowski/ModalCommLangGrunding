@@ -17,6 +17,8 @@ import org.json.*;
  */
 public class VoiceTalking extends Talking implements Runnable {
 
+    private static final int TALKING_SERVER_PORT = 6667;
+
     /**
      * Refernce to VoiceListening, used to be able to stop listening service for the moment of giving answer
      */
@@ -56,7 +58,7 @@ public class VoiceTalking extends Talking implements Runnable {
             answers = new LinkedList<>();
         try
         {
-            talkingServer = new ServerSocket(6667);
+            talkingServer = new ServerSocket(TALKING_SERVER_PORT);
             Logger.getAnonymousLogger().log(Level.INFO, "Talking server up");
             talkingApp = new ProcessBuilder("voice/Talking/Talking.exe", "6667").start();
             talkingClient = talkingServer.accept();
