@@ -5,6 +5,7 @@ import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.State;
 import com.pwr.zpi.core.memory.semantic.IndividualModel;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -56,8 +57,8 @@ public class LatestFocusedGroupSelector implements RepresentativesSelector {
         return representativeBPs;
     }
 
-    private boolean isEligible(BaseProfile bp) {
-        return bp.getAffectedIMs(State.IS, State.IS_NOT).contains(relatedObject)
+    public boolean isEligible(BaseProfile bp) {
+        return new ArrayList<>(bp.getAffectedIMs(State.IS, State.IS_NOT)).contains(relatedObject)
                 && formula.isFormulaFulfilled(bp);
     }
 }

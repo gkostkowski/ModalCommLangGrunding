@@ -24,6 +24,7 @@ import com.pwr.zpi.util.Util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +38,7 @@ class Main {
     static public void main(String... args) throws InterruptedException, InvalidMeasureException,
             InvalidContextualisationException, InvalidGroupSelectorException, InvalidFormulaException {
 
-        Level logsVisibilityLevel=Level.INFO;
+        Level logsVisibilityLevel = Level.INFO;
         Util.setLogVisibilityLevel(logsVisibilityLevel);
         //dbLoopTest();
 
@@ -46,15 +47,9 @@ class Main {
         Contextualisation latestGroupContext = new FilteringContextualisation(new ConcreteContextBuilder(),
                 new LatestGroupSelector(3),
                 new NormalisedDistance(0.3));
-        Contextualisation latestGroupContextSoftDis = new FilteringContextualisation(new ConcreteContextBuilder(),
-                new LatestGroupSelector(3),
-                new NormalisedSoftDistance(0.5));
 
-        Formula relevantTraitedFormula = prepareFormula1();
 
-        Contextualisation latestFocusedGroupContextSoftDis = new FilteringContextualisation(new ConcreteContextBuilder(),
-                new LatestFocusedGroupSelector(relevantTraitedFormula),
-                new NormalisedSoftDistance(0.5));
+
 //                new Distance(2));
         Agent agentNoCtxt = new Agent.AgentBuilder()
                 //.contextualisation(null)
@@ -68,43 +63,35 @@ class Main {
                 .contextualisation(latestGroupContext)
                 .label("agentLtstGrpCntxt")
                 .build();
-        Agent agentLtstGrpCntxtSoftDist = new Agent.AgentBuilder()
-                .contextualisation(latestGroupContextSoftDis)
-                .label("agentLtstGrpCntxtSoftDist")
-                .build();
-        Agent agentLtstFcsdGrpCntxtSoftDist = new Agent.AgentBuilder()
-                .contextualisation(latestFocusedGroupContextSoftDis)
-                .label("agentLtstFcsdGrpCntxtSoftDist")
-                .build();
+
 
         /*Description of below lines:*/
         /*Launching scenarios for simple modalities: */
 //        new Scenario(agentNoCtxt, "scenario01.csv").execute();
-//        new Scenario(agentNoCtxt, "scenario01_main_without_SM.csv").execute();
+//        new Scenario(agentNoCtxt, "conj_disj_scenario01a_main.csv").execute();
 //        new Scenario(agentNoCtxt, "scenario01_main.csv").execute();
 
-        //new Scenario(agentNoCtxt, "conj_no_context_scenario01.csv").execute();
-        //new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv").execute();
-        //new Scenario(agentLtstGrpCntxtSoftDist, "conj_latest_group_context_scenario07.csv").execute();
-        new Scenario(agentLtstFcsdGrpCntxtSoftDist, "conj_latest_focused_group_context_scenario08.csv").execute();
-
-//        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv").execute();
-        //new Scenario(agentNoCtxt, "disj_no_context_scenario06.csv").execute();
-//
-//        new Scenario(agent, "scenario01_main.csv").execute();
-        //new Scenario(agent, null, "conj_context_scenario02.csv").execute();
 
 
-        //      new Scenario(agent, "conj_latest_context_scenario03.csv").execute();
+        /*      * * * Sample scenarios execution * * *          */
 
-        QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
-        Trait[] tr = new Trait[]{
-                new Trait("Red"),
-                new Trait("White"),
-                new Trait("Blinking"),
-                new Trait("Blue"),
-                new Trait("Soft")};
+//        new Scenario(agentNoCtxt, "conj_disj_scenario01a_main.csv").execute();  //scenario01a
+//        new Scenario(agentNoCtxt, "conj_disj_scenario01c_main.csv").execute();  //scenario01c
+        //new Scenario(agentNoCtxt, "sm_conj_disj_scenario01b_main.csv").execute();  //scenario01b //todo
 
+        //new Scenario(agentNoCtxt, "conj_no_context_scenario001.csv").execute(); //scenario001
+//        new Scenario(agentNoCtxt, "conj_no_context_scenario02a.csv").execute(); //scenario02a
+//        new Scenario(agentLtstCntxt, "conj_context_scenario02b.csv").execute();  //scenario02b
+        //new Scenario(agentNoCtxt, "sm_conj_no_context_scenario03.csv").execute(); //scenario03 //todo
+//        new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv").execute(); //scenario04
+//        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv").execute(); //scenario05
+//        new Scenario(agentNoCtxt, "disj_no_context_scenario06.csv").execute(); //scenario06
+        //executeConjLatestGroupSoftDistContextScenario(); //scenario07
+//        executeConjFocusedGroupContextScenario(); //scenario08
+
+        //showMalformedScenarioExceprions();
+
+        /*   *** old stuff *** */
         // simplyModalitiesScenario(agent, qrCodes, tr);
         //or
         //simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
@@ -118,18 +105,67 @@ class Main {
         //modalConjunctionsScenario(agent, qrCodes, tr);
     }
 
-    private static Formula prepareFormula1() throws InvalidFormulaException {
+    private static void executeConjLatestGroupSoftDistContextScenario() throws InvalidGroupSelectorException, InvalidMeasureException, InvalidContextualisationException {
+        Contextualisation latestGroupContextSoftDis = new FilteringContextualisation(new ConcreteContextBuilder(),
+                new LatestGroupSelector(3),
+                new NormalisedSoftDistance(0.5));
+        Agent agentLtstGrpCntxtSoftDist = new Agent.AgentBuilder()
+                .contextualisation(latestGroupContextSoftDis)
+                .label("agentLtstGrpCntxtSoftDist")
+                .build();
+        new Scenario(agentLtstGrpCntxtSoftDist, "conj_latest_group_context_scenario07.csv").execute();
+    }
+
+    /**
+     * Aim of this method is to execute prepared malformed scenarios to show related exceptions and handling them.
+     */
+    private static void showMalformedScenarioExceprions() {
+        Agent agentNoCtxt = new Agent.AgentBuilder()
+                .label("agentNoCtxt")
+                .build();
+        String [] malformedScenariosNames = {
+                "malformed_no_question_answer_scenario101.csv",
+                "malformed_not_defined_object_scenario102.csv",
+                "malformed_missing_trait_in_header_scenario103.csv",
+                "malformed_no_scenario_marker_scenario104.csv",
+                "malformed_no_def_marker_scenario105.csv"
+        };
+        for (String scenarioName : malformedScenariosNames) {
+            System.out.println("\t\t\tScenario "+scenarioName);
+            new Scenario(agentNoCtxt, scenarioName).execute();
+        }
+    }
+
+    private static void executeConjFocusedGroupContextScenario() throws InvalidFormulaException, InvalidMeasureException, InvalidContextualisationException {
+        Formula relevantTraitedFormula = prepareSampleFormula();
+        Contextualisation latestFocusedGroupContextSoftDis = new FilteringContextualisation(new ConcreteContextBuilder(),
+                new LatestFocusedGroupSelector(relevantTraitedFormula),
+                new NormalisedSoftDistance(0.5));
+        Agent agentLtstFcsdGrpCntxtSoftDist = new Agent.AgentBuilder()
+                .contextualisation(latestFocusedGroupContextSoftDis)
+                .label("agentLtstFcsdGrpCntxtSoftDist")
+                .build();
+
+        new Scenario(agentLtstFcsdGrpCntxtSoftDist, "conj_latest_focused_group_context_scenario08.csv").execute();
+    }
+
+    /**
+     * Returns <i>Is 04512 blue and blinking.</i>
+     */
+    private static Formula prepareSampleFormula() throws InvalidFormulaException {
+
+        List<Trait> traits = new ArrayList<Trait>() {{
+            add(new Trait("Blue"));
+            add(new Trait("Soft"));
+            add(new Trait("Blinking"));
+            add(new Trait("Green"));
+            add(new Trait("Square"));
+            add(new Trait("Solid"));
+            add(new Trait("Striped"));
+        }};
         return new ComplexFormula(new IndividualModel(new QRCode("04512"),
-                new ObjectType("04", new ArrayList<Trait>(){{
-                    add(new Trait(""));
-                    add(new Trait(""));
-                    add(new Trait(""));
-                    add(new Trait(""));
-                    add(new Trait(""));
-                    add(new Trait(""));
-                    add(new Trait(""));
-                }})),
-                Arrays.asList(new Trait[]{new Trait("")}),
+                new ObjectType("04", traits)),
+                Arrays.asList(new Trait[]{traits.get(0), traits.get(2)}),
                 Arrays.asList(new State[]{State.IS, State.IS}),
                 LogicOperator.AND);
     }

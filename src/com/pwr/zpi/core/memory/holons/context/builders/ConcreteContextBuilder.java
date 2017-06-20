@@ -24,6 +24,10 @@ public class ConcreteContextBuilder implements ContextBuilder {
 
     @Override
     public Context build(IndividualModel relatedObject, Collection<BaseProfile> representatives) {
+        if (representatives.isEmpty()) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Empty collection of representatives.");
+            return null;
+        }
         if (representatives.size() == 1)
             return new Context(representatives.iterator().next().getRelatedTraits(relatedObject, State.IS),
                     representatives.iterator().next().getRelatedTraits(relatedObject, State.IS_NOT), relatedObject);
@@ -49,9 +53,6 @@ public class ConcreteContextBuilder implements ContextBuilder {
 
 
     private List<Trait> partialBuild(Collection<BaseProfile> representatives, IndividualModel relatedObject, State state) throws InvalidContextException {
-
-        if (representatives.isEmpty())
-            throw new InvalidContextException("Empty collection of representatives.");
         List<Trait> common = new ArrayList<>();
         Iterator<BaseProfile> iterator = representatives.iterator();
         common.addAll(iterator.next().getRelatedTraits(relatedObject, state));

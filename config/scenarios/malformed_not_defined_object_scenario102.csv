@@ -1,0 +1,12 @@
+#scenario description;formulas type:;;conjunctions;;context:;latest group focused context;;;;;;;;
+#;;;;;threshold:;0;;;;;;;;
+#;;;;;desirable states of definied traits:;;;;;;;;;
+DEF;;;;;;;;;;;;;;
+#lack of definition;;
+#Dyzio;04512;Blue;Soft;Blinking;Green;Square;Solid;Striped;;;;;;
+SCENARIO;;;;;;;;;;;;;;
+Dyzio;;;;;;;;;;;;;;
+timestamp;related_object;Blue;Soft;Blinking;Green;Square;Solid;Striped;;;;;;
+6;Dyzio;1;1;1;1;1;0;1;;;;;;
+7;Dyzio;1;1;1;1;1;0;1;;;;;;
+
