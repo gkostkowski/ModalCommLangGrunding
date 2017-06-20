@@ -29,18 +29,21 @@ public class AnswerThread implements Runnable {
      */
     private Agent agent;
 
+    private CommonResources statics2;
+
     /**
      * Constructor of AnswerThread
      * @param talking   reference to VoiceTalking thread instance
      * @param question  asked question
      */
-    public AnswerThread(Talking talking, String question, Agent agent)
+    public AnswerThread(Talking talking, String question, Agent agent, CommonResources statics2)
     {
         this.question = question;
         this.agent = agent;
         talkingThread = talking;
         Thread thread = new Thread(this, "AnswerThread");
         thread.start();
+        this.statics2 = statics2;
     }
 
     /**
@@ -56,10 +59,11 @@ public class AnswerThread implements Runnable {
         try {
             Statement statement;
             formula = question1.getFormula();
-            Statics.tryProccessingFormula(formula);
+            statics2.addFormula(formula);
             Map<Formula, ModalOperator> map;
-            Statics.acquire(false);
+            statics2.acquire(false);
             map = Grounder.performFormulaGrounding(agent, formula);
+            Thread.sleep(10000);
             releaseResources(formula);
             if(formula instanceof ComplexFormula)
                 statement = new ComplexStatement((ComplexFormula)formula, map, question1.getName());
@@ -84,7 +88,7 @@ public class AnswerThread implements Runnable {
 
     private void releaseResources(Formula formula)
     {
-        Statics.release(false);
-        Statics.removeFromFormulasInProccess(formula);
+        statics2.release(false);
+        statics2.removeFormula(formula);
     }
 }

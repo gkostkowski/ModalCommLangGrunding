@@ -4,6 +4,7 @@ import com.pwr.zpi.conversation.Listening;
 import com.pwr.zpi.conversation.Talking;
 import com.pwr.zpi.conversation.VoiceListening;
 import com.pwr.zpi.conversation.VoiceTalking;
+import com.pwr.zpi.core.behaviours.CommonResources;
 import com.pwr.zpi.core.memory.episodic.BPCollection;
 import com.pwr.zpi.core.memory.episodic.BaseProfile;
 import com.pwr.zpi.core.memory.episodic.DistributedKnowledge;
@@ -21,7 +22,6 @@ import com.pwr.zpi.io.DatabaseAO;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.core.behaviours.AnswerThread;
 import com.pwr.zpi.core.behaviours.UpdateThread;
-import com.pwr.zpi.core.behaviours.Statics;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -390,6 +390,8 @@ public class Agent {
          */
         private Thread updateThread;
 
+        private CommonResources commonResources;
+
         /**
          * main loop of the agent. Periodically checks for new observations and new questions
          */
@@ -397,17 +399,16 @@ public class Agent {
         public void run() {
             while(RUNNING)
             {
-                if(checkIfNewObservations() && updateThread.isAlive())
+                if(checkIfNewObservations() && !updateThread.isAlive())
                 {
-                    Statics.acquire(true);
-                    updateThread = new Thread(new UpdateThread(Agent.this));
+                    updateThread = new Thread(new UpdateThread(Agent.this, commonResources));
                     updateThread.start();
                 }
                 String question = listeningThread.getQuestion();
                 if(question!=null)
                 {
                     System.out.println(question);
-                    new AnswerThread(talkingThread, question,Agent.this);
+                    new AnswerThread(talkingThread, question,Agent.this, commonResources);
                 }
             }
             System.out.println("Stopped - life cycle");
@@ -426,7 +427,9 @@ public class Agent {
             listeningThread = new VoiceListening();
             listeningThread.start();
             talkingThread = new VoiceTalking(listeningThread);
-            updateThread = new Thread(new UpdateThread(Agent.this));
+            talkingThread.start();
+            commonResources = new CommonResources();
+            updateThread = new Thread(new UpdateThread(Agent.this, commonResources));
             if(thread==null)
             {
                 thread = new Thread(this, "life cycle");
