@@ -38,11 +38,11 @@ public class SimpleFormula extends Formula implements Comparable<SimpleFormula>{
     public SimpleFormula(IndividualModel individualModel, Trait trait, boolean isNegated) throws InvalidFormulaException
     {
         if(individualModel==null || trait == null)
-            throw new NullPointerException("One of the parameters is null");
+            throw new NullPointerException("Cannot create formula - One of the parameters is null");
         this.individualModel = individualModel;
         this.trait = trait;
         if(!checkTraits())
-            throw new InvalidFormulaException("Trait doesn't describe type of the model");
+            throw new InvalidFormulaException("Cannot create formula - Trait doesn't describe type of the model");
         this.isNegated = isNegated;
     }
 
@@ -68,11 +68,11 @@ public class SimpleFormula extends Formula implements Comparable<SimpleFormula>{
         if(model == null || traits == null || statesSeq == null)
             throw new NullPointerException("One of the parameters is null");
         if(traits.size() != 1 || statesSeq.size() != 1)
-            throw new InvalidFormulaException("Number of traits or states is not equal to 1");
+            throw new InvalidFormulaException("Cannot create formula - Number of traits or states is not equal to one");
         individualModel = model;
         trait = traits.get(0);
         if(!checkTraits())
-            throw new InvalidFormulaException("Trait doesn't describe type of the model");
+            throw new InvalidFormulaException("Cannot create formula - Trait doesn't describe type of the model");
         isNegated = statesSeq.get(0) != State.IS;
     }
 

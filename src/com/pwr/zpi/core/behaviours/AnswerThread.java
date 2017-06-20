@@ -63,7 +63,6 @@ public class AnswerThread implements Runnable {
             Map<Formula, ModalOperator> map;
             statics2.acquire(false);
             map = Grounder.performFormulaGrounding(agent, formula);
-            Thread.sleep(10000);
             releaseResources(formula);
             if(formula instanceof ComplexFormula)
                 statement = new ComplexStatement((ComplexFormula)formula, map, question1.getName());

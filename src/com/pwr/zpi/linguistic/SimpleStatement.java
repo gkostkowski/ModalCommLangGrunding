@@ -21,8 +21,6 @@ public class SimpleStatement extends Statement {
      */
     private SimpleFormula complementaryFormula;
 
-
-
     /**
      * Constructor of SimpleStatement
      *
