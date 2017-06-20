@@ -1,0 +1,21 @@
+#scenario description;formulas type:;;conjunctions;;context:;latest group context;;related scenario:;;scenario01
+#;;;;;threshold:;0.3;last:;3;;
+DEF;;;;;;;;;;
+Rysio;0212;Blue;Soft;Blinking;;;;;;
+SCENARIO;;;;;;;;;;
+Rysio;;;;;;;;;;
+timestamp;related_object;Blue;Soft;Blinking;;;;;;
+8;Rysio;1;1;1;;;;;;
+9;Rysio;1;1;1;;;;;;
+10;Rysio;1;1;1;;;;;;
+11;Rysio;1;1;1;;;;;;
+12;Rysio;1;1;1;;;;;;
+13;Rysio;-1;1;1;;;;;;
+14;Rysio;-1;1;1;;;;;;
+15;Rysio;1;-1;-1;;;;;;
+#;Latest three observations will produce empty context;;;;;;;;;
+16;Rysio;-1;-1;-1;is rysio blue and soft;No, he is not blue and soft;;;;
+17;Rysio;0;1;1;;;;;;
+18;Rysio;0;1;1;;;;;;
+19;Rysio;0;0;1;is rysio soft and blinking;Yes, it is soft and blinking;is rysio blue and blinking;I don't know about those states of rysio, but it is possible that it is Blue and not Blinking or it is quite the opposite;;
+#;;;;;;;przeflitrowane zbiory gruntujace zawieraja tylko obserwacje 11 i 12 - 0.5 dla p and !q oraz 0.5 dla !p and !q;;;

@@ -77,19 +77,19 @@ class Main {
 
 //        new Scenario(agentNoCtxt, "conj_disj_scenario01a_main.csv").execute();  //scenario01a
 //        new Scenario(agentNoCtxt, "conj_disj_scenario01c_main.csv").execute();  //scenario01c
-        //new Scenario(agentNoCtxt, "sm_conj_disj_scenario01b_main.csv").execute();  //scenario01b //todo
-
-        //new Scenario(agentNoCtxt, "conj_no_context_scenario001.csv").execute(); //scenario001
+//        new Scenario(agentNoCtxt, "sm_conj_disj_scenario01b_main.csv").execute();  //scenario01b //todo
+//
+//        new Scenario(agentNoCtxt, "conj_no_context_scenario001.csv").execute(); //scenario001
 //        new Scenario(agentNoCtxt, "conj_no_context_scenario02a.csv").execute(); //scenario02a
 //        new Scenario(agentLtstCntxt, "conj_context_scenario02b.csv").execute();  //scenario02b
-        //new Scenario(agentNoCtxt, "sm_conj_no_context_scenario03.csv").execute(); //scenario03 //todo
+//        new Scenario(agentNoCtxt, "sm_conj_no_context_scenario03.csv").execute(); //scenario03 //todo
 //        new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv").execute(); //scenario04
 //        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv").execute(); //scenario05
 //        new Scenario(agentNoCtxt, "disj_no_context_scenario06.csv").execute(); //scenario06
-        //executeConjLatestGroupSoftDistContextScenario(); //scenario07
-//        executeConjFocusedGroupContextScenario(); //scenario08
-
-        //showMalformedScenarioExceprions();
+//        executeConjLatestGroupSoftDistContextScenario(); //scenario07
+        executeConjFocusedGroupContextScenario(); //scenario08
+//
+//        showMalformedScenarioExceprions();
 
         /*   *** old stuff *** */
         // simplyModalitiesScenario(agent, qrCodes, tr);
