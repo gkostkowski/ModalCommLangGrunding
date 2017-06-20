@@ -21,10 +21,6 @@ public class AnswerThread implements Runnable {
      */
     private Talking talkingThread;
     /**
-     * Reference to main life cycle thread
-     */
-    private Agent.LifeCycle lifeCycle;
-    /**
      * String with a question asked to agent
      */
     private String question;
@@ -33,20 +29,21 @@ public class AnswerThread implements Runnable {
      */
     private Agent agent;
 
+    private CommonResources statics2;
+
     /**
      * Constructor of AnswerThread
      * @param talking   reference to VoiceTalking thread instance
      * @param question  asked question
-     * @param lifeCycle reference to behaviours thread instance
      */
-    public AnswerThread(Talking talking, String question, Agent.LifeCycle lifeCycle, Agent agent)
+    public AnswerThread(Talking talking, String question, Agent agent, CommonResources statics2)
     {
         this.question = question;
         this.agent = agent;
         talkingThread = talking;
-        this.lifeCycle = lifeCycle;
         Thread thread = new Thread(this, "AnswerThread");
         thread.start();
+        this.statics2 = statics2;
     }
 
     /**
@@ -62,10 +59,11 @@ public class AnswerThread implements Runnable {
         try {
             Statement statement;
             formula = question1.getFormula();
-            lifeCycle.tryProccessingFormula(formula);
+            statics2.addFormula(formula);
             Map<Formula, ModalOperator> map;
-            lifeCycle.acquire(false);
+            statics2.acquire(false);
             map = Grounder.performFormulaGrounding(agent, formula);
+            Thread.sleep(10000);
             releaseResources(formula);
             if(formula instanceof ComplexFormula)
                 statement = new ComplexStatement((ComplexFormula)formula, map, question1.getName());
@@ -90,7 +88,7 @@ public class AnswerThread implements Runnable {
 
     private void releaseResources(Formula formula)
     {
-        lifeCycle.release(false);
-        lifeCycle.removeFromFormulasInProccess(formula);
+        statics2.release(false);
+        statics2.removeFormula(formula);
     }
 }

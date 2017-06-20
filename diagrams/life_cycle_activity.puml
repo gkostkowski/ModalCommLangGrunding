@@ -1,0 +1,14 @@
+@startuml
+title Wątek cyklu życia agenta
+start
+    while(działa?)
+        if(nowe obserwacje w bazie
+        i wolny dostęp do pamięci) then (yes)
+            :uruchom wątku aktualizującego pamięć;
+        endif
+        if(nowe pytanie i wolny dostęp do pamięci?) then (yes)
+            :uruchom wątek odpowiadający na pytanie;
+        endif
+    endwhile
+end
+@enduml

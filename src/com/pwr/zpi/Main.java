@@ -96,7 +96,15 @@ class Main {
         //or
         //simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        //startLifeCycle(agentNoCtxt, qrCodes, tr);
+        QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
+        Trait[] tr = new Trait[]{
+                new Trait("Red"),
+                new Trait("White"),
+                new Trait("Blinking"),
+                new Trait("Blue"),
+                new Trait("Soft")};
+
+        startLifeCycle(agentNoCtxt, qrCodes, tr);
 
         //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which

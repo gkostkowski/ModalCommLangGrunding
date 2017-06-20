@@ -2,16 +2,28 @@
 title Proces odpowiedzi na pytanie użytkownika
 start
     :proces przetwarzania pytania;
-    while (podobna formula jest aktualnie przetwarzana)
-        : czekaj;
-    endwhile
-    : Proces gruntowania formuly ;
-    : Proces generowania odpowiedzi
-    w języku naturalnym z ugruntowanych formuł;
-    : Przekaż odpowiedź do wątku,
-    który przekazuje ją użytkownikowi ;
-
-
+    if(pytanie wlasciwe) then (yes)
+        while (podobna formula jest aktualnie przetwarzana)
+                : czekaj;
+            endwhile
+            : Proces gruntowania formuly ;
+            if(nie wystąpił wyjątek) then (yes)
+                : Proces generowania odpowiedzi
+                w języku naturalnym z ugruntowanych formuł;
+                if(nie wystąpił wyjątek) then (yes)
+                    : Przekaż odpowiedź do wątku,
+                    który przekazuje ją użytkownikowi ;
+                    end
+                else (no)
+                      :przekaż w odopwiedzi co było błędem;
+                      end
+                endif
+            else (no)
+                :przekaż w odopwiedzi co było błędem;
+                end
+            endif
+    else (no)
+        :przekaż w odopwiedzi co było błędem;
 end
 
 

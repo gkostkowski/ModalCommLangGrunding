@@ -1,7 +1,7 @@
 @startuml
-title Wątek nasłuchujący pytań użytkownika
+title Proces nasłuchujący pytań użytkownika
 start
-    while (RUNNING)
+    while (działa?)
         : pobierz pytanie uzytkownika;
         : dodaj pytanie do kolejki
         pytań do przetworzenia ;

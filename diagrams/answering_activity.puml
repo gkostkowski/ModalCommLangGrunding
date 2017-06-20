@@ -10,11 +10,15 @@ if (mapa pusta) then (yes)
 else
 :sortuj formuly zgodnie z podo-
 bienstwem do formuly z pytania ;
+:dodaj do odpowiedzi przekananie o formule z pytania;
+if(jest formula z BEL?) then (yes)
+:dodaj ją do odpowiedzi;
+endif
 repeat:
     : pobierz kolejna formule i jej operator modalny;
     : dodaj do odpowiedzi przekonanie agenta o tej formule;
 
-repeat while (jest jeszcze nie przetworzona formula)
+repeat while (jest jeszcze nieprzetworzona formula?)
 : zwróć odpowiedź ;
 end
 @enduml
