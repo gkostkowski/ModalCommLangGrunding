@@ -4,8 +4,12 @@ import com.pwr.zpi.conversation.ConversationSimulator;
 import com.pwr.zpi.core.Agent;
 import com.pwr.zpi.core.memory.episodic.Observation;
 import com.pwr.zpi.core.memory.holons.context.measures.NormalisedSoftDistance;
+import com.pwr.zpi.core.memory.holons.context.selectors.LatestFocusedGroupSelector;
 import com.pwr.zpi.core.memory.holons.context.selectors.LatestGroupSelector;
+import com.pwr.zpi.core.memory.semantic.IndividualModel;
+import com.pwr.zpi.core.memory.semantic.ObjectType;
 import com.pwr.zpi.exceptions.InvalidContextualisationException;
+import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.InvalidGroupSelectorException;
 import com.pwr.zpi.exceptions.InvalidMeasureException;
 import com.pwr.zpi.core.memory.holons.context.builders.ConcreteContextBuilder;
@@ -13,10 +17,12 @@ import com.pwr.zpi.core.memory.holons.context.contextualisation.Contextualisatio
 import com.pwr.zpi.core.memory.holons.context.contextualisation.FilteringContextualisation;
 import com.pwr.zpi.core.memory.holons.context.measures.NormalisedDistance;
 import com.pwr.zpi.core.memory.holons.context.selectors.LatestSelector;
-import com.pwr.zpi.language.Trait;
+import com.pwr.zpi.language.*;
 import com.pwr.zpi.core.memory.semantic.QRCode;
 import com.pwr.zpi.util.Util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,10 +35,10 @@ class Main {
      * @param args
      */
     static public void main(String... args) throws InterruptedException, InvalidMeasureException,
-            InvalidContextualisationException, InvalidGroupSelectorException {
+            InvalidContextualisationException, InvalidGroupSelectorException, InvalidFormulaException {
 
         Level logsVisibilityLevel=Level.INFO;
-        Util.setLogLevel(logsVisibilityLevel);
+        Util.setLogVisibilityLevel(logsVisibilityLevel);
         //dbLoopTest();
 
         Contextualisation latestContext = new FilteringContextualisation(new ConcreteContextBuilder(), new LatestSelector(),
@@ -42,6 +48,12 @@ class Main {
                 new NormalisedDistance(0.3));
         Contextualisation latestGroupContextSoftDis = new FilteringContextualisation(new ConcreteContextBuilder(),
                 new LatestGroupSelector(3),
+                new NormalisedSoftDistance(0.5));
+
+        Formula relevantTraitedFormula = prepareFormula1();
+
+        Contextualisation latestFocusedGroupContextSoftDis = new FilteringContextualisation(new ConcreteContextBuilder(),
+                new LatestFocusedGroupSelector(relevantTraitedFormula),
                 new NormalisedSoftDistance(0.5));
 //                new Distance(2));
         Agent agentNoCtxt = new Agent.AgentBuilder()
@@ -60,6 +72,10 @@ class Main {
                 .contextualisation(latestGroupContextSoftDis)
                 .label("agentLtstGrpCntxtSoftDist")
                 .build();
+        Agent agentLtstFcsdGrpCntxtSoftDist = new Agent.AgentBuilder()
+                .contextualisation(latestFocusedGroupContextSoftDis)
+                .label("agentLtstFcsdGrpCntxtSoftDist")
+                .build();
 
         /*Description of below lines:*/
         /*Launching scenarios for simple modalities: */
@@ -69,7 +85,8 @@ class Main {
 
         //new Scenario(agentNoCtxt, "conj_no_context_scenario01.csv").execute();
         //new Scenario(agentLtstCntxt, "conj_latest_context_scenario04.csv").execute();
-        new Scenario(agentLtstGrpCntxtSoftDist, "conj_latest_group_context_scenario07.csv").execute();
+        //new Scenario(agentLtstGrpCntxtSoftDist, "conj_latest_group_context_scenario07.csv").execute();
+        new Scenario(agentLtstFcsdGrpCntxtSoftDist, "conj_latest_focused_group_context_scenario08.csv").execute();
 
 //        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv").execute();
         //new Scenario(agentNoCtxt, "disj_no_context_scenario06.csv").execute();
@@ -99,6 +116,22 @@ class Main {
         // is present in db after launching one of them, so they can't be used together.
 
         //modalConjunctionsScenario(agent, qrCodes, tr);
+    }
+
+    private static Formula prepareFormula1() throws InvalidFormulaException {
+        return new ComplexFormula(new IndividualModel(new QRCode("04512"),
+                new ObjectType("04", new ArrayList<Trait>(){{
+                    add(new Trait(""));
+                    add(new Trait(""));
+                    add(new Trait(""));
+                    add(new Trait(""));
+                    add(new Trait(""));
+                    add(new Trait(""));
+                    add(new Trait(""));
+                }})),
+                Arrays.asList(new Trait[]{new Trait("")}),
+                Arrays.asList(new State[]{State.IS, State.IS}),
+                LogicOperator.AND);
     }
 
     private static void startLifeCycle(Agent agent, QRCode[] qrCodes, Trait[] tr) {
