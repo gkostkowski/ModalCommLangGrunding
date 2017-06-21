@@ -55,7 +55,7 @@ public class Configuration {
     /**
      * DatabaseAO static value.
      */
-    public static final String DATABASE_FILENAME, DEF_DATABASE_FILENAME = "baza1.db";
+    public static final String DATABASE_FILENAME, DEF_DATABASE_FILENAME = "database.db";
     public static final String IDENTIFIERS_PATH, DEF_IDENTIFIERS_PATH = "com.pwr.zpi.core.memory.semantic.identifiers";
 
     /**

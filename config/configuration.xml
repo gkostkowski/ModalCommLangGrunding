@@ -17,7 +17,7 @@
     <RELATIVE_FILEPATH> \config\types_def.xml </RELATIVE_FILEPATH>
 
     <!-- DatabaseAO -->
-    <DATABASE_FILENAME> baza1.db </DATABASE_FILENAME>
+    <DATABASE_FILENAME> database.db </DATABASE_FILENAME>
     <IDENTIFIERS_PATH> com.pwr.zpi.core.memory.semantic.identifiers </IDENTIFIERS_PATH>
 
     <!-- Context -->
