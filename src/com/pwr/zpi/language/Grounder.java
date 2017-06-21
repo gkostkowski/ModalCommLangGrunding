@@ -403,7 +403,7 @@ public class Grounder {
         try {
             relevantEpsilonValue = getConcentrationEpsilon(disjunction);
             if (!isEpsilonLogged) {
-                Logger.getAnonymousLogger().log(Level.INFO, "epsilon: " + relevantEpsilonValue);
+                Logger.getAnonymousLogger().log(Level.FINE, "epsilon: " + relevantEpsilonValue);
                 isEpsilonLogged = true;
             }
         } catch (NotApplicableException | InvalidConfigurationException e) {

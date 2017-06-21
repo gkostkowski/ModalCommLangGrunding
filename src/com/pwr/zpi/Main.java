@@ -3,7 +3,6 @@ package com.pwr.zpi;
 import com.pwr.zpi.conversation.ConversationSimulator;
 import com.pwr.zpi.core.Agent;
 import com.pwr.zpi.core.memory.episodic.Observation;
-import com.pwr.zpi.core.memory.holons.context.measures.NormalisedDistance;
 import com.pwr.zpi.core.memory.holons.context.measures.NormalisedSoftDistance;
 import com.pwr.zpi.core.memory.holons.context.selectors.LatestFocusedGroupSelector;
 import com.pwr.zpi.core.memory.holons.context.selectors.LatestGroupSelector;
@@ -17,6 +16,9 @@ import com.pwr.zpi.exceptions.InvalidMeasureException;
 import com.pwr.zpi.core.memory.holons.context.builders.ConcreteContextBuilder;
 import com.pwr.zpi.core.memory.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.core.memory.holons.context.contextualisation.FilteringContextualisation;
+import com.pwr.zpi.core.memory.holons.context.measures.NormalisedDistance;
+import com.pwr.zpi.core.memory.holons.context.selectors.LatestSelector;
+
 import com.pwr.zpi.language.*;
 import com.pwr.zpi.core.memory.semantic.identifiers.QRCode;
 import com.pwr.zpi.util.Util;
@@ -50,32 +52,15 @@ class Main {
 
 
 
-//                new Distance(2));
         Agent agentNoCtxt = new Agent.AgentBuilder()
                 //.contextualisation(null)
                 .label("agentNoCtxt")
                 .build();
-        Agent agentLtstCntxt = new Agent.AgentBuilder()
-                .contextualisation(latestContext)
-                .label("agentLtstCntxt")
-                .build();
-        Agent agentLtstGrpCntxt = new Agent.AgentBuilder()
-                .contextualisation(latestGroupContext)
-                .label("agentLtstGrpCntxt")
-                .build();
-
-
-        /*Description of below lines:*/
-        /*Launching scenarios for simple modalities: */
-//        new Scenario(agentNoCtxt, "scenario01.csv").execute();
-//        new Scenario(agentNoCtxt, "conj_disj_scenario01a_main.csv").execute();
-//        new Scenario(agentNoCtxt, "scenario01_main.csv").execute();
-
 
 
         /*      * * * Sample scenarios execution * * *          */
 
-//        new Scenario(agentNoCtxt, "conj_disj_scenario01a_main.csv").execute();  //scenario01a
+        new Scenario(agentNoCtxt, "conj_disj_scenario01a_main.csv").execute();  //scenario01a
 //        new Scenario(agentNoCtxt, "conj_disj_scenario01c_main.csv").execute();  //scenario01c
 //        new Scenario(agentNoCtxt, "sm_conj_disj_scenario01b_main.csv").execute();  //scenario01b //todo
 //
@@ -105,7 +90,7 @@ class Main {
                 new Trait("Blue"),
                 new Trait("Soft")};
 
-        startLifeCycle(agentNoCtxt, qrCodes, tr);
+        //startLifeCycle(agentNoCtxt, qrCodes, tr);
 
         //testVoice(agent, qrCodes, tr);
         //note: simplyModalitiesScenario and simplyAndConjunctionModalitiesScenario use same episodic knowledge, which

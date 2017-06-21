@@ -1,11 +1,10 @@
 package com.pwr.zpi.io;
 
 import com.pwr.zpi.core.memory.episodic.Observation;
+import com.pwr.zpi.core.memory.semantic.ObjectType;
+import com.pwr.zpi.core.memory.semantic.identifiers.Identifier;
 import com.pwr.zpi.exceptions.IdentifierClassNotFoundException;
 import com.pwr.zpi.language.Trait;
-import com.pwr.zpi.core.memory.semantic.identifiers.Identifier;
-import com.pwr.zpi.core.memory.semantic.ObjectType;
-import com.pwr.zpi.core.memory.semantic.identifiers.QRCode;
 import org.reflections.Reflections;
 
 import java.io.File;
