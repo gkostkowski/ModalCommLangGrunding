@@ -17,16 +17,18 @@ timestamp;related_object;Blue;Soft;Blinking;Green;Square;Solid;Striped;;;;;;
 14;Dyzio;-1;1;1;0;1;1;-1;;;;;;
 15;Dyzio;-1;-1;-1;0;1;1;1;;;;;;
 16;Dyzio;-1;-1;-1;0;0;1;-1;;;;;;
-17;Dyzio;0;0;0;0;0;0;1;is dyzio green and square;Yes, It is;is dyzio soft and blinking;Yes, it is possible that dyzio is Soft and Blinking, but it is possible that it is quite the opposite;is dyzio striped and square;don't know this states, but I know that is not striped and square
-#;;;;;;;;przeflitrowane zbiory gruntujace zawieraja 8,9,11,13,14-16;;!p and q => 6/7;4/7 oraz 3/7 => pos;;;
+17;Dyzio;0;0;0;0;0;0;1;is dyzio green and square;Yes, It is;is dyzio soft and blinking;Yes, I know that dyzio is Soft and Blinking;is dyzio striped and square;Yes, I believe that dyzio is Striped and Square, but it is possible that it is not Striped and Square
+#;;;;;;;;przeflitrowane zbiory gruntujace zawieraja 6-8, 10, 12;;;;w kazdej z pieciu obserwacji jest sof and blinking;;4/5 dla striped and square => bel
 18;Dyzio;-1;-1;0;1;-1;1;1;;;;;;
 19;Dyzio;-1;1;-1;1;-1;1;1;;;;;;
 20;Dyzio;0;0;0;0;0;0;0;is dyzio green and square;Yes, I Know;;;;
-18;Dyzio;1;1;0;1;-1;1;1;;;;;;
-19;Dyzio;1;1;-1;1;-1;1;1;;;;;;
+#;;;;;;;;;;ostatnie dwie obserwacje 18 i 19 gdzie is not square nie brane pod uwage poniewaz odleglosc od kontekstu jest zbyt duza;;;;
+18;Dyzio;1;1;1;1;-1;1;1;;;;;;
+19;Dyzio;1;1;1;1;-1;1;1;;;;;;
 20;Dyzio;0;0;0;0;0;0;0;is dyzio green and square;I belive;;;;
+#;;;;;;;;;;uwzglednienie dwoch ostatnich obserwacji (zgodne z kontekstem) gdzie not square;;;;
 21;Dyzio;1;1;1;1;-1;1;1;;;;;;
-22;Dyzio;0;0;0;0;0;0;0;is dyzio not blue and solid;Yes, it is possible that dyzio is not Blue and Solid, but it is possible that it is Blue and Solid or it is quite the opposite;is dyzio striped and solid;Yes, it is possible that dyzio is Striped and Solid, but it is possible that it is Striped and not Solid or it is not Striped and Solid;;
+22;Dyzio;0;0;0;0;0;0;0;is dyzio not blue and solid;Yes, it is possible that dyzio is not Blue and Solid, but it is possible that it is Blue and Solid;is dyzio striped and solid;I don't know about those states of dyzio, but it is possible that it is not Striped and Solid;;
 23;Dyzio;-1;1;1;-1;1;1;1;;;;;;
-24;Dyzio;0;0;0;0;0;0;0;is dyzio not blue and solid;?;;;;
+24;Dyzio;0;0;0;0;0;0;0;is dyzio not blue and solid;Yes, it is possible that dyzio is not Blue and Solid, but it is possible that it is Blue and Solid;;;;
 #;;;;;;;;;;;;;;

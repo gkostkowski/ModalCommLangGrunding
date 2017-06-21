@@ -134,14 +134,18 @@ public class NewNonBinaryHolon implements Holon{
 
     @Override
     public boolean update(DistributedKnowledge dk) throws InvalidFormulaException, NotApplicableException {
-        if(shouldUpdateDistributedKnowledge(dk)) {
+        /*if(updateDKifRequired(dk)) {
             update();
             return true;
         }
-        return false;
+        return false;*/
+        updateDKifRequired(dk);
+        update();
+        return true;
+
     }
 
-    private boolean shouldUpdateDistributedKnowledge(DistributedKnowledge dk) {
+    private boolean updateDKifRequired(DistributedKnowledge dk) {
         if(dk.isNewerThan(this.dk)) {
             try {
                 this.dk = dk.clone();
