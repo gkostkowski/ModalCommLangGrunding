@@ -157,7 +157,6 @@ public class DatabaseAO {
             }
         }
         String SQLCommandText = "INSERT INTO \"" + tableName + "\" (" + columns + ") VALUES (" + values + ");";
-        System.out.println(SQLCommandText);
         try {
             Statement SQLStatement = dbConnection.createStatement();
             SQLStatement.execute(SQLCommandText);
@@ -233,7 +232,6 @@ public class DatabaseAO {
         Set<Class<? extends Identifier>> classes = reflections.getSubTypesOf(Identifier.class);
 
         for (Class clazz: classes) {
-            System.out.println(clazz.getSimpleName());
             try {
                 Identifier identifier = (Identifier) clazz.newInstance();
                 if(identifier.isIdMemberOf(idNumber)) {
