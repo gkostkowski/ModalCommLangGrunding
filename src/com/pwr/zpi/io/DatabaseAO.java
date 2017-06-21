@@ -157,7 +157,7 @@ public class DatabaseAO {
             }
         }
         String SQLCommandText = "INSERT INTO \"" + tableName + "\" (" + columns + ") VALUES (" + values + ");";
-
+        System.out.println(SQLCommandText);
         try {
             Statement SQLStatement = dbConnection.createStatement();
             SQLStatement.execute(SQLCommandText);
