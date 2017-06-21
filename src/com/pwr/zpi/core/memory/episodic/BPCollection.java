@@ -4,6 +4,7 @@
 package com.pwr.zpi.core.memory.episodic;
 
 import com.pwr.zpi.core.memory.semantic.IndividualModel;
+import com.pwr.zpi.io.Configuration;
 import com.pwr.zpi.language.State;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.language.Formula;
@@ -25,13 +26,13 @@ import java.util.stream.Collectors;
  */
 public class BPCollection {
 
-    private static final int INIT_TIMESTAMP = 0;
+    private static final int INIT_TIMESTAMP = Configuration.INIT_TIMESTAMP;
     /**
      * Determines what should be happen in case of adding base profile with timestamp, which is already noticed. If true
      * then old base profile will be overridden.
      */
-    private static final boolean DEFAULT_OVERRIDE_IF_EXISTS = true;
-    private static final int MAX_WM_CAPACITY = 100;
+    private static final boolean OVERRIDE_IF_EXISTS = Configuration.OVERRIDE_IF_EXISTS;
+    private static final int MAX_WM_CAPACITY = Configuration.MAX_WM_CAPACITY;
 
 
 
@@ -154,7 +155,7 @@ public class BPCollection {
      * @param type
      */
     public void addToMemory(MemoryType type, BaseProfile ... newBPs) {
-        addToMemory(type, DEFAULT_OVERRIDE_IF_EXISTS, newBPs);
+        addToMemory(type, OVERRIDE_IF_EXISTS, newBPs);
     }
 
     /**

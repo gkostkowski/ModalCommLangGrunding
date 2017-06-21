@@ -8,11 +8,11 @@ import com.pwr.zpi.core.Agent;
 import com.pwr.zpi.core.memory.episodic.Observation;
 import com.pwr.zpi.exceptions.InvalidScenarioException;
 import com.pwr.zpi.core.memory.holons.context.contextualisation.Contextualisation;
+import com.pwr.zpi.io.Configuration;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.core.memory.semantic.QRCode;
 import javafx.util.Pair;
 
-import javax.crypto.spec.DESKeySpec;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -29,11 +29,12 @@ import java.util.stream.Collectors;
  */
 public class Scenario {
 
-    private static final int FIRST_TRAIT_POS = 2;
-    private static final int NAME_POS = 0;
-    private static final char COMMENT_SIGN = '#';
-    private static final String SCENARIO_MARKER = "SCENARIO";
-    private static final String DEF_SCENARIOS_DIR = "config/scenarios/";
+    private static final int FIRST_TRAIT_POS = Configuration.FIRST_TRAIT_POS;
+    private static final int NAME_POS = Configuration.NAME_POS;
+    private static final char COMMENT_SIGN = Configuration.COMMENT_SIGN;
+    private static final String SCENARIO_MARKER = Configuration.SCENARIO_MARKER;
+    private static final String SCENARIOS_DIR = Configuration.SCENARIOS_DIR;
+
     private Agent agent;
     private Contextualisation contextualisation;
     private List<String> IndModIDs;
@@ -288,7 +289,7 @@ public class Scenario {
 
     private List<String> readContent() throws IOException {
         try {
-            return Files.readAllLines(Paths.get(DEF_SCENARIOS_DIR + filename), Charset.forName("UTF-8"));
+            return Files.readAllLines(Paths.get(SCENARIOS_DIR + filename), Charset.forName("UTF-8"));
         } catch (IOException e) {
             return Files.readAllLines(Paths.get(filename), Charset.forName("UTF-8")); //if absolute
         }

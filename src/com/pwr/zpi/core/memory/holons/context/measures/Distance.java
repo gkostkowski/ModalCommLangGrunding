@@ -7,6 +7,7 @@ import com.pwr.zpi.core.memory.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidMeasureException;
 import com.pwr.zpi.exceptions.InvalidMeasureImplementation;
 import com.pwr.zpi.core.memory.holons.context.Context;
+import com.pwr.zpi.io.Configuration;
 import com.pwr.zpi.language.State;
 import com.pwr.zpi.language.Trait;
 import com.pwr.zpi.core.memory.semantic.IndividualModel;
@@ -21,7 +22,7 @@ import java.util.*;
  */
 public class Distance implements Measure {
 
-    private static final double DEF_MAX_THRESHOLD = 3;
+    private static final double MAX_THRESHOLD = Configuration.MAX_THRESHOLD;
     double maxThreshold;
 
     public Distance(double maxThreshold) throws InvalidMeasureException {
@@ -31,7 +32,7 @@ public class Distance implements Measure {
     }
 
     public Distance() {
-        this.maxThreshold = DEF_MAX_THRESHOLD;
+        this.maxThreshold = MAX_THRESHOLD;
     }
 
     /**

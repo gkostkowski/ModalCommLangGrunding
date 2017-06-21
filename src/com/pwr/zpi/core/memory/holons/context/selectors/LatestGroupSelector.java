@@ -2,6 +2,7 @@ package com.pwr.zpi.core.memory.holons.context.selectors;
 
 import com.pwr.zpi.core.memory.episodic.BaseProfile;
 import com.pwr.zpi.exceptions.InvalidGroupSelectorException;
+import com.pwr.zpi.io.Configuration;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.State;
 import com.pwr.zpi.core.memory.semantic.IndividualModel;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
  */
 public class LatestGroupSelector implements RepresentativesSelector {
 
-    private static final int DEF_LATEST_GROUP_SIZE = 5;
+    private static final int LATEST_GROUP_SIZE = Configuration.LATEST_GROUP_SIZE;
     private int groupSize;
 
     public LatestGroupSelector(int groupSize) throws InvalidGroupSelectorException {
@@ -35,7 +36,7 @@ public class LatestGroupSelector implements RepresentativesSelector {
      */
     @Override
     public Set<BaseProfile> select(Map<Formula, Set<BaseProfile>> namedGroundingSets){
-        int groupSize = this.groupSize != 0 ? this.groupSize : DEF_LATEST_GROUP_SIZE;
+        int groupSize = this.groupSize != 0 ? this.groupSize : LATEST_GROUP_SIZE;
         if (namedGroundingSets == null || namedGroundingSets.isEmpty()) {
             throw new NullPointerException("Representative base profiles cannot be resolved.");
         }

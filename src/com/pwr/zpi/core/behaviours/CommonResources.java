@@ -17,15 +17,15 @@ public class CommonResources {
     /**
      * List of formulas that are currently being processed by agent
      */
-    List<Formula> formulasInProcessing = Collections.synchronizedList(new ArrayList<>());
+    private List<Formula> formulasInProcessing = Collections.synchronizedList(new ArrayList<>());
     /**
      * Object used in synchronization
      */
-    public static final Object foo = new Object();
+    private static final Object foo = new Object();
     /**
      * Object used in synchronization
      */
-    public static final Object foo2 = new Object();
+    private static final Object foo2 = new Object();
 
     /**
      * Semaphore that controls co-existence of AnswerThread and UpdateThread
@@ -36,7 +36,7 @@ public class CommonResources {
      * method which blocks access for specific threads
      * @param isMemoryUpdateThread  true if blocking thread is the memory update thread
      */
-    public void acquire(boolean isMemoryUpdateThread)
+    void acquire(boolean isMemoryUpdateThread)
     {
         synchronized (foo2) {
             if (isMemoryUpdateThread) {
@@ -62,7 +62,7 @@ public class CommonResources {
      * method releases blockage and allows other threads to access resources
      * @param isMemoryUpdateThread  true if releasing thread is the memory update one
      */
-    public void release(boolean isMemoryUpdateThread)
+    void release(boolean isMemoryUpdateThread)
     {
         synchronized (foo2) {
             if (isMemoryUpdateThread)
@@ -76,7 +76,7 @@ public class CommonResources {
      * Adds next formula to formulasInProcessing
      * @param formula   Formula to be added
      */
-    public void addFormula(Formula formula)
+    void addFormula(Formula formula)
     {
         synchronized (foo)
         {
@@ -95,7 +95,7 @@ public class CommonResources {
      * Removes formula which agent has finished processing from formulasInProcessing
      * @param formula   formula to be removed
      */
-    public void removeFormula(Formula formula)
+    void removeFormula(Formula formula)
     {
         synchronized (foo) {
             formulasInProcessing.remove(formula);
@@ -108,7 +108,7 @@ public class CommonResources {
      * @param formula   Formula to be checked
      * @return          true if there is one like this one, false otherwise
      */
-    public boolean checkIfContains(Formula formula)
+    private boolean checkIfContains(Formula formula)
     {
         synchronized (foo) {
             Iterator i = formulasInProcessing.iterator();

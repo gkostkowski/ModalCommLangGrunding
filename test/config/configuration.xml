@@ -1,0 +1,61 @@
+<!-- This is the example file containing values for various final static variables crucial for data grounding. -->
+<!-- NOTE: String is a default type so it can be omitted. -->
+
+<statics>
+    <!-- Distributed knowledge -->
+    <DK_IS_COMPLEX type="bool"> true </DK_IS_COMPLEX>
+
+    <!-- Scenario -->
+    <FIRST_TRAIT_POS type="int"> 2 </FIRST_TRAIT_POS>
+    <NAME_POS type="int"> 0 </NAME_POS>
+    <COMMENT_SIGN type="char"> # </COMMENT_SIGN>
+    <SCENARIO_MARKER> SCENARIO </SCENARIO_MARKER>
+    <SCENARIOS_DIR> config/scenarios/ </SCENARIOS_DIR>
+
+    <!-- XMLDAO -->
+    <MAIN_MODULE_NAME> ModalCommLangGrunding </MAIN_MODULE_NAME>
+    <RELATIVE_FILEPATH> \config\types_def.xml </RELATIVE_FILEPATH>
+
+    <!-- DatabaseAO -->
+    <DATABASE_FILENAME> baza1.db </DATABASE_FILENAME>
+
+    <!-- Context -->
+    <MAX_THRESHOLD type="double"> 3 </MAX_THRESHOLD>
+    <NORMALISED_MAX_THRESHOLD type="double"> 0.4 </NORMALISED_MAX_THRESHOLD>
+    <LATEST_GROUP_SIZE type="int"> 5 </LATEST_GROUP_SIZE>
+
+    <!-- BPCollection -->
+    <INIT_TIMESTAMP type="int"> 0 </INIT_TIMESTAMP>
+    <MAX_WM_CAPACITY type="int"> 100 </MAX_WM_CAPACITY>
+    <OVERRIDE_IF_EXISTS type="bool"> true </OVERRIDE_IF_EXISTS>
+
+    <!-- BPCollection -->
+    <LISTENING_SERVER_PORT type="int"> 6666 </LISTENING_SERVER_PORT>
+    <TALKING_SERVER_PORT type="int"> 6667 </TALKING_SERVER_PORT>
+
+    <!-- Thresholds for simple modalities -->
+    <MIN_POS type="double"> 0.2 </MIN_POS>
+    <MAX_POS type="double"> 0.6 </MAX_POS>
+    <MIN_BEL type="double"> 0.7 </MIN_BEL>
+    <MAX_BEL type="double"> 0.9 </MAX_BEL>
+    <KNOW type="double"> 1.0 </KNOW>
+
+    <!-- Thresholds for modal conjunctions -->
+    <CONJ_MIN_POS type="double"> 0.1 </CONJ_MIN_POS>
+    <CONJ_MAX_POS type="double"> 0.6 </CONJ_MAX_POS>
+    <CONJ_MIN_BEL type="double"> 0.65 </CONJ_MIN_BEL>
+    <CONJ_MAX_BEL type="double"> 0.9 </CONJ_MAX_BEL>
+    <CONJ_KNOW type="double"> 1.0 </CONJ_KNOW>
+
+    <!-- Thresholds for modal disjunctions -->
+    <DISJ_MIN_POS type="double"> 0.4 </DISJ_MIN_POS>
+    <DISJ_MAX_POS type="double"> 0.55 </DISJ_MAX_POS>
+    <DISJ_MAX_BEL type="double"> 1.0 </DISJ_MAX_BEL>
+    <DISJ_KNOW type="double"> 1.0 </DISJ_KNOW>
+
+    <!-- Thresholds for modal exclusive disjunctions -->
+    <EX_DISJ_MIN_POS type="double"> 0.21 </EX_DISJ_MIN_POS>
+    <EX_DISJ_MAX_POS type="double"> 0.67 </EX_DISJ_MAX_POS>
+    <EX_DISJ_MAX_BEL type="double"> 1.0 </EX_DISJ_MAX_BEL>
+    <EX_DISJ_KNOW type="double"> 1.0 </EX_DISJ_KNOW>
+</statics>

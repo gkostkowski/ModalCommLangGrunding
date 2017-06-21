@@ -20,6 +20,8 @@ import java.util.logging.Logger;
  */
 public class VoiceListening extends Listening implements Runnable {
 
+    private static final int LISTENING_SERVER_PORT = 6666;
+
     /**
      * The listeningServer ServerSocket allows for connection with outside application that provides next questions
      */
@@ -48,7 +50,7 @@ public class VoiceListening extends Listening implements Runnable {
         if (questions == null)
             questions = new LinkedList<>();
         try {
-            listeningServer = new ServerSocket(6666);
+            listeningServer = new ServerSocket(LISTENING_SERVER_PORT);
             Logger.getAnonymousLogger().log(Level.INFO, "Listening server up");
             listeningApp = new ProcessBuilder("voice/Listening/Listening.exe", "6666", "voice/Listening/Grammar.xml").start();
             listeningClient = listeningServer.accept();

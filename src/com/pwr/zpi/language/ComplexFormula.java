@@ -61,13 +61,13 @@ public class ComplexFormula extends Formula implements Comparable<ComplexFormula
      */
     public ComplexFormula(IndividualModel model, List<Trait> traits, List<State> statesSeq, LogicOperator op) throws InvalidFormulaException {
         if (model == null || traits == null || statesSeq == null || op == null)
-            throw new NullPointerException("One or more parameteres are null");
+            throw new NullPointerException("Cannot create formula - one or more parameteres are null");
         if (traits.size() != 2 || statesSeq.size() != 2 )
             throw new InvalidFormulaException("Either size of traits or states is not 2 or operator is not valid");
         this.individualModel = model;
         this.traits = traits;
         if (!checkTraits())
-            throw new InvalidFormulaException("Given traits don't describe type of the object");
+            throw new InvalidFormulaException("Cannot create formula - given traits don't describe type of the object");
         leftPart = new SimpleFormula(model, traits.subList(0, 1), statesSeq.subList(0, 1));
         rightPart = new SimpleFormula(model, traits.subList(1, 2), statesSeq.subList(1, 2));
         this.operator = op;

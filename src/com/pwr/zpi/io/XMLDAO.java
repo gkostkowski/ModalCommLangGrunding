@@ -24,11 +24,12 @@ import java.util.logging.Logger;
  * @author Grzegorz Kostkowski
  */
 public class XMLDAO<T extends ObjectType> {
-    private static final String MAIN_MODULE_NAME = "ModalCommLangGrunding";
+    private static final String MAIN_MODULE_NAME = Configuration.MAIN_MODULE_NAME;
+    protected static final String RELATIVE_FILEPATH = Configuration.RELATIVE_FILEPATH;
+    protected static final String FILEPATH = makePath() + RELATIVE_FILEPATH;
+
     protected XStream xstream = new XStream(new DomDriver());
     protected String xml;
-    protected static final String DEF_RELATIVE_FILEPATH ="\\config\\types_def.xml";
-    protected static final String DEF_FILEPATH = makePath() + DEF_RELATIVE_FILEPATH;
 
     private static String makePath() {
         File currDir = new File(System.getProperty("user.dir"));
@@ -58,7 +59,7 @@ public class XMLDAO<T extends ObjectType> {
     }
 
     private Collection<T> fromFile() {
-        return fromFile(DEF_FILEPATH);
+        return fromFile(FILEPATH);
     }
 
 
@@ -86,7 +87,7 @@ public class XMLDAO<T extends ObjectType> {
     }
 
     public Collection<T> loadTypesDefinitions() {
-        return fromFile(DEF_FILEPATH);
+        return fromFile(FILEPATH);
     }
 
 }

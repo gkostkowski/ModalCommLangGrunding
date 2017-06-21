@@ -7,6 +7,7 @@ import com.pwr.zpi.core.Agent;
 import com.pwr.zpi.exceptions.InvalidFormulaException;
 import com.pwr.zpi.exceptions.NotConsistentDKException;
 import com.pwr.zpi.core.memory.semantic.IndividualModel;
+import com.pwr.zpi.io.Configuration;
 import com.pwr.zpi.language.Formula;
 import com.pwr.zpi.language.Grounder;
 import com.pwr.zpi.language.Trait;
@@ -36,7 +37,7 @@ public class DistributedKnowledge implements Cloneable {
      * with given relatedFormula) or complex if true (building all dk classes - also for mental models related to
      * complementary formulas)
      */
-    private static final boolean DEFAULT_DK_IS_COMPLEX = true;
+    private static final boolean DK_IS_COMPLEX = Configuration.DK_IS_COMPLEX;
 
 
     /**
@@ -110,7 +111,7 @@ public class DistributedKnowledge implements Cloneable {
 
     public DistributedKnowledge(Agent agent, Formula formula)
             throws InvalidFormulaException, NotConsistentDKException {
-        this(agent, formula, agent.getKnowledgeBase().getTimestamp(), DEFAULT_DK_IS_COMPLEX);
+        this(agent, formula, agent.getKnowledgeBase().getTimestamp(), DK_IS_COMPLEX);
     }
 
     public DistributedKnowledge(Agent agent, Formula formula, int timestamp)
