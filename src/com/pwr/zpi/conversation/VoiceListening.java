@@ -1,5 +1,6 @@
 package com.pwr.zpi.conversation;
 
+import com.pwr.zpi.io.Configuration;
 import org.json.*;
 
 import java.io.BufferedReader;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class VoiceListening extends Listening implements Runnable {
 
-    private static final int LISTENING_SERVER_PORT = 6666;
+ //   private static final int LISTENING_SERVER_PORT = 6666;
 
     /**
      * The listeningServer ServerSocket allows for connection with outside application that provides next questions
@@ -50,9 +51,9 @@ public class VoiceListening extends Listening implements Runnable {
         if (questions == null)
             questions = new LinkedList<>();
         try {
-            listeningServer = new ServerSocket(LISTENING_SERVER_PORT);
+            listeningServer = new ServerSocket(Configuration.LISTENING_SERVER_PORT);
             Logger.getAnonymousLogger().log(Level.INFO, "Listening server up");
-            listeningApp = new ProcessBuilder("voice/Listening/Listening.exe", "6666", "voice/Listening/Grammar.xml").start();
+            listeningApp = new ProcessBuilder("voice/Listening/Listening.exe", Integer.toString(Configuration.LISTENING_SERVER_PORT), "voice/Listening/Grammar.xml").start();
             listeningClient = listeningServer.accept();
             Logger.getAnonymousLogger().log(Level.INFO, "Listening client connected");
             bufferedReader = new BufferedReader(new InputStreamReader(listeningClient.getInputStream()));

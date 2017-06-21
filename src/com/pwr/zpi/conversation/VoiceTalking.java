@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.pwr.zpi.io.Configuration;
 import org.json.*;
 
 /**
@@ -16,8 +17,6 @@ import org.json.*;
  * @author Weronika Wolska
  */
 public class VoiceTalking extends Talking implements Runnable {
-
-    private static final int TALKING_SERVER_PORT = 6667;
 
     /**
      * Refernce to VoiceListening, used to be able to stop listening service for the moment of giving answer
@@ -58,9 +57,10 @@ public class VoiceTalking extends Talking implements Runnable {
             answers = new LinkedList<>();
         try
         {
-            talkingServer = new ServerSocket(TALKING_SERVER_PORT);
+            talkingServer = new ServerSocket(Configuration.TALKING_SERVER_PORT);
             Logger.getAnonymousLogger().log(Level.INFO, "Talking server up");
-            talkingApp = new ProcessBuilder("voice/Talking/Talking.exe", "6667").start();
+            talkingApp = new ProcessBuilder("voice/Talking/Talking.exe",
+                    Integer.toString(Configuration.TALKING_SERVER_PORT)).start();
             talkingClient = talkingServer.accept();
             Logger.getAnonymousLogger().log(Level.INFO, "Talking client connected");
             printWriter = new PrintWriter(talkingClient.getOutputStream(), true);
