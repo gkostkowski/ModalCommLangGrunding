@@ -1,6 +1,7 @@
 package com.pwr.zpi.core.memory.semantic;
 
 
+import com.pwr.zpi.core.memory.semantic.identifiers.Identifier;
 import com.pwr.zpi.language.Trait;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  * There is one individual model for each object.
  * It has a name which gives a way of communication between human and agent.
  *
+ * @author Mateusz Gawłowski
  */
 public class IndividualModel {
     private Identifier identifier;
@@ -40,8 +42,9 @@ public class IndividualModel {
 
     /**
      * checks if given list of valuedTraits contains in models' valuedTraits.
-     * @param traits List of TraitSignatures that are supposed to be checked
-     * @return true if all valuedTraits describe model, false otherwise
+     *
+     * @param traits List of TraitSignatures that are supposed to be checked.
+     * @return True if all valuedTraits describe model, false otherwise.
      */
     public boolean checkIfContainsTraits(List<Trait> traits)
     {
@@ -52,9 +55,10 @@ public class IndividualModel {
     }
 
     /**
-     * method checks if given Trait describes model
-     * @param trait Trait to be checked
-     * @return true if Trait describes model, false otherwise
+     * This method checks if given trait describes this model.
+     *
+     * @param trait Trait to be checked.
+     * @return True if Trait describes model, false otherwise.
      */
     public boolean checkIfContainsTrait(Trait trait)
     {

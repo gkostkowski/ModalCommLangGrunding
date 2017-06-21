@@ -2,21 +2,26 @@ package com.pwr.zpi.core.behaviours;
 
 import com.pwr.zpi.core.Agent;
 
+/**
+ * Thread that realises update of agent's memory by getting new observations from database.
+ *
+ * @author Mateusz Gawlowski
+ */
 public class UpdateThread implements Runnable {
 
     Agent agent;
-    CommonResources statics2;
+    CommonResources commonResources;
 
-    public UpdateThread(Agent agent, CommonResources statics2)
+    public UpdateThread(Agent agent, CommonResources commonResources)
     {
         this.agent = agent;
-        this.statics2 = statics2;
+        this.commonResources = commonResources;
     }
 
     @Override
     public void run() {
-        statics2.acquire(true);
+        commonResources.acquire(true);
         agent.updateMemory();
-        statics2.release(true);
+        commonResources.release(true);
     }
 }

@@ -22,9 +22,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class is responsible for reading configuration from config file and to provide configuration values to
- * the application environment.
+ * This class is responsible for reading configuration from XML config file and to provide
+ * configuration values to the application's environment.
  *
+ * @author Mateusz Gawlowski
+ * @author Grzegorz Kostkowski
  */
 public class Configuration {
 
@@ -54,6 +56,7 @@ public class Configuration {
      * DatabaseAO static value.
      */
     public static final String DATABASE_FILENAME, DEF_DATABASE_FILENAME = "baza1.db";
+    public static final String IDENTIFIERS_PATH, DEF_IDENTIFIERS_PATH = "com.pwr.zpi.core.memory.semantic.identifiers";
 
     /**
      * Context static values.
@@ -111,8 +114,10 @@ public class Configuration {
     private static final double EX_DISJ_MAX_BEL, DEF_EX_DISJ_MAX_BEL = 1;
     private static final double EX_DISJ_KNOW, DEF_EX_DISJ_KNOW = 1;
 
+    /**
+     * This block is used to initialize static values via reading xml file.
+     */
     static {
-
         String xml;
         ConfigurationReader reader = new ConfigurationReader();
 
@@ -145,6 +150,7 @@ public class Configuration {
 
         //DatabaseAO
         DATABASE_FILENAME = selectValue(reader.getValue("DATABASE_FILENAME"), DEF_DATABASE_FILENAME);
+        IDENTIFIERS_PATH = selectValue(reader.getValue("IDENTIFIERS_PATH"), DEF_IDENTIFIERS_PATH);
 
         //Context
         MAX_THRESHOLD = selectValue(reader.getValue("MAX_THRESHOLD"), DEF_MAX_THRESHOLD);
@@ -212,8 +218,8 @@ public class Configuration {
     /**
      * Returns array of appropriate thresholds for specified type. This thresholds are used in grounding process.
      *
-     * @param type
-     * @return
+     * @param type Type of formula.
+     * @return Array of threshold values for given formula type.
      */
     public static double[] getThresholds(Formula.Type type) throws InvalidConfigurationException {
         double[] res = null;
@@ -238,6 +244,12 @@ public class Configuration {
         return res;
     }
 
+    /**
+     * This class holds dictionary of values from config file.
+     * Instance of this class is created and dictionary populated while reading the XML file.
+     *
+     * @author Mateusz Gawlowski
+     */
     public static class ConfigurationReader {
 
         private Map<String, Object> configValuesMap;
@@ -255,6 +267,11 @@ public class Configuration {
         }
     }
 
+    /**
+     * Custom converter of XStream for reading config file.
+     *
+     * @author Mateusz Gawlowski
+     */
     public static class ConfigurationConverter implements Converter {
 
         public boolean canConvert(Class clazz) {
@@ -270,7 +287,7 @@ public class Configuration {
             while (reader.hasMoreChildren()) {
                 reader.moveDown();
                 String value = reader.getValue().replaceAll("\\s+",""); // removes all non-visible characters
-                String name = reader.getNodeName().toUpperCase();
+                String name = reader.getNodeName();
                 String type = reader.getAttribute("type");
                     switch (type != null ? type.toLowerCase() : "null") {
                         case "int": case "integer":

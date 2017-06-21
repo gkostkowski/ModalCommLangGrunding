@@ -2,7 +2,7 @@ package com.pwr.zpi.io
 
 import com.pwr.zpi.core.Agent
 import com.pwr.zpi.core.memory.episodic.Observation
-import com.pwr.zpi.core.memory.semantic.QRCode
+import com.pwr.zpi.core.memory.semantic.identifiers.QRCode
 import com.pwr.zpi.language.Trait
 import org.junit.Test
 

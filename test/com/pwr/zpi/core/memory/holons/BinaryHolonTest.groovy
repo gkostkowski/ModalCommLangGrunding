@@ -8,7 +8,7 @@ import com.pwr.zpi.core.memory.holons.BinaryHolon
 import com.pwr.zpi.core.memory.holons.Holon
 import com.pwr.zpi.core.memory.semantic.IndividualModel
 import com.pwr.zpi.core.memory.semantic.ObjectType
-import com.pwr.zpi.core.memory.semantic.QRCode
+import com.pwr.zpi.core.memory.semantic.identifiers.QRCode
 import com.pwr.zpi.exceptions.InvalidFormulaException
 import com.pwr.zpi.exceptions.NotApplicableException
 import com.pwr.zpi.exceptions.NotConsistentDKException

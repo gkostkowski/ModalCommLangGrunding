@@ -1,10 +1,12 @@
 package com.pwr.zpi.io;
 
 import com.pwr.zpi.core.memory.episodic.Observation;
+import com.pwr.zpi.exceptions.IdentifierClassNotFoundException;
 import com.pwr.zpi.language.Trait;
-import com.pwr.zpi.core.memory.semantic.Identifier;
+import com.pwr.zpi.core.memory.semantic.identifiers.Identifier;
 import com.pwr.zpi.core.memory.semantic.ObjectType;
-import com.pwr.zpi.core.memory.semantic.QRCode;
+import com.pwr.zpi.core.memory.semantic.identifiers.QRCode;
+import org.reflections.Reflections;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,15 +15,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
  * This class acts as data access layer for SQLite database that is used to gather observations
  * and return new observations to agent in order to update its memory.
+ *
+ * @author Mateusz Gawlowski
  */
 public class DatabaseAO {
 
     private static final String DATABASE_FILENAME = Configuration.DATABASE_FILENAME;
+    private static final String IDENTIFIERS_PATH = Configuration.IDENTIFIERS_PATH;
 
     private static Collection<ObjectType> objectTypeCollection;
     private Connection dbConnection;
@@ -32,7 +39,7 @@ public class DatabaseAO {
     }
 
     public DatabaseAO(Collection<ObjectType> objectTypes) {
-        this.objectTypeCollection = objectTypes;
+        objectTypeCollection = objectTypes;
         init();
     }
 
@@ -49,11 +56,11 @@ public class DatabaseAO {
                 Files.createDirectories(Paths.get("db"));
             deleteDatabase();
             dbConnection = DriverManager.getConnection("jdbc:sqlite:" + dbFilePath);
+            addTablesForAllObjectTypes();
+            setInsertFlag(true);
         } catch (IOException | SQLException e) {
-            e.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.SEVERE, "Failed to connect to database.", e);
         }
-        addTablesForAllObjectTypes();
-        setInsertFlag(true);
     }
 
     /**
@@ -67,8 +74,7 @@ public class DatabaseAO {
             if(new File(path.toString()).exists() && Files.isReadable(path) && Files.isExecutable(path))
                 Files.delete(Paths.get("db/" + DATABASE_FILENAME));
         } catch (IOException e) {
-            System.out.println("Probable solution: disconnect from database in your IDE.");
-            e.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.WARNING, "Failed to delete database file.", e);
         }
     }
 
@@ -121,13 +127,14 @@ public class DatabaseAO {
             SQLStatement.clearBatch();
             SQLStatement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.SEVERE, "Failed to create database's schema.", e);
         }
     }
 
     /**
      * Adds observation to proper table on database. It also launches a SQL trigger that changes value of flag
      * in InsertFlag table so now it implies that there are new observations.
+     *
      * @param observation Observation that is being added to database.
      */
     public void addNewObservation(Observation observation) {
@@ -137,12 +144,12 @@ public class DatabaseAO {
         String tableName = observation.getType().getTypeId();
         String idNumber = observation.getIdentifier().getIdNumber();
         String timestamp = String.valueOf(observation.getTimestamp());
-        Map<Trait, Boolean> traits = observation.getValuedTraits();
+        Map<Trait, Boolean> observationTraits = observation.getValuedTraits();
 
         columns.append("id,timestamp");
         values.append("\"").append(idNumber).append("\",").append(timestamp);
 
-        for (Map.Entry<Trait, Boolean> traitBooleanEntry : traits.entrySet())
+        for (Map.Entry<Trait, Boolean> traitBooleanEntry : observationTraits.entrySet())
         {
             if(traitBooleanEntry.getValue() != null) {
                 columns.append(",").append(traitBooleanEntry.getKey().getName());
@@ -156,7 +163,7 @@ public class DatabaseAO {
             SQLStatement.execute(SQLCommandText);
             SQLStatement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.WARNING, "Failed to add new observation.", e);
         }
     }
 
@@ -164,6 +171,7 @@ public class DatabaseAO {
      * This method is used to obtain observations that haven't been fetched yet.
      * It also resets the InsertFlag (to imply that there are no new observations now)
      * and updates indexes of last fetched records in nameIndexMap.
+     *
      * @return Collection of new observations from database.
      */
     public Collection<Observation> fetchNewObservations() {
@@ -183,7 +191,7 @@ public class DatabaseAO {
                 queryResultSet = SQLStatement.executeQuery(SQLCommandText);
 
                 while(queryResultSet.next()) {
-                    obsIdentifier = new QRCode(queryResultSet.getString("id"));
+                    obsIdentifier = createIdentifier(queryResultSet.getString("id"));
                     obsTimestamp = queryResultSet.getInt("timestamp");
 
                     typeTraits = obsIdentifier.getType().getTraits();
@@ -208,13 +216,41 @@ public class DatabaseAO {
                 SQLStatement.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.WARNING, "Failed to fetch new observations.", e);
         }
         return newObservations;
     }
 
     /**
+     * Creates proper identifier for given id number by looking among all implemented identifiers
+     * and checking whether it matches identifier's scheme.
+     *
+     * @param idNumber Number of identifier.
+     * @return Proper identifier or null if not found.
+     */
+    private Identifier createIdentifier(String idNumber) {
+        Reflections reflections = new Reflections(IDENTIFIERS_PATH);
+        Set<Class<? extends Identifier>> classes = reflections.getSubTypesOf(Identifier.class);
+
+        for (Class clazz: classes) {
+            System.out.println(clazz.getSimpleName());
+            try {
+                Identifier identifier = (Identifier) clazz.newInstance();
+                if(identifier.isIdMemberOf(idNumber)) {
+                    identifier.setId(idNumber);
+                    return identifier;
+                }
+            } catch (IllegalAccessException | InstantiationException e) {
+                Logger.getAnonymousLogger().log(Level.WARNING, "Error when trying to create identifier for idNumber: " + idNumber + ".", e);
+            }
+        }
+        Logger.getAnonymousLogger().log(Level.WARNING, "Failed to find identifier class for idNumber: " + idNumber + ".", new IdentifierClassNotFoundException());
+        return null;
+    }
+
+    /**
      * Used to get index of last record from given table.
+     *
      * @param tableName Name of table in database.
      * @return Index if last record.
      */
@@ -227,7 +263,7 @@ public class DatabaseAO {
             index = queryResultSet.getInt(1);
             SQLStatement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.WARNING, "Failed to get max index from table " + tableName + ".", e);
         }
         return index;
     }
@@ -235,7 +271,8 @@ public class DatabaseAO {
     /**
      * Used to determine whether any observations has been added to database since last fetch
      * via checking value of flag in InsertFlag table.
-     * @return true when there are new records, false when aren't
+     *
+     * @return True when there are new records, false when aren't.
      */
     public boolean isInsertFlagPositive(){
         int flagValue = 0;
@@ -246,7 +283,7 @@ public class DatabaseAO {
             flagValue = queryResultSet.getInt(1);
             SQLStatement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.WARNING, "Failed to check flag's status.", e);
         }
         return flagValue == 1;
     }
@@ -261,7 +298,7 @@ public class DatabaseAO {
             SQLStatement.execute(SQLCommandText);
             SQLStatement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.WARNING, "Failed to set flag to " + isAnyNew + ".", e);
         }
     }
 }

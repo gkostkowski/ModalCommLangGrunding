@@ -6,7 +6,7 @@ import com.pwr.zpi.core.memory.holons.context.measures.Distance
 import com.pwr.zpi.core.memory.holons.context.measures.NormalisedDistance
 import com.pwr.zpi.core.memory.semantic.IndividualModel
 import com.pwr.zpi.core.memory.semantic.ObjectType
-import com.pwr.zpi.core.memory.semantic.QRCode
+import com.pwr.zpi.core.memory.semantic.identifiers.QRCode
 import com.pwr.zpi.language.Trait
 import org.junit.Test
 

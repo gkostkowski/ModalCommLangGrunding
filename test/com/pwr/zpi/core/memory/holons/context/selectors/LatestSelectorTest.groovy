@@ -4,7 +4,7 @@ import com.pwr.zpi.core.memory.episodic.BaseProfile
 import com.pwr.zpi.core.memory.holons.context.selectors.LatestSelector
 import com.pwr.zpi.core.memory.semantic.IndividualModel
 import com.pwr.zpi.core.memory.semantic.ObjectType
-import com.pwr.zpi.core.memory.semantic.QRCode
+import com.pwr.zpi.core.memory.semantic.identifiers.QRCode
 import com.pwr.zpi.language.*
 
 /**

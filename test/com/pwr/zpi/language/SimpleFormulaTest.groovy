@@ -2,7 +2,7 @@ package com.pwr.zpi.language
 
 import com.pwr.zpi.core.memory.semantic.IndividualModel
 import com.pwr.zpi.core.memory.semantic.ObjectType
-import com.pwr.zpi.core.memory.semantic.QRCode
+import com.pwr.zpi.core.memory.semantic.identifiers.QRCode
 import org.junit.Test
 
 /**

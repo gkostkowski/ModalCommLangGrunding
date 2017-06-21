@@ -1,6 +1,6 @@
 package com.pwr.zpi.core.memory.episodic;
 
-import com.pwr.zpi.core.memory.semantic.Identifier;
+import com.pwr.zpi.core.memory.semantic.identifiers.Identifier;
 import com.pwr.zpi.core.memory.semantic.ObjectType;
 import com.pwr.zpi.language.Trait;
 

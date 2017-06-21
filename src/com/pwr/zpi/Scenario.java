@@ -10,7 +10,7 @@ import com.pwr.zpi.exceptions.InvalidScenarioException;
 import com.pwr.zpi.core.memory.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.io.Configuration;
 import com.pwr.zpi.language.Trait;
-import com.pwr.zpi.core.memory.semantic.QRCode;
+import com.pwr.zpi.core.memory.semantic.identifiers.QRCode;
 import javafx.util.Pair;
 
 import java.io.IOException;
