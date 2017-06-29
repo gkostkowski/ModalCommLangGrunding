@@ -22,11 +22,10 @@ import com.pwr.zpi.language.*;
 import com.pwr.zpi.core.memory.semantic.identifiers.QRCode;
 import com.pwr.zpi.simulation.Scenario;
 import com.pwr.zpi.util.Util;
+import javafx.application.Application;
+import org.codehaus.groovy.runtime.powerassert.SourceText;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,7 +75,8 @@ class Main {
 //
 //        showMalformedScenarioExceprions();
 
-        new Scenario(agentNoCtxt, "presentation2_noContext.csv").execute();
+
+        launchPresentationMode();
         /*   *** old stuff *** */
         // simplyModalitiesScenario(agent, qrCodes, tr);
         //or
@@ -97,6 +97,35 @@ class Main {
         // is present in db after launching one of them, so they can't be used together.
 
         //modalConjunctionsScenario(agent, qrCodes, tr);
+    }
+
+    private static void launchPresentationMode() throws InvalidMeasureException, InvalidContextualisationException, InvalidFormulaException {
+        System.out.println("\tAvailable scenarios:\n" +
+                "1. standard noContext\n2. LatestContext");
+        System.out.println("Enter number representing prepared scenario:");
+        System.out.print("> ");
+        Scanner sc=new Scanner(System.in);
+        int choice = sc.nextInt();
+        runDemonstration(choice);
+        runDemonstration(choice);
+        System.exit(0);
+    }
+
+    private static void runDemonstration(int choice) throws InvalidMeasureException, InvalidContextualisationException, InvalidFormulaException {
+        switch (choice) {
+            case 1:
+                Agent agent=new Agent.AgentBuilder()
+                        .label("agentNoCtxt")
+                        .build();
+                new Scenario(agent, "presentation2_latestContext.csv").execute();
+                agent.startLifeCycle();
+                if(new Scanner(System.in).next() == "x")
+                    agent.sttopLifeCycle();
+                break;
+            case 2:
+                executeDedicatedConjFocusedGroupContextScenario();
+                break;
+        }
     }
 
     private static void executeConjLatestGroupSoftDistContextScenario() throws InvalidGroupSelectorException, InvalidMeasureException, InvalidContextualisationException {
@@ -131,6 +160,19 @@ class Main {
     }
 
     private static void executeConjFocusedGroupContextScenario() throws InvalidFormulaException, InvalidMeasureException, InvalidContextualisationException {
+        Formula relevantTraitedFormula = prepareSampleFormula();
+        Contextualisation latestFocusedGroupContextSoftDis = new FilteringContextualisation(new ConcreteContextBuilder(),
+                new LatestFocusedGroupSelector(relevantTraitedFormula),
+                new NormalisedSoftDistance(0.5));
+        Agent agentLtstFcsdGrpCntxtSoftDist = new Agent.AgentBuilder()
+                .contextualisation(latestFocusedGroupContextSoftDis)
+                .label("agentLtstFcsdGrpCntxtSoftDist")
+                .build();
+
+        new Scenario(agentLtstFcsdGrpCntxtSoftDist, "conj_latest_focused_group_context_scenario08.csv").execute();
+    }
+
+    private static void executeDedicatedConjFocusedGroupContextScenario() throws InvalidFormulaException, InvalidMeasureException, InvalidContextualisationException {
         Formula relevantTraitedFormula = prepareSampleFormula();
         Contextualisation latestFocusedGroupContextSoftDis = new FilteringContextualisation(new ConcreteContextBuilder(),
                 new LatestFocusedGroupSelector(relevantTraitedFormula),
