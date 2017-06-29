@@ -20,7 +20,7 @@
     <DATABASE_FILENAME> baza1.db </DATABASE_FILENAME>
 
     <!-- Context -->
-    <MAX_THRESHOLD type="double"> 3 </MAX_THRESHOLD>
+    <MAX_THRESHOLD type="double"> 4 </MAX_THRESHOLD>
     <NORMALISED_MAX_THRESHOLD type="double"> 0.4 </NORMALISED_MAX_THRESHOLD>
     <LATEST_GROUP_SIZE type="int"> 5 </LATEST_GROUP_SIZE>
 

@@ -74,5 +74,45 @@
                 </trait>
             </traits>
         </type>
+        <type>
+            <typeId>11</typeId>
+            <traits class="linked-list">
+                <trait>
+                    <name>Happy</name>
+                </trait>
+                <trait>
+                    <name>Eating</name>
+                </trait>
+                <trait>
+                    <name>White</name>
+                </trait>
+                <trait>
+                    <name>Dirty</name>
+                </trait>
+                <trait>
+                    <name>Playing</name>
+                </trait>
+            </traits>
+        </type>
+        <type>
+            <typeId>12</typeId>
+            <traits class="linked-list">
+                <trait>
+                    <name>blue</name>
+                </trait>
+                <trait>
+                    <name>yellow</name>
+                </trait>
+                <trait>
+                    <name>square</name>
+                </trait>
+                <trait>
+                    <name>round</name>
+                </trait>
+                <trait>
+                    <name>Striped</name>
+                </trait>
+            </traits>
+        </type>
     </collection>
 </types>

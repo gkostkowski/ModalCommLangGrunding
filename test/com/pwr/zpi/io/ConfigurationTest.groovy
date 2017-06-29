@@ -9,7 +9,7 @@ class ConfigurationTest extends GroovyTestCase {
 
     @Test
     void test() {
-        assertEquals 3.0, Configuration.MAX_THRESHOLD
+        assertEquals 4.0, Configuration.MAX_THRESHOLD
         assertEquals '#', Configuration.COMMENT_SIGN
         assertEquals "config/scenarios/", Configuration.SCENARIOS_DIR
         assertEquals 5, Configuration.LATEST_GROUP_SIZE

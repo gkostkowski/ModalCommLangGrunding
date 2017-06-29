@@ -17,10 +17,10 @@ import com.pwr.zpi.core.memory.holons.context.builders.ConcreteContextBuilder;
 import com.pwr.zpi.core.memory.holons.context.contextualisation.Contextualisation;
 import com.pwr.zpi.core.memory.holons.context.contextualisation.FilteringContextualisation;
 import com.pwr.zpi.core.memory.holons.context.measures.NormalisedDistance;
-import com.pwr.zpi.core.memory.holons.context.selectors.LatestSelector;
 
 import com.pwr.zpi.language.*;
 import com.pwr.zpi.core.memory.semantic.identifiers.QRCode;
+import com.pwr.zpi.simulation.Scenario;
 import com.pwr.zpi.util.Util;
 
 import java.util.ArrayList;
@@ -60,12 +60,11 @@ class Main {
 
         /*      * * * Sample scenarios execution * * *          */
 
-        new Scenario(agentNoCtxt, "conj_disj_scenario01a_main.csv").execute();  //scenario01a
+      //  new Scenario(agentNoCtxt, "conj_disj_scenario01a_main.csv").execute();  //scenario01a
 //        new Scenario(agentNoCtxt, "conj_disj_scenario01c_main.csv").execute();  //scenario01c
-//        new Scenario(agentNoCtxt, "sm_conj_disj_scenario01b_main.csv").execute();  //scenario01b //todo
+    //    new Scenario(agentNoCtxt, "sm_conj_disj_scenario01b_main.csv").execute();  //scenario01b //todo
 //
 //        new Scenario(agentNoCtxt, "conj_no_context_scenario001.csv").execute(); //scenario001
-//          new Scenario(agentNoCtxt, "sm_scenario01d.csv").execute(); //scenarioBinHolon
 //        new Scenario(agentNoCtxt, "conj_no_context_scenario02a.csv").execute(); //scenario02a
 //        new Scenario(agentLtstCntxt, "conj_context_scenario02b.csv").execute();  //scenario02b
 //        new Scenario(agentNoCtxt, "sm_conj_no_context_scenario03.csv").execute(); //scenario03 //todo
@@ -73,10 +72,11 @@ class Main {
 //        new Scenario(agentNoCtxt, "ex_disj_no_context_scenario05.csv").execute(); //scenario05
 //        new Scenario(agentNoCtxt, "disj_no_context_scenario06.csv").execute(); //scenario06
 //        executeConjLatestGroupSoftDistContextScenario(); //scenario07
-//        executeConjFocusedGroupContextScenario(); //scenario08
+ //       executeConjFocusedGroupContextScenario(); //scenario08
 //
 //        showMalformedScenarioExceprions();
 
+        new Scenario(agentNoCtxt, "presentation2_noContext.csv").execute();
         /*   *** old stuff *** */
         // simplyModalitiesScenario(agent, qrCodes, tr);
         //or

@@ -31,7 +31,7 @@
     <OVERRIDE_IF_EXISTS type="bool"> true </OVERRIDE_IF_EXISTS>
 
     <!-- BPCollection -->
-    <LISTENING_SERVER_PORT type="int"> 6666 </LISTENING_SERVER_PORT>
+    <LISTENING_SERVER_PORT type="int"> 6665 </LISTENING_SERVER_PORT>
     <TALKING_SERVER_PORT type="int"> 6667 </TALKING_SERVER_PORT>
 
     <!-- Thresholds for simple modalities -->
