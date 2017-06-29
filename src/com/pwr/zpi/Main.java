@@ -101,13 +101,13 @@ class Main {
 
     private static void launchPresentationMode() throws InvalidMeasureException, InvalidContextualisationException, InvalidFormulaException {
         System.out.println("\tAvailable scenarios:\n" +
-                "1. standard noContext\n2. LatestContext");
+                "1. standard noContext\n2. focusedContext\n");
         System.out.println("Enter number representing prepared scenario:");
         System.out.print("> ");
         Scanner sc=new Scanner(System.in);
         int choice = sc.nextInt();
         runDemonstration(choice);
-        runDemonstration(choice);
+
         System.exit(0);
     }
 
@@ -117,10 +117,12 @@ class Main {
                 Agent agent=new Agent.AgentBuilder()
                         .label("agentNoCtxt")
                         .build();
-                new Scenario(agent, "presentation2_latestContext.csv").execute();
+                new Scenario(agent, "presentation2_focusedContext.csv").execute();
                 agent.startLifeCycle();
-                if(new Scanner(System.in).next() == "x")
+                if(new Scanner(System.in).next() == "x") {
                     agent.sttopLifeCycle();
+                    Logger.getAnonymousLogger().log(Level.INFO, "Closing conversation ...");
+                }
                 break;
             case 2:
                 executeDedicatedConjFocusedGroupContextScenario();
@@ -173,16 +175,16 @@ class Main {
     }
 
     private static void executeDedicatedConjFocusedGroupContextScenario() throws InvalidFormulaException, InvalidMeasureException, InvalidContextualisationException {
-        Formula relevantTraitedFormula = prepareSampleFormula();
+        Formula relevantTraitedFormula = prepareDedicatedSampleFormula();
         Contextualisation latestFocusedGroupContextSoftDis = new FilteringContextualisation(new ConcreteContextBuilder(),
                 new LatestFocusedGroupSelector(relevantTraitedFormula),
-                new NormalisedSoftDistance(0.5));
+                new NormalisedSoftDistance(0.0));
         Agent agentLtstFcsdGrpCntxtSoftDist = new Agent.AgentBuilder()
                 .contextualisation(latestFocusedGroupContextSoftDis)
                 .label("agentLtstFcsdGrpCntxtSoftDist")
                 .build();
 
-        new Scenario(agentLtstFcsdGrpCntxtSoftDist, "conj_latest_focused_group_context_scenario08.csv").execute();
+        new Scenario(agentLtstFcsdGrpCntxtSoftDist, "presentation2_focusedContext.csv").execute();
     }
 
     /**
@@ -201,6 +203,22 @@ class Main {
         }};
         return new ComplexFormula(new IndividualModel(new QRCode("04512"),
                 new ObjectType("04", traits)),
+                Arrays.asList(new Trait[]{traits.get(0), traits.get(2)}),
+                Arrays.asList(new State[]{State.IS, State.IS}),
+                LogicOperator.AND);
+    }
+
+    private static Formula prepareDedicatedSampleFormula() throws InvalidFormulaException {
+
+        List<Trait> traits = new ArrayList<Trait>() {{
+            add(new Trait("yellow"));
+            add(new Trait("square"));
+            add(new Trait("round"));
+            add(new Trait("Striped"));
+
+        }};
+        return new ComplexFormula(new IndividualModel(new QRCode("12999"),
+                new ObjectType("12", traits)),
                 Arrays.asList(new Trait[]{traits.get(0), traits.get(2)}),
                 Arrays.asList(new State[]{State.IS, State.IS}),
                 LogicOperator.AND);

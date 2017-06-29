@@ -1,0 +1,21 @@
+DEF;;;;;;;;;
+Jimmy;12999;yellow;square;round;striped;;;;
+SCENARIO;;;;;;;;;
+Jimmy;;;;;;;;;
+timestamp;related_object;yellow;square;round;striped;;;;
+0;Jimmy;0;1;-1;-1;;;;
+1;Jimmy;0;1;-1;1;;;;
+2;Jimmy;1;-1;1;1;;;;
+3;Jimmy;0;1;-1;-1;;;;
+4;Jimmy;-1;1;-1;0;;;;
+5;Jimmy;1;-1;1;1;;;;
+6;Jimmy;1;-1;1;1;;;;
+7;Jimmy;0;1;-1;0;;;;
+8;Jimmy;0;-1;1;1;;;;
+9;Jimmy;0;1;-1;1;;;;
+10;Jimmy;1;-1;1;1;;;;
+11;Jimmy;1;-1;1;1;;;;
+12;Jimmy;-1;1;0;1;;;;
+13;Jimmy;-1;1;-1;0;;;;
+14;Jimmy;-1;0;1;1;;;;
+15;Jimmy;0;0;0;0;is jimmy yellow and round;yes ;Is jimmy square and striped;pos
