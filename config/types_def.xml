@@ -98,9 +98,6 @@
             <typeId>12</typeId>
             <traits class="linked-list">
                 <trait>
-                    <name>blue</name>
-                </trait>
-                <trait>
                     <name>yellow</name>
                 </trait>
                 <trait>
