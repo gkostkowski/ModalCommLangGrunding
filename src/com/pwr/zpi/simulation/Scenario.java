@@ -1,7 +1,7 @@
 /*
  * Created by Grzegorz Kostkowski
  */
-package com.pwr.zpi;
+package com.pwr.zpi.simulation;
 
 import com.pwr.zpi.conversation.ConversationSimulator;
 import com.pwr.zpi.core.Agent;

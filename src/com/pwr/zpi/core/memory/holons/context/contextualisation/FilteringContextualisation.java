@@ -130,6 +130,8 @@ public class FilteringContextualisation implements Contextualisation {
      * @return true if given examined base profile met criteria; false otherwise.
      */
     public boolean determineFulfillment(BaseProfile examined, Context context) throws InvalidMeasureImplementation {
+        if (examined == null || context == null)
+            Logger.getAnonymousLogger().log(Level.WARNING, examined == null ? "bp ": "context"+" is null.");
         Logger.getAnonymousLogger().log(Level.FINEST, "Measure value: "+measure.count(examined, context));
         return measure.count(examined, context) <= measure.getMaxThreshold();
     }

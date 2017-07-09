@@ -1,0 +1,21 @@
+DEF;;;;;;;;;;;;;;
+Jimmy;12999;blue;yellow;square;round;striped;;;;;;;;
+SCENARIO;;;;;;;;;;;;;;
+Jimmy;;;;;;;;;;;;;;
+timestamp;related_object;blue;yellow;square;round;striped;;;;;;;;
+0;Jimmy;0;0;-1;1;0;;;;;;;;
+1;Jimmy;0;0;-1;1;0;;;;;;;;
+2;Jimmy;0;0;1;-1;0;;;;;;;;
+3;Jimmy;0;0;1;-1;0;;;;;;;;
+4;Jimmy;0;0;1;-1;0;;;;;;;;
+5;Jimmy;0;0;1;1;0;;;;;;;;
+6;Jimmy;0;0;-1;-1;0;;;;;;;;
+7;Jimmy;0;0;1;1;0;;;;;;;;
+8;Jimmy;0;0;-1;-1;0;;;;;;;;
+9;Jimmy;0;0;-1;1;0;;;;;;;;
+10;Jimmy;0;0;-1;1;0;;;;;;;;
+11;Jimmy;0;0;-1;1;0;;;;;;;;
+12;Jimmy;0;0;1;-1;0;;;;;;;;
+13;Jimmy;0;0;1;-1;0;;;;;;;;
+14;Jimmy;0;0;0;1;0;;;;;;;;
+15;Jimmy;0;0;0;0;0;is jimmy yellow;???;Is jimmy either square or round;???;Is jimmy square or round;???;Is jimmy not round and not striped;????

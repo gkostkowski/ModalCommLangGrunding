@@ -15,6 +15,7 @@
       <item> Bobby </item>
       <item> Jimmy </item>
       <item> Terry </item>
+      <item> Arthur </item>
     </one-of>
   </rule>
 
@@ -25,6 +26,14 @@
       <item> soft </item>
       <item> blinking </item>
       <item> red </item>
+      <item> happy </item>
+      <item> playing </item>
+      <item> eating </item>
+      <item> dirty </item>
+      <item> yellow </item>
+      <item> round </item>
+      <item> square </item>
+      <item> striped </item>
     </one-of>
   </rule>
 
