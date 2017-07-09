@@ -16,6 +16,6 @@ public class BarCode extends Identifier {
 
     @Override
     public boolean isIdMemberOf(String idNumber) {
-        return false;
+        return false; //to implement
     }
 }

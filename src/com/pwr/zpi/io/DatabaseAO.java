@@ -31,6 +31,10 @@ public class DatabaseAO {
 
     private static Collection<ObjectType> objectTypeCollection;
     private Connection dbConnection;
+
+    /**
+     * This map contains names of tables in database and index of last fetched observation from given table.
+     */
     private Map<String, Integer> nameIndexMap;
 
     public DatabaseAO() {
@@ -131,8 +135,8 @@ public class DatabaseAO {
     }
 
     /**
-     * Adds observation to proper table on database. It also launches a SQL trigger that changes value of flag
-     * in InsertFlag table so now it implies that there are new observations.
+     * Adds observation to proper table on database. By doing so it also launches a SQL trigger that changes
+     * value of flag in InsertFlag table so now it implies that there are new observations.
      *
      * @param observation Observation that is being added to database.
      */
@@ -174,9 +178,11 @@ public class DatabaseAO {
      */
     public Collection<Observation> fetchNewObservations() {
         Collection<Observation> newObservations = new HashSet<>();
-        String SQLCommandText, tableName, traitValue; int lastIndex, obsTimestamp;
-        Statement SQLStatement; ResultSet queryResultSet; Identifier obsIdentifier;
-        List<Trait> typeTraits; Map<Trait, Boolean> obsTraits;
+        String SQLCommandText, tableName; int lastIndex;
+        Statement SQLStatement; ResultSet queryResultSet;
+
+        List<Trait> obsTypeTraits; String observationTraitValue;
+        Identifier observationIdentifier; int observationTimestamp; Map<Trait, Boolean> observationTraits;
         setInsertFlag(false);
         try {
             for(Map.Entry<String, Integer> nameIndexEntry: nameIndexMap.entrySet()){
@@ -189,27 +195,27 @@ public class DatabaseAO {
                 queryResultSet = SQLStatement.executeQuery(SQLCommandText);
 
                 while(queryResultSet.next()) {
-                    obsIdentifier = createIdentifier(queryResultSet.getString("id"));
-                    obsTimestamp = queryResultSet.getInt("timestamp");
+                    observationIdentifier = createIdentifier(queryResultSet.getString("id"));
+                    observationTimestamp = queryResultSet.getInt("timestamp");
 
-                    typeTraits = obsIdentifier.getType().getTraits();
-                    obsTraits = new HashMap<>();
+                    obsTypeTraits = observationIdentifier.getType().getTraits();
+                    observationTraits = new HashMap<>();
 
-                    for(Trait trait: typeTraits){
-                        traitValue = queryResultSet.getString(trait.getName());
-                        if (traitValue == null)
-                            obsTraits.put(trait, null);
+                    for(Trait trait: obsTypeTraits){
+                        observationTraitValue = queryResultSet.getString(trait.getName());
+                        if (observationTraitValue == null)
+                            observationTraits.put(trait, null);
                         else {
-                            switch(traitValue){
+                            switch(observationTraitValue){
                                 case "1":
-                                    obsTraits.put(trait, true);
+                                    observationTraits.put(trait, true);
                                     break;
                                 case "0":
-                                    obsTraits.put(trait, false);
+                                    observationTraits.put(trait, false);
                             }
                         }
                     }
-                    newObservations.add(new Observation(obsIdentifier, obsTraits, obsTimestamp));
+                    newObservations.add(new Observation(observationIdentifier, observationTraits, observationTimestamp));
                 }
                 SQLStatement.close();
             }

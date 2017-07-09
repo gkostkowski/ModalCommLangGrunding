@@ -16,7 +16,7 @@ public class QRCode extends Identifier {
 
     @Override
     public boolean isIdMemberOf(String idNumber) {
-        return true;
+        return true; //to implement
     }
 
     @Override
