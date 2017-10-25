@@ -82,7 +82,7 @@ public class SimpleStatement extends Statement {
                     groundedFormulas.get(questionKey).equals(ModalOperator.BEL)) {
                 if (complementaryFormula!=null)
                     return "Yes, I believe " + getRestOfSentece((SimpleFormula)questionKey)
-                            + ", but it possible that it is"
+                            + ", but it possible that he is"
                             + ((complementaryFormula.isNegated()) ? " not" : "");
                 else return "Yes, I believe " + getRestOfSentece((SimpleFormula)questionKey);
             } else {
@@ -107,11 +107,11 @@ public class SimpleStatement extends Statement {
         if (questionKey!=null)
             if (complementaryFormula!=null)
                 return "It is possible that " + getRestOfSentece((SimpleFormula)questionKey)
-                        + ", but it is also possible that it is"
+                        + ", but it is also possible that he is"
                         + ((complementaryFormula.isNegated()) ? " not" : "");
             else return "It is possible that " + getRestOfSentece((SimpleFormula)questionKey);
         else if (groundedFormulas.containsKey(complementaryFormula))
-            return "I do not know enough about asked state, I only think it is possible that "
+            return "I do not know enough about asked state, I only think he is possible that "
                     + getRestOfSentece(complementaryFormula);
         return null;
     }

@@ -31,6 +31,11 @@ import java.util.logging.Logger;
 
 class Main {
 
+    private static final String CONTEXT_FLAG = "--context";
+    private static final int NO_CONTEXT_INDICATOR = 1;
+    private static final int CONTEXT_INDICATOR = 2;
+    private static final String FINAL_PRESENTATION_SCENARIO_FILE = "final_presentation_scenario.csv";
+
     /**
      * Realizacja przykładowych przebiegow
      *
@@ -51,12 +56,6 @@ class Main {
 
 
 
-        Agent agentNoCtxt = new Agent.AgentBuilder()
-                //.contextualisation(null)
-                .label("agentNoCtxt")
-                .build();
-
-
         /*      * * * Sample scenarios execution * * *          */
 
       //  new Scenario(agentNoCtxt, "conj_disj_scenario01a_main.csv").execute();  //scenario01a
@@ -75,20 +74,20 @@ class Main {
 //
 //        showMalformedScenarioExceprions();
 
-
-        launchPresentationMode();
+//        args=new String[]{"--context"};
+        launchFinalPresentationMode(args);
         /*   *** old stuff *** */
         // simplyModalitiesScenario(agent, qrCodes, tr);
         //or
         //simplyAndConjunctionModalitiesScenario(agent, qrCodes, tr);
 
-        QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
-        Trait[] tr = new Trait[]{
-                new Trait("Red"),
-                new Trait("White"),
-                new Trait("Blinking"),
-                new Trait("Blue"),
-                new Trait("Soft")};
+//        QRCode[] qrCodes = new QRCode[]{new QRCode("0124"), new QRCode("02442"), new QRCode("01442")};
+//        Trait[] tr = new Trait[]{
+//                new Trait("Red"),
+//                new Trait("White"),
+//                new Trait("Blinking"),
+//                new Trait("Blue"),
+//                new Trait("Soft")};
 
         //startLifeCycle(agentNoCtxt, qrCodes, tr);
 
@@ -99,32 +98,56 @@ class Main {
         //modalConjunctionsScenario(agent, qrCodes, tr);
     }
 
+    private static void launchFinalPresentationMode(String[] args) {
+        try {
+            if (args != null && args.length == 1) {
+                if(args[0].equalsIgnoreCase(CONTEXT_FLAG))
+                runDemonstration(CONTEXT_INDICATOR);
+            } else {
+                runDemonstration(NO_CONTEXT_INDICATOR);
+            }
+        } catch (InvalidMeasureException | InvalidFormulaException | InvalidContextualisationException e) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, "Not able to run presentation due to an error.", e);
+            System.exit(1);
+        }
+    }
+
+    private static void runNoContext() {
+
+    }
+
+    private static void runWithContext() {
+
+    }
+
     private static void launchPresentationMode() throws InvalidMeasureException, InvalidContextualisationException, InvalidFormulaException {
-        System.out.println("\tAvailable scenarios:\n" +
-                "1. standard noContext\n2. focusedContext\n");
-        System.out.println("Enter number representing prepared scenario:");
-        System.out.print("> ");
-        Scanner sc=new Scanner(System.in);
-        int choice = sc.nextInt();
-        runDemonstration(choice);
+//        System.out.println("\tAvailable scenarios:\n" +
+//                "1. standard noContext\n2. focusedContext\n");
+//        System.out.println("Enter number representing prepared scenario:");
+//        System.out.print("> ");
+//        Scanner sc=new Scanner(System.in);
+//        int choice = sc.nextInt();
+//        runDemonstration(choice);
 
         System.exit(0);
     }
 
     private static void runDemonstration(int choice) throws InvalidMeasureException, InvalidContextualisationException, InvalidFormulaException {
         switch (choice) {
-            case 1:
+            case NO_CONTEXT_INDICATOR:
+                Logger.getAnonymousLogger().log(Level.INFO, "Launching  conversation without context ...");
                 Agent agent=new Agent.AgentBuilder()
                         .label("agentNoCtxt")
                         .build();
-                new Scenario(agent, "presentation2_focusedContext.csv").execute();
+                new Scenario(agent, FINAL_PRESENTATION_SCENARIO_FILE).execute();
                 agent.startLifeCycle();
                 if(new Scanner(System.in).next() == "x") {
                     agent.sttopLifeCycle();
                     Logger.getAnonymousLogger().log(Level.INFO, "Closing conversation ...");
                 }
                 break;
-            case 2:
+            case CONTEXT_INDICATOR:
+                Logger.getAnonymousLogger().log(Level.INFO, "Launching  conversation with context ...");
                 executeDedicatedConjFocusedGroupContextScenario();
                 break;
         }
@@ -184,7 +207,7 @@ class Main {
                 .label("agentLtstFcsdGrpCntxtSoftDist")
                 .build();
 
-        new Scenario(agentLtstFcsdGrpCntxtSoftDist, "presentation2_focusedContext.csv").execute();
+        new Scenario(agentLtstFcsdGrpCntxtSoftDist, FINAL_PRESENTATION_SCENARIO_FILE).execute();
     }
 
     /**
@@ -211,15 +234,15 @@ class Main {
     private static Formula prepareDedicatedSampleFormula() throws InvalidFormulaException {
 
         List<Trait> traits = new ArrayList<Trait>() {{
-            add(new Trait("yellow"));
-            add(new Trait("square"));
-            add(new Trait("round"));
-            add(new Trait("Striped"));
+            add(new Trait("polite"));
+            add(new Trait("friendly"));
+            add(new Trait("tired"));
+            add(new Trait("hungry"));
 
         }};
-        return new ComplexFormula(new IndividualModel(new QRCode("12999"),
-                new ObjectType("12", traits)),
-                Arrays.asList(new Trait[]{traits.get(0), traits.get(2)}),
+        return new ComplexFormula(new IndividualModel(new QRCode("1310"),
+                new ObjectType("13", traits)),
+                Arrays.asList(new Trait[]{traits.get(2), traits.get(3)}),
                 Arrays.asList(new State[]{State.IS, State.IS}),
                 LogicOperator.AND);
     }

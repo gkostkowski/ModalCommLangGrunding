@@ -111,5 +111,22 @@
                 </trait>
             </traits>
         </type>
+        <type>
+            <typeId>13</typeId>
+            <traits class="linked-list">
+                <trait>
+                    <name>polite</name>
+                </trait>
+                <trait>
+                    <name>friendly</name>
+                </trait>
+                <trait>
+                    <name>tired</name>
+                </trait>
+                <trait>
+                    <name>hungry</name>
+                </trait>
+            </traits>
+        </type>
     </collection>
 </types>

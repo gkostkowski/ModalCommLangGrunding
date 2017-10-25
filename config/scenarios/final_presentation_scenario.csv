@@ -1,0 +1,23 @@
+#;scenariusz na potrzeby prezentacji na gali API;;;;
+DEF;;;;;
+John;1310;polite;friendly;tired;hungry
+SCENARIO;;;;;
+John;;;;;
+timestamp;related_object;polite;friendly;tired;hungry
+1;John;-1;-1;1;1
+2;John;-1;1;1;1
+3;John;1;1;-1;-1
+4;John;-1;0;1;1
+5;John;-1;-1;1;1
+6;John;0;0;0;0;Is John polite and friendly?;No, I belive that he is not polite;
+4;John;1;0;1;1
+5;John;0;1;0;1
+6;John;1;1;0;0
+7;John;1;1;-1;-1
+8;John;1;-1;1;-1;
+9;John;0;0;0;0;Is John not polite?;Yes, it is possible that John is polite;
+;;;;;
+#;;expected answers:;;;
+#;Is John polite?;Yes, it is possible that John is polite;;;
+#;Is John polite (when he is tired and hungry)?;No, but it is possible that he is not polite (when he is tired and hungry);;;
+#;Is John polite and friendly?;Yes, it is possible that John is polite and friendly, but it is also possible that he is polite and not friendly or (even) it is possible that is not polite and not friendly;;;

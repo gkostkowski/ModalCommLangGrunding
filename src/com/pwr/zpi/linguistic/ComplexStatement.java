@@ -216,7 +216,7 @@ public class ComplexStatement extends Statement {
     private String generateRestOfsentence(ComplexFormula formula, boolean isName, boolean wholeNeeded) {
         if (!wholeNeeded && isOppositeFromFormula(formula))
             return "it is quite the opposite";
-        String subject = (isName) ? name : "it";
+        String subject = (isName) ? name : "he";
         String isXOR = (formula.getOperator() == LogicOperator.XOR) ? "either " : "";
         if (formula.getStates().get(0) == State.IS && formula.getStates().get(1) == State.IS)
             return subject + " is " + isXOR + formula.getTraits().get(0).getName()

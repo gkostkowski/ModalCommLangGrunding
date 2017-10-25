@@ -14,7 +14,8 @@
 
     <!-- XMLDAO -->
     <MAIN_MODULE_NAME> ModalCommLangGrunding </MAIN_MODULE_NAME>
-    <RELATIVE_FILEPATH> \config\types_def.xml </RELATIVE_FILEPATH>
+    <!--<RELATIVE_FILEPATH> \config\types_def.xml </RELATIVE_FILEPATH>-->
+    <RELATIVE_FILEPATH> /config/types_def.xml </RELATIVE_FILEPATH>
 
     <!-- DatabaseAO -->
     <DATABASE_FILENAME> database.db </DATABASE_FILENAME>
