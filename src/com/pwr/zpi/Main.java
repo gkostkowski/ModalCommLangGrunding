@@ -240,11 +240,15 @@ class Main {
             add(new Trait("hungry"));
 
         }};
-        return new ComplexFormula(new IndividualModel(new QRCode("1310"),
+//        return new ComplexFormula(new IndividualModel(new QRCode("1310"),
+//                new ObjectType("13", traits)),
+//                Arrays.asList(new Trait[]{traits.get(2), traits.get(3)}),
+//                Arrays.asList(new State[]{State.IS, State.IS}),
+//                LogicOperator.AND);
+        return new SimpleFormula(new IndividualModel(new QRCode("1310"),
                 new ObjectType("13", traits)),
-                Arrays.asList(new Trait[]{traits.get(2), traits.get(3)}),
-                Arrays.asList(new State[]{State.IS, State.IS}),
-                LogicOperator.AND);
+                Arrays.asList(new Trait[]{traits.get(3)}),
+                Arrays.asList(new State[]{State.IS}));
     }
 
     private static void startLifeCycle(Agent agent, QRCode[] qrCodes, Trait[] tr) {
